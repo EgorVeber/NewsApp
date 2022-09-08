@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_card_view">10dp</dimen>
+    <dimen name="radius_card_view">10dp</dimen>
+    <dimen name="text_size_city">40sp</dimen>
+    <dimen name="margin_base">20dp</dimen>
+    <dimen name="text_size_info">20sp</dimen>
+    <dimen name="text_size_weekT">22sp</dimen>
+    <dimen name="text_size_info2">20sp</dimen>
+    <dimen name="text_size_weather">52sp</dimen>
+    <dimen name="margin_info">10dp</dimen>
+    <dimen name="city_name_margin_top">50dp</dimen>
+    <dimen name="margin_15_dp">15dp</dimen>
+    <dimen name="temperature_value_text_size">40sp</dimen>
+    <dimen name="feels_like_text_size">30sp</dimen>
+    <dimen name="fab_icon_size">56dp</dimen>
+    <dimen name="fab_margin">15dp</dimen>
+    <dimen name="recycler_item_padding">10dp</dimen>
+    <dimen name="recycler_item_text_size">25sp</dimen>
+    <dimen name="recycler_item_line_height">1dp</dimen>
+    <dimen name="recycler_item_line_margin_end">20dp</dimen>
+    <dimen name="week_size_icon">40dp</dimen>
+    <dimen name="city_name_text_size">35sp</dimen>
+    <dimen name="main_container_text_size">10sp</dimen>
+    <dimen name="threads_text_size">25sp</dimen>
+    <dimen name="town_header_height">100dp</dimen>
+    <dimen name="weather_icon_width">150dp</dimen>
+    <dimen name="weather_icon_height">150dp</dimen>
+    <dimen name="weather_icon_margin">110dp</dimen>
+    <dimen name="hairline">1dp</dimen>
+    <dimen name="fab_location_icon_size">45dp</dimen>
+</resources>

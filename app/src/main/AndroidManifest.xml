@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ru.gb.veber.newsapi">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
+        android:name=".core.App"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +17,7 @@
         android:theme="@style/Theme.NewsAPI"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".view.ActivityMain"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
