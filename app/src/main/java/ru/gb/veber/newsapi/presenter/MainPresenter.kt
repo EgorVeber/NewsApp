@@ -11,4 +11,16 @@ class MainPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
         router.replaceScreen(FragmentSourcesScreen)
         super.onFirstViewAttach()
     }
+
+    fun openScreenNews() {
+        router.replaceScreen(FragmentNewsScreen)
+    }
+
+    fun openScreenSources() {
+        router.replaceScreen(FragmentSourcesScreen)
+    }
+
+    fun openScreenProfile() {
+        router.replaceScreen(FragmentProfileScreen)
+    }
 }

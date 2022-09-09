@@ -23,6 +23,9 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        if (savedInstanceState == null) {
+            binding.bottomNavigationView.selectedItemId = R.id.actionNews
+        }
     }
 
     override fun onResumeFragments() {
@@ -38,5 +41,27 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
 
     override fun init() {
 
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.actionNews -> {
+                    presenter.openScreenNews()
+                    true
+                }
+                R.id.actionSources -> {
+                    presenter.openScreenSources()
+                    true
+                }
+                R.id.actionProfile -> {
+                    presenter.openScreenProfile()
+                    true
+                }
+                else -> {
+                    true
+                }
+            }
+        }
+
+        binding.bottomNavigationView.setOnItemReselectedListener {
+        }
     }
 }

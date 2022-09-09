@@ -5,14 +5,13 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/listCountSources"
+        android:text="fragment_news"
         style="@style/sources_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerSources"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
