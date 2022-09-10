@@ -14,18 +14,16 @@ import ru.gb.veber.newsapi.utils.TOP_HEADLINES_SOURCES
 interface NewsApi {
     @GET(TOP_HEADLINES)
     fun getTopicalHeadlines(
-        @Header("X-Api-Key") key: String,
         @Query("country") country: String,
         @Query("category") category: String,
-    ): Call<Articles>
+    ): Single<Articles>
 
     @GET(EVERYTHING)
     fun getEverything(
-        @Header("X-Api-Key") key: String,
         @Query("q") q: String,
     ): Call<Articles>
 
     @GET(TOP_HEADLINES_SOURCES)
-    fun getSources(@Header("X-Api-Key") key: String): Single<SourcesRequest>
+    fun getSources(): Single<SourcesRequest>
 
 }

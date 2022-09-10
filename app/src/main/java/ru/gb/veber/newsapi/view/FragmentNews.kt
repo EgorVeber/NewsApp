@@ -19,7 +19,7 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView {
     private val binding get() = _binding!!
 
     private val presenter: FragmentNewsPresenter by moxyPresenter {
-        FragmentNewsPresenter()
+        FragmentNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle))
     }
 
     override fun onCreateView(
