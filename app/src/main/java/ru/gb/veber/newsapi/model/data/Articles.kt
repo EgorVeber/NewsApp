@@ -9,7 +9,7 @@ data class Articles(
 )
 
 data class Article(
-    val author: String,
+    val author: String?="Аноним",
     val content: String,
     val description: String,
     val publishedAt: String,
@@ -20,7 +20,7 @@ data class Article(
 )
 
 data class Source(
-    val id: Any,
+    val id: String?="Не проверенный источник",
     val name: String,
 )
 

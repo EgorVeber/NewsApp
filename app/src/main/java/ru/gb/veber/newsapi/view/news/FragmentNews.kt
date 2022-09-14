@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view
+package ru.gb.veber.newsapi.view.news
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,15 +11,15 @@ import ru.gb.veber.newsapi.databinding.FragmentNewsBinding
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.NewsRetrofit
 import ru.gb.veber.newsapi.presenter.FragmentNewsPresenter
-import ru.gb.veber.newsapi.presenter.FragmentNewsView
+import ru.gb.veber.newsapi.view.BackPressedListener
 
-class FragmentNews : MvpAppCompatFragment(), FragmentNewsView,BackPressedListener {
+class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListener {
 
     private var _binding: FragmentNewsBinding? = null
     private val binding get() = _binding!!
 
     private val presenter: FragmentNewsPresenter by moxyPresenter {
-        FragmentNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),App.instance.router)
+        FragmentNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle), App.instance.router)
     }
 
     override fun onCreateView(
@@ -41,6 +41,6 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView,BackPressedListene
     }
 
     override fun onBackPressedRouter(): Boolean {
-      return presenter.onBackPressedRouter()
+        return presenter.onBackPressedRouter()
     }
 }

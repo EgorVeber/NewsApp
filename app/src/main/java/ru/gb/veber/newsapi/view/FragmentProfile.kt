@@ -8,13 +8,8 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentMprofileBinding
-import ru.gb.veber.newsapi.databinding.FragmentNewsBinding
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
-import ru.gb.veber.newsapi.model.repository.NewsRetrofit
-import ru.gb.veber.newsapi.presenter.FragmentNewsView
 import ru.gb.veber.newsapi.presenter.FragmentProfilePresenter
 import ru.gb.veber.newsapi.presenter.FragmentProfileView
-import ru.gb.veber.newsapi.presenter.FragmentSourcesPresenter
 
 class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView,BackPressedListener {
 

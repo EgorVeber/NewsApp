@@ -18,7 +18,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String","NEWS_BASE_URL","\"https://newsapi.org/v2/\""
-        buildConfigField "String","KEY_NEWS","\"33804c62820c4b94864ee739f17a8d08\""
+        buildConfigField "String","KEY_NEWS","\"640d42b4cab3433dbf94d90504e44276\""
     }
     buildFeatures {
         viewBinding true

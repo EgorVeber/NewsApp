@@ -3,9 +3,9 @@ package ru.gb.veber.newsapi.presenter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import ru.gb.veber.newsapi.view.FragmentNews
 import ru.gb.veber.newsapi.view.FragmentProfile
 import ru.gb.veber.newsapi.view.FragmentSources
+import ru.gb.veber.newsapi.view.news.FragmentNews
 
 object  FragmentSourcesScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {

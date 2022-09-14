@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.presenter
+package ru.gb.veber.newsapi.view.news
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy

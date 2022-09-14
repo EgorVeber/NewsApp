@@ -8,6 +8,9 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
+import ru.gb.veber.newsapi.model.repository.NewsApi
+import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.NewsRetrofit
 import ru.gb.veber.newsapi.presenter.MainPresenter
 import ru.gb.veber.newsapi.presenter.ViewMain
 
@@ -63,7 +66,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
 
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach { fragment ->
-            Log.d("Back", "onBackPressed() called with: fragment = $fragment")
+            //  Log.d("Back", "onBackPressed() called with: fragment = $fragment")
             if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
                 return
             }

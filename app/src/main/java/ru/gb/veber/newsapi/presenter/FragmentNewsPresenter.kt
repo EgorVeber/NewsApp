@@ -4,15 +4,19 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.view.news.FragmentNewsView
 
-class FragmentNewsPresenter(private val newsRepoImpl: NewsRepoImpl,private val router: Router) :
+class FragmentNewsPresenter(private val newsRepoImpl: NewsRepoImpl, private val router: Router) :
     MvpPresenter<FragmentNewsView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        newsRepoImpl.getTopicalHeadlines().subscribe({
+        //newsRepoDataBaseGetDefaultCategory
+        //Какая нибусь сложная штука с любымими источниками или категориями
+        //А можно просто по дефолку новости любимой страны например
+        newsRepoImpl.getTopicalHeadlinesCountry("ru").subscribe({
             Log.d("TAG", "onFirstViewAttach() called")
-            Log.d("TAG", it.status.toString())
+            Log.d("TAG", it.status)
             Log.d("TAG", it.totalResults.toString())
             Log.d("TAG", it.articles.toString())
         }, {
