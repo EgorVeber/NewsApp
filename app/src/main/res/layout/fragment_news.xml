@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:text="fragment_news"
+        android:id="@+id/ArticleAll"
         style="@style/sources_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

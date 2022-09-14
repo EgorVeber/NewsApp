@@ -20,7 +20,7 @@ class FragmentSourcesPresenter(private val newsRepoImpl: NewsRepoImpl,private va
         })
     }
     fun onBackPressedRouter(): Boolean {
-        Log.d("Back", "onBackPressedRouter() Sources")
+        Log.d("Back", "onBackPressedRouter() SourcesDTO")
         router.backTo(FragmentNewsScreen)
         return true
     }

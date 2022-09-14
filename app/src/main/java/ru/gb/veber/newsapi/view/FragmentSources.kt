@@ -11,7 +11,7 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentSourcesBinding
-import ru.gb.veber.newsapi.model.data.Sources
+import ru.gb.veber.newsapi.model.data.SourcesDTO
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.NewsRetrofit
 import ru.gb.veber.newsapi.presenter.FragmentSourcesPresenter
@@ -42,7 +42,7 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView,BackPressedL
     }
 
     @SuppressLint("SetTextI18n")
-    override fun setSources(list: List<Sources>) {
+    override fun setSources(list: List<SourcesDTO>) {
         TransitionManager.beginDelayedTransition(binding.root)
         sourcesAdapter.sources = list
         binding.listCountSources.text = "Всего издательств (источников): ${list.size} "

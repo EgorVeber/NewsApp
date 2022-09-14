@@ -2,35 +2,45 @@ package ru.gb.veber.newsapi.model.data
 
 import com.google.gson.annotations.SerializedName
 
-data class Articles(
-    val articles: List<Article>,
+data class ArticlesDTO(
+    val articles: List<ArticleDTO>,
     val status: String,
     val totalResults: Int,
 )
 
-data class Article(
-    val author: String?="Аноним",
+data class ArticleDTO(
+    var author: String? = "Аноним",
     val content: String,
     val description: String,
     val publishedAt: String,
-    val source: Source,
+    val source: SourceDTO,
     val title: String,
     val url: String,
     val urlToImage: String,
-)
+) {
+    fun editRequest(): ArticleDTO {
+        if (this.source.id == null) {
+            this.source.id = "Не проверенный источник"
+        }
+        if (this.author == null) {
+            this.author = "Аноним"
+        }
+        return this
+    }
+}
 
-data class Source(
-    val id: String?="Не проверенный источник",
+data class SourceDTO(
+    var id: String? = "Не проверенный источник",
     val name: String,
 )
 
 
-data class SourcesRequest(
+data class SourcesRequestDTO(
     @SerializedName("status") var status: String? = null,
-    @SerializedName("sources") var sources: ArrayList<Sources> = arrayListOf(),
+    @SerializedName("sources") var sources: ArrayList<SourcesDTO> = arrayListOf(),
 )
 
-data class Sources(
+data class SourcesDTO(
     @SerializedName("id") var id: String? = null,
     @SerializedName("name") var name: String? = null,
     @SerializedName("description") var description: String? = null,

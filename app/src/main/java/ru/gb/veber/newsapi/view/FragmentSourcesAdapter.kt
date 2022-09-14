@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.SourcesItemBinding
-import ru.gb.veber.newsapi.model.data.Sources
+import ru.gb.veber.newsapi.model.data.SourcesDTO
 
 
 class FragmentSourcesAdapter() : RecyclerView.Adapter<SourcesViewHolder>() {
 
-    var sources: List<Sources> = emptyList()
+    var sources: List<SourcesDTO> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -31,7 +31,7 @@ class SourcesViewHolder(
     private val binding: SourcesItemBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: Sources) = with(binding) {
+    fun bind(item: SourcesDTO) = with(binding) {
         idSources.text = item.id
         name.text = item.name
         description.text = item.description
