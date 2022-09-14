@@ -3,7 +3,7 @@ package ru.gb.veber.newsapi.presenter
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.model.data.Sources
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface FragmentSourcesView : MvpView {

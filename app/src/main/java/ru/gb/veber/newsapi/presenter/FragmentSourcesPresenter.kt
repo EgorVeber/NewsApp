@@ -1,10 +1,11 @@
 package ru.gb.veber.newsapi.presenter
 
 import android.util.Log
+import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 
-class FragmentSourcesPresenter(private val newsRepoImpl: NewsRepoImpl) :
+class FragmentSourcesPresenter(private val newsRepoImpl: NewsRepoImpl,private val router: Router) :
     MvpPresenter<FragmentSourcesView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -17,5 +18,10 @@ class FragmentSourcesPresenter(private val newsRepoImpl: NewsRepoImpl) :
         }, {
             Log.d("TAG", it.localizedMessage)
         })
+    }
+    fun onBackPressedRouter(): Boolean {
+        Log.d("Back", "onBackPressedRouter() Sources")
+        router.backTo(FragmentNewsScreen)
+        return true
     }
 }

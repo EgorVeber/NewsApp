@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.view
 
 import android.os.Bundle
+import android.util.Log
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
@@ -24,7 +25,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if (savedInstanceState == null) {
-            binding.bottomNavigationView.selectedItemId = R.id.actionNews
+            // binding.bottomNavigationView.selectedItemId = R.id.actionNews
         }
     }
 
@@ -45,23 +46,28 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
             when (it.itemId) {
                 R.id.actionNews -> {
                     presenter.openScreenNews()
-                    true
                 }
                 R.id.actionSources -> {
                     presenter.openScreenSources()
-                    true
                 }
                 R.id.actionProfile -> {
                     presenter.openScreenProfile()
-                    true
-                }
-                else -> {
-                    true
                 }
             }
+            true
         }
 
         binding.bottomNavigationView.setOnItemReselectedListener {
         }
+    }
+
+    override fun onBackPressed() {
+        supportFragmentManager.fragments.forEach { fragment ->
+            Log.d("Back", "onBackPressed() called with: fragment = $fragment")
+            if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
+                return
+            }
+        }
+        presenter.onBackPressedRouter()
     }
 }

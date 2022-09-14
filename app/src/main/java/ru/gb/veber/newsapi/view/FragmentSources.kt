@@ -9,21 +9,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentSourcesBinding
-import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.model.data.Sources
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.NewsRetrofit
 import ru.gb.veber.newsapi.presenter.FragmentSourcesPresenter
 import ru.gb.veber.newsapi.presenter.FragmentSourcesView
 
-class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView {
+class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView,BackPressedListener {
 
     private var _binding: FragmentSourcesBinding? = null
     private val binding get() = _binding!!
     private val sourcesAdapter = FragmentSourcesAdapter()
 
     private val presenter: FragmentSourcesPresenter by moxyPresenter {
-        FragmentSourcesPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle))
+        FragmentSourcesPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle), App.instance.router)
     }
 
     override fun onCreateView(
@@ -50,5 +51,9 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+      return  presenter.onBackPressedRouter()
     }
 }

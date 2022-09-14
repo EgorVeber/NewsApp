@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentMprofileBinding
 import ru.gb.veber.newsapi.databinding.FragmentNewsBinding
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
@@ -15,13 +16,13 @@ import ru.gb.veber.newsapi.presenter.FragmentProfilePresenter
 import ru.gb.veber.newsapi.presenter.FragmentProfileView
 import ru.gb.veber.newsapi.presenter.FragmentSourcesPresenter
 
-class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView {
+class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView,BackPressedListener {
 
     private var _binding: FragmentMprofileBinding? = null
     private val binding get() = _binding!!
 
     private val presenter: FragmentProfilePresenter by moxyPresenter {
-        FragmentProfilePresenter()
+        FragmentProfilePresenter(App.instance.router)
     }
 
     override fun onCreateView(
@@ -40,5 +41,9 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+      return  presenter.onBackPressedRouter()
     }
 }

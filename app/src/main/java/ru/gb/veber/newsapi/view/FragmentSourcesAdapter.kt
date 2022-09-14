@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.SourcesItemBinding
-import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.model.data.Sources
 
 
 class FragmentSourcesAdapter() : RecyclerView.Adapter<SourcesViewHolder>() {
