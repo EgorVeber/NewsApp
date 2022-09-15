@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.view.news
 
+import BottomSheet
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.transition.TransitionManager
@@ -7,7 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
@@ -22,7 +25,7 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
 
     private var _binding: FragmentNewsBinding? = null
     private val binding get() = _binding!!
-
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
     private val newsAdapter = FragmentNewsAdapter()
 
 
@@ -42,6 +45,13 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
+        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
+            addBottomSheetCallback(callBackBehavior)
+        }
+        binding.ArticleAll.setOnClickListener {
+            //bSheetB.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            BottomSheet().show(requireActivity().supportFragmentManager, "")
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -58,5 +68,21 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
 
     override fun onBackPressedRouter(): Boolean {
         return presenter.onBackPressedRouter()
+    }
+
+    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            when (newState) {
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+
+                }
+                BottomSheetBehavior.STATE_EXPANDED -> {
+                }
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+        }
     }
 }
