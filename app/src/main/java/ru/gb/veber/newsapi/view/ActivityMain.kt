@@ -8,7 +8,6 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
-import ru.gb.veber.newsapi.model.repository.NewsApi
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.NewsRetrofit
 import ru.gb.veber.newsapi.presenter.MainPresenter
@@ -27,6 +26,18 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        var api = NewsRepoImpl(NewsRetrofit.newsTopSingle)
+        api.getEverythingKeyWordSearchInSources(sources = "engadget", searchIn = "title", q = "bitcoin", sortBy = "publishedAt", from = "2022-08-25",to= "2022-09-20").subscribe({
+            Log.d("@@NEWS", it.totalResults.toString())
+            it.articles.forEach {
+                Log.d("@@NEWS", " Заголовок:${it.title}   Автор:${it.author}")
+            }
+        }, {
+            Log.d("@@NEWS", it.localizedMessage)
+        })
+
         if (savedInstanceState == null) {
             // binding.bottomNavigationView.selectedItemId = R.id.actionNews
         }

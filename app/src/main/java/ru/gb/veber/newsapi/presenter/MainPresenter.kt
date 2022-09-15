@@ -9,7 +9,7 @@ class MainPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
 
     override fun onFirstViewAttach() {
         viewState.init()
-        router.replaceScreen(FragmentNewsScreen)
+        // router.replaceScreen(FragmentNewsScreen)
         super.onFirstViewAttach()
     }
 

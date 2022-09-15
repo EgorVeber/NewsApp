@@ -66,9 +66,25 @@ interface NewsApi {
     fun getSources(): Single<SourcesRequestDTO>
 
 
+    //EVERYTHING domains прикрутить как нибудь
     @GET(EVERYTHING)
-    fun getEverything(
+    fun getEverythingKeyWordSearchIn(
         @Query("q") q: String,
+        @Query("searchIn") searchIn: String? = null,
+        @Query("language") language: String? = null,
+        @Query("sortBy") sortBy: String? = null,
+        @Query("from") from: String? = null,
+        @Query("to") to: String? = null,
     ): Single<ArticlesDTO>
 
+
+    @GET(EVERYTHING)
+    fun getEverythingKeyWordSearchInSources(
+        @Query("sources") sources: String,
+        @Query("q") q: String? = null,
+        @Query("searchIn") searchIn: String? = null,
+        @Query("sortBy") sortBy: String? = null,
+        @Query("from") from: String? = null,
+        @Query("to") to: String? = null,
+    ): Single<ArticlesDTO>
 }
