@@ -12,6 +12,7 @@ import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.NewsRetrofit
 import ru.gb.veber.newsapi.presenter.MainPresenter
 import ru.gb.veber.newsapi.presenter.ViewMain
+import ru.gb.veber.newsapi.utils.subscribeDefault
 
 class ActivityMain : MvpAppCompatActivity(), ViewMain {
 
@@ -28,19 +29,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         setContentView(binding.root)
 
 
-        var api = NewsRepoImpl(NewsRetrofit.newsTopSingle)
-        api.getEverythingKeyWordSearchInSources(sources = "engadget", searchIn = "title", q = "bitcoin", sortBy = "publishedAt", from = "2022-08-25",to= "2022-09-20").subscribe({
-            Log.d("@@NEWS", it.totalResults.toString())
-            it.articles.forEach {
-                Log.d("@@NEWS", " Заголовок:${it.title}   Автор:${it.author}")
-            }
-        }, {
-            Log.d("@@NEWS", it.localizedMessage)
-        })
 
-        if (savedInstanceState == null) {
-            // binding.bottomNavigationView.selectedItemId = R.id.actionNews
-        }
     }
 
     override fun onResumeFragments() {

@@ -8,10 +8,8 @@ import ru.gb.veber.newsapi.utils.subscribeDefault
 class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
 
 
-    //TOP_HEADLINES_SOURCES
-    override fun getSources(): Single<SourcesRequestDTO> =
-        newsApi.getSources()
-            .subscribeDefault()
+
+
 
     //TOP_HEADLINES
     override fun getTopicalHeadlinesCountryCategoryKeyword(
@@ -64,16 +62,7 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         newsApi.getTopicalHeadlinesSources(sources).subscribeDefault()
 
 
-//    override fun getEverythingKeyWord(
-//        q: String,
-//        sortBy: String?,
-//        domains: String?,
-//        from: String?,
-//        to: String?,
-//        language: String?,
-//    ): Single<ArticlesDTO> =
-//        newsApi.getEverythingKeyWord(q, sortBy, domains, from, to, language).subscribeDefault()
-
+    //Everything
     override fun getEverythingKeyWordSearchIn(
         q: String,
         searchIn: String?,
@@ -81,8 +70,8 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         sortBy: String?,
         from: String?,
         to: String?,
-        ): Single<ArticlesDTO> =
-        newsApi.getEverythingKeyWordSearchIn(q, searchIn, language,sortBy, from, to)
+    ): Single<ArticlesDTO> =
+        newsApi.getEverythingKeyWordSearchIn(q, searchIn, language, sortBy, from, to)
             .subscribeDefault()
 
 
@@ -94,8 +83,14 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         from: String?,
         to: String?,
     ): Single<ArticlesDTO> =
-        newsApi.getEverythingKeyWordSearchInSources(sources,q, searchIn,  sortBy, from, to)
+        newsApi.getEverythingKeyWordSearchInSources(sources, q, searchIn, sortBy, from, to)
             .subscribeDefault()
 
-
+    //TOP_HEADLINES_SOURCES
+    override fun getSources(
+        category: String?,
+        language: String?,
+        country: String?,
+    ): Single<SourcesRequestDTO> =
+        newsApi.getSources(category, language, country).subscribeDefault()
 }

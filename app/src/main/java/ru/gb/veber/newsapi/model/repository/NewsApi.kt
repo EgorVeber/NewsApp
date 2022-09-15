@@ -61,11 +61,6 @@ interface NewsApi {
         @Query("sources") sources: String,
     ): Single<ArticlesDTO>
 
-
-    @GET(TOP_HEADLINES_SOURCES)
-    fun getSources(): Single<SourcesRequestDTO>
-
-
     //EVERYTHING domains прикрутить как нибудь
     @GET(EVERYTHING)
     fun getEverythingKeyWordSearchIn(
@@ -87,4 +82,13 @@ interface NewsApi {
         @Query("from") from: String? = null,
         @Query("to") to: String? = null,
     ): Single<ArticlesDTO>
+
+
+    //TOP_HEADLINES_SOURCES
+    @GET(TOP_HEADLINES_SOURCES)
+    fun getSources(
+        @Query("category") category: String? = null,
+        @Query("language") language: String? = null,
+        @Query("country") country: String? = null,
+    ): Single<SourcesRequestDTO>
 }

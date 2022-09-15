@@ -10,7 +10,7 @@ class FragmentSourcesPresenter(private val newsRepoImpl: NewsRepoImpl,private va
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        newsRepoImpl.getSources().subscribe({
+        newsRepoImpl.getSources("sports", country = "us").subscribe({
             Log.d("TAG", "onFirstViewAttach() called")
             Log.d("TAG", it.status.toString())
             Log.d("TAG", it.sources.toString())

@@ -6,12 +6,10 @@ import retrofit2.http.Query
 import ru.gb.veber.newsapi.model.data.ArticlesDTO
 import ru.gb.veber.newsapi.model.data.SourcesRequestDTO
 import ru.gb.veber.newsapi.utils.EVERYTHING
+import ru.gb.veber.newsapi.utils.TOP_HEADLINES_SOURCES
 
 interface NewsRepo {
 
-
-    //TOP_HEADLINES_SOURCES
-    fun getSources(): Single<SourcesRequestDTO>
 
     //TOP_HEADLINES
     fun getTopicalHeadlinesCountryCategoryKeyword(
@@ -43,8 +41,6 @@ interface NewsRepo {
 
 
     //EVERYTHING
-
-
     fun getEverythingKeyWordSearchInSources(
         sources: String,
         q: String? = null,
@@ -63,5 +59,11 @@ interface NewsRepo {
         to: String? = null,
         ): Single<ArticlesDTO>
 
+    //TOP_HEADLINES_SOURCES
+    fun getSources(
+        category: String? = null,
+        language: String? = null,
+        country: String? = null,
+    ): Single<SourcesRequestDTO>
 
 }
