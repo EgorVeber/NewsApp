@@ -1,10 +1,10 @@
-package ru.gb.veber.newsapi.view
+package ru.gb.veber.newsapi.view.sources
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.SourcesItemBinding
-import ru.gb.veber.newsapi.model.data.SourcesDTO
+import ru.gb.veber.newsapi.model.SourcesDTO
 
 
 class FragmentSourcesAdapter() : RecyclerView.Adapter<SourcesViewHolder>() {

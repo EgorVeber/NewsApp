@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view
+package ru.gb.veber.newsapi.view.activity
 
 interface BackPressedListener {
     fun onBackPressedRouter():Boolean

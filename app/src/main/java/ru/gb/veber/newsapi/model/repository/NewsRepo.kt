@@ -1,15 +1,10 @@
 package ru.gb.veber.newsapi.model.repository
 
 import io.reactivex.rxjava3.core.Single
-import retrofit2.http.GET
-import retrofit2.http.Query
-import ru.gb.veber.newsapi.model.data.ArticlesDTO
-import ru.gb.veber.newsapi.model.data.SourcesRequestDTO
-import ru.gb.veber.newsapi.utils.EVERYTHING
-import ru.gb.veber.newsapi.utils.TOP_HEADLINES_SOURCES
+import ru.gb.veber.newsapi.model.ArticlesDTO
+import ru.gb.veber.newsapi.model.SourcesRequestDTO
 
 interface NewsRepo {
-
 
     //TOP_HEADLINES
     fun getTopicalHeadlinesCountryCategoryKeyword(

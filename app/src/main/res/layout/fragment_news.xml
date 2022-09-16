@@ -1,56 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/ArticleAll"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="10dp"
-        android:textSize="18sp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabRippleColor="@null"
+        app:tabBackground="@drawable/tabs_selector"
+        app:tabIndicator="@null"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/black" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerNews"
-        android:layout_marginTop="30dp"
-        android:padding="10dp"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_sheet_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#f6f6fa"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="0dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-        <View
-            android:id="@+id/bottom_sheet_line"
-            android:layout_width="25dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="#663b4351"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textColor="#000"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_line" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
+</androidx.constraintlayout.widget.ConstraintLayout>

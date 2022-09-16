@@ -3,24 +3,31 @@ package ru.gb.veber.newsapi.presenter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import ru.gb.veber.newsapi.view.FragmentProfile
-import ru.gb.veber.newsapi.view.FragmentSources
-import ru.gb.veber.newsapi.view.news.FragmentNews
+import ru.gb.veber.newsapi.view.profile.FragmentProfile
+import ru.gb.veber.newsapi.view.sources.FragmentSources
+import ru.gb.veber.newsapi.view.newsitem.FragmentNews
+import ru.gb.veber.newsapi.view.viewpagernews.FragmentViewPagerNews
 
 object  FragmentSourcesScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return FragmentSources()
+        return FragmentSources.getInstance()
     }
 }
 
-object  FragmentNewsScreen : FragmentScreen {
+data class  FragmentNewsScreen(private val category:String) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return FragmentNews()
+        return FragmentNews.getInstance(category)
     }
 }
 
 object  FragmentProfileScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return FragmentProfile()
+        return FragmentProfile.getInstance()
+    }
+}
+
+object  FragmentViewPagerNewsScreen : FragmentScreen {
+    override fun createFragment(factory: FragmentFactory): Fragment {
+        return FragmentViewPagerNews.getInstance()
     }
 }

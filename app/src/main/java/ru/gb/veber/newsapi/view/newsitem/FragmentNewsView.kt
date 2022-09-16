@@ -1,10 +1,12 @@
-package ru.gb.veber.newsapi.presenter
+package ru.gb.veber.newsapi.view.newsitem
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
+import ru.gb.veber.newsapi.model.ArticleDTO
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface ViewMain : MvpView {
+interface FragmentNewsView : MvpView {
     fun init()
+    fun setSources(articles: List<ArticleDTO>)
 }

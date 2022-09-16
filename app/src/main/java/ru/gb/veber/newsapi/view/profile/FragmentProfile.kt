@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view
+package ru.gb.veber.newsapi.view.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +9,9 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentMprofileBinding
 import ru.gb.veber.newsapi.presenter.FragmentProfilePresenter
-import ru.gb.veber.newsapi.presenter.FragmentProfileView
+import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
-class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView,BackPressedListener {
+class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressedListener {
 
     private var _binding: FragmentMprofileBinding? = null
     private val binding get() = _binding!!
@@ -40,5 +40,11 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView,BackPressedL
 
     override fun onBackPressedRouter(): Boolean {
       return  presenter.onBackPressedRouter()
+    }
+
+    companion object {
+        fun getInstance(): FragmentProfile {
+            return FragmentProfile()
+        }
     }
 }

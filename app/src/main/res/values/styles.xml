@@ -27,4 +27,12 @@
 <!--        <item name="colorSurface">@color/teal_300</item>-->
 <!--        <item name="colorOnSurfaceVariant">@color/teal_300</item>-->
     </style>
+
+    <style name="MyTabStyle" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabTextAppearance">@style/MyTextAppearanceButton</item>
+    </style>
+
+    <style name="MyTextAppearanceButton" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
 </resources>

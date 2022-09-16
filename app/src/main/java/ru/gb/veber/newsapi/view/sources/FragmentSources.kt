@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view
+package ru.gb.veber.newsapi.view.sources
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,13 +11,13 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentSourcesBinding
-import ru.gb.veber.newsapi.model.data.SourcesDTO
+import ru.gb.veber.newsapi.model.SourcesDTO
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
-import ru.gb.veber.newsapi.model.repository.NewsRetrofit
+import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.presenter.FragmentSourcesPresenter
-import ru.gb.veber.newsapi.presenter.FragmentSourcesView
+import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
-class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView,BackPressedListener {
+class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
 
     private var _binding: FragmentSourcesBinding? = null
     private val binding get() = _binding!!
@@ -54,6 +54,12 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView,BackPressedL
     }
 
     override fun onBackPressedRouter(): Boolean {
-      return  presenter.onBackPressedRouter()
+        return presenter.onBackPressedRouter()
+    }
+
+    companion object {
+        fun getInstance(): FragmentSources {
+            return FragmentSources()
+        }
     }
 }

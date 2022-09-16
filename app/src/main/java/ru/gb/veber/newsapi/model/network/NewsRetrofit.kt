@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.model.repository
+package ru.gb.veber.newsapi.model.network
 
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient

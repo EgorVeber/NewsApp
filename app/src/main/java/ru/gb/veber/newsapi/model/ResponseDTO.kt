@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.model.data
+package ru.gb.veber.newsapi.model
 
 import com.google.gson.annotations.SerializedName
 

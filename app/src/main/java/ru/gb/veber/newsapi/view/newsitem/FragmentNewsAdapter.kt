@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.news
+package ru.gb.veber.newsapi.view.viewpagernews
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.databinding.NewsItemBinding
-import ru.gb.veber.newsapi.databinding.SourcesItemBinding
-import ru.gb.veber.newsapi.model.data.ArticleDTO
-import ru.gb.veber.newsapi.model.data.SourcesDTO
-import ru.gb.veber.newsapi.utils.loadGlide
+import ru.gb.veber.newsapi.model.ArticleDTO
 
 
 class FragmentNewsAdapter() : RecyclerView.Adapter<NewsViewHolder>() {

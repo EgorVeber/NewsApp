@@ -1,15 +1,12 @@
 package ru.gb.veber.newsapi.model.repository
 
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.model.data.ArticlesDTO
-import ru.gb.veber.newsapi.model.data.SourcesRequestDTO
+import ru.gb.veber.newsapi.model.ArticlesDTO
+import ru.gb.veber.newsapi.model.SourcesRequestDTO
+import ru.gb.veber.newsapi.model.network.NewsApi
 import ru.gb.veber.newsapi.utils.subscribeDefault
 
 class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
-
-
-
-
 
     //TOP_HEADLINES
     override fun getTopicalHeadlinesCountryCategoryKeyword(

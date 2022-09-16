@@ -1,35 +1,27 @@
-package ru.gb.veber.newsapi.view
+package ru.gb.veber.newsapi.view.activity
 
 import android.os.Bundle
-import android.util.Log
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
-import ru.gb.veber.newsapi.model.repository.NewsRetrofit
-import ru.gb.veber.newsapi.presenter.MainPresenter
-import ru.gb.veber.newsapi.presenter.ViewMain
-import ru.gb.veber.newsapi.utils.subscribeDefault
+import ru.gb.veber.newsapi.presenter.ActivityPresenter
 
 class ActivityMain : MvpAppCompatActivity(), ViewMain {
 
     private lateinit var binding: ActivityMainBinding
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
 
-    private val presenter: MainPresenter by moxyPresenter {
-        MainPresenter(App.instance.router)
+    private val presenter: ActivityPresenter by moxyPresenter {
+        ActivityPresenter(App.instance.router)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-
     }
 
     override fun onResumeFragments() {

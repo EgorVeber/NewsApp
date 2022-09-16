@@ -1,8 +1,9 @@
-package ru.gb.veber.newsapi.view.news
+package ru.gb.veber.newsapi.view.newsitem
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,23 +13,25 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.FragmentNewsBinding
-import ru.gb.veber.newsapi.model.data.ArticleDTO
+import ru.gb.veber.newsapi.databinding.FragmentNewsViewPagerItemBinding
+import ru.gb.veber.newsapi.model.ArticleDTO
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
-import ru.gb.veber.newsapi.model.repository.NewsRetrofit
+import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.presenter.FragmentNewsPresenter
-import ru.gb.veber.newsapi.view.BackPressedListener
+import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.viewpagernews.FragmentNewsAdapter
 
 class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListener {
 
-    private var _binding: FragmentNewsBinding? = null
+    private var _binding: FragmentNewsViewPagerItemBinding? = null
     private val binding get() = _binding!!
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
     private val newsAdapter = FragmentNewsAdapter()
 
 
     private val presenter: FragmentNewsPresenter by moxyPresenter {
-        FragmentNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle), App.instance.router)
+        FragmentNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
+            App.instance.router, arguments?.getString(BUNDLE_KEY) ?: "")
     }
 
     override fun onCreateView(
@@ -36,7 +39,7 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentNewsBinding.inflate(inflater, container, false)
+        _binding = FragmentNewsViewPagerItemBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -54,7 +57,7 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<ArticleDTO>) {
         TransitionManager.beginDelayedTransition(binding.root)
-        binding.ArticleAll.text = "Статей нашлось: " + articles.size
+       // binding.ArticleAll.text = "Статей нашлось: " + articles.size
         newsAdapter.articles = articles
     }
 
@@ -80,6 +83,15 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
+        }
+    }
+
+    companion object {
+        private const val BUNDLE_KEY = "BUNDLE_KEY"
+        fun getInstance(category: String) = FragmentNews().apply {
+            arguments = Bundle().apply {
+                putString(BUNDLE_KEY, category)
+            }
         }
     }
 }

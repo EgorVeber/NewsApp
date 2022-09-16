@@ -4,13 +4,14 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.view.sources.FragmentSourcesView
 
 class FragmentSourcesPresenter(private val newsRepoImpl: NewsRepoImpl,private val router: Router) :
     MvpPresenter<FragmentSourcesView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        newsRepoImpl.getSources("sports", country = "us").subscribe({
+        newsRepoImpl.getSources().subscribe({
             Log.d("TAG", "onFirstViewAttach() called")
             Log.d("TAG", it.status.toString())
             Log.d("TAG", it.sources.toString())
@@ -21,7 +22,7 @@ class FragmentSourcesPresenter(private val newsRepoImpl: NewsRepoImpl,private va
     }
     fun onBackPressedRouter(): Boolean {
         Log.d("Back", "onBackPressedRouter() SourcesDTO")
-        router.backTo(FragmentNewsScreen)
+        router.backTo(FragmentViewPagerNewsScreen)
         return true
     }
 }
