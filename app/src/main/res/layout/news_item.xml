@@ -6,10 +6,8 @@
     app:cardElevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/onstrainL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_margin="2dp">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -23,9 +21,9 @@
         <TextView
             android:id="@+id/title"
             style="@style/sources_text"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageNews"
@@ -34,9 +32,8 @@
         <TextView
             android:id="@+id/publishedAt"
             style="@style/sources_text"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:text="asdasdsada"
             android:textColor="@color/selectedColor"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"

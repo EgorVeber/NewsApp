@@ -27,10 +27,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//
-//
-//        Log.d("TAG",    request.substring(11,16))
-////
+
 //        Log.d("TAG", date.toString())
 //        Log.d("TAG", date.formatHour())
 //        Log.d("TAG", Date().toString())
