@@ -7,6 +7,8 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.gb.veber.newsapi.BuildConfig
 import ru.gb.veber.newsapi.utils.API_KEY
+import ru.gb.veber.newsapi.utils.PAGE_SIZE
+import ru.gb.veber.newsapi.utils.PAGE_SIZE_COUNT
 
 object NewsRetrofit {
     val newsTopSingle: NewsApi =
@@ -19,7 +21,9 @@ object NewsRetrofit {
 
     private fun client() = OkHttpClient.Builder().addInterceptor { chain ->
         val request = chain.request()
-        val url = request.url.newBuilder().addQueryParameter(API_KEY, BuildConfig.KEY_NEWS).build()
+        val url = request.url.newBuilder().addQueryParameter(API_KEY, BuildConfig.KEY_NEWS)
+            .addQueryParameter(PAGE_SIZE,
+                PAGE_SIZE_COUNT).build()
         chain.proceed(request.newBuilder().url(url).build())
     }.build()
 }

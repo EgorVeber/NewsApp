@@ -38,7 +38,6 @@ class FragmentViewPagerNews : MvpAppCompatFragment(), FragmentViewPagerNewsView,
             binding.tabLayout, binding.viewPager
         ) { tab, position ->
             when (position) {
-                MAIN -> tab.text = CATEGORY_MAIN
                 BUSINESS -> tab.text = CATEGORY_BUSINESS
                 ENTERTAINMENT -> tab.text = CATEGORY_ENTERTAINMENT
                 GENERAL -> tab.text = CATEGORY_GENERAL

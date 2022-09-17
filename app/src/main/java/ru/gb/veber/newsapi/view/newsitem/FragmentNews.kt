@@ -1,37 +1,46 @@
 package ru.gb.veber.newsapi.view.newsitem
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentNewsViewPagerItemBinding
-import ru.gb.veber.newsapi.model.ArticleDTO
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
+import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.presenter.FragmentNewsPresenter
+import ru.gb.veber.newsapi.utils.loadGlide
+import ru.gb.veber.newsapi.utils.loadGlideNot
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.viewpagernews.CATEGORY_GENERAL
 import ru.gb.veber.newsapi.view.viewpagernews.FragmentNewsAdapter
+
 
 class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListener {
 
     private var _binding: FragmentNewsViewPagerItemBinding? = null
     private val binding get() = _binding!!
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
-    private val newsAdapter = FragmentNewsAdapter()
-
+    private val newsAdapter = FragmentNewsAdapter() {
+        presenter.clickNews(it)
+    }
 
     private val presenter: FragmentNewsPresenter by moxyPresenter {
         FragmentNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
-            App.instance.router, arguments?.getString(BUNDLE_KEY) ?: "")
+            App.instance.router)
     }
 
     override fun onCreateView(
@@ -43,22 +52,45 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL)
+        binding.imageViewAll.setOnClickListener {
+            bSheetB.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+    private var listener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (!recyclerView.canScrollVertically(1)) {
+                Log.d("recyclerNews", "Нижняя точка ")
+            }
+        }
+    }
+
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
             addBottomSheetCallback(callBackBehavior)
         }
-        binding.ArticleAll.setOnClickListener {
-            bSheetB.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-        }
+
+        //TODO Придумать пагинацию
+        binding.recyclerNews.addOnScrollListener(listener)
+        // bSheetB.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
     @SuppressLint("SetTextI18n")
-    override fun setSources(articles: List<ArticleDTO>) {
+    override fun setSources(articles: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
-       // binding.ArticleAll.text = "Статей нашлось: " + articles.size
         newsAdapter.articles = articles
+        Log.d("SIZEART", articles.size.toString())
+    }
+
+    override fun clickNews(it: Article) {
+        bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.imageViewAll.loadGlideNot(it.urlToImage)
     }
 
     override fun onDestroyView() {

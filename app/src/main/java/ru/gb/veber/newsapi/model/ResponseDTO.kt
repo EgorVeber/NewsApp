@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.model
 
 import com.google.gson.annotations.SerializedName
+import kotlin.collections.ArrayList
 
 data class ArticlesDTO(
     val articles: List<ArticleDTO>,
@@ -11,23 +12,13 @@ data class ArticlesDTO(
 data class ArticleDTO(
     var author: String? = "Аноним",
     val content: String,
-    val description: String,
-    val publishedAt: String,
+    val description: String?,
+    var publishedAt: String,
     val source: SourceDTO,
     val title: String,
     val url: String,
-    val urlToImage: String,
-) {
-    fun editRequest(): ArticleDTO {
-        if (this.source.id == null) {
-            this.source.id = "Не проверенный источник"
-        }
-        if (this.author == null) {
-            this.author = "Аноним"
-        }
-        return this
-    }
-}
+    val urlToImage: String?,
+)
 
 data class SourceDTO(
     var id: String? = "Не проверенный источник",

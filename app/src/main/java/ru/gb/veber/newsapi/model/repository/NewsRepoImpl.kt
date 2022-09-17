@@ -1,12 +1,41 @@
 package ru.gb.veber.newsapi.model.repository
 
+import android.util.Log
 import io.reactivex.rxjava3.core.Single
+import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.ArticlesDTO
 import ru.gb.veber.newsapi.model.SourcesRequestDTO
 import ru.gb.veber.newsapi.model.network.NewsApi
-import ru.gb.veber.newsapi.utils.subscribeDefault
+import ru.gb.veber.newsapi.utils.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
+
+    override fun changeRequest(list: List<Article>): List<Article> {
+        return list.map {
+
+            var publishedDate = stringFromData(it.publishedAt)
+            var SDF = SimpleDateFormat("yyyy-MM-dd")
+
+            if (SDF.format(publishedDate).equals(SDF.format(Date()))) {
+                it.publishedAt = "Today ${publishedDate.formatHour()}"
+            } else if (SDF.format(publishedDate).equals(SDF.format(takeDate(-1)))) {
+                it.publishedAt = "Yesterday ${publishedDate.formatHour()}"
+            } else {
+                it.publishedAt = publishedDate.formatDateTime()
+            }
+
+            if (it.source.id == null) {
+                it.source.id = "Не проверенный источник"
+            }
+
+            if (it.author == null) {
+                it.author = "Аноним"
+            }
+            it
+        }
+    }
 
     //TOP_HEADLINES
     override fun getTopicalHeadlinesCountryCategoryKeyword(

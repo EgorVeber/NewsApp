@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.view.activity
 
 import android.os.Bundle
+import android.util.Log
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
@@ -8,6 +9,9 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
+import ru.gb.veber.newsapi.utils.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ActivityMain : MvpAppCompatActivity(), ViewMain {
 
@@ -22,6 +26,20 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+//
+//
+//        Log.d("TAG",    request.substring(11,16))
+////
+//        Log.d("TAG", date.toString())
+//        Log.d("TAG", date.formatHour())
+//        Log.d("TAG", Date().toString())
+//
+//
+//        var fmt = SimpleDateFormat("yyyy-MM-dd")
+//    Log.d("TAG", fmt.format(date).equals(fmt.format(takeDate(-1))).toString())
+//        Log.d("TAG", fmt.format(date).equals(fmt.format(Date())).toString())
+
     }
 
     override fun onResumeFragments() {
