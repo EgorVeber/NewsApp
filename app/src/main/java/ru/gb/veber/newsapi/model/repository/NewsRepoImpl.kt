@@ -19,11 +19,11 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
             var SDF = SimpleDateFormat("yyyy-MM-dd")
 
             if (SDF.format(publishedDate).equals(SDF.format(Date()))) {
-                it.publishedAt = "Today ${publishedDate.formatHour()}"
+                it.publishedAtChange = "Today ${publishedDate.formatHour()}"
             } else if (SDF.format(publishedDate).equals(SDF.format(takeDate(-1)))) {
-                it.publishedAt = "Yesterday ${publishedDate.formatHour()}"
+                it.publishedAtChange = "Yesterday ${publishedDate.formatHour()}"
             } else {
-                it.publishedAt = publishedDate.formatDateTime()
+                it.publishedAtChange = publishedDate.formatDateTime()
             }
 
             if (it.source.id == null) {

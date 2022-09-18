@@ -52,8 +52,9 @@ class NewsViewHolder(
 //        description.text = item.description
 //        source.text = item.source.name + " ;" + item.source.id
 //        url.text = item.url
+
         title.text = item.title
-        publishedAt.text = item.publishedAt
+        publishedAt.text = item.publishedAtChange
 
         //1 варинат без scaleType обрезается часть содержимого
 //        imageNews.load(item.urlToImage) {

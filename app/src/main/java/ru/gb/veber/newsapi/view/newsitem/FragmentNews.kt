@@ -22,10 +22,7 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.presenter.FragmentNewsPresenter
-import ru.gb.veber.newsapi.utils.hide
-import ru.gb.veber.newsapi.utils.loadGlide
-import ru.gb.veber.newsapi.utils.loadGlideNot
-import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.viewpagernews.CATEGORY_GENERAL
 import ru.gb.veber.newsapi.view.viewpagernews.FragmentNewsAdapter
@@ -82,20 +79,18 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         binding.recyclerNews.addOnScrollListener(listener)
         // bSheetB.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
-
-        var flag = false
         binding.filterButton.setOnClickListener {
-            if (flag) {
-                bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
-                flag = false
-            } else {
-                flag = true
-                bSheetB.state = BottomSheetBehavior.STATE_COLLAPSED
-                binding.imageViewAll.hide()
-                binding.imageViewDown.hide()
-                binding.spinner.show()
-                presenter.loadNewsCountry(binding.spinner.selectedItem.toString())
-            }
+//            if (flag) {
+//                bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+//                flag = false
+//            } else {
+//                flag = true
+//                bSheetB.state = BottomSheetBehavior.STATE_COLLAPSED
+//                binding.imageViewAll.hide()
+//                binding.imageViewDown.hide()
+//                binding.spinner.show()
+//                presenter.loadNewsCountry(binding.spinner.selectedItem.toString())
+//            }
         }
     }
 
@@ -107,8 +102,13 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
     }
 
     override fun clickNews(it: Article) {
+        Log.d("TAG", "clickNews() called with: it = $it")
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
         binding.imageViewAll.loadGlideNot(it.urlToImage)
+        binding.dateNews.text= stringFromData(it.publishedAt).formatDateDay()
+        binding.titleNews.text=it.title
+        binding.descriptionNews.text=it.description
+        // autor source url
     }
 
     override fun onDestroyView() {

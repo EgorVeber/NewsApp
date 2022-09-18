@@ -4,6 +4,7 @@ data class Article(
     var author: String?,
     var description: String?,
     var publishedAt: String,
+    var publishedAtChange: String?,
     var source: Source,
     var title: String,
     var url: String,

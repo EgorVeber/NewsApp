@@ -8,6 +8,7 @@ fun mapToArticle(item: ArticleDTO): Article {
         author = item.author,
         description = item.description,
         publishedAt = item.publishedAt,
+        publishedAtChange = item.publishedAt,
         source = mapToSources(item.source),
         title = item.title,
         url = item.url,
