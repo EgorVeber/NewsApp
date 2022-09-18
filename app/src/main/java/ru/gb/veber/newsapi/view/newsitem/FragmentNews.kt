@@ -22,8 +22,10 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.presenter.FragmentNewsPresenter
+import ru.gb.veber.newsapi.utils.hide
 import ru.gb.veber.newsapi.utils.loadGlide
 import ru.gb.veber.newsapi.utils.loadGlideNot
+import ru.gb.veber.newsapi.utils.show
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.viewpagernews.CATEGORY_GENERAL
 import ru.gb.veber.newsapi.view.viewpagernews.FragmentNewsAdapter
@@ -64,7 +66,7 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             if (!recyclerView.canScrollVertically(1)) {
-                Log.d("recyclerNews", "Нижняя точка ")
+                Log.d("recyclerNews", "Нижняя точка 1 ")
             }
         }
     }
@@ -79,6 +81,22 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         //TODO Придумать пагинацию
         binding.recyclerNews.addOnScrollListener(listener)
         // bSheetB.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+
+
+        var flag = false
+        binding.filterButton.setOnClickListener {
+            if (flag) {
+                bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+                flag = false
+            } else {
+                flag = true
+                bSheetB.state = BottomSheetBehavior.STATE_COLLAPSED
+                binding.imageViewAll.hide()
+                binding.imageViewDown.hide()
+                binding.spinner.show()
+                presenter.loadNewsCountry(binding.spinner.selectedItem.toString())
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")

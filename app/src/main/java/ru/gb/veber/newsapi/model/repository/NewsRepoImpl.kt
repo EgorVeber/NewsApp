@@ -46,26 +46,17 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         newsApi.getTopicalHeadlinesCountryCategoryKeyword(country, category, keyWord)
             .subscribeDefault()
 
-
-    override fun getTopicalHeadlinesCountryKeyWord(
-        country: String,
-        keyWord: String,
-    ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCountryKeyWord(country, keyWord).subscribeDefault()
-
-
     override fun getTopicalHeadlinesCountryCategory(
         country: String,
-        category: String,
+        category: String?,
     ): Single<ArticlesDTO> =
         newsApi.getTopicalHeadlinesCountryCategory(country, category).subscribeDefault()
 
-
-    override fun getTopicalHeadlinesCategoryKeyWord(
+    override fun getTopicalHeadlinesCategoryCountry(
         category: String,
-        keyWord: String,
+        country: String?,
     ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCategoryKeyWord(category, keyWord).subscribeDefault()
+        newsApi.getTopicalHeadlinesCategoryCountry(category, country).subscribeDefault()
 
 
     override fun getTopicalHeadlinesSourcesKeyWord(
@@ -74,15 +65,6 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
     ): Single<ArticlesDTO> =
         newsApi.getTopicalHeadlinesSourcesKeyWord(keyWord, sources).subscribeDefault()
 
-
-    override fun getTopicalHeadlinesCountry(country: String): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCountry(country).subscribeDefault()
-
-    override fun getTopicalHeadlinesCategory(category: String): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCategory(category).subscribeDefault()
-
-    override fun getTopicalHeadlinesKeyWord(keyWord: String): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesKeyWord(keyWord).subscribeDefault()
 
     override fun getTopicalHeadlinesSources(sources: String): Single<ArticlesDTO> =
         newsApi.getTopicalHeadlinesSources(sources).subscribeDefault()

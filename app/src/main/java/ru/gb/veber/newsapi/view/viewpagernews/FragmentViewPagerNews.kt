@@ -47,6 +47,7 @@ class FragmentViewPagerNews : MvpAppCompatFragment(), FragmentViewPagerNewsView,
                 TECHNOLOGY -> tab.text = CATEGORY_TECHNOLOGY
             }
         }.attach()
+
     }
 
     override fun init() {

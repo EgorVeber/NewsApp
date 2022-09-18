@@ -7,10 +7,10 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
+        style="@style/Widget.App.BottomNavigationView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:itemHorizontalTranslationEnabled="true"
-        style="@style/Widget.App.BottomNavigationView2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,5 +26,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".view.activity.ActivityMain" />
+
+    <View
+        android:id="@+id/vdfsdfsdfs"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@color/selectedColor"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

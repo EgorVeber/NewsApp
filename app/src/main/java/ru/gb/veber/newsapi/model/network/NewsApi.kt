@@ -12,48 +12,27 @@ import ru.gb.veber.newsapi.utils.TOP_HEADLINES_SOURCES
 interface NewsApi {
     @GET(TOP_HEADLINES)
     fun getTopicalHeadlinesCountryCategoryKeyword(
-        @Query("country") country: String,
-        @Query("category") category: String,
-        @Query("q") keyWord: String,
-    ): Single<ArticlesDTO>
-
-    @GET(TOP_HEADLINES)
-    fun getTopicalHeadlinesCategoryKeyWord(
-        @Query("category") category: String,
-        @Query("q") keyWord: String,
-    ): Single<ArticlesDTO>
-
-    @GET(TOP_HEADLINES)
-    fun getTopicalHeadlinesCountryKeyWord(
-        @Query("country") country: String,
+        @Query("country") country: String?,
+        @Query("category") category: String?,
         @Query("q") keyWord: String,
     ): Single<ArticlesDTO>
 
     @GET(TOP_HEADLINES)
     fun getTopicalHeadlinesCountryCategory(
         @Query("country") country: String,
-        @Query("category") category: String,
+        @Query("category") category: String?,
     ): Single<ArticlesDTO>
 
     @GET(TOP_HEADLINES)
-    fun getTopicalHeadlinesCountry(
-        @Query("country") country: String,
-    ): Single<ArticlesDTO>
-
-    @GET(TOP_HEADLINES)
-    fun getTopicalHeadlinesCategory(
+    fun getTopicalHeadlinesCategoryCountry(
         @Query("category") category: String,
+        @Query("country") country: String?,
     ): Single<ArticlesDTO>
 
     @GET(TOP_HEADLINES)
     fun getTopicalHeadlinesSourcesKeyWord(
         @Query("q") keyWord: String,
         @Query("sources") sources: String,
-    ): Single<ArticlesDTO>
-
-    @GET(TOP_HEADLINES)
-    fun getTopicalHeadlinesKeyWord(
-        @Query("q") keyWord: String,
     ): Single<ArticlesDTO>
 
     @GET(TOP_HEADLINES)
