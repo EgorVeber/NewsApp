@@ -32,7 +32,7 @@ class FragmentNewsPresenter(
         //newsRepoDataBaseGetDefaultCategory
         //Какая нибусь сложная штука с любымими источниками или категориями
         //А можно просто по дефолку новости любимой страны например
-        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category).map { articles ->
+        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category,"ru").map { articles ->
             articles.articles.map(::mapToArticle).also {
                 newsRepoImpl.changeRequest(it)
             }
