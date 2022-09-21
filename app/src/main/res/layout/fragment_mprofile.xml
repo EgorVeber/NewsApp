@@ -26,4 +26,11 @@
         android:layout_height="50dp"
         android:layout_margin="20dp"
         android:entries="@array/Country" />
+
+    <TextView
+        android:id="@+id/textviewsda"
+        android:text="asdddddddddddddddddddddddddddddddddddddddddddasdasdsa12345"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

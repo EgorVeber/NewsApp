@@ -29,6 +29,12 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
                 it.source.id = "Не проверенный источник"
             }
 
+            if (it.description.equals("")) {
+                it.description = " Read on ${it.source.name}"
+            }else{
+                it.description+="."
+            }
+
             if (it.author == null) {
                 it.author = "Аноним"
             }

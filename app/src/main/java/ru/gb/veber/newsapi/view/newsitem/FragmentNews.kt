@@ -2,6 +2,9 @@ package ru.gb.veber.newsapi.view.newsitem
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -97,6 +100,7 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         binding.filterButton.visibility = View.INVISIBLE
         hideFilter()
 
+
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
         binding.imageViewAll.show()
         binding.titleNews.show()
@@ -105,7 +109,21 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         binding.imageViewAll.loadGlideNot(it.urlToImage)
         binding.dateNews.text = stringFromData(it.publishedAt).formatDateDay()
         binding.titleNews.text = it.title
-        binding.descriptionNews.text = it.description
+
+
+        var spanableStringBuilder =
+            SpannableStringBuilder(it.description)
+        spanableStringBuilder.setSpan(
+            ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+            spanableStringBuilder.length - 1,
+            spanableStringBuilder.length,
+            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+        )
+
+        binding.descriptionNews.text = spanableStringBuilder
+
+        binding.authorText.text = it.author
+        binding.sourceText.text = it.source.name
         // autor source url
     }
 
