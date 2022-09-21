@@ -31,6 +31,11 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
 
     override fun init() {
 
+        binding.progressBar.max = 100
+        binding.progressBar.progress = 10
+
+
+
     }
 
     override fun onDestroyView() {

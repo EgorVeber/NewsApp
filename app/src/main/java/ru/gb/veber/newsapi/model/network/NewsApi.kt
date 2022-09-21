@@ -18,12 +18,6 @@ interface NewsApi {
     ): Single<ArticlesDTO>
 
     @GET(TOP_HEADLINES)
-    fun getTopicalHeadlinesCountryCategory(
-        @Query("country") country: String,
-        @Query("category") category: String?,
-    ): Single<ArticlesDTO>
-
-    @GET(TOP_HEADLINES)
     fun getTopicalHeadlinesCategoryCountry(
         @Query("category") category: String,
         @Query("country") country: String?,

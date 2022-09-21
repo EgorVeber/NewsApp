@@ -15,8 +15,7 @@ interface NewsRepo {
         keyWord: String,
     ): Single<ArticlesDTO>    //Не эффективно
 
-    fun getTopicalHeadlinesCountryCategory(country: String, category: String?= null): Single<ArticlesDTO>
-    fun getTopicalHeadlinesCategoryCountry(category: String, country: String?= null): Single<ArticlesDTO>
+    fun getTopicalHeadlinesCategoryCountry(category: String,country: String? = null): Single<ArticlesDTO>
 
     fun getTopicalHeadlinesSourcesKeyWord(
         keyWord: String,

@@ -1,7 +1,6 @@
 package ru.gb.veber.newsapi.model
 
 import com.google.gson.annotations.SerializedName
-import kotlin.collections.ArrayList
 
 data class ArticlesDTO(
     val articles: List<ArticleDTO>,
@@ -28,7 +27,7 @@ data class SourceDTO(
 
 data class SourcesRequestDTO(
     @SerializedName("status") var status: String? = null,
-    @SerializedName("sources") var sources: ArrayList<SourcesDTO> = arrayListOf(),
+    @SerializedName("sources") var sources: List<SourcesDTO> = listOf()
 )
 
 data class SourcesDTO(

@@ -1,18 +1,11 @@
 package ru.gb.veber.newsapi.view.viewpagernews
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.RoundedCorner
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.RoundedCornersTransformation
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.databinding.NewsItemBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.ArticleDTO
 import ru.gb.veber.newsapi.utils.loadGlide
 
 typealias OnUserClickListener = (article: Article) -> Unit

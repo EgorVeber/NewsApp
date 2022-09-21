@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.model.repository
 
-import android.util.Log
 import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.ArticlesDTO
@@ -46,17 +45,11 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         newsApi.getTopicalHeadlinesCountryCategoryKeyword(country, category, keyWord)
             .subscribeDefault()
 
-    override fun getTopicalHeadlinesCountryCategory(
-        country: String,
-        category: String?,
-    ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCountryCategory(country, category).subscribeDefault()
-
     override fun getTopicalHeadlinesCategoryCountry(
         category: String,
         country: String?,
     ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCategoryCountry(category, country).subscribeDefault()
+        newsApi.getTopicalHeadlinesCategoryCountry(category,country).subscribeDefault()
 
 
     override fun getTopicalHeadlinesSourcesKeyWord(

@@ -12,8 +12,8 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentSourcesBinding
 import ru.gb.veber.newsapi.model.SourcesDTO
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
+import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.presenter.FragmentSourcesPresenter
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 

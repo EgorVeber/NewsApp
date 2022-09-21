@@ -13,6 +13,9 @@ class FragmentNewsPresenter(
     private val router: Router,
 ) :
     MvpPresenter<FragmentNewsView>() {
+
+    private var checkFilter = false
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
@@ -32,7 +35,7 @@ class FragmentNewsPresenter(
         //newsRepoDataBaseGetDefaultCategory
         //Какая нибусь сложная штука с любымими источниками или категориями
         //А можно просто по дефолку новости любимой страны например
-        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category,"ru").map { articles ->
+        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, "ru").map { articles ->
             articles.articles.map(::mapToArticle).also {
                 newsRepoImpl.changeRequest(it)
             }
@@ -43,8 +46,8 @@ class FragmentNewsPresenter(
         })
     }
 
-    fun loadNewsCountry(country: String) {
-        newsRepoImpl.getTopicalHeadlinesCountryCategory(country).map { articles ->
+    fun loadNewsCountry(category: String, country: String) {
+        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, country).map { articles ->
             articles.articles.map(::mapToArticle).also {
                 newsRepoImpl.changeRequest(it)
             }
@@ -53,5 +56,23 @@ class FragmentNewsPresenter(
         }, {
             Log.d("TAG", it.localizedMessage)
         })
+    }
+
+    fun filterButtonClick() {
+        if (!checkFilter) {
+            viewState.showFilter()
+            checkFilter = true
+        } else {
+            viewState.hideFilter()
+            checkFilter = false
+        }
+    }
+
+    fun behaviorHide() {
+        checkFilter = false
+    }
+
+    fun visibilityFilterButton() {
+        viewState.visibilityFilterButton()
     }
 }

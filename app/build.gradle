@@ -17,12 +17,14 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String","NEWS_BASE_URL","\"https://newsapi.org/v2/\""
-        buildConfigField "String","KEY_NEWS","\"33804c62820c4b94864ee739f17a8d08\""
+        buildConfigField "String", "NEWS_BASE_URL", "\"https://newsapi.org/v2/\""
+        buildConfigField "String", "KEY_NEWS", "\"33804c62820c4b94864ee739f17a8d08\""
     }
+
     buildFeatures {
         viewBinding true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -48,7 +50,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
 
 
     //Moxy
@@ -79,5 +80,4 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.4.3'
     implementation 'androidx.room:room-rxjava3:2.4.3'
     kapt 'androidx.room:room-compiler:2.4.3'
-
 }

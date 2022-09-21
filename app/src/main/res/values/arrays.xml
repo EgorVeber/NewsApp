@@ -1,9 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="catNames">
-        <item>ru</item>
+    <string-array name="CountryCodeALl">
+        <item>Default</item>
         <item>ar</item>
-        <item>gr</item>
-        <item>hk</item>
+        <item>au</item>
+        <item>br</item>
+        <item>ca</item>
+        <item>de</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>gb</item>
+        <item>ie</item>
+        <item>in</item>
+        <item>is</item>
+        <item>it</item>
+        <item>nl</item>
+        <item>no</item>
+        <item>pk</item>
+        <item>ru</item>
+        <item>sa</item>
+        <item>se</item>
+        <item>us</item>
+        <item>za</item>
+    </string-array>
+    <string-array name="CountryAll">
+        <item>ALL</item>
+        <item>Argentina</item>
+        <item>Australia</item>
+        <item>Brazil</item>
+        <item>Canada</item>
+        <item>Germany</item>
+        <item>Spain</item>
+        <item>France</item>
+        <item>United Kingdom</item>
+        <item>Ireland</item>
+        <item>India</item>
+        <item>Israel</item>
+        <item>Italy</item>
+        <item>Netherlands</item>
+        <item>Norway</item>
+        <item>Pakistan</item>
+        <item>Russia</item>
+        <item>Saudi Arabia</item>
+        <item>Sweden</item>
+        <item>United States</item>
+        <item>South Africa</item>
+    </string-array>
+
+    <string-array name="CountryCode">
+        <item>Default</item>
+        <item>ar</item>
+        <item>au</item>
+        <item>br</item>
+        <item>ca</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>gb</item>
+        <item>it</item>
+        <item>ru</item>
+        <item>us</item>
+    </string-array>
+    <string-array name="Country">
+        <item>ALL</item>
+        <item>Argentina</item>
+        <item>Australia</item>
+        <item>Brazil</item>
+        <item>Canada</item>
+        <item>Germany</item>
+        <item>France</item>
+        <item>United Kingdom</item>
+        <item>Italy</item>
+        <item>Russia</item>
+        <item>United States</item>
     </string-array>
 </resources>

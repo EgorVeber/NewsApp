@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import io.reactivex.rxjava3.core.Observable
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FragmentNewsViewPagerItemBinding
 import ru.gb.veber.newsapi.model.Article
@@ -29,7 +29,9 @@ import ru.gb.veber.newsapi.view.viewpagernews.FragmentNewsAdapter
 class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListener {
 
     private var _binding: FragmentNewsViewPagerItemBinding? = null
+
     private val binding get() = _binding!!
+
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
     private val newsAdapter = FragmentNewsAdapter() {
         presenter.clickNews(it)
@@ -52,9 +54,7 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL)
-        binding.imageViewAll.setOnClickListener {
-            bSheetB.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+
     }
 
     private var listener = object : RecyclerView.OnScrollListener() {
@@ -69,31 +69,19 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
+
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
             addBottomSheetCallback(callBackBehavior)
         }
 
-        Observable.create<Boolean> {
-            it.onNext(true)
-        }.subscribe()
-        //TODO Придумать пагинацию
         binding.recyclerNews.addOnScrollListener(listener)
-        // bSheetB.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
-        var flag = false
         binding.filterButton.setOnClickListener {
-            Log.d("flag", flag.toString())
-            if (!flag) {
-                flag = true
-                bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
-                binding.imageViewAll.show()
-                binding.imageViewDown.show()
-            } else {
-                flag = false
-                bSheetB.state = BottomSheetBehavior.STATE_COLLAPSED
-                binding.imageViewAll.hide()
-                binding.imageViewDown.hide()
+            if (bSheetB.state == BottomSheetBehavior.STATE_EXPANDED) {
+                presenter.loadNewsCountry(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
+                    "us")
             }
+            presenter.filterButtonClick()
         }
     }
 
@@ -106,7 +94,14 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
 
     override fun clickNews(it: Article) {
         Log.d("TAG", "clickNews() called with: it = $it")
+        binding.filterButton.visibility = View.INVISIBLE
+        hideFilter()
+
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.imageViewAll.show()
+        binding.titleNews.show()
+        binding.dateNews.show()
+        binding.descriptionNews.show()
         binding.imageViewAll.loadGlideNot(it.urlToImage)
         binding.dateNews.text = stringFromData(it.publishedAt).formatDateDay()
         binding.titleNews.text = it.title
@@ -114,29 +109,58 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         // autor source url
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun showFilter() {
+        bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.imageViewAll.hide()
+        binding.titleNews.hide()
+        binding.dateNews.hide()
+        binding.descriptionNews.hide()
+        binding.countrySpiner.show()
+        binding.searchViewKeyWord.show()
+        binding.filterTitle.show()
+        binding.filterButton.setImageResource(R.drawable.check_icon)
     }
 
-    override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+    override fun hideFilter() {
+        bSheetB.state = BottomSheetBehavior.STATE_COLLAPSED
+        binding.countrySpiner.hide()
+        binding.searchViewKeyWord.hide()
+        binding.filterTitle.hide()
+        binding.filterButton.setImageResource(R.drawable.filter_icon)
     }
+
+    override fun behaviorHide() {
+        bSheetB.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    override fun visibilityFilterButton() {
+        binding.filterButton.visibility = View.VISIBLE
+    }
+
 
     private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             when (newState) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
-
+                    presenter.behaviorHide()
+                    binding.filterButton.visibility = View.VISIBLE
+                    binding.filterButton.setImageResource(R.drawable.filter_icon)
                 }
+
                 BottomSheetBehavior.STATE_EXPANDED -> {
                 }
             }
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
         }
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+//        if(bSheetB.state==BottomSheetBehavior.STATE_COLLAPSED){
+//            return presenter.onBackPressedRouter(false)
+//        }
+        return presenter.onBackPressedRouter()
     }
 
     companion object {
@@ -147,4 +171,10 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
             }
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

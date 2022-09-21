@@ -19,9 +19,8 @@ import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.*
-import java.text.SimpleDateFormat
-import java.util.*
+import ru.gb.veber.newsapi.utils.subscribeDefault
+
 
 class ActivityMain : MvpAppCompatActivity(), ViewMain {
 
@@ -32,21 +31,34 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         ActivityPresenter(App.instance.router)
     }
 
+    var words: MutableList<String> = mutableListOf()
+    var map: HashMap<String, Int> = HashMap()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.vdfsdfsdfs.setOnClickListener {
-            TransitionSet().also { transition ->
-                transition.duration = 500L
-                transition.addTransition(Slide(Gravity.TOP))
-                transition.addTransition(Fade())
-                TransitionManager.beginDelayedTransition(binding.root, transition)
-            }
-            binding.vdfsdfsdfs.visibility = View.GONE
-            binding.fragmentContainerMain.animate().alpha(1F).duration = 800
-        }
+
+//        NewsRepoImpl(NewsRetrofit.newsTopSingle).getSources().subscribeDefault().subscribe({
+//            it.sources.forEach {
+//                words.add(it.country!!)
+//            }
+//            for (i in 0 until words.size) {
+//                if (map.containsKey(words[i]))
+//                {
+//                    map[words[i]] = map[words[i]]!! + 1
+//                } else
+//                {
+//                    map[words[i]] = 1
+//                }
+//            }
+//
+//            Log.d("TAG", map.toList().sortedBy { it.second }.toMap().toSortedMap().toString())
+//            Log.d("TAG", map.size.toString())
+//        }, {
+//            Log.d("TAG", it.localizedMessage)
+//        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

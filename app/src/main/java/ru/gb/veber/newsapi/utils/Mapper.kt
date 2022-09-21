@@ -1,6 +1,9 @@
 package ru.gb.veber.newsapi.utils
 
-import ru.gb.veber.newsapi.model.*
+import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.ArticleDTO
+import ru.gb.veber.newsapi.model.Source
+import ru.gb.veber.newsapi.model.SourceDTO
 
 
 fun mapToArticle(item: ArticleDTO): Article {

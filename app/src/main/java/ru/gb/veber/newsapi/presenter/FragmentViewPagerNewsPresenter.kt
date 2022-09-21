@@ -3,7 +3,6 @@ package ru.gb.veber.newsapi.presenter
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
-import ru.gb.veber.newsapi.view.viewpagernews.FragmentViewPagerNews
 import ru.gb.veber.newsapi.view.viewpagernews.FragmentViewPagerNewsView
 
 class FragmentViewPagerNewsPresenter(private val router: Router) :
