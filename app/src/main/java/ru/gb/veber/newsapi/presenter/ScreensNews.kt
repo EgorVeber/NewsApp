@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import ru.gb.veber.newsapi.view.newsitem.FragmentNews
+import ru.gb.veber.newsapi.view.newswebview.FragmentNewsWebView
 import ru.gb.veber.newsapi.view.profile.FragmentProfile
 import ru.gb.veber.newsapi.view.sources.FragmentSources
 import ru.gb.veber.newsapi.view.viewpagernews.FragmentViewPagerNews
@@ -31,3 +32,10 @@ object  FragmentViewPagerNewsScreen : FragmentScreen {
         return FragmentViewPagerNews.getInstance()
     }
 }
+
+data class FragmentNewsWebViewScreen(private val url:String) : FragmentScreen {
+    override fun createFragment(factory: FragmentFactory): Fragment {
+        return FragmentNewsWebView.getInstance(url)
+    }
+}
+

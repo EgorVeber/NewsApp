@@ -21,6 +21,7 @@ import ru.gb.veber.newsapi.view.newsitem.FragmentNews
  const val CATEGORY_SPORTS = "Sports"
  const val TECHNOLOGY = 6
  const val CATEGORY_TECHNOLOGY = "Technology"
+ const val DEFAULT_URL = "https://ria.ru/"
 
 
 class NewsAdapter(fragmentManager: FragmentActivity) :

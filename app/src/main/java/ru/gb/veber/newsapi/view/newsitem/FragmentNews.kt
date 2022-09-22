@@ -57,7 +57,6 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL)
-
     }
 
     private var listener = object : RecyclerView.OnScrollListener() {
@@ -78,13 +77,18 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         }
 
         binding.recyclerNews.addOnScrollListener(listener)
-
         binding.filterButton.setOnClickListener {
             if (bSheetB.state == BottomSheetBehavior.STATE_EXPANDED) {
                 presenter.loadNewsCountry(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
                     "us")
             }
             presenter.filterButtonClick()
+        }
+
+
+
+        binding.imageFavorites.setOnClickListener {
+            binding.imageFavorites.setImageResource(R.drawable.ic_baseline_heart_brokenlike)
         }
     }
 
@@ -99,8 +103,6 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         Log.d("TAG", "clickNews() called with: it = $it")
         binding.filterButton.visibility = View.INVISIBLE
         hideFilter()
-
-
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
         binding.imageViewAll.show()
         binding.titleNews.show()
@@ -121,10 +123,15 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         )
 
         binding.descriptionNews.text = spanableStringBuilder
-
         binding.authorText.text = it.author
         binding.sourceText.text = it.source.name
-        // autor source url
+        spanableStringBuilder.removeSpan(spanableStringBuilder)
+
+
+
+        binding.descriptionNews.setOnClickListener {view->
+            presenter.openScreenWebView(it.url)
+        }
     }
 
     override fun showFilter() {
@@ -175,9 +182,7 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
     }
 
     override fun onBackPressedRouter(): Boolean {
-//        if(bSheetB.state==BottomSheetBehavior.STATE_COLLAPSED){
-//            return presenter.onBackPressedRouter(false)
-//        }
+        Log.d("Back", "onBackPressedRouter() FragmentNew override")
         return presenter.onBackPressedRouter()
     }
 
@@ -194,5 +199,4 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         super.onDestroyView()
         _binding = null
     }
-
 }

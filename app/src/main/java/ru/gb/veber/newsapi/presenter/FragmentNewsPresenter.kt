@@ -23,7 +23,7 @@ class FragmentNewsPresenter(
 
     fun onBackPressedRouter(): Boolean {
         router.exit()
-        Log.d("Back", "onBackPressedRouter() News")
+        Log.d("Back", "onBackPressedRouter() FragmentNewsPresenter")
         return true
     }
 
@@ -72,7 +72,7 @@ class FragmentNewsPresenter(
         checkFilter = false
     }
 
-    fun visibilityFilterButton() {
-        viewState.visibilityFilterButton()
+    fun openScreenWebView(url: String) {
+        router.navigateTo(FragmentNewsWebViewScreen(url))
     }
 }

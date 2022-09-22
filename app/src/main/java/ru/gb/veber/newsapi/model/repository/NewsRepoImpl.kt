@@ -29,14 +29,14 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
                 it.source.id = "Не проверенный источник"
             }
 
-            if (it.description.equals("")) {
+            if (it.description.equals("")||it.description==null) {
                 it.description = " Read on ${it.source.name}"
-            }else{
-                it.description+="."
+            } else {
+                it.description += "."
             }
 
-            if (it.author == null) {
-                it.author = "Аноним"
+            if (it.author == null || it.author.equals("") || it.author.equals(" ")) {
+                it.author = "Anonymous source"
             }
             it
         }
@@ -55,7 +55,7 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         category: String,
         country: String?,
     ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCategoryCountry(category,country).subscribeDefault()
+        newsApi.getTopicalHeadlinesCategoryCountry(category, country).subscribeDefault()
 
 
     override fun getTopicalHeadlinesSourcesKeyWord(

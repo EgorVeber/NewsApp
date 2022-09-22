@@ -16,10 +16,7 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
-import ru.gb.veber.newsapi.model.network.NewsRetrofit
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.subscribeDefault
 
 
 class ActivityMain : MvpAppCompatActivity(), ViewMain {
