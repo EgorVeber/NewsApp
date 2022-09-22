@@ -13,7 +13,6 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
 
     override fun changeRequest(list: List<Article>): List<Article> {
         return list.map {
-
             var publishedDate = stringFromData(it.publishedAt)
             var SDF = SimpleDateFormat("yyyy-MM-dd")
 
@@ -29,7 +28,7 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
                 it.source.id = "Не проверенный источник"
             }
 
-            if (it.description.equals("")||it.description==null) {
+            if (it.description.equals("") || it.description == null) {
                 it.description = " Read on ${it.source.name}"
             } else {
                 it.description += "."
@@ -39,6 +38,8 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
                 it.author = "Anonymous source"
             }
             it
+        }.also {
+            it[0].viewType = 1
         }
     }
 

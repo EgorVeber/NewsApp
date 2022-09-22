@@ -12,8 +12,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageNews"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +24,9 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:textSize="16sp"
+            app:layout_constraintVertical_bias="0.1"
             app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/imageNews"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageNews"
             app:layout_constraintTop_toTopOf="@+id/imageNews" />

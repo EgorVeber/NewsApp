@@ -9,6 +9,7 @@ data class Article(
     var title: String,
     var url: String,
     var urlToImage: String?,
+    var viewType: Int=0,
 )
 
 data class Source(

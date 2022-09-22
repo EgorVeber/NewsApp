@@ -94,10 +94,10 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.actionNews -> {
+                R.id.topNews -> {
                     presenter.openScreenNews()
                 }
-                R.id.actionSources -> {
+                R.id.sourcesNews -> {
                     presenter.openScreenSources()
                 }
                 R.id.actionProfile -> {

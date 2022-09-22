@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/actionNews"
+        android:id="@+id/topNews"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/default_icon"
-        android:title="News" />
+        android:title="Top" />
+    <item
+        android:id="@+id/searchNews"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="Search" />
 
     <item
-        android:id="@+id/actionSources"
+        android:id="@+id/allNews"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/sources_icon"
+        android:title="Main" />
+
+    <item
+        android:id="@+id/sourcesNews"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_baseline_accessibility_new_24"
         android:title="Sources" />
 
     <item
         android:id="@+id/actionProfile"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/profile_icon"
         android:title="Profile" />
 </menu>
