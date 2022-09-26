@@ -23,7 +23,7 @@ class FragmentNewsPresenter(
 
     fun onBackPressedRouter(): Boolean {
         router.exit()
-        Log.d("Back", "onBackPressedRouter() FragmentNewsPresenter")
+        Log.d("@@@", "onBackPressedRouter() FragmentNewsPresenter")
         return true
     }
 

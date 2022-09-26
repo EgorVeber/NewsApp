@@ -4,6 +4,8 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.ArticleDTO
 import ru.gb.veber.newsapi.model.Source
 import ru.gb.veber.newsapi.model.SourceDTO
+import ru.gb.veber.newsapi.model.database.data.Account
+import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 
 
 fun mapToArticle(item: ArticleDTO): Article {
@@ -23,5 +25,15 @@ fun mapToSources(item: SourceDTO): Source {
     return Source(
         id = item.id,
         name = item.name
+    )
+}
+
+//ROOM
+fun mapToAccount(item: AccountDbEntity): Account {
+    return Account(
+        id = item.id,
+        userName = item.userName,
+        email = item.email,
+        createdAt = item.createdAt
     )
 }

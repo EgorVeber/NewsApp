@@ -107,9 +107,9 @@
                     android:layout_height="wrap_content"
                     android:background="@color/black2"
                     android:src="@drawable/ic_baseline_heart_broken_24"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
 
                 <TextView
                     android:id="@+id/sourceText"

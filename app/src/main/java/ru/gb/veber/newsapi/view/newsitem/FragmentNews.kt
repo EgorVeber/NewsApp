@@ -68,6 +68,16 @@ class FragmentNews : MvpAppCompatFragment(), FragmentNewsView, BackPressedListen
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d("@@@onSaveInstanceState", "onSaveInstanceState() called with: outState = $outState")
+    }
+
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        Log.d("@@@setMenuVisibility", "setMenuVisibility() called with: menuVisible = $menuVisible")
+    }
+
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())

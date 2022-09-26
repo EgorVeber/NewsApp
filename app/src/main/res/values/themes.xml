@@ -12,7 +12,7 @@
         <item name="android:fitsSystemWindows">true</item>
         <item name="windowNoTitle">true</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/gray3</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/selectedColor</item>
         <!-- Customize your theme here. -->
         <item name="tabStyle">@style/MyTabStyle</item>
     </style>

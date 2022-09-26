@@ -9,6 +9,7 @@ import ru.gb.veber.newsapi.view.activity.ViewMain
 class ActivityPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
 
     override fun onFirstViewAttach() {
+        Log.d("TAG", "onFirstViewAttach() called")
         viewState.init()
         router.replaceScreen(FragmentViewPagerNewsScreen)
         super.onFirstViewAttach()
@@ -23,11 +24,11 @@ class ActivityPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
     }
 
     fun openScreenProfile() {
-        router.navigateTo(FragmentProfileScreen)
+        router.navigateTo(FragmentProfileMainScreen)
     }
 
     fun onBackPressedRouter() {
-        Log.d("Back", "onBackPressedRouter() ActivityPresenter")
+        Log.d("@@@", "onBackPressedRouter() ActivityPresenter")
         router.exit()
     }
 }

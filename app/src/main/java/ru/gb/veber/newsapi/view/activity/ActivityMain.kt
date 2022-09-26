@@ -16,7 +16,9 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
+import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
+import ru.gb.veber.newsapi.utils.subscribeDefault
 
 
 class ActivityMain : MvpAppCompatActivity(), ViewMain {
@@ -35,8 +37,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 //        NewsRepoImpl(NewsRetrofit.newsTopSingle).getSources().subscribeDefault().subscribe({
 //            it.sources.forEach {
 //                words.add(it.country!!)
@@ -112,16 +112,21 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
     }
 
     override fun onBackPressed() {
-        if (binding.vdfsdfsdfs.visibility == View.VISIBLE) {
-            binding.vdfsdfsdfs.visibility = View.GONE
-            return
-        }
+
+
+        Log.d("@@@", "onBackPressed")
+//        if (binding.vdfsdfsdfs.visibility == View.VISIBLE) {
+//            binding.vdfsdfsdfs.visibility = View.GONE
+//            return
+//        }
         supportFragmentManager.fragments.forEach { fragment ->
-            Log.d("Back", "onBackPressed() called with: fragment = $fragment")
+            Log.d("@@@", "onBackPressed() forEach  fragment = $fragment")
             if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
+                Log.d("@@@", "onBackPressed if")
                 return
             }
         }
+        Log.d("@@@", "onBackPressed forEach after")
         presenter.onBackPressedRouter()
     }
 }

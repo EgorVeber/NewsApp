@@ -3,6 +3,7 @@ package ru.gb.veber.newsapi.core
 import android.app.Application
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
+import ru.gb.veber.newsapi.model.database.NewsDataBase
 
 class App : Application() {
 
@@ -10,9 +11,13 @@ class App : Application() {
     val router = cicerone.router
     val navigationHolder = cicerone.getNavigatorHolder()
 
-   // private lateinit var connetivityListener: ConnetivityListener
+    val newsDb: NewsDataBase by lazy {
+        NewsDataBase.createDb(this)
+    }
 
-  //  val database: GithubDB by lazy { GithubDB.create(this) }
+    // private lateinit var connetivityListener: ConnetivityListener
+
+    //  val database: GithubDB by lazy { GithubDB.create(this) }
 
     override fun onCreate() {
         super.onCreate()

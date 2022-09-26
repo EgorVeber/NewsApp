@@ -5,7 +5,9 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.gb.veber.newsapi.R
@@ -16,17 +18,22 @@ fun <T> Single<T>.subscribeDefault(): Single<T> {
     return this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 }
 
+fun Completable.subscribeDefault(): Completable {
+    return this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+}
+
 fun ImageView.loadGlide(url: String?) {
     Glide.with(context).load(url)
         .placeholder(R.drawable.loading1)
-        .error(R.drawable.plaecehodler2)
+        .error(R.drawable.riaplaceholder)
         .transform(MultiTransformation(RoundedCorners(25)))
         .into(this)
 }
+
 fun ImageView.loadGlideNot(url: String?) {
     Glide.with(context).load(url)
         .placeholder(R.drawable.loading1)
-        .error(R.drawable.plaecehodler2)
+        .error(R.drawable.riaplaceholder)
         .into(this)
 }
 
@@ -39,11 +46,14 @@ const val FORMAT_DATE_DAY = "dd MMMM yyyy, HH:mm"
 
 fun Date.formatHour(): String = SimpleDateFormat(FORMAT_HOUR, Locale.getDefault()).format(this)
 fun Date.formatDate(): String = SimpleDateFormat(FORMAT_DATE, Locale.getDefault()).format(this)
-fun Date.formatDateTime(): String = SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault()).format(this)
-fun Date.formatDateDay(): String = SimpleDateFormat(FORMAT_DATE_DAY, Locale.getDefault()).format(this)
+fun Date.formatDateTime(): String =
+    SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault()).format(this)
+
+fun Date.formatDateDay(): String =
+    SimpleDateFormat(FORMAT_DATE_DAY, Locale.getDefault()).format(this)
 
 fun stringFromData(dateString: String) =
-    SimpleDateFormat(FORMAT_DATE_REQUEST, Locale.getDefault()).parse(dateString)?:Date()
+    SimpleDateFormat(FORMAT_DATE_REQUEST, Locale.getDefault()).parse(dateString) ?: Date()
 
 fun takeDate(count: Int): Date {
     val currentDate = Calendar.getInstance()
@@ -68,5 +78,15 @@ fun View.show(): View {
         visibility = View.VISIBLE
     }
     return this
+}
+
+fun View.showSnackBarError(
+    text: String,
+    actionText: String,
+    action: (View) -> Unit,
+    length: Int = Snackbar.LENGTH_LONG
+) {
+    Snackbar.make(this, text, length)
+        .setAction(actionText, action).show()
 }
 

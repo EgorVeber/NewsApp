@@ -22,14 +22,13 @@
             android:id="@+id/title"
             style="@style/sources_text"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
             android:textSize="16sp"
-            app:layout_constraintVertical_bias="0.1"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@+id/imageNews"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageNews"
-            app:layout_constraintTop_toTopOf="@+id/imageNews" />
+            app:layout_constraintTop_toTopOf="@+id/imageNews"
+            app:layout_constraintVertical_bias="0.001" />
 
         <TextView
             android:id="@+id/publishedAt"
