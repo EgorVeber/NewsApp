@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.snackbar.Snackbar
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
@@ -41,6 +40,7 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
         }
 
         binding.signUpButton.setOnClickListener {
+
             var username = binding.userNameEditText.text.toString()
             var email = binding.emailEditText.text.toString()
             var password = binding.passwordEditText.text.toString()
