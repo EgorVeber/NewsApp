@@ -3,12 +3,21 @@ package ru.gb.veber.newsapi.view.profile
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
+import android.text.style.UnderlineSpan
+import android.transition.Transition
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat
 import androidx.transition.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -45,37 +54,28 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
 
     override fun init() {
 
+        var spanableStringBuilder =
+            SpannableStringBuilder(getString(R.string.TermsOfUserRegister))
+        spanableStringBuilder.setSpan(ForegroundColorSpan(resources.getColor(R.color.selectedColor)),
+            41, 55, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        spanableStringBuilder.setSpan(ForegroundColorSpan(resources.getColor(R.color.selectedColor)),
+            60, 76, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        spanableStringBuilder.setSpan(UnderlineSpan(),41,55, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spanableStringBuilder.setSpan(UnderlineSpan(),60,76, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        binding.teamSign.text = spanableStringBuilder
+        spanableStringBuilder.removeSpan(spanableStringBuilder)
+
+
+        binding.teamSign.setOnClickListener {
+            presenter.openScreenWebView(getString(R.string.teamSite))
+        }
 
         binding.homePageBack.setOnClickListener {
             presenter.openMain()
         }
-
-//        binding.signInButton.setOnClickListener {
-//            presenter.openScreenProfile()
-//            // (requireActivity() as TestDate).getIdFragment(5)
-//        }
-//
-//        binding.changeRegisterButton.setOnClickListener {
-//            TransitionSet().also { transition ->
-//                transition.duration = 500L
-//                transition.addTransition(Fade())
-//                transition.addTransition(Slide(Gravity.END))
-//                TransitionManager.beginDelayedTransition(binding.root, transition)
-//            }
-//            binding.group1.hide()
-//            binding.group2.show()
-//        }
-//
-//        binding.changeSignButton.setOnClickListener {
-//            TransitionSet().also { transition ->
-//                transition.duration = 500L
-//                transition.addTransition(Fade())
-//                transition.addTransition(Slide(Gravity.START))
-//                TransitionManager.beginDelayedTransition(binding.root, transition)
-//            }
-//            binding.group1.show()
-//            binding.group2.hide()
-//        }
 
 
         var constraintSetLogin = ConstraintSet()
@@ -103,6 +103,15 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
                 ConstraintSet.END,
                 R.id.constraintLayoutSet,
                 ConstraintSet.END)
+            constraintSetLogin.applyTo(binding.root)
+
+
+
+            constraintSetLogin.clear(R.id.teamSign, ConstraintSet.TOP)
+            constraintSetLogin.connect(R.id.teamSign,
+                ConstraintSet.TOP,
+                R.id.changeSignButton,
+                ConstraintSet.BOTTOM)
             constraintSetLogin.applyTo(binding.root)
 
 
@@ -138,6 +147,13 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
                 ConstraintSet.END,
                 R.id.constraintLayoutSet,
                 ConstraintSet.END)
+            constraintSetLogin.applyTo(binding.root)
+
+
+            constraintSetLogin.clear(R.id.teamSign, ConstraintSet.TOP)
+            constraintSetLogin.connect(R.id.teamSign, ConstraintSet.TOP,
+                R.id.changeRegisterButton,
+                ConstraintSet.BOTTOM)
             constraintSetLogin.applyTo(binding.root)
 
         }

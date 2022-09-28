@@ -44,4 +44,8 @@ class FragmentAuthorizationPresenter(
     fun openMain() {
         viewState.sendActivityOpenScreen()
     }
+
+    fun openScreenWebView(string: String) {
+        router.navigateTo(FragmentNewsWebViewScreen(string))
+    }
 }

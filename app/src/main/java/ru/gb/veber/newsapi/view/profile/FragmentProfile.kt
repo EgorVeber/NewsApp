@@ -44,16 +44,6 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
         binding.progressBar.max = 100
         binding.progressBar.progress = 10
 
-
-        var spanableStringBuilder =
-            SpannableStringBuilder(binding.textviewsda.text)
-        spanableStringBuilder.setSpan(
-            ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
-            spanableStringBuilder.length - 1,
-            spanableStringBuilder.length,
-            Spannable.SPAN_INCLUSIVE_INCLUSIVE
-        )
-
         binding.textviewsda.setOnClickListener {
             Log.d("TAG", "init() called")
         }
