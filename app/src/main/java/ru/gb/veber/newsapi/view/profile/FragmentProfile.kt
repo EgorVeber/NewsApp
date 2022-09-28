@@ -34,6 +34,11 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("arguments",arguments?.getInt(ACCOUNT_ID,4).toString())
+    }
+
     override fun init() {
 
         binding.progressBar.max = 100
@@ -64,8 +69,11 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
     }
 
     companion object {
-        fun getInstance(): FragmentProfile {
-            return FragmentProfile()
+        private const val  ACCOUNT_ID = "ACCOUNT_ID"
+        fun getInstance(accountID: Int): FragmentProfile {
+            return FragmentProfile().apply {
+                arguments?.putInt(ACCOUNT_ID, accountID)
+            }
         }
     }
 }

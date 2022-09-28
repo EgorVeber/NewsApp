@@ -5,6 +5,7 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.RoomRepoImpl
+import ru.gb.veber.newsapi.presenter.FragmentProfileMainPresenter.Companion.TEST_BUNDLE
 import ru.gb.veber.newsapi.view.profile.FragmentAuthorizationView
 import java.util.*
 
@@ -31,12 +32,16 @@ class FragmentAuthorizationPresenter(
             .subscribe({
                 viewState.success()
             }, {
-
-                Log.d("ERROR_DB",it.localizedMessage)
+                viewState.error()
+                Log.d("ERROR_DB", it.localizedMessage)
             })
     }
 
     fun openScreenProfile() {
-        router.navigateTo(FragmentProfileScreen)
+        router.navigateTo(FragmentProfileScreen(TEST_BUNDLE))
+    }
+
+    fun openMain() {
+        viewState.sendActivityOpenScreen()
     }
 }

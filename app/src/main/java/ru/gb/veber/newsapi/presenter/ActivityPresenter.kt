@@ -11,7 +11,7 @@ class ActivityPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
     override fun onFirstViewAttach() {
         Log.d("TAG", "onFirstViewAttach() called")
         viewState.init()
-        router.replaceScreen(FragmentViewPagerNewsScreen)
+        router.replaceScreen(FragmentProfileMainScreen)
         super.onFirstViewAttach()
     }
 

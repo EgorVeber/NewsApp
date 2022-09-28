@@ -21,7 +21,15 @@ import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.utils.subscribeDefault
 
 
-class ActivityMain : MvpAppCompatActivity(), ViewMain {
+interface TestDate {
+    fun getIdFragment(id: Int)
+}
+interface OpenScreen {
+    fun openMainScreen()
+}
+
+
+class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate,OpenScreen {
 
     private lateinit var binding: ActivityMainBinding
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
@@ -108,6 +116,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         }
 
         binding.bottomNavigationView.setOnItemReselectedListener {
+
         }
     }
 
@@ -128,5 +137,13 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain {
         }
         Log.d("@@@", "onBackPressed forEach after")
         presenter.onBackPressedRouter()
+    }
+
+    override fun getIdFragment(id: Int) {
+        binding.bottomNavigationView.selectedItemId = R.id.sourcesNews
+    }
+
+    override fun openMainScreen() {
+        binding.bottomNavigationView.selectedItemId = R.id.allNews
     }
 }

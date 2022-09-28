@@ -8,4 +8,6 @@ import moxy.viewstate.strategy.StateStrategyType
 interface FragmentAuthorizationView:MvpView {
     fun init()
     fun success()
+    fun error()
+    fun sendActivityOpenScreen()
 }

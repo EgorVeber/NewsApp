@@ -8,7 +8,7 @@ import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 @Dao
 interface AccountsDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun createAccount(accountDbEntity: AccountDbEntity): Completable
 
     @Update

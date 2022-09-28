@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NewsAPI</string>
+    <string name="TermsOfUserRegister">Clicking Register
+You agree to the User Agreement and the Commenting Rules.</string>
+    <string name="TermsOfUserSign">Clicking enter
+You agree to the User Agreement and the Commenting Rules.</string>
 </resources>

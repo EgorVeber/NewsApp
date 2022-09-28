@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.presenter
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
@@ -36,11 +37,29 @@ data class  FragmentNewsScreen(private val category:String) : FragmentScreen {
     }
 }
 
-object  FragmentProfileScreen : FragmentScreen {
+data class FragmentProfileScreen(private val accountId:Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return FragmentProfile.getInstance()
+        return FragmentProfile.getInstance(accountId)
     }
 }
+
+
+//
+//data class UserScreen(private val userLogin: String) : FragmentScreen {
+//    override fun createFragment(factory: FragmentFactory): Fragment {
+//        return UserDetailsFragment.newInstance(userLogin)
+//    }
+//}
+//
+//data class RepoScreen(private val repo: ReposDto) : FragmentScreen {
+//    override fun createFragment(factory: FragmentFactory): Fragment {
+//        return RepoUserFragment.getInstance(Bundle().apply {
+//            putParcelable(KEY_REPO,repo)
+//        })
+//    }
+//}
+//
+
 
 object  FragmentViewPagerNewsScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {

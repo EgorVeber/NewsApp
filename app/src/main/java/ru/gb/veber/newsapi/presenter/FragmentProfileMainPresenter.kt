@@ -20,11 +20,14 @@ class FragmentProfileMainPresenter(private val router: Router) :
         return true
     }
 
-    fun openScreenProfile() {
-        router.replaceScreen(FragmentProfileScreen)
+    fun openScreenProfile(accountId: Int) {
+        router.replaceScreen(FragmentProfileScreen(accountId))
     }
 
     fun openScreenAuthorization() {
         router.replaceScreen(FragmentAuthorizationScreen)
+    }
+    companion object{
+        const val TEST_BUNDLE = 999
     }
 }
