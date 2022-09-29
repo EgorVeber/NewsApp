@@ -25,7 +25,4 @@ class FragmentProfileMainPresenter(private val router: Router) :
     fun openScreenAuthorization() {
         router.replaceScreen(FragmentAuthorizationScreen)
     }
-    companion object{
-        const val TEST_BUNDLE = 999
-    }
 }

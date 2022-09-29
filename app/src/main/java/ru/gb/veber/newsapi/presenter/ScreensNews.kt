@@ -11,62 +11,44 @@ import ru.gb.veber.newsapi.view.profile.FragmentProfileMain
 import ru.gb.veber.newsapi.view.sources.FragmentSources
 import ru.gb.veber.newsapi.view.viewpagernews.FragmentViewPagerNews
 
-object  FragmentSourcesScreen : FragmentScreen {
+object FragmentSourcesScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return FragmentSources.getInstance()
     }
 }
 
-object  FragmentAuthorizationScreen : FragmentScreen {
+object FragmentAuthorizationScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return FragmentAuthorization.getInstance()
     }
 }
 
 
-object  FragmentProfileMainScreen : FragmentScreen {
+object FragmentProfileMainScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return FragmentProfileMain.getInstance()
     }
 }
 
-data class  FragmentNewsScreen(private val category:String) : FragmentScreen {
+data class FragmentNewsScreen(private val category: String) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return FragmentNews.getInstance(category)
     }
 }
 
-data class FragmentProfileScreen(private val accountId:Int) : FragmentScreen {
+data class FragmentProfileScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return FragmentProfile.getInstance(accountId)
     }
 }
 
-
-//
-//data class UserScreen(private val userLogin: String) : FragmentScreen {
-//    override fun createFragment(factory: FragmentFactory): Fragment {
-//        return UserDetailsFragment.newInstance(userLogin)
-//    }
-//}
-//
-//data class RepoScreen(private val repo: ReposDto) : FragmentScreen {
-//    override fun createFragment(factory: FragmentFactory): Fragment {
-//        return RepoUserFragment.getInstance(Bundle().apply {
-//            putParcelable(KEY_REPO,repo)
-//        })
-//    }
-//}
-//
-
-
-object  FragmentViewPagerNewsScreen : FragmentScreen {
+object FragmentViewPagerNewsScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return FragmentViewPagerNews.getInstance()
     }
 }
 
-data class FragmentNewsWebViewScreen(private val url:String) : FragmentScreen {
+data class FragmentNewsWebViewScreen(private val url: String) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return FragmentNewsWebView.getInstance(url)
     }

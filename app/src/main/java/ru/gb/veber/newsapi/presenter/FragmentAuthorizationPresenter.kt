@@ -2,10 +2,10 @@ package ru.gb.veber.newsapi.presenter
 
 import android.util.Log
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.RoomRepoImpl
-import ru.gb.veber.newsapi.presenter.FragmentProfileMainPresenter.Companion.TEST_BUNDLE
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.FragmentAuthorizationView
 import java.util.*
@@ -15,6 +15,8 @@ class FragmentAuthorizationPresenter(
     private val roomRepoImpl: RoomRepoImpl,
 ) :
     MvpPresenter<FragmentAuthorizationView>() {
+
+    private val bag = CompositeDisposable()
 
     override fun onFirstViewAttach() {
         Log.d("TAG", "onFirstViewAttach() called")
@@ -30,16 +32,36 @@ class FragmentAuthorizationPresenter(
 
     fun createAccount(username: String, email: String, password: String) {
         roomRepoImpl.createAccount(AccountDbEntity(0, username, password, email, Date().toString()))
-            .subscribe({
-                viewState.successRegister()
+            .andThen(roomRepoImpl.getAccountByUserName(username)).subscribe({
+                Log.d("ERROR_DB", it.toString())
+                viewState.successRegister(it.id)
+                saveIdSharedPref(it.id)
             }, {
                 viewState.errorRegister()
                 Log.d("ERROR_DB", it.localizedMessage)
-            })
+            }).disposebleBy(bag)
     }
 
-    fun openScreenProfile() {
-        router.navigateTo(FragmentProfileScreen(TEST_BUNDLE))
+    fun checkSignIn(userLogin: String, userPassword: String) {
+        roomRepoImpl.getAccountByUserName(userLogin).subscribe({
+            if (it.password.contains(userPassword)) {
+                viewState.successSignIn(it.id)
+                saveIdSharedPref(it.id)
+            } else {
+                viewState.errorSignIn()
+            }
+        }, {
+            Log.d("ERROR_DB", it.localizedMessage)
+            viewState.emptyAccount()
+        }).disposebleBy(bag)
+    }
+
+    private fun saveIdSharedPref(id:Int){
+        viewState.saveIdSharedPref(id)
+    }
+
+    fun openScreenProfile(id: Int) {
+        router.navigateTo(FragmentProfileScreen(id))
     }
 
     fun openMain() {
@@ -58,18 +80,6 @@ class FragmentAuthorizationPresenter(
         viewState.setLoginAnim()
     }
 
-    fun checkSignIn(userLogin: String, userPassword: String) {
-        roomRepoImpl.getAccountByUserName(userLogin).subscribe({
-            if (it.password.contains(userPassword)) {
-                viewState.successSignIn()
-            } else {
-                viewState.errorSignIn()
-            }
-        }, {
-            Log.d("ERROR_DB", it.localizedMessage)
-            viewState.emptyAccount()
-        })
-    }
 
     fun loginValidation(it: CharSequence?) {
         if (LOGIN_PATTERN.matcher(it).matches()) {
@@ -109,5 +119,10 @@ class FragmentAuthorizationPresenter(
         } else {
             viewState.emailRegisterNotValidate()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bag.dispose()
     }
 }

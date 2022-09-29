@@ -32,7 +32,7 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("arguments",arguments?.getInt(ACCOUNT_ID,4).toString())
+        Log.d("arguments",arguments?.getInt(ACCOUNT_ID,0).toString())
     }
 
     override fun init() {
@@ -58,7 +58,9 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
         private const val  ACCOUNT_ID = "ACCOUNT_ID"
         fun getInstance(accountID: Int): FragmentProfile {
             return FragmentProfile().apply {
-                arguments?.putInt(ACCOUNT_ID, accountID)
+                arguments=Bundle().apply {
+                    putInt(ACCOUNT_ID, accountID)
+                }
             }
         }
     }

@@ -8,9 +8,9 @@ import moxy.viewstate.strategy.StateStrategyType
 interface FragmentAuthorizationView : MvpView {
     fun init()
 
-    fun successRegister()
+    fun successRegister(id: Int)
     fun errorRegister()
-    fun successSignIn()
+    fun successSignIn(id: Int)
     fun errorSignIn()
 
     fun sendActivityOpenScreen()
@@ -33,6 +33,8 @@ interface FragmentAuthorizationView : MvpView {
     fun emailRegisterNotValidate()
 
     fun emptyAccount()
+
+   fun saveIdSharedPref(id: Int)
 
 
 }

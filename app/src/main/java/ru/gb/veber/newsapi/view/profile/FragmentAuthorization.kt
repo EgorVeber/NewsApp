@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.view.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -155,8 +156,9 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
             })
     }
 
-    override fun successRegister() {
-        binding.root.showSnackBarError("Account created successfully", "", {})
+
+    override fun errorSignIn() {
+        binding.passwordTextInput.error = "Invalid password"
     }
 
     override fun errorRegister() {
@@ -165,13 +167,20 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
         binding.root.showSnackBarError("Email and username must be unique", "", {})
     }
 
-    override fun successSignIn() {
+    override fun successSignIn(id: Int) {
         binding.root.showSnackBarError("Successful authorization", "", {})
+        presenter.openScreenProfile(id)
     }
 
-    override fun errorSignIn() {
-        binding.passwordTextInput.error = "Invalid password"
-        binding.root.showSnackBarError("Password is wrong", "", {})
+    override fun successRegister(id: Int) {
+        binding.root.showSnackBarError("Account created successfully", "", {})
+        presenter.openScreenProfile(id)
+    }
+
+    override fun saveIdSharedPref(id: Int) {
+        requireActivity().getSharedPreferences(FragmentProfileMain.FILE_SETTINGS,
+            Context.MODE_PRIVATE).edit().putInt(
+            FragmentProfileMain.ACCOUNT_ID, id).apply()
     }
 
     override fun sendActivityOpenScreen() {
@@ -181,6 +190,7 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
     override fun emptyAccount() {
         binding.userNameTextInput.error = "This user does not exist"
     }
+
 
     override fun loginIsValidate(charSequence: CharSequence?) {
         binding.userNameTextInput.error = null

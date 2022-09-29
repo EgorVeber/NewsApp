@@ -1,6 +1,8 @@
 package ru.gb.veber.newsapi.view.profile
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,11 +33,12 @@ class FragmentProfileMain : MvpAppCompatFragment(), FragmentProfileMainView, Bac
     }
 
     override fun init() {
-//    requireActivity().getSharedPreferences(FILE_SETTINGS, Context.MODE_PRIVATE).edit().putInt(
-//        ACCOUNT_ID, 0).apply()
-        val accountId =
-            requireActivity().getSharedPreferences(FILE_SETTINGS, AppCompatActivity.MODE_PRIVATE)
-                .getInt(ACCOUNT_ID, 0)
+
+        val accountId = requireActivity()
+            .getSharedPreferences(FILE_SETTINGS, AppCompatActivity.MODE_PRIVATE)
+            .getInt(ACCOUNT_ID, 0)
+
+        Log.d("ACCOUNT_ID", accountId.toString())
         if (accountId != 0) {
             presenter.openScreenProfile(accountId)
         } else {
