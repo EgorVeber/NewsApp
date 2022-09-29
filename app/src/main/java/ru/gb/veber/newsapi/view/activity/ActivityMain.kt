@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.view.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -16,20 +17,21 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
-import ru.gb.veber.newsapi.model.database.dao.AccountsDao
-import ru.gb.veber.newsapi.model.repository.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
+import ru.gb.veber.newsapi.view.profile.FragmentAuthorization
+import ru.gb.veber.newsapi.view.profile.FragmentProfileMain
 
 
 interface TestDate {
     fun getIdFragment(id: Int)
 }
+
 interface OpenScreen {
     fun openMainScreen()
 }
 
 
-class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate,OpenScreen {
+class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
 
     private lateinit var binding: ActivityMainBinding
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
@@ -45,6 +47,11 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate,OpenScreen {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+//        getSharedPreferences(FragmentProfileMain.FILE_SETTINGS,
+//            Context.MODE_PRIVATE).edit().putInt(
+//            FragmentProfileMain.ACCOUNT_ID, 0).apply()
 
 
 //      RoomRepoImpl(App.instance.newsDb.accountsDao()).deleteAllAccount().subscribe({
@@ -121,7 +128,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate,OpenScreen {
             }
             true
         }
-
         binding.bottomNavigationView.setOnItemReselectedListener {
 
         }
@@ -129,28 +135,23 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate,OpenScreen {
 
     override fun onBackPressed() {
 
-
-        Log.d("@@@", "onBackPressed")
-//        if (binding.vdfsdfsdfs.visibility == View.VISIBLE) {
-//            binding.vdfsdfsdfs.visibility = View.GONE
-//            return
-//        }
         supportFragmentManager.fragments.forEach { fragment ->
-            Log.d("@@@", "onBackPressed() forEach  fragment = $fragment")
+            Log.d("NavigateActivityBack", "onBackPressed() forEach  fragment = $fragment")
             if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
-                Log.d("@@@", "onBackPressed if")
+                Log.d("NavigateActivityBack", "onBackPressed if")
                 return
             }
         }
-        Log.d("@@@", "onBackPressed forEach after")
+
+        Log.d("NavigateActivityBack", "onBackPressed forEach after")
         presenter.onBackPressedRouter()
     }
 
     override fun getIdFragment(id: Int) {
-        binding.bottomNavigationView.selectedItemId = R.id.sourcesNews
+        // binding.bottomNavigationView.selectedItemId = R.id.sourcesNews
     }
 
     override fun openMainScreen() {
-        binding.bottomNavigationView.selectedItemId = R.id.allNews
+        // binding.bottomNavigationView.selectedItemId = R.id.allNews
     }
 }

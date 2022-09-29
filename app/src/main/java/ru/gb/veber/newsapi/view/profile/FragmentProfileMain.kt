@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.view.profile
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,21 +15,13 @@ import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
 class FragmentProfileMain : MvpAppCompatFragment(), FragmentProfileMainView, BackPressedListener {
 
-    private var _binding: FragmentProfileMainBinding? = null
-    private val binding get() = _binding!!
+
 
     private val presenter: FragmentProfileMainPresenter by moxyPresenter {
         FragmentProfileMainPresenter(App.instance.router)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentProfileMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+
 
     override fun init() {
 
@@ -46,10 +37,6 @@ class FragmentProfileMain : MvpAppCompatFragment(), FragmentProfileMainView, Bac
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     override fun onBackPressedRouter(): Boolean {
         return presenter.onBackPressedRouter()

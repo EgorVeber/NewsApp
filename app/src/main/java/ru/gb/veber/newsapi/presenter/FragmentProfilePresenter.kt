@@ -12,7 +12,7 @@ class FragmentProfilePresenter(private val router: Router) :
         viewState.init()
     }
     fun onBackPressedRouter(): Boolean {
-        router.backTo(FragmentViewPagerNewsScreen)
+        router.exit()
         Log.d("Back", "onBackPressedRouter() Profile")
         return true
     }

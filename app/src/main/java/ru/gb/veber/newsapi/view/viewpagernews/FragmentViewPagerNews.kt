@@ -34,9 +34,7 @@ class FragmentViewPagerNews : MvpAppCompatFragment(), FragmentViewPagerNewsView,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewPager.adapter = NewsAdapter(requireActivity())
-        TabLayoutMediator(
-            binding.tabLayout, binding.viewPager
-        ) { tab, position ->
+         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 BUSINESS -> tab.text = CATEGORY_BUSINESS
                 ENTERTAINMENT -> tab.text = CATEGORY_ENTERTAINMENT
@@ -47,7 +45,6 @@ class FragmentViewPagerNews : MvpAppCompatFragment(), FragmentViewPagerNewsView,
                 TECHNOLOGY -> tab.text = CATEGORY_TECHNOLOGY
             }
         }.attach()
-
     }
 
     override fun init() {
