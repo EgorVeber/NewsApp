@@ -16,9 +16,7 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
-import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.subscribeDefault
 
 
 interface TestDate {

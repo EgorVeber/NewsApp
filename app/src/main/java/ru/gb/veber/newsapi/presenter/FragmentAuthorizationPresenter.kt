@@ -3,9 +3,14 @@ package ru.gb.veber.newsapi.presenter
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.FragmentProfileMainPresenter.Companion.TEST_BUNDLE
+import ru.gb.veber.newsapi.utils.LOGIN_PATTERN
+import ru.gb.veber.newsapi.utils.LOGIN_STR
+import ru.gb.veber.newsapi.utils.PASSWORD_PATTERN
+import ru.gb.veber.newsapi.utils.PASSWORD_STR
 import ru.gb.veber.newsapi.view.profile.FragmentAuthorizationView
 import java.util.*
 
@@ -47,5 +52,33 @@ class FragmentAuthorizationPresenter(
 
     fun openScreenWebView(string: String) {
         router.navigateTo(FragmentNewsWebViewScreen(string))
+    }
+
+    fun changeRegisterAnim() {
+        viewState.setRegisterAnim()
+    }
+
+    fun changeLoginAnim() {
+        viewState.setLoginAnim()
+    }
+
+    fun getPasswordToLogin(userLogin: String, userPassword: String) {
+        roomRepoImpl.getAccountByUserName(userLogin)
+    }
+
+    fun loginValidation(it: CharSequence?) {
+        if (LOGIN_PATTERN.matcher(it).matches()) {
+            viewState.loginIsValidate(it)
+        } else {
+            viewState.loginNotValidate()
+        }
+    }
+
+    fun passwordValidation(it: CharSequence?) {
+        if (PASSWORD_PATTERN.matcher(it).matches()) {
+            viewState.passwordIsValidate(it)
+        } else {
+            viewState.passwordNotValidate(it)
+        }
     }
 }

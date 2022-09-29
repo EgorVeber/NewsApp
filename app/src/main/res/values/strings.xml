@@ -3,4 +3,5 @@
     <string name="TermsOfUserRegister">Click Register or Login
 You agree to the User Agreement and Commenting Rules.</string>
     <string name="teamSite"><![CDATA[https://mservices.ria.ru/docs/get/article?project=ria.ru&lang=rus&article_id=1748006692]]></string>
+    <string name="errorInputEmail">Wrong format</string>
 </resources>

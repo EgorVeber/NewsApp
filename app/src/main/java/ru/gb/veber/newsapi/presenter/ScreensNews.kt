@@ -1,12 +1,11 @@
 package ru.gb.veber.newsapi.presenter
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import ru.gb.veber.newsapi.view.profile.FragmentAuthorization
 import ru.gb.veber.newsapi.view.newsitem.FragmentNews
 import ru.gb.veber.newsapi.view.newswebview.FragmentNewsWebView
+import ru.gb.veber.newsapi.view.profile.FragmentAuthorization
 import ru.gb.veber.newsapi.view.profile.FragmentProfile
 import ru.gb.veber.newsapi.view.profile.FragmentProfileMain
 import ru.gb.veber.newsapi.view.sources.FragmentSources

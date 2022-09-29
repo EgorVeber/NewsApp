@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.NewsItemBinding
 import ru.gb.veber.newsapi.databinding.NewsItemHeaderBinding

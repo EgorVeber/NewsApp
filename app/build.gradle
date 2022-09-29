@@ -64,6 +64,9 @@ dependencies {
     //RxJava
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.13'
+    //binging
+    implementation 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+
 
     //Retrofit
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'

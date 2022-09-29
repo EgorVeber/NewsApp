@@ -10,4 +10,10 @@ interface FragmentAuthorizationView:MvpView {
     fun success()
     fun error()
     fun sendActivityOpenScreen()
+    fun setRegisterAnim()
+    fun setLoginAnim()
+    fun loginIsValidate(charSequence: CharSequence?)
+    fun loginNotValidate()
+     fun passwordIsValidate(it: CharSequence?)
+     fun passwordNotValidate(it: CharSequence?)
 }
