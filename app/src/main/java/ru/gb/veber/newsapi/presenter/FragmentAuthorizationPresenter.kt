@@ -3,14 +3,10 @@ package ru.gb.veber.newsapi.presenter
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
-import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.FragmentProfileMainPresenter.Companion.TEST_BUNDLE
-import ru.gb.veber.newsapi.utils.LOGIN_PATTERN
-import ru.gb.veber.newsapi.utils.LOGIN_STR
-import ru.gb.veber.newsapi.utils.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.utils.PASSWORD_STR
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.FragmentAuthorizationView
 import java.util.*
 
@@ -35,9 +31,9 @@ class FragmentAuthorizationPresenter(
     fun createAccount(username: String, email: String, password: String) {
         roomRepoImpl.createAccount(AccountDbEntity(0, username, password, email, Date().toString()))
             .subscribe({
-                viewState.success()
+                viewState.successRegister()
             }, {
-                viewState.error()
+                viewState.errorRegister()
                 Log.d("ERROR_DB", it.localizedMessage)
             })
     }
@@ -62,8 +58,17 @@ class FragmentAuthorizationPresenter(
         viewState.setLoginAnim()
     }
 
-    fun getPasswordToLogin(userLogin: String, userPassword: String) {
-        roomRepoImpl.getAccountByUserName(userLogin)
+    fun checkSignIn(userLogin: String, userPassword: String) {
+        roomRepoImpl.getAccountByUserName(userLogin).subscribe({
+            if (it.password.contains(userPassword)) {
+                viewState.successSignIn()
+            } else {
+                viewState.errorSignIn()
+            }
+        }, {
+            Log.d("ERROR_DB", it.localizedMessage)
+            viewState.emptyAccount()
+        })
     }
 
     fun loginValidation(it: CharSequence?) {
@@ -79,6 +84,30 @@ class FragmentAuthorizationPresenter(
             viewState.passwordIsValidate(it)
         } else {
             viewState.passwordNotValidate(it)
+        }
+    }
+
+    fun passwordRegisterValidation(it: CharSequence?) {
+        if (PASSWORD_PATTERN.matcher(it).matches()) {
+            viewState.passwordRegisterIsValidate(it)
+        } else {
+            viewState.passwordRegisterNotValidate(it)
+        }
+    }
+
+    fun loginRegisterValidation(it: CharSequence?) {
+        if (LOGIN_PATTERN.matcher(it).matches()) {
+            viewState.loginRegisterIsValidate(it)
+        } else {
+            viewState.loginRegisterNotValidate()
+        }
+    }
+
+    fun emailRegisterValidation(it: CharSequence?) {
+        if (EMAIL_PATTERN.matcher(it).matches()) {
+            viewState.emailRegisterIsValidate(it)
+        } else {
+            viewState.emailRegisterNotValidate()
         }
     }
 }

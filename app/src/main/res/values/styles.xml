@@ -41,7 +41,7 @@
         <item name="hintTextColor">@color/selectedColor</item>
         <item name="boxStrokeWidth">0.8dp</item>
         <item name="boxStrokeColor">@color/selectedColor</item>
-        <item name="endIconMode">clear_text</item>
+        <item name="endIconMode">none</item>
         <item name="boxBackgroundColor">@color/white</item>
     </style>
 

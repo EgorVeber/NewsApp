@@ -40,6 +40,7 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
         duration = DURATION_REGISTER
         interpolator = AnticipateOvershootInterpolator(1F)
     }
+
     private var userLogin: String = ""
     private var userPassword: String = ""
     private var userRegisterLogin: String = ""
@@ -79,19 +80,28 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
         binding.changeRegisterButton.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.root, changeBounds)
             presenter.changeRegisterAnim()
+            if (checkNullRegisterData()) {
+                binding.registerButton.alpha = 1F
+            }
         }
 
         binding.changeSignButton.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.root, changeBounds)
             presenter.changeLoginAnim()
-            if (userLogin != "" && userPassword != "") {
+            if (checkNullSignUpData()) {
                 binding.signInButton.alpha = 1F
             }
         }
 
         binding.signInButton.setOnClickListener {
-            if (userLogin != "" && userPassword != "") {
-                presenter.getPasswordToLogin(userLogin, userPassword)
+            if (checkNullSignUpData()) {
+                presenter.checkSignIn(userLogin, userPassword)
+            }
+        }
+
+        binding.registerButton.setOnClickListener {
+            if (checkNullRegisterData()) {
+                presenter.createAccount(userRegisterLogin, userEmail, userRegisterPassword)
             }
         }
     }
@@ -99,8 +109,8 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
     private fun rxTextChangerValidation() {
 
         RxTextView.textChanges(binding.passwordEditText)
-            .skip(6)
             .filter { it.toString().isNotEmpty() }
+            .skip(6)
             .subscribe({
                 presenter.passwordValidation(it)
             }, {
@@ -108,27 +118,69 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
             })
 
         RxTextView.textChanges(binding.userNameEditText)
-            .skip(5)
             .filter { it.toString().isNotEmpty() }
+            .skip(4)
             .subscribe({
                 presenter.loginValidation(it)
             }, {
                 Log.d("RxTextView", it.localizedMessage)
             })
+
+        RxTextView.textChanges(binding.passwordRegisterEditText)
+            .filter { it.toString().isNotEmpty() }
+            .skip(6)
+            .subscribe({
+                presenter.passwordRegisterValidation(it)
+            }, {
+                Log.d("RxTextView", it.localizedMessage)
+            })
+
+        RxTextView.textChanges(binding.userNameRegisterEditText)
+            .filter { it.toString().isNotEmpty() }
+            .skip(4)
+            .subscribe({
+                presenter.loginRegisterValidation(it)
+            }, {
+                Log.d("RxTextView", it.localizedMessage)
+            })
+
+
+        RxTextView.textChanges(binding.emailRegisterEditText)
+            .filter { it.toString().isNotEmpty() }
+            .skip(5)
+            .subscribe({
+                presenter.emailRegisterValidation(it)
+            }, {
+                Log.d("RxTextView", it.localizedMessage)
+            })
     }
 
-    override fun success() {
-        binding.root.showSnackBarError("Success create account", "", {})
+    override fun successRegister() {
+        binding.root.showSnackBarError("Account created successfully", "", {})
     }
 
-    override fun error() {
-        binding.root.showSnackBarError("Such user already exists", "", {})
+    override fun errorRegister() {
+        binding.userNameRegisterTextInput.error = "Check your login"
+        binding.emailRegisterTextInput.error = "Check your email"
+        binding.root.showSnackBarError("Email and username must be unique", "", {})
+    }
+
+    override fun successSignIn() {
+        binding.root.showSnackBarError("Successful authorization", "", {})
+    }
+
+    override fun errorSignIn() {
+        binding.passwordTextInput.error = "Invalid password"
+        binding.root.showSnackBarError("Password is wrong", "", {})
     }
 
     override fun sendActivityOpenScreen() {
         (requireActivity() as OpenScreen).openMainScreen()
     }
 
+    override fun emptyAccount() {
+        binding.userNameTextInput.error = "This user does not exist"
+    }
 
     override fun loginIsValidate(charSequence: CharSequence?) {
         binding.userNameTextInput.error = null
@@ -159,7 +211,50 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
         binding.signInButton.alpha = 0.5F
     }
 
+    override fun loginRegisterIsValidate(it: CharSequence?) {
+        binding.userNameRegisterTextInput.error = null
+        userRegisterLogin = it.toString()
+        if (userRegisterPassword != "" && userEmail != "") {
+            binding.registerButton.alpha = 1F
+        }
+    }
 
+    override fun loginRegisterNotValidate() {
+        binding.userNameRegisterTextInput.error =
+            getString(R.string.errorInputEmail) + "($LOGIN_STR)"
+        userRegisterLogin = ""
+        binding.registerButton.alpha = 0.5F
+    }
+
+    override fun passwordRegisterIsValidate(it: CharSequence?) {
+        binding.passwordRegisterTextInput.error = null
+        userRegisterPassword = it.toString()
+        if (userRegisterLogin != "" && userEmail != "") {
+            binding.registerButton.alpha = 1F
+        }
+    }
+
+    override fun passwordRegisterNotValidate(it: CharSequence?) {
+        userRegisterPassword = ""
+        binding.passwordRegisterTextInput.error =
+            getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
+        binding.registerButton.alpha = 0.5F
+    }
+
+    override fun emailRegisterIsValidate(it: CharSequence?) {
+        binding.emailRegisterTextInput.error = null
+        userEmail = it.toString()
+        if (userRegisterLogin != "" && userRegisterPassword != "") {
+            binding.registerButton.alpha = 1F
+        }
+    }
+
+    override fun emailRegisterNotValidate() {
+        userEmail = ""
+        binding.emailRegisterTextInput.error =
+            getString(R.string.errorInputEmail) + "($EMAIL_STR)"
+        binding.registerButton.alpha = 0.5F
+    }
 
     override fun setRegisterAnim() {
         constraintSetLogin.clear(R.id.userNameTextInput, ConstraintSet.END)
@@ -231,6 +326,14 @@ class FragmentAuthorization : MvpAppCompatFragment(), FragmentAuthorizationView,
             binding.teamSign.text = this
             removeSpan(this)
         }
+    }
+
+    private fun checkNullSignUpData(): Boolean {
+        return userLogin != "" && userPassword != ""
+    }
+
+    private fun checkNullRegisterData(): Boolean {
+        return userRegisterLogin != "" && userRegisterPassword != "" && userEmail != ""
     }
 
     override fun onDestroyView() {

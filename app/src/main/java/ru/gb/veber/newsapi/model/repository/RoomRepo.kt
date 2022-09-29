@@ -9,6 +9,7 @@ interface RoomRepo {
     fun createAccount(accountDbEntity: AccountDbEntity): Completable
     fun updateAccount(accountDbEntity: AccountDbEntity): Completable
     fun deleteAccount(accountDbEntity: AccountDbEntity): Completable
+    fun deleteAllAccount(): Completable
     fun getAccountById(accountId: Int): Single<Account>
     fun getAccountByUserName(userName: String): Single<Account>
 }

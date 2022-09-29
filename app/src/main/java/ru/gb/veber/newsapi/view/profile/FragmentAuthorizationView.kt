@@ -5,15 +5,34 @@ import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface FragmentAuthorizationView:MvpView {
+interface FragmentAuthorizationView : MvpView {
     fun init()
-    fun success()
-    fun error()
+
+    fun successRegister()
+    fun errorRegister()
+    fun successSignIn()
+    fun errorSignIn()
+
     fun sendActivityOpenScreen()
     fun setRegisterAnim()
     fun setLoginAnim()
-    fun loginIsValidate(charSequence: CharSequence?)
+
     fun loginNotValidate()
-     fun passwordIsValidate(it: CharSequence?)
-     fun passwordNotValidate(it: CharSequence?)
+    fun loginIsValidate(charSequence: CharSequence?)
+
+    fun passwordIsValidate(it: CharSequence?)
+    fun passwordNotValidate(it: CharSequence?)
+
+    fun loginRegisterIsValidate(it: CharSequence?)
+    fun loginRegisterNotValidate()
+
+    fun passwordRegisterIsValidate(it: CharSequence?)
+    fun passwordRegisterNotValidate(it: CharSequence?)
+
+    fun emailRegisterIsValidate(it: CharSequence?)
+    fun emailRegisterNotValidate()
+
+    fun emptyAccount()
+
+
 }

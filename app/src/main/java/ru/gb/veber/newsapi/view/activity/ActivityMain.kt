@@ -16,6 +16,8 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
+import ru.gb.veber.newsapi.model.database.dao.AccountsDao
+import ru.gb.veber.newsapi.model.repository.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
 
 
@@ -43,6 +45,13 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate,OpenScreen {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+//      RoomRepoImpl(App.instance.newsDb.accountsDao()).deleteAllAccount().subscribe({
+//          Log.d("TAG", "delete")
+//      },{
+//
+//      })
 //        NewsRepoImpl(NewsRetrofit.newsTopSingle).getSources().subscribeDefault().subscribe({
 //            it.sources.forEach {
 //                words.add(it.country!!)

@@ -22,6 +22,10 @@ class RoomRepoImpl(private val accountDao: AccountsDao) : RoomRepo {
         return accountDao.deleteAccount(accountDbEntity)
     }
 
+    override fun deleteAllAccount(): Completable {
+        return accountDao.deleteAllAccount()
+    }
+
     override fun getAccountById(accountId: Int): Single<Account> {
         return accountDao.getAccountById(accountId).subscribeDefault().map(::mapToAccount)
     }
