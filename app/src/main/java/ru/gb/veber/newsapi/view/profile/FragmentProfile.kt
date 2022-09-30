@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.view.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,7 +33,7 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("arguments",arguments?.getInt(ACCOUNT_ID,0).toString())
+        Log.d("arguments", arguments?.getInt(ACCOUNT_ID, 0).toString())
     }
 
     override fun init() {
@@ -41,8 +42,14 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
         binding.progressBar.progress = 10
 
         binding.textviewsda.setOnClickListener {
-            Log.d("TAG", "init() called")
+            presenter.logout()
         }
+    }
+
+    override fun logout() {
+        requireActivity().getSharedPreferences(FragmentProfileMain.FILE_SETTINGS,
+            Context.MODE_PRIVATE).edit().putInt(
+            FragmentProfileMain.ACCOUNT_ID, 0).apply()
     }
 
     override fun onDestroyView() {
@@ -55,10 +62,10 @@ class FragmentProfile : MvpAppCompatFragment(), FragmentProfileView, BackPressed
     }
 
     companion object {
-        private const val  ACCOUNT_ID = "ACCOUNT_ID"
+        private const val ACCOUNT_ID = "ACCOUNT_ID"
         fun getInstance(accountID: Int): FragmentProfile {
             return FragmentProfile().apply {
-                arguments=Bundle().apply {
+                arguments = Bundle().apply {
                     putInt(ACCOUNT_ID, accountID)
                 }
             }

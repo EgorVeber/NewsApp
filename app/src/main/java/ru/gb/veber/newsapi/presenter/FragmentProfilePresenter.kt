@@ -16,4 +16,9 @@ class FragmentProfilePresenter(private val router: Router) :
         Log.d("Back", "onBackPressedRouter() Profile")
         return true
     }
+
+    fun logout() {
+        router.replaceScreen(FragmentAuthorizationScreen)
+        viewState.logout()
+    }
 }

@@ -7,4 +7,5 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface FragmentProfileView : MvpView {
     fun init()
+    fun logout()
 }

@@ -56,12 +56,12 @@ class FragmentAuthorizationPresenter(
         }).disposebleBy(bag)
     }
 
-    private fun saveIdSharedPref(id:Int){
+    private fun saveIdSharedPref(id: Int) {
         viewState.saveIdSharedPref(id)
     }
 
     fun openScreenProfile(id: Int) {
-        router.navigateTo(FragmentProfileScreen(id))
+        router.replaceScreen(FragmentProfileScreen(id))
     }
 
     fun openMain() {

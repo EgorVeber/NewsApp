@@ -94,8 +94,8 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
                     transition.addTransition(Slide(Gravity.BOTTOM))
                     TransitionManager.beginDelayedTransition(binding.root, transition)
                 }
-                binding.vdfsdfsdfs.visibility = View.VISIBLE
-                binding.fragmentContainerMain.animate().alpha(0F).duration = 800
+//                binding.vdfsdfsdfs.visibility = View.VISIBLE
+//                binding.fragmentContainerMain.animate().alpha(0F).duration = 800
             }
         }
         return super.onOptionsItemSelected(item)
@@ -128,6 +128,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
             }
             true
         }
+        binding.bottomNavigationView.selectedItemId = R.id.sourcesNews
         binding.bottomNavigationView.setOnItemReselectedListener {
 
         }

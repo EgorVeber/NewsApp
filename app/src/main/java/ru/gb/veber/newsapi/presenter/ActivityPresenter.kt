@@ -11,7 +11,6 @@ class ActivityPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
     override fun onFirstViewAttach() {
         Log.d("TAG", "onFirstViewAttach() called")
         viewState.init()
-        router.replaceScreen(FragmentSourcesScreen)
         super.onFirstViewAttach()
     }
 
@@ -20,11 +19,11 @@ class ActivityPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
     }
 
     fun openScreenSources() {
-        router.newRootScreen(FragmentSourcesScreen)
+        router.replaceScreen(FragmentSourcesScreen)
     }
 
     fun openScreenProfile() {
-        router.newRootChain(FragmentProfileMainScreen)
+        router.replaceScreen(FragmentProfileMainScreen)
     }
 
     fun onBackPressedRouter() {

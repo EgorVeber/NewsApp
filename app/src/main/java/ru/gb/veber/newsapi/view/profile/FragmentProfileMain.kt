@@ -1,15 +1,10 @@
 package ru.gb.veber.newsapi.view.profile
 
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.FragmentProfileMainBinding
 import ru.gb.veber.newsapi.presenter.FragmentProfileMainPresenter
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
