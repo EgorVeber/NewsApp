@@ -33,8 +33,4 @@ interface AuthorizationView : MvpView {
     fun emailRegisterNotValidate()
 
     fun emptyAccount()
-
-   fun saveIdSharedPref(id: Int)
-
-
 }

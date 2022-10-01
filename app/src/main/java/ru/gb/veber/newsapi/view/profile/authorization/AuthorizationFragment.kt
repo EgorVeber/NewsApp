@@ -181,11 +181,6 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         presenter.openScreenProfile(id)
     }
 
-    override fun saveIdSharedPref(id: Int) {
-        requireActivity().getSharedPreferences(ProfileFragment.FILE_SETTINGS,
-            Context.MODE_PRIVATE).edit().putInt(
-            ProfileFragment.ACCOUNT_ID, id).apply()
-    }
 
     override fun sendActivityOpenScreen() {
         (requireActivity() as OpenScreen).openMainScreen()

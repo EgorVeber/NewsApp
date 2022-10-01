@@ -8,10 +8,8 @@ import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.core.FragmentProfileScreen
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
-import ru.gb.veber.newsapi.utils.EMAIL_PATTERN
-import ru.gb.veber.newsapi.utils.LOGIN_PATTERN
-import ru.gb.veber.newsapi.utils.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.utils.disposebleBy
+import ru.gb.veber.newsapi.model.setAccountID
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationView
 import java.util.*
 
@@ -61,8 +59,8 @@ class AuthorizationPresenter(
         }).disposebleBy(bag)
     }
 
-    private fun saveIdSharedPref(id: Int) {
-        viewState.saveIdSharedPref(id)
+    private fun saveIdSharedPref(accountId: Int) {
+        setAccountID(accountId)
     }
 
     fun openScreenProfile(id: Int) {

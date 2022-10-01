@@ -10,7 +10,9 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
+import ru.gb.veber.newsapi.model.setAccountID
 import ru.gb.veber.newsapi.presenter.AccountPresenter
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 
@@ -43,14 +45,13 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.progressBar.progress = 10
 
         binding.textviewsda.setOnClickListener {
-            presenter.logout()
+            binding.textviewsda.textSize=18f
+           // presenter.logout()
         }
     }
 
     override fun logout() {
-        requireActivity().getSharedPreferences(ProfileFragment.FILE_SETTINGS,
-            Context.MODE_PRIVATE).edit().putInt(
-            ProfileFragment.ACCOUNT_ID, 0).apply()
+
     }
 
     override fun onDestroyView() {
