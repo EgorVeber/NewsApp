@@ -1,8 +1,8 @@
-package ru.gb.veber.newsapi.model.repository
+package ru.gb.veber.newsapi.model.repository.room
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.model.database.data.Account
+import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 
 interface RoomRepo {

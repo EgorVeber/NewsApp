@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.databinding.NewsItemBinding
-import ru.gb.veber.newsapi.databinding.NewsItemHeaderBinding
+import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
+import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.utils.loadGlide
 import ru.gb.veber.newsapi.utils.loadGlideNot
@@ -27,15 +27,15 @@ class TopNewsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            VIEW_TYPE_NEWS -> NewsViewHolder(NewsItemBinding.inflate(LayoutInflater.from(parent.context),
+            VIEW_TYPE_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(parent.context),
                 parent,
                 false), onUserClickListener)
-            VIEW_TYPE_HEADER_NEWS -> NewsHeaderViewHolder(NewsItemHeaderBinding.inflate(
+            VIEW_TYPE_HEADER_NEWS -> NewsHeaderViewHolder(TopNewsItemHeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), onUserClickListener)
             else -> NewsViewHolder(
-                NewsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+                TopNewsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                 onUserClickListener)
         }
     }
@@ -52,7 +52,7 @@ class TopNewsAdapter(
 }
 
 class NewsViewHolder(
-    private val binding: NewsItemBinding,
+    private val binding: TopNewsItemBinding,
     private val onUserClickListener: OnUserClickListener,
 ) : BaseViewHolder(binding.root) {
 
@@ -69,7 +69,7 @@ class NewsViewHolder(
 
 
 class NewsHeaderViewHolder(
-    private val binding: NewsItemHeaderBinding,
+    private val binding: TopNewsItemHeaderBinding,
     private val onUserClickListener: OnUserClickListener,
 ) : BaseViewHolder(binding.root) {
 

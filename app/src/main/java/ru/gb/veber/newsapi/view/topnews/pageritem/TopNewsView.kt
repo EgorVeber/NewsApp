@@ -14,4 +14,5 @@ interface TopNewsView : MvpView {
     fun hideFilter()
     fun behaviorHide()
     fun visibilityFilterButton()
+    fun successInsertArticle()
 }

@@ -16,3 +16,11 @@ data class Source(
     var id: String?,
     var name: String,
 )
+
+data class Account(
+    val id: Int,
+    val userName: String,
+    val email: String,
+    val password: String,
+    val createdAt: String,
+)

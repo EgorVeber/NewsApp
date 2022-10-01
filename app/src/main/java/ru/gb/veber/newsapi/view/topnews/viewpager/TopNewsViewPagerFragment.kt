@@ -1,7 +1,6 @@
 package ru.gb.veber.newsapi.view.topnews.viewpager
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.FragmentNewsBinding
+import ru.gb.veber.newsapi.databinding.TopNewsViewPagerFragmentBinding
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.BUSINESS
@@ -31,7 +31,7 @@ import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.TECHN
 class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
     BackPressedListener {
 
-    private var _binding: FragmentNewsBinding? = null
+    private var _binding: TopNewsViewPagerFragmentBinding? = null
     private val binding get() = _binding!!
 
     private val presenter: TopNewsViewPagerPresenter by moxyPresenter {
@@ -43,18 +43,17 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentNewsBinding.inflate(inflater, container, false)
+        _binding = TopNewsViewPagerFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("arguments", arguments?.getInt(ProfileFragment.ACCOUNT_ID, 0).toString())
-        initialization()
+        initialization(arguments?.getInt(ProfileFragment.ACCOUNT_ID)?:ACCOUNT_ID_DEFAULT)
     }
 
-    private fun initialization() {
-        binding.viewPager.adapter = TopNewsAdapter(requireActivity())
+    private fun initialization(accountID: Int) {
+        binding.viewPager.adapter = TopNewsAdapter(requireActivity(),accountID)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 BUSINESS -> tab.text = CATEGORY_BUSINESS

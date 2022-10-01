@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsFragment
 
 
-class TopNewsAdapter(fragmentManager: FragmentActivity) : FragmentStateAdapter(fragmentManager) {
+class TopNewsAdapter(fragmentManager: FragmentActivity, private val accountID: Int) : FragmentStateAdapter(fragmentManager) {
     companion object {
         const val ADAPTER_SIZE = 7
         const val BUSINESS = 1
@@ -41,6 +41,6 @@ class TopNewsAdapter(fragmentManager: FragmentActivity) : FragmentStateAdapter(f
                 TECHNOLOGY -> CATEGORY_TECHNOLOGY
                 else -> CATEGORY_GENERAL
             }
-        return TopNewsFragment.getInstance(category)
+        return TopNewsFragment.getInstance(category,accountID)
     }
 }

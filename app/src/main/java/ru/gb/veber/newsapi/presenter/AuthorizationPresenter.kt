@@ -4,11 +4,10 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
-import ru.gb.veber.newsapi.core.AllNewsScreen
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.core.FragmentProfileScreen
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
-import ru.gb.veber.newsapi.model.repository.RoomRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.EMAIL_PATTERN
 import ru.gb.veber.newsapi.utils.LOGIN_PATTERN
 import ru.gb.veber.newsapi.utils.PASSWORD_PATTERN

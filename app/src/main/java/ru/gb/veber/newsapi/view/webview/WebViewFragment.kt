@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
@@ -51,11 +52,12 @@ class WebViewFragment : MvpAppCompatFragment(), WebView, BackPressedListener {
     }
 
     override fun init(url: String) {
+
+        binding.webNews.webViewClient = WebViewClient()
         binding.webNews.loadUrl(url)
         binding.webNews.settings.builtInZoomControls = true;
         binding.webNews.clearHistory()
         binding.webNews.clearCache(true)
-
         binding.mainBackWebView.setOnClickListener {
             presenter.back()
         }

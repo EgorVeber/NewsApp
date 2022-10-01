@@ -19,19 +19,16 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.view.allnews.AllNewsFragment
+import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 
-
-interface TestDate {
-    fun getIdFragment(id: Int)
-}
 
 interface OpenScreen {
     fun openMainScreen()
 }
 
 
-class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
+class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen {
 
     private lateinit var binding: ActivityMainBinding
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
@@ -118,7 +115,9 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
     override fun init() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
+
                 R.id.topNews -> {
+                    Log.d("TAG", "init() called")
                     presenter.openScreenNews()
                 }
                 R.id.searchNews -> {
@@ -137,7 +136,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
             true
         }
         // changeMenuItemTextAndIcon()
-        binding.bottomNavigationView.selectedItemId = R.id.sourcesNews
+        binding.bottomNavigationView.selectedItemId = R.id.allNews
         binding.bottomNavigationView.setOnItemReselectedListener {
 
         }
@@ -152,7 +151,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
     override fun onBackPressed() {
 
 
-        if (supportFragmentManager.fragments.last() !is AllNewsFragment) {
+        if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment) {
             binding.bottomNavigationView.selectedItemId = R.id.allNews
         }
 
@@ -177,10 +176,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
         }, {
         })
         //presenter.onBackPressedRouter()
-    }
-
-    override fun getIdFragment(id: Int) {
-        // binding.bottomNavigationView.selectedItemId = R.id.sourcesNews
     }
 
     override fun openMainScreen() {

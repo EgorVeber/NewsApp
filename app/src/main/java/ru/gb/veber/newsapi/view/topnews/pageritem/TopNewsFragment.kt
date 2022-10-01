@@ -18,44 +18,60 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.FragmentNewsViewPagerItemBinding
+import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.profile.ProfileFragment.Companion.ACCOUNT_ID
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_GENERAL
 
 
 class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener {
 
-    private var _binding: FragmentNewsViewPagerItemBinding? = null
+    private var _binding: TopNewsFragmentBinding? = null
 
     private val binding get() = _binding!!
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
+
     private val newsAdapter = TopNewsAdapter() {
         presenter.clickNews(it)
+        presenter.saveArticle(it,arguments?.getInt(ACCOUNT_ID)?: ACCOUNT_ID_DEFAULT)
     }
 
     private val presenter: TopNewsPresenter by moxyPresenter {
         TopNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
-            App.instance.router)
+            App.instance.router, ArticleRepoImpl(App.instance.newsDb.articleDao()))
     }
+
+    companion object {
+        private const val BUNDLE_KEY = "BUNDLE_KEY"
+        fun getInstance(category: String, accountId: Int) = TopNewsFragment().apply {
+            arguments = Bundle().apply {
+                putString(BUNDLE_KEY, category)
+                putInt(ACCOUNT_ID, accountId)
+            }
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentNewsViewPagerItemBinding.inflate(inflater, container, false)
+        _binding = TopNewsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL)
+        Log.d("TAG", arguments?.getInt(ACCOUNT_ID).toString())
     }
 
     private var listener = object : RecyclerView.OnScrollListener() {
@@ -67,16 +83,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.d("@@@onSaveInstanceState", "onSaveInstanceState() called with: outState = $outState")
-    }
-
-    override fun setMenuVisibility(menuVisible: Boolean) {
-        super.setMenuVisibility(menuVisible)
-        Log.d("@@@setMenuVisibility", "setMenuVisibility() called with: menuVisible = $menuVisible")
-    }
-
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
@@ -86,6 +92,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
 
         binding.recyclerNews.addOnScrollListener(listener)
+
         binding.filterButton.setOnClickListener {
             if (bSheetB.state == BottomSheetBehavior.STATE_EXPANDED) {
                 presenter.loadNewsCountry(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
@@ -138,7 +145,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
 
 
-        binding.descriptionNews.setOnClickListener {view->
+        binding.descriptionNews.setOnClickListener { view ->
             presenter.openScreenWebView(it.url)
         }
     }
@@ -171,6 +178,10 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.filterButton.visibility = View.VISIBLE
     }
 
+    override fun successInsertArticle() {
+
+    }
+
 
     private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -195,17 +206,20 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         return presenter.onBackPressedRouter()
     }
 
-    companion object {
-        private const val BUNDLE_KEY = "BUNDLE_KEY"
-        fun getInstance(category: String) = TopNewsFragment().apply {
-            arguments = Bundle().apply {
-                putString(BUNDLE_KEY, category)
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d("@@@onSaveInstanceState", "onSaveInstanceState() called with: outState = $outState")
+    }
+
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        Log.d("@@@setMenuVisibility", "setMenuVisibility() called with: menuVisible = $menuVisible")
     }
 }

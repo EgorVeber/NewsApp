@@ -1,11 +1,8 @@
 package ru.gb.veber.newsapi.utils
 
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.ArticleDTO
-import ru.gb.veber.newsapi.model.Source
-import ru.gb.veber.newsapi.model.SourceDTO
-import ru.gb.veber.newsapi.model.database.data.Account
+import ru.gb.veber.newsapi.model.*
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
+import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
 
 
 fun mapToArticle(item: ArticleDTO): Article {
@@ -36,5 +33,22 @@ fun mapToAccount(item: AccountDbEntity): Account {
         email = item.email,
         createdAt = item.createdAt,
         password = item.password
+    )
+}
+
+fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
+    return ArticleDbEntity(
+        id = 0,
+        accountID = accountId,
+        author = article.author,
+        description = article.description,
+        publishedAt = article.publishedAt,
+        sourceId = article.source.id ?: "none",
+        sourceName = article.source.name,
+        title = article.title,
+        url = article.url,
+        urlToImage = article.urlToImage,
+        isHistory = true,
+        isFavorites = false
     )
 }

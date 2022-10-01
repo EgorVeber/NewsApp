@@ -21,8 +21,8 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.FragmentSignInBinding
-import ru.gb.veber.newsapi.model.repository.RoomRepoImpl
+import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
+import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
 import ru.gb.veber.newsapi.utils.EMAIL_STR
 import ru.gb.veber.newsapi.utils.LOGIN_STR
@@ -36,7 +36,7 @@ import ru.gb.veber.newsapi.view.profile.ProfileFragment
 class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     BackPressedListener {
 
-    private var _binding: FragmentSignInBinding? = null
+    private var _binding: AuthorizationFragmentBinding? = null
     private val binding get() = _binding!!
 
 
@@ -62,7 +62,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentSignInBinding.inflate(inflater, container, false)
+        _binding = AuthorizationFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 

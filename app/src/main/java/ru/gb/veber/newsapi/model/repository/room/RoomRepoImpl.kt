@@ -1,9 +1,9 @@
-package ru.gb.veber.newsapi.model.repository
+package ru.gb.veber.newsapi.model.repository.room
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.database.dao.AccountsDao
-import ru.gb.veber.newsapi.model.database.data.Account
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.utils.mapToAccount
 import ru.gb.veber.newsapi.utils.subscribeDefault
@@ -19,11 +19,11 @@ class RoomRepoImpl(private val accountDao: AccountsDao) : RoomRepo {
     }
 
     override fun deleteAccount(accountDbEntity: AccountDbEntity): Completable {
-        return accountDao.deleteAccount(accountDbEntity)
+        return accountDao.deleteAccount(accountDbEntity).subscribeDefault()
     }
 
     override fun deleteAllAccount(): Completable {
-        return accountDao.deleteAllAccount()
+        return accountDao.deleteAllAccount().subscribeDefault()
     }
 
     override fun getAccountById(accountId: Int): Single<Account> {

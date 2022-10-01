@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.FragmentSourcesBinding
+import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.model.SourcesDTO
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
@@ -19,7 +19,7 @@ import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
 class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
 
-    private var _binding: FragmentSourcesBinding? = null
+    private var _binding: SourcesFragmentBinding? = null
     private val binding get() = _binding!!
     private val sourcesAdapter = FragmentSourcesAdapter()
 
@@ -32,7 +32,7 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentSourcesBinding.inflate(inflater, container, false)
+        _binding = SourcesFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 

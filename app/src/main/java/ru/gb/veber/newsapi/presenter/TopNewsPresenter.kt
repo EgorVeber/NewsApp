@@ -6,12 +6,17 @@ import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.mapToArticle
+import ru.gb.veber.newsapi.utils.mapToArticleDbEntity
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 
 class TopNewsPresenter(
     private val newsRepoImpl: NewsRepoImpl,
     private val router: Router,
+    private val articleRepoImpl: ArticleRepoImpl,
 ) :
     MvpPresenter<TopNewsView>() {
 
@@ -75,5 +80,16 @@ class TopNewsPresenter(
 
     fun openScreenWebView(url: String) {
         router.navigateTo(WebViewScreen(url))
+    }
+
+    fun saveArticle(it: Article, accountId: Int) {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            articleRepoImpl.insertArticle(mapToArticleDbEntity(it,accountId)).subscribe({
+                Log.d("ERROR_DB", it.toString())
+                viewState.successInsertArticle()
+            }, {
+                Log.d("ERROR_DB", it.localizedMessage)
+            })
+        }
     }
 }

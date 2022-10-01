@@ -9,14 +9,14 @@ import android.view.ViewGroup
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.FragmentMprofileBinding
+import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
 import ru.gb.veber.newsapi.presenter.AccountPresenter
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 
 class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener {
 
-    private var _binding: FragmentMprofileBinding? = null
+    private var _binding: AccountFragmentBinding? = null
     private val binding get() = _binding!!
 
     private val presenter: AccountPresenter by moxyPresenter {
@@ -28,7 +28,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentMprofileBinding.inflate(inflater, container, false)
+        _binding = AccountFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
