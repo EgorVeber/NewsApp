@@ -14,7 +14,7 @@ import ru.gb.veber.newsapi.databinding.FragmentSourcesBinding
 import ru.gb.veber.newsapi.model.SourcesDTO
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
-import ru.gb.veber.newsapi.presenter.FragmentSourcesPresenter
+import ru.gb.veber.newsapi.presenter.SourcesPresenter
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
 class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
@@ -23,8 +23,8 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     private val binding get() = _binding!!
     private val sourcesAdapter = FragmentSourcesAdapter()
 
-    private val presenter: FragmentSourcesPresenter by moxyPresenter {
-        FragmentSourcesPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle), App.instance.router)
+    private val presenter: SourcesPresenter by moxyPresenter {
+        SourcesPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle), App.instance.router)
     }
 
     override fun onCreateView(

@@ -1,0 +1,93 @@
+package ru.gb.veber.newsapi.view.topnews.viewpager
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.google.android.material.tabs.TabLayoutMediator
+import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.core.App
+import ru.gb.veber.newsapi.databinding.FragmentNewsBinding
+import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
+import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.profile.ProfileFragment
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.BUSINESS
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_BUSINESS
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_ENTERTAINMENT
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_GENERAL
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_HEALTH
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_SCIENCE
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_SPORTS
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_TECHNOLOGY
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.ENTERTAINMENT
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.GENERAL
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.HEALTH
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.SCIENCE
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.SPORTS
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.TECHNOLOGY
+
+class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
+    BackPressedListener {
+
+    private var _binding: FragmentNewsBinding? = null
+    private val binding get() = _binding!!
+
+    private val presenter: TopNewsViewPagerPresenter by moxyPresenter {
+        TopNewsViewPagerPresenter(App.instance.router)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FragmentNewsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("arguments", arguments?.getInt(ProfileFragment.ACCOUNT_ID, 0).toString())
+        initialization()
+    }
+
+    private fun initialization() {
+        binding.viewPager.adapter = TopNewsAdapter(requireActivity())
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when (position) {
+                BUSINESS -> tab.text = CATEGORY_BUSINESS
+                ENTERTAINMENT -> tab.text = CATEGORY_ENTERTAINMENT
+                GENERAL -> tab.text = CATEGORY_GENERAL
+                HEALTH -> tab.text = CATEGORY_HEALTH
+                SCIENCE -> tab.text = CATEGORY_SCIENCE
+                SPORTS -> tab.text = CATEGORY_SPORTS
+                TECHNOLOGY -> tab.text = CATEGORY_TECHNOLOGY
+            }
+        }.attach()
+    }
+
+    override fun init() {
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+        return presenter.onBackPressedRouter()
+    }
+
+    companion object {
+        fun getInstance(accountID:Int): TopNewsViewPagerFragment {
+            return TopNewsViewPagerFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ProfileFragment.ACCOUNT_ID, accountID)
+                }
+            }
+        }
+    }
+}

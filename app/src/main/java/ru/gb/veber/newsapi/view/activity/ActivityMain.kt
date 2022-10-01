@@ -1,25 +1,25 @@
 package ru.gb.veber.newsapi.view.activity
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.Toast
 import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import io.reactivex.rxjava3.core.Completable
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.view.profile.FragmentAuthorization
-import ru.gb.veber.newsapi.view.profile.FragmentProfileMain
+import ru.gb.veber.newsapi.view.allnews.AllNewsFragment
+import java.util.concurrent.TimeUnit
 
 
 interface TestDate {
@@ -35,6 +35,8 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
 
     private lateinit var binding: ActivityMainBinding
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
+    private var backStack = 1;
+
 
     private val presenter: ActivityPresenter by moxyPresenter {
         ActivityPresenter(App.instance.router)
@@ -43,15 +45,16 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
     var words: MutableList<String> = mutableListOf()
     var map: HashMap<String, Int> = HashMap()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
-//        getSharedPreferences(FragmentProfileMain.FILE_SETTINGS,
+//        getSharedPreferences(ProfileFragment.FILE_SETTINGS,
 //            Context.MODE_PRIVATE).edit().putInt(
-//            FragmentProfileMain.ACCOUNT_ID, 0).apply()
+//            ProfileFragment.ACCOUNT_ID, 0).apply()
 
 
 //      RoomRepoImpl(App.instance.newsDb.accountsDao()).deleteAllAccount().subscribe({
@@ -113,11 +116,16 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
 
 
     override fun init() {
-
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.topNews -> {
                     presenter.openScreenNews()
+                }
+                R.id.searchNews -> {
+                    presenter.openScreenSearchNews()
+                }
+                R.id.allNews -> {
+                    presenter.openScreenAllNews()
                 }
                 R.id.sourcesNews -> {
                     presenter.openScreenSources()
@@ -128,24 +136,47 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
             }
             true
         }
+        // changeMenuItemTextAndIcon()
         binding.bottomNavigationView.selectedItemId = R.id.sourcesNews
         binding.bottomNavigationView.setOnItemReselectedListener {
 
         }
     }
 
+    fun changeMenuItemTextAndIcon() {
+        val item: MenuItem = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
+        item.title = "JS"
+        //item.icon = ContextCompat.getDrawable(activity, R.drawable.ic_barcode)
+    }
+
     override fun onBackPressed() {
 
-        supportFragmentManager.fragments.forEach { fragment ->
-            Log.d("NavigateActivityBack", "onBackPressed() forEach  fragment = $fragment")
-            if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
-                Log.d("NavigateActivityBack", "onBackPressed if")
-                return
+
+        if (supportFragmentManager.fragments.last() !is AllNewsFragment) {
+            binding.bottomNavigationView.selectedItemId = R.id.allNews
+        }
+
+        Log.d("NavigateActivityBack", backStack.toString())
+        if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
+            Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
+        } else {
+            supportFragmentManager.fragments.forEach { fragment ->
+                Log.d("NavigateActivityBack", "onBackPressed() forEach  fragment = $fragment")
+                if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
+                    Log.d("NavigateActivityBack", "onBackPressed if")
+                    return
+                }
             }
         }
 
-        Log.d("NavigateActivityBack", "onBackPressed forEach after")
-        presenter.onBackPressedRouter()
+        backStack = 0
+        Completable.create {
+            it.onComplete()
+        }.delay(2000L, TimeUnit.MILLISECONDS).subscribe({
+            backStack = 1
+        }, {
+        })
+        //presenter.onBackPressedRouter()
     }
 
     override fun getIdFragment(id: Int) {
@@ -153,6 +184,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, TestDate, OpenScreen {
     }
 
     override fun openMainScreen() {
-        // binding.bottomNavigationView.selectedItemId = R.id.allNews
+        binding.bottomNavigationView.selectedItemId = R.id.allNews
     }
 }

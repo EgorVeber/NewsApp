@@ -5,6 +5,11 @@ import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.model.database.NewsDataBase
 
+
+
+//TODO Норма картинки сделать везде и фильтр recycler и анимации загрузки
+
+
 class App : Application() {
 
     private val cicerone: Cicerone<Router> by lazy { Cicerone.create() }
