@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.view.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -19,6 +20,7 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.view.allnews.AllNewsFragment
+import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 
@@ -49,9 +51,9 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen {
         setContentView(binding.root)
 
 
-//        getSharedPreferences(ProfileFragment.FILE_SETTINGS,
+//       getSharedPreferences(ProfileFragment.FILE_SETTINGS,
 //            Context.MODE_PRIVATE).edit().putInt(
-//            ProfileFragment.ACCOUNT_ID, 0).apply()
+//           ProfileFragment.ACCOUNT_ID, 0).apply()
 
 
 //      RoomRepoImpl(App.instance.newsDb.accountsDao()).deleteAllAccount().subscribe({
@@ -149,7 +151,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen {
     }
 
     override fun onBackPressed() {
-
 
         if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment) {
             binding.bottomNavigationView.selectedItemId = R.id.allNews

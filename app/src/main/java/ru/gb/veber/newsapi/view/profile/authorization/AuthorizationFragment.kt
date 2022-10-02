@@ -144,6 +144,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             .filter { it.toString().isNotEmpty() }
             .skip(4)
             .subscribe({
+                Log.d("PASSWORD", it.toString())
                 presenter.loginRegisterValidation(it)
             }, {
                 Log.d("RxTextView", it.localizedMessage)
@@ -166,6 +167,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun errorRegister() {
+        Log.d("PASSWORD", "errorRegister() called")
         binding.userNameRegisterTextInput.error = "Check your login"
         binding.emailRegisterTextInput.error = "Check your email"
         binding.root.showSnackBarError("Email and username must be unique", "", {})

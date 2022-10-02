@@ -41,13 +41,17 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     override fun init() {
 
-        binding.progressBar.max = 100
-        binding.progressBar.progress = 10
 
-        binding.textviewsda.setOnClickListener {
-            binding.textviewsda.textSize=18f
-           // presenter.logout()
+        binding.logout.setOnClickListener {
+            presenter.logout()
         }
+
+        binding.changeDate.setOnClickListener {
+            presenter.openScreenChangeDate(arguments?.getInt(ACCOUNT_ID, 0))
+        }
+
+//        binding.progressBar.max = 100
+//        binding.progressBar.progress = 90
     }
 
     override fun logout() {

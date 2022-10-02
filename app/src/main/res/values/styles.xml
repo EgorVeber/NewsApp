@@ -67,4 +67,18 @@
     </style>
 
 
+
+    <style name="ButtonStyle2" parent="Widget.MaterialComponents.CompoundButton.Switch">
+
+    </style>
+
+
+
+    <style name="MySwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/MyOverlay</item>
+    </style>
+
+    <style name="MyOverlay" parent="">
+          <item name="colorSecondary">@color/selectedColor23</item>
+    </style>
 </resources>

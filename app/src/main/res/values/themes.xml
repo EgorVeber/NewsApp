@@ -16,5 +16,6 @@
         <item name="tabStyle">@style/MyTabStyle</item>
         <item name="textInputStyle">@style/MyTextInputStyle</item>
         <item name="materialButtonStyle">@style/MyMaterialButtonStyle</item>
+        <item name="switchStyle">@style/MySwitchStyle</item>
     </style>
 </resources>

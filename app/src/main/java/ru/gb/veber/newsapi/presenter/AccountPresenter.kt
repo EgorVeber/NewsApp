@@ -26,4 +26,8 @@ class AccountPresenter(private val router: Router) :
         router.replaceScreen(FragmentAuthorizationScreen)
         setAccountID(ACCOUNT_ID_DEFAULT)
     }
+
+    fun openScreenChangeDate(accountID: Int?) {
+
+    }
 }
