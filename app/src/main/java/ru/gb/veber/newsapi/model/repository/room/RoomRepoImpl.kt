@@ -18,8 +18,8 @@ class RoomRepoImpl(private val accountDao: AccountsDao) : RoomRepo {
         return accountDao.updateAccount(accountDbEntity).subscribeDefault()
     }
 
-    override fun deleteAccount(accountDbEntity: AccountDbEntity): Completable {
-        return accountDao.deleteAccount(accountDbEntity).subscribeDefault()
+    override fun deleteAccount(accountID: Int): Completable {
+        return accountDao.deleteAccount(accountID).subscribeDefault()
     }
 
     override fun deleteAllAccount(): Completable {

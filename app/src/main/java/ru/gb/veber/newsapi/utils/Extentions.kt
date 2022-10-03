@@ -104,3 +104,12 @@ fun Disposable.disposebleBy(bag: CompositeDisposable) {
     bag.add(this)
 }
 
+
+fun String.checkLogin():String{
+    return if(this.length>=7){
+        this.substring(0,7)
+    }else{
+        this
+    }
+}
+

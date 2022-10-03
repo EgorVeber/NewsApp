@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.view.profile.authorization
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -22,6 +21,7 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
+import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
 import ru.gb.veber.newsapi.utils.EMAIL_STR
@@ -29,8 +29,8 @@ import ru.gb.veber.newsapi.utils.LOGIN_STR
 import ru.gb.veber.newsapi.utils.PASSWORD_STR
 import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.activity.OpenScreen
-import ru.gb.veber.newsapi.view.profile.ProfileFragment
 
 
 class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
@@ -54,7 +54,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     private val presenter: AuthorizationPresenter by moxyPresenter {
         AuthorizationPresenter(App.instance.router,
-            RoomRepoImpl(App.instance.newsDb.accountsDao()))
+            RoomRepoImpl(App.instance.newsDb.accountsDao()),SharedPreferenceAccount())
     }
 
     override fun onCreateView(
@@ -74,11 +74,11 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         rxTextChangerValidation()
 
 
-        binding.teamSign.setOnClickListener {
+        binding.privacyPolicy.setOnClickListener {
             presenter.openScreenWebView(getString(R.string.teamSite))
         }
 
-        binding.mainBackSignIn.setOnClickListener {
+        binding.backMainScreen.setOnClickListener {
             presenter.openMain()
         }
 
@@ -176,11 +176,13 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     override fun successSignIn(id: Int) {
         binding.root.showSnackBarError("Successful authorization", "", {})
         presenter.openScreenProfile(id)
+      //  (requireActivity() as BottomNavigationSetIcon).setDefault()
     }
 
     override fun successRegister(id: Int) {
         binding.root.showSnackBarError("Account created successfully", "", {})
         presenter.openScreenProfile(id)
+       // (requireActivity() as BottomNavigationSetIcon).setDefault()
     }
 
 
@@ -190,6 +192,10 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     override fun emptyAccount() {
         binding.userNameTextInput.error = "This user does not exist"
+    }
+
+    override fun setBottomNavigationIcon(checkLogin: String) {
+        (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetCurrentAccount(checkLogin)
     }
 
 
@@ -286,8 +292,8 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             ConstraintSet.END)
         constraintSetLogin.applyTo(binding.root)
 
-        constraintSetLogin.clear(R.id.teamSign, ConstraintSet.TOP)
-        constraintSetLogin.connect(R.id.teamSign,
+        constraintSetLogin.clear(R.id.privacyPolicy, ConstraintSet.TOP)
+        constraintSetLogin.connect(R.id.privacyPolicy,
             ConstraintSet.TOP,
             R.id.changeSignButton,
             ConstraintSet.BOTTOM)
@@ -313,15 +319,15 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             R.id.constraintLayoutSet,
             ConstraintSet.END)
         constraintSetLogin.applyTo(binding.root)
-        constraintSetLogin.clear(R.id.teamSign, ConstraintSet.TOP)
-        constraintSetLogin.connect(R.id.teamSign, ConstraintSet.TOP,
+        constraintSetLogin.clear(R.id.privacyPolicy, ConstraintSet.TOP)
+        constraintSetLogin.connect(R.id.privacyPolicy, ConstraintSet.TOP,
             R.id.changeRegisterButton,
             ConstraintSet.BOTTOM)
         constraintSetLogin.applyTo(binding.root)
     }
 
     private fun setSpanRegulationsTv() {
-        SpannableStringBuilder(binding.teamSign.text).apply {
+        SpannableStringBuilder(binding.privacyPolicy.text).apply {
 
             setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
                 R.color.selectedColor)), 41, 55, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -334,7 +340,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             setSpan(UnderlineSpan(), 41, 55, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             setSpan(UnderlineSpan(), 60, 76, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-            binding.teamSign.text = this
+            binding.privacyPolicy.text = this
             removeSpan(this)
         }
     }

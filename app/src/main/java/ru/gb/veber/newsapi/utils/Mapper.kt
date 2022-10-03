@@ -36,6 +36,16 @@ fun mapToAccount(item: AccountDbEntity): Account {
     )
 }
 
+fun mapToAccountDbEntity(item: Account): AccountDbEntity {
+    return AccountDbEntity(
+        id = item.id,
+        userName = item.userName,
+        email = item.email,
+        createdAt = item.createdAt,
+        password = item.password
+    )
+}
+
 fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
     return ArticleDbEntity(
         id = 0,

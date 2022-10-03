@@ -26,7 +26,7 @@
 
     <item
         android:id="@+id/actionProfile"
-        android:icon="@drawable/profile_icon"
+        android:icon="@drawable/ic_baseline_person_add_alt_1_24"
         android:title="Profile"
         app:showAsAction="ifRoom" />
 </menu>

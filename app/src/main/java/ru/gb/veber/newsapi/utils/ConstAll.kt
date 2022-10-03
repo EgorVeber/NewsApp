@@ -11,3 +11,10 @@ const val EVERYTHING = "everything"
 
 //ROOM
 const val ACCOUNT_ID_DEFAULT = 0
+const val ERROR_DB = "ERROR_DB"
+
+//BUNDLE SHARED
+const val FILE_SETTINGS = "FILE_SETTINGS"
+const val ACCOUNT_ID = "ACCOUNT_ID"
+const val ACCOUNT_LOGIN = "ACCOUNT_LOGIN"
+const val ACCOUNT_LOGIN_DEFAULT = "Profile"

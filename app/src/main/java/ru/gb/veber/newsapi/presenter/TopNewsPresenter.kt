@@ -9,6 +9,7 @@ import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.mapToArticle
 import ru.gb.veber.newsapi.utils.mapToArticleDbEntity
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
@@ -85,10 +86,10 @@ class TopNewsPresenter(
     fun saveArticle(it: Article, accountId: Int) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             articleRepoImpl.insertArticle(mapToArticleDbEntity(it,accountId)).subscribe({
-                Log.d("ERROR_DB", it.toString())
+                Log.d(ERROR_DB, it.toString())
                 viewState.successInsertArticle()
             }, {
-                Log.d("ERROR_DB", it.localizedMessage)
+                Log.d(ERROR_DB, it.localizedMessage)
             })
         }
     }

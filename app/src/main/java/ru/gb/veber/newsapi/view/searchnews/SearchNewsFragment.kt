@@ -10,8 +10,9 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.profile.ProfileFragment.Companion.ACCOUNT_ID
 
 class SearchNewsFragment : MvpAppCompatFragment(),SearchNewsView, BackPressedListener {
 
@@ -33,7 +34,7 @@ class SearchNewsFragment : MvpAppCompatFragment(),SearchNewsView, BackPressedLis
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("arguments", arguments?.getInt(ACCOUNT_ID, 0).toString())
+        Log.d("arguments", arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT).toString())
     }
 
     override fun init() {

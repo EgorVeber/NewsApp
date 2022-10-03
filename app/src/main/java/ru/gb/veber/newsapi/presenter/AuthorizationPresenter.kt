@@ -5,10 +5,11 @@ import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
-import ru.gb.veber.newsapi.core.FragmentProfileScreen
+import ru.gb.veber.newsapi.core.AccountScreen
+import ru.gb.veber.newsapi.model.Account
+import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
-import ru.gb.veber.newsapi.model.setAccountID
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationView
 import java.util.*
@@ -16,6 +17,7 @@ import java.util.*
 class AuthorizationPresenter(
     private val router: Router,
     private val roomRepoImpl: RoomRepoImpl,
+    private val sharedPreferenceAccount: SharedPreferenceAccount,
 ) :
     MvpPresenter<AuthorizationView>() {
 
@@ -36,12 +38,11 @@ class AuthorizationPresenter(
     fun createAccount(username: String, email: String, password: String) {
         roomRepoImpl.createAccount(AccountDbEntity(0, username, password, email, Date().toString()))
             .andThen(roomRepoImpl.getAccountByUserName(username)).subscribe({
-                Log.d("ERROR_DB", it.toString())
                 viewState.successRegister(it.id)
-                saveIdSharedPref(it.id)
+                saveIdSharedPref(it)
             }, {
                 viewState.errorRegister()
-                Log.d("ERROR_DB", it.localizedMessage)
+                Log.d(ERROR_DB, it.localizedMessage)
             }).disposebleBy(bag)
     }
 
@@ -49,27 +50,29 @@ class AuthorizationPresenter(
         roomRepoImpl.getAccountByUserName(userLogin).subscribe({
             if (it.password.contains(userPassword)) {
                 viewState.successSignIn(it.id)
-                saveIdSharedPref(it.id)
+                saveIdSharedPref(it)
             } else {
                 viewState.errorSignIn()
             }
         }, {
-            Log.d("ERROR_DB", it.localizedMessage)
+            Log.d(ERROR_DB, it.localizedMessage)
             viewState.emptyAccount()
         }).disposebleBy(bag)
     }
 
-    private fun saveIdSharedPref(accountId: Int) {
-        setAccountID(accountId)
+    private fun saveIdSharedPref(accountId: Account) {
+        sharedPreferenceAccount.setAccountID(accountId.id)
+        sharedPreferenceAccount.setAccountLogin(accountId.userName.checkLogin())
+        viewState.setBottomNavigationIcon(accountId.userName.checkLogin())
     }
 
     fun openScreenProfile(id: Int) {
-        router.replaceScreen(FragmentProfileScreen(id))
+        router.replaceScreen(AccountScreen(id))
     }
 
     fun openMain() {
         viewState.sendActivityOpenScreen()
-       // router.replaceScreen(AllNewsScreen(0))
+        // router.replaceScreen(AllNewsScreen(0))
     }
 
     fun openScreenWebView(string: String) {

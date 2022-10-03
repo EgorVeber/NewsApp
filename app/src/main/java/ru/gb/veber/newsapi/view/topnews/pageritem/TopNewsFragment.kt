@@ -26,7 +26,6 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.profile.ProfileFragment.Companion.ACCOUNT_ID
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_GENERAL
 
 

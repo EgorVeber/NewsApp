@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollAccount"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,13 +17,33 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                tools:text="James" />
+
+            <TextView
+                android:id="@+id/userEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:text="James@megafon.ru" />
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -33,9 +54,9 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
-                    android:text="UserName" />
+                    android:layout_marginStart="5dp"
+                    android:text="Account" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -45,13 +66,15 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/editInformation"
                     android:layout_width="match_parent"
-                    android:id="@+id/changeDate"
                     android:layout_height="match_parent"
-                    android:background="?selectableItemBackground"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="10dp"
+                    android:background="?selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -65,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Сhange data"
+                        android:text="Edit Information"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -75,9 +98,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="?selectableItemBackground"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -102,7 +127,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -127,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="25dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -142,9 +169,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
                         android:layout_weight="5"
                         android:max="100"
-                        android:layout_marginStart="5dp"
                         android:progress="60"
                         app:indicatorColor="@color/selectedColor" />
 
@@ -157,13 +184,12 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -189,9 +215,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="15dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -202,9 +229,9 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_marginStart="5dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
                         android:text="Font size"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
@@ -214,9 +241,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="15dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -230,8 +258,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Dark theme"
                         android:layout_marginStart="5dp"
+                        android:text="Dark theme"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -245,8 +273,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="30dp"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="25dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -268,8 +298,8 @@
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:checked="true"
-                        android:layout_marginEnd="10dp" />
+                        android:layout_marginEnd="10dp"
+                        android:checked="true" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -279,7 +309,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -305,9 +335,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="15dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -329,15 +360,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginEnd="10dp"
-                        android:checked="true"/>
+                        android:checked="true" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="30dp"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="25dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -351,8 +384,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Customize Category"
                         android:layout_marginStart="5dp"
+                        android:text="Customize Category"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -364,7 +397,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -389,8 +422,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="30dp"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="25dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -402,8 +437,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
                         android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
                         android:text="Get Notification FireBase"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
@@ -422,8 +457,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -434,8 +468,8 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:text="Additional Information" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -449,9 +483,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="15dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -474,8 +509,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="15dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -489,8 +526,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Privacy Policy"
                         android:layout_marginStart="5dp"
+                        android:text="Privacy Policy"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -500,8 +537,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -520,6 +559,36 @@
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/deleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="?selectableItemBackground"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_delete_24" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:text="Delete account"
+                    android:textColor="@color/colorError"
+                    android:textSize="16sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

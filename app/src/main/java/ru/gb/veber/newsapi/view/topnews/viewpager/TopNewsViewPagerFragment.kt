@@ -10,6 +10,7 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsViewPagerFragmentBinding
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
@@ -49,7 +50,7 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initialization(arguments?.getInt(ProfileFragment.ACCOUNT_ID)?:ACCOUNT_ID_DEFAULT)
+        initialization(arguments?.getInt(ACCOUNT_ID)?:ACCOUNT_ID_DEFAULT)
     }
 
     private fun initialization(accountID: Int) {
@@ -84,7 +85,7 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
         fun getInstance(accountID:Int): TopNewsViewPagerFragment {
             return TopNewsViewPagerFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ProfileFragment.ACCOUNT_ID, accountID)
+                    putInt(ACCOUNT_ID, accountID)
                 }
             }
         }

@@ -4,11 +4,16 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.*
-import ru.gb.veber.newsapi.model.getAccountID
+import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.ViewMain
 
 
-class ActivityPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
+class ActivityPresenter(
+    private val router: Router,
+    private val sharedPreferenceAccount: SharedPreferenceAccount
+) : MvpPresenter<ViewMain>() {
 
     override fun onFirstViewAttach() {
         Log.d("TAG", "onFirstViewAttach() called")
@@ -17,27 +22,33 @@ class ActivityPresenter(private val router: Router) : MvpPresenter<ViewMain>() {
     }
 
     fun openScreenNews() {
-        router.replaceScreen(TopNewsViewPagerScreen(getAccountID()))
+        router.replaceScreen(TopNewsViewPagerScreen(sharedPreferenceAccount.getAccountID()))
     }
 
     fun openScreenSources() {
-        router.replaceScreen(FragmentSourcesScreen)
+        router.replaceScreen(SourcesScreen)
     }
 
     fun openScreenProfile() {
-        router.replaceScreen(FragmentProfileMainScreen(getAccountID()))
+        router.replaceScreen(ProfileScreen(sharedPreferenceAccount.getAccountID()))
     }
 
     fun openScreenSearchNews() {
-        router.replaceScreen(SearchNewsScreen(getAccountID()))
+        router.replaceScreen(SearchNewsScreen(sharedPreferenceAccount.getAccountID()))
     }
 
     fun openScreenAllNews() {
-        router.replaceScreen(AllNewsScreen(getAccountID()))
+        router.replaceScreen(AllNewsScreen(sharedPreferenceAccount.getAccountID()))
     }
 
     fun onBackPressedRouter() {
         Log.d("Navigate", " router.exit() ActivityPresenter")
         router.exit()
+    }
+
+    fun getAccountSettings() {
+        if(sharedPreferenceAccount.getAccountID()!= ACCOUNT_ID_DEFAULT){
+            viewState.onCreateSetIconTitleAccount(sharedPreferenceAccount.getAccountLogin())
+        }
     }
 }

@@ -8,7 +8,7 @@ import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 interface RoomRepo {
     fun createAccount(accountDbEntity: AccountDbEntity): Completable
     fun updateAccount(accountDbEntity: AccountDbEntity): Completable
-    fun deleteAccount(accountDbEntity: AccountDbEntity): Completable
+    fun deleteAccount(account:Int): Completable
     fun deleteAllAccount(): Completable
     fun getAccountById(accountId: Int): Single<Account>
     fun getAccountByUserName(userName: String): Single<Account>

@@ -33,4 +33,5 @@ interface AuthorizationView : MvpView {
     fun emailRegisterNotValidate()
 
     fun emptyAccount()
+    fun setBottomNavigationIcon(checkLogin: String)
 }

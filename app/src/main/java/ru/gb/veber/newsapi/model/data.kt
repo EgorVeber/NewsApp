@@ -19,8 +19,8 @@ data class Source(
 
 data class Account(
     val id: Int,
-    val userName: String,
-    val email: String,
-    val password: String,
+    var userName: String,
+    var email: String,
+    var password: String,
     val createdAt: String,
 )

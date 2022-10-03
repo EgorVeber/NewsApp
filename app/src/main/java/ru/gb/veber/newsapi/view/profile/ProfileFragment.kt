@@ -7,6 +7,8 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.presenter.ProfilePresenter
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
 class ProfileFragment : MvpAppCompatFragment(), ProfileView {
@@ -29,8 +31,6 @@ class ProfileFragment : MvpAppCompatFragment(), ProfileView {
     }
 
     companion object {
-        const val FILE_SETTINGS = "FILE_SETTINGS"
-        const val ACCOUNT_ID = "ACCOUNT_ID"
         fun getInstance(accountID: Int): ProfileFragment {
             return ProfileFragment().apply {
                 arguments = Bundle().apply {

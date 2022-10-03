@@ -7,7 +7,7 @@
 
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/mainBackSignIn"
+        android:id="@+id/backMainScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
@@ -20,13 +20,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
-        android:text="Home"
+        android:text="Authorization"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/mainBackSignIn"
-        app:layout_constraintStart_toEndOf="@+id/mainBackSignIn"
-        app:layout_constraintTop_toTopOf="@+id/mainBackSignIn" />
+        app:layout_constraintBottom_toBottomOf="@+id/backMainScreen"
+        app:layout_constraintStart_toEndOf="@+id/backMainScreen"
+        app:layout_constraintTop_toTopOf="@+id/backMainScreen" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group1"
@@ -112,7 +112,7 @@
         app:rippleColor="@color/gray3" />
 
     <TextView
-        android:id="@+id/teamSign"
+        android:id="@+id/privacyPolicy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"

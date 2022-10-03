@@ -7,4 +7,5 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface ViewMain : MvpView {
     fun init()
+    fun onCreateSetIconTitleAccount(accountLogin: String)
 }

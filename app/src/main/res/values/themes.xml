@@ -17,5 +17,8 @@
         <item name="textInputStyle">@style/MyTextInputStyle</item>
         <item name="materialButtonStyle">@style/MyMaterialButtonStyle</item>
         <item name="switchStyle">@style/MySwitchStyle</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
     </style>
+
+
 </resources>

@@ -1,20 +1,27 @@
 package ru.gb.veber.newsapi.view.profile.account
 
-import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
-import ru.gb.veber.newsapi.model.setAccountID
+import ru.gb.veber.newsapi.databinding.DialogDeleteAccountBinding
+import ru.gb.veber.newsapi.model.Account
+import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.AccountPresenter
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.hide
+import ru.gb.veber.newsapi.utils.show
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.profile.ProfileFragment
+import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 
 class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener {
 
@@ -22,7 +29,8 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     private val binding get() = _binding!!
 
     private val presenter: AccountPresenter by moxyPresenter {
-        AccountPresenter(App.instance.router)
+        AccountPresenter(App.instance.router, RoomRepoImpl(App.instance.newsDb.accountsDao()),
+            SharedPreferenceAccount())
     }
 
     override fun onCreateView(
@@ -36,26 +44,62 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("arguments", arguments?.getInt(ACCOUNT_ID, 0).toString())
+        arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT).apply {
+            presenter.getAccountSettings(this)
+        }
     }
 
     override fun init() {
 
-
         binding.logout.setOnClickListener {
             presenter.logout()
+            presenter.setBottomNavigationIcon()
         }
 
-        binding.changeDate.setOnClickListener {
-            presenter.openScreenChangeDate(arguments?.getInt(ACCOUNT_ID, 0))
+        binding.editInformation.setOnClickListener {
+            presenter.openScreenEditAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
         }
 
-//        binding.progressBar.max = 100
-//        binding.progressBar.progress = 90
+        binding.deleteAccount.setOnClickListener {
+            presenter.showDialog()
+        }
     }
 
-    override fun logout() {
 
+    override fun setAccountInfo(account: Account) {
+        binding.userName.text = account.userName
+        binding.userEmail.text = account.email
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.nestedScrollAccount.show()
+        Log.d("setAccountInfo", "setAccountInfo() called with: account = $account")
+    }
+
+    override fun loading() {
+        binding.nestedScrollAccount.hide()
+    }
+
+    override fun setBottomNavigationIcon() {
+       (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetDefaultIcon()
+    }
+
+    override fun showDialog() {
+        val dialogBinding = DialogDeleteAccountBinding.inflate(layoutInflater)
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setCancelable(true)
+            .setTitle("Delete account")
+            .setMessage("You will not be able to recover your account")
+            .setView(dialogBinding.root)
+            .create()
+        dialog.show()
+
+        dialogBinding.negativeDelete.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.positiveDelete.setOnClickListener {
+            presenter.deleteAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            dialog.dismiss()
+        }
     }
 
     override fun onDestroyView() {
@@ -68,7 +112,6 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     }
 
     companion object {
-        private const val ACCOUNT_ID = "ACCOUNT_ID"
         fun getInstance(accountID: Int): AccountFragment {
             return AccountFragment().apply {
                 arguments = Bundle().apply {
