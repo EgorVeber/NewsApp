@@ -22,6 +22,7 @@
     <color name="gray4">#808080</color>
     <color name="iconTint">#757575</color>
     <color name="colorError">#f44336</color>
+    <color name="colorLike">#ef5350</color>
 
     <color name="teal_300">#4DB6AC</color>
     <color name="teal_400">#26A69A</color>

@@ -18,4 +18,5 @@ interface EditAccountView : MvpView {
     fun emailRegisterNotValidate()
     fun successUpdateAccount(userLogin:String)
     fun errorUpdateAccount()
+    fun noChangeAccount()
 }

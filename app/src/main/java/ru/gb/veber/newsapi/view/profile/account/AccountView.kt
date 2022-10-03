@@ -14,4 +14,6 @@ interface AccountView : MvpView {
     fun setBottomNavigationIcon()
     @StateStrategyType(SkipStrategy::class)
     fun showDialog()
+    fun clearHistory()
+    fun clearFavorites()
 }

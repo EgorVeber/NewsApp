@@ -55,9 +55,11 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
     }
 
     private fun initialization() {
+
         binding.backAccountScreen.setOnClickListener {
             presenter.backAccountScreen()
         }
+
         binding.saveChangeAccount.setOnClickListener {
             if (checkNullSignUpData()) {
                 Log.d("userEmail", userEmail)
@@ -157,6 +159,10 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
 
     override fun errorUpdateAccount() {
         binding.root.showSnackBarError("Email and username must be unique", "", {})
+    }
+
+    override fun noChangeAccount() {
+        binding.root.showSnackBarError("No change Account", "", {})
     }
 
     private fun rxTextChangerValidation() {

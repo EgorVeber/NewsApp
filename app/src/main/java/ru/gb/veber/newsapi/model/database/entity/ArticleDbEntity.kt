@@ -1,7 +1,9 @@
 package ru.gb.veber.newsapi.model.database.entity
 
-import androidx.room.*
-import ru.gb.veber.newsapi.model.Source
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 
 
 @Entity(
@@ -15,7 +17,7 @@ import ru.gb.veber.newsapi.model.Source
 )
 data class ArticleDbEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    var id: Int,
     @ColumnInfo(name = "account_id")
     val accountID: Int,
     var author: String?,

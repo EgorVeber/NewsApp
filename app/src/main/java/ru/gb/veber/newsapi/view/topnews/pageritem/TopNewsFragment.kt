@@ -26,7 +26,7 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_GENERAL
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
 
 
 class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener {
@@ -39,7 +39,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     private val newsAdapter = TopNewsAdapter() {
         presenter.clickNews(it)
-        presenter.saveArticle(it,arguments?.getInt(ACCOUNT_ID)?: ACCOUNT_ID_DEFAULT)
+        presenter.saveArticle(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 
     private val presenter: TopNewsPresenter by moxyPresenter {
@@ -101,10 +101,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
 
 
-
-        binding.imageFavorites.setOnClickListener {
-            binding.imageFavorites.setImageResource(R.drawable.ic_baseline_heart_brokenlike)
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -122,6 +118,8 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.imageViewAll.show()
         binding.titleNews.show()
         binding.dateNews.show()
+        binding.authorText.show()
+        binding.imageFavorites.show()
         binding.descriptionNews.show()
         binding.imageViewAll.loadGlideNot(it.urlToImage)
         binding.dateNews.text = stringFromData(it.publishedAt).formatDateDay()
@@ -147,12 +145,19 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.descriptionNews.setOnClickListener { view ->
             presenter.openScreenWebView(it.url)
         }
+
+        binding.imageFavorites.setOnClickListener { view ->
+            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+            presenter.saveArticleLike(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        }
     }
 
     override fun showFilter() {
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
         binding.imageViewAll.hide()
         binding.titleNews.hide()
+        binding.authorText.hide()
+        binding.imageFavorites.hide()
         binding.dateNews.hide()
         binding.descriptionNews.hide()
         binding.countrySpiner.show()

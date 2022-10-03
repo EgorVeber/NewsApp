@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.model
 
 data class Article(
+    var id:Int?=0,
     var author: String?,
     var description: String?,
     var publishedAt: String,
@@ -23,4 +24,6 @@ data class Account(
     var email: String,
     var password: String,
     val createdAt: String,
+    var totalHistory: String?="0",
+    var totalFavorites: String?="0",
 )

@@ -1,15 +1,11 @@
 package ru.gb.veber.newsapi.view.profile
 
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.presenter.ProfilePresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
 class ProfileFragment : MvpAppCompatFragment(), ProfileView {
 

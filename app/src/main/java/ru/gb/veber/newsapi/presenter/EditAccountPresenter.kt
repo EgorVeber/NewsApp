@@ -66,15 +66,20 @@ class EditAccountPresenter(
     }
 
     fun checkSaveAccount(userLogin: String, userPassword: String, userEmail: String) {
-        account.email = userEmail
-        account.userName = userLogin
-        account.password = userPassword
-        roomRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
-            viewState.successUpdateAccount(account.userName.checkLogin())
-            sharedPreferenceAccount.setAccountLogin(account.userName.checkLogin())
-        }, {
-            viewState.errorUpdateAccount()
-            Log.d(ERROR_DB, it.localizedMessage)
-        })
+
+        if (account.userName == userLogin && account.email == userEmail && account.password == userPassword) {
+            viewState.noChangeAccount()
+        } else {
+            account.email = userEmail
+            account.userName = userLogin
+            account.password = userPassword
+            roomRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
+                viewState.successUpdateAccount(account.userName.checkLogin())
+                sharedPreferenceAccount.setAccountLogin(account.userName.checkLogin())
+            }, {
+                viewState.errorUpdateAccount()
+                Log.d(ERROR_DB, it.localizedMessage)
+            })
+        }
     }
 }

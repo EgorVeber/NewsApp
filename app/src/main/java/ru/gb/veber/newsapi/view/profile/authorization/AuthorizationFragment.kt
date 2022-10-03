@@ -174,7 +174,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun successSignIn(id: Int) {
-        binding.root.showSnackBarError("Successful authorization", "", {})
+        //binding.root.showSnackBarError("Successful authorization", "", {})
         presenter.openScreenProfile(id)
       //  (requireActivity() as BottomNavigationSetIcon).setDefault()
     }

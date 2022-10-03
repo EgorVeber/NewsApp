@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.view.profile.account
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.util.Log
@@ -9,17 +10,16 @@ import android.view.ViewGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
 import ru.gb.veber.newsapi.databinding.DialogDeleteAccountBinding
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.AccountPresenter
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.hide
-import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 
@@ -30,7 +30,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     private val presenter: AccountPresenter by moxyPresenter {
         AccountPresenter(App.instance.router, RoomRepoImpl(App.instance.newsDb.accountsDao()),
-            SharedPreferenceAccount())
+            SharedPreferenceAccount(), ArticleRepoImpl(App.instance.newsDb.articleDao()))
     }
 
     override fun onCreateView(
@@ -63,12 +63,25 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.deleteAccount.setOnClickListener {
             presenter.showDialog()
         }
+        binding.totalHistory.setOnClickListener {
+            presenter.clearHistory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        }
+        binding.totalFavorites.setOnClickListener {
+            presenter.clearFavorites(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        }
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun setAccountInfo(account: Account) {
+
         binding.userName.text = account.userName
         binding.userEmail.text = account.email
+        binding.totalFavoritesText.text =
+            getString(R.string.totalFavorites) + " " + account.totalFavorites
+        binding.totalHistoryText.text =
+            getString(R.string.totalHistory) + " " + account.totalHistory
+
         TransitionManager.beginDelayedTransition(binding.root)
         binding.nestedScrollAccount.show()
         Log.d("setAccountInfo", "setAccountInfo() called with: account = $account")
@@ -79,7 +92,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     }
 
     override fun setBottomNavigationIcon() {
-       (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetDefaultIcon()
+        (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetDefaultIcon()
     }
 
     override fun showDialog() {
@@ -100,6 +113,17 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
             presenter.deleteAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
             dialog.dismiss()
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun clearHistory() {
+        binding.totalHistoryText.text = getString(R.string.totalHistory)+" 0"
+        binding.root.showSnackBarError("Success", "", {})
+    }
+
+    override fun clearFavorites() {
+        binding.totalFavoritesText.text = getString(R.string.totalFavorites)+" 0"
+        binding.root.showSnackBarError("Success", "", {})
     }
 
     override fun onDestroyView() {

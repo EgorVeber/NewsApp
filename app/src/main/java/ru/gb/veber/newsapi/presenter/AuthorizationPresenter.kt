@@ -4,8 +4,8 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
-import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.core.AccountScreen
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity

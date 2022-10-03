@@ -20,7 +20,7 @@ interface AccountsDao {
     @Query("Delete from accounts")
     fun deleteAllAccount(): Completable
 
-    @Query("Select * from accounts where id =:accountId")
+    @Query("Select  * from accounts where id =:accountId")
     fun getAccountById(accountId: Int): Single<AccountDbEntity>
 
     @Query("Select * from accounts where userName =:userName")

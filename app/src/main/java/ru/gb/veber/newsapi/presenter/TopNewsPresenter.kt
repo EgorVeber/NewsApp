@@ -7,7 +7,6 @@ import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.mapToArticle
@@ -22,6 +21,7 @@ class TopNewsPresenter(
     MvpPresenter<TopNewsView>() {
 
     private var checkFilter = false
+    private var currentArticle = 0
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -85,12 +85,33 @@ class TopNewsPresenter(
 
     fun saveArticle(it: Article, accountId: Int) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
-            articleRepoImpl.insertArticle(mapToArticleDbEntity(it,accountId)).subscribe({
+            articleRepoImpl.insertArticle(mapToArticleDbEntity(it, accountId)).andThen(
+                articleRepoImpl.getLastArticle()
+            ).subscribe({
+                currentArticle = it.id
                 Log.d(ERROR_DB, it.toString())
                 viewState.successInsertArticle()
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
             })
+        }
+    }
+
+    fun saveArticleLike(article: Article, accountId: Int) {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            if (currentArticle != 0) {
+                var item = mapToArticleDbEntity(article, accountId)
+                item.isFavorites = true
+                item.id = currentArticle
+                articleRepoImpl.updateArticle(item).subscribe({
+                    viewState.successInsertArticle()
+                    Log.d(ERROR_DB, "successInsertArticle")
+                }, {
+                    Log.d(ERROR_DB, it.localizedMessage)
+                })
+            } else {
+                saveArticle(article, accountId)
+            }
         }
     }
 }

@@ -18,6 +18,14 @@ fun mapToArticle(item: ArticleDTO): Article {
     )
 }
 
+
+fun mapToSourcesDbEntity(sourcesId: String, sourcesName: String): Source {
+    return Source(
+        id = sourcesId,
+        name = sourcesName
+    )
+}
+
 fun mapToSources(item: SourceDTO): Source {
     return Source(
         id = item.id,
@@ -60,5 +68,19 @@ fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
         urlToImage = article.urlToImage,
         isHistory = true,
         isFavorites = false
+    )
+}
+
+
+fun articleDbEntityToArticle(item: ArticleDbEntity): Article {
+    return Article(
+        author = item.author,
+        description = item.description,
+        publishedAt = item.publishedAt,
+        publishedAtChange = item.publishedAt,
+        source = mapToSourcesDbEntity(item.sourceId, item.sourceName),
+        title = item.title,
+        url = item.url,
+        urlToImage = item.urlToImage,
     )
 }

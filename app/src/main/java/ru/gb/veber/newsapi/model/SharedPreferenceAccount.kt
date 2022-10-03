@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.view.profile.ProfileFragment
 
 
 class SharedPreferenceAccount {

@@ -13,21 +13,20 @@ import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.profile.ProfileFragment
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.BUSINESS
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_BUSINESS
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_ENTERTAINMENT
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_GENERAL
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_HEALTH
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_SCIENCE
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_SPORTS
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.CATEGORY_TECHNOLOGY
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.ENTERTAINMENT
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.GENERAL
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.HEALTH
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.SCIENCE
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.SPORTS
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsAdapter.Companion.TECHNOLOGY
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.BUSINESS
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_BUSINESS
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_ENTERTAINMENT
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_HEALTH
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_SCIENCE
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_SPORTS
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_TECHNOLOGY
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.ENTERTAINMENT
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.GENERAL
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.HEALTH
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SCIENCE
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SPORTS
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.TECHNOLOGY
 
 class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
     BackPressedListener {
@@ -54,7 +53,7 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
     }
 
     private fun initialization(accountID: Int) {
-        binding.viewPager.adapter = TopNewsAdapter(requireActivity(),accountID)
+        binding.viewPager.adapter = TopNewsViewPagerAdapter(requireActivity(),accountID)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 BUSINESS -> tab.text = CATEGORY_BUSINESS

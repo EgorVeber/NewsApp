@@ -3,7 +3,6 @@ package ru.gb.veber.newsapi.model.database.dao
 import androidx.room.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
 
 @Dao
@@ -20,6 +19,21 @@ interface ArticleDao {
     @Query("Delete from article")
     fun deleteAllArticle(): Completable
 
-    @Query("Select * from article where id =:accountId")
+    @Query("Delete from article where account_id=:accountId and is_favorites=1")
+    fun deleteArticleIsFavoriteById(accountId: Int): Completable
+
+    @Query("Delete from article where account_id=:accountId and is_history=1")
+    fun deleteArticleIsHistoryById(accountId: Int): Completable
+
+    @Query("Select * from article where account_id =:accountId and is_history=1")
+    fun getHistoryArticleById(accountId: Int): Single<List<ArticleDbEntity>>
+
+    @Query("Select * from article where account_id =:accountId and is_favorites=1")
+    fun getLikeArticleById(accountId: Int): Single<List<ArticleDbEntity>>
+
+    @Query("Select * from article where account_id =:accountId")
     fun getArticleById(accountId: Int): Single<List<ArticleDbEntity>>
+
+    @Query("SELECT * FROM article ORDER BY id DESC  LIMIT 1")
+    fun getLastArticle(): Single<ArticleDbEntity>
 }

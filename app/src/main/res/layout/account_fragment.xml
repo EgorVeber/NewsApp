@@ -17,13 +17,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <TextView
                 android:id="@+id/userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -93,8 +92,9 @@
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/logout"
+                    android:id="@+id/totalFavorites"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
@@ -110,18 +110,62 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_baseline_logout_24" />
+                        android:src="@drawable/ic_favorite" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/totalFavoritesText"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Logout"
+                        android:layout_weight="1"
+                        android:text="Total Favorites 0"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_delete_24" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/totalHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="?selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_history_24" />
+
+                    <TextView
+                        android:id="@+id/totalHistoryText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:text="Total History 0"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_delete_24" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -154,7 +198,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="25dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -181,6 +224,35 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="60 из 100" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="25dp"
+                    android:background="?selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_logout_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:text="Logout"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -367,7 +439,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="25dp"
+                    android:layout_marginBottom="15dp"
                     android:orientation="horizontal"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp">
@@ -386,6 +458,34 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="Customize Category"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/customizeSources"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="25dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_emoji_people_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:text="Customize Sources"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -579,7 +679,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_baseline_delete_24" />
+                    android:src="@drawable/ic_deleteerror" />
 
                 <TextView
                     android:layout_width="wrap_content"

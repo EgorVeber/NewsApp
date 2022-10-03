@@ -5,7 +5,6 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.*
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.ViewMain
 
@@ -50,5 +49,9 @@ class ActivityPresenter(
         if(sharedPreferenceAccount.getAccountID()!= ACCOUNT_ID_DEFAULT){
             viewState.onCreateSetIconTitleAccount(sharedPreferenceAccount.getAccountLogin())
         }
+    }
+
+    fun openFavoritesScreen() {
+        router.replaceScreen(FavoritesViewPagerScreen(sharedPreferenceAccount.getAccountID()))
     }
 }
