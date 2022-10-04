@@ -1,19 +1,31 @@
 package ru.gb.veber.newsapi.view.activity
 
+import android.annotation.SuppressLint
+import android.opengl.Visibility
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.util.Log
+import android.view.View
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.reactivex.rxjava3.core.Completable
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
+import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.allnews.AllNewsFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
@@ -30,11 +42,18 @@ interface EventLogoutAccountScreen {
     fun bottomNavigationSetTitleCurrentAccount(checkLogin: String)
 }
 
-class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAccountScreen {
+interface EventOpenBehaviorNews {
+    fun openNews(article: Article)
+}
+
+class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAccountScreen,
+    EventOpenBehaviorNews {
 
     private lateinit var binding: ActivityMainBinding
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
-    private var backStack = 1;
+    private var backStack = 1
+
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
     private val presenter: ActivityPresenter by moxyPresenter {
         ActivityPresenter(App.instance.router, SharedPreferenceAccount())
@@ -58,6 +77,11 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun init() {
+
+        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
+            addBottomSheetCallback(callBackBehavior)
+        }
+
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
 
@@ -72,7 +96,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
                     presenter.openScreenAllNews()
                 }
                 R.id.sourcesNews -> {
-                   // presenter.openScreenSources()
+                    // presenter.openScreenSources()
                     presenter.openFavoritesScreen()
                 }
                 R.id.actionProfile -> {
@@ -87,40 +111,44 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         }
     }
 
-    override fun onCreateSetIconTitleAccount(accountLogin: String) {
-        var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
-        item.title = accountLogin
-        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_person_24)
-    }
-
     override fun onBackPressed() {
-
-        if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
-            supportFragmentManager.fragments.last() !is EditAccountFragment) {
-            binding.bottomNavigationView.selectedItemId = R.id.allNews
-        }
-
-        Log.d("NavigateActivityBack", backStack.toString())
-        if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
-            Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
+        if (binding.webNews.visibility == View.VISIBLE) {
+            binding.webNews.visibility = View.INVISIBLE
+            binding.nestedBehaviorMain.visibility = View.VISIBLE
         } else {
-            supportFragmentManager.fragments.forEach { fragment ->
-                Log.d("NavigateActivityBack", "onBackPressed() forEach  fragment = $fragment")
-                if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
-                    Log.d("NavigateActivityBack", "onBackPressed if")
-                    return
+            if (bSheetB.state == BottomSheetBehavior.STATE_EXPANDED) {
+                bSheetB.collapsed()
+                binding.bottomNavigationView.visibility=View.VISIBLE
+            } else {
+                if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
+                    supportFragmentManager.fragments.last() !is EditAccountFragment
+                ) {
+                    binding.bottomNavigationView.selectedItemId = R.id.allNews
                 }
+
+                Log.d("NavigateActivityBack", backStack.toString())
+                if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
+                    Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
+                } else {
+                    supportFragmentManager.fragments.forEach { fragment ->
+                        Log.d("NavigateActivityBack",
+                            "onBackPressed() forEach  fragment = $fragment")
+                        if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
+                            Log.d("NavigateActivityBack", "onBackPressed if")
+                            return
+                        }
+                    }
+                }
+                backStack = 0
+                Completable.create {
+                    it.onComplete()
+                }.delay(2000L, TimeUnit.MILLISECONDS).subscribe({
+                    backStack = 1
+                }, {
+                })
+                //presenter.onBackPressedRouter()
             }
         }
-
-        backStack = 0
-        Completable.create {
-            it.onComplete()
-        }.delay(2000L, TimeUnit.MILLISECONDS).subscribe({
-            backStack = 1
-        }, {
-        })
-        //presenter.onBackPressedRouter()
     }
 
     override fun openMainScreen() {
@@ -133,6 +161,12 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         item.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_person_add_alt_1_24)
     }
 
+    override fun onCreateSetIconTitleAccount(accountLogin: String) {
+        var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
+        item.title = accountLogin
+        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_person_24)
+    }
+
     override fun bottomNavigationSetCurrentAccount(checkLogin: String) {
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = checkLogin
@@ -142,5 +176,80 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     override fun bottomNavigationSetTitleCurrentAccount(checkLogin: String) {
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = checkLogin
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun openNews(it: Article) {
+        bSheetB.expanded()
+        binding.bottomNavigationView.visibility=View.INVISIBLE
+//        binding.imageViewAll.show()
+//        binding.titleNews.show()
+//        binding.dateNews.show()
+//        binding.authorText.show()
+//        binding.imageFavorites.show()
+//        binding.descriptionNews.show()
+        binding.imageViewAll.loadGlideNot(it.urlToImage)
+        binding.dateNews.text = stringFromData(it.publishedAt).formatDateDay()
+        binding.titleNews.text = it.title
+
+
+        var spanableStringBuilder =
+            SpannableStringBuilder(it.description)
+        spanableStringBuilder.setSpan(
+            ImageSpan(this, R.drawable.ic_baseline_open_in_new_24),
+            spanableStringBuilder.length - 1,
+            spanableStringBuilder.length,
+            Spannable.SPAN_INCLUSIVE_INCLUSIVE
+        )
+
+        binding.descriptionNews.text = spanableStringBuilder
+        binding.authorText.text = it.author
+        binding.sourceText.text = it.source.name
+        spanableStringBuilder.removeSpan(spanableStringBuilder)
+
+        binding.descriptionNews.setOnClickListener { view ->
+            // bSheetB.collapsed()
+            //presenter.openScreenWebView(it.url)
+
+            binding.bottomNavigationView.visibility=View.INVISIBLE
+            binding.nestedBehaviorMain.visibility = View.INVISIBLE
+            binding.webNews.webViewClient = webViewClient
+            binding.webNews.loadUrl(it.url)
+            binding.webNews.webChromeClient = WebChromeClient()
+            binding.webNews.settings.javaScriptEnabled = true;
+            binding.webNews.settings.builtInZoomControls = true;
+            binding.webNews.clearHistory()
+            binding.webNews.clearCache(true)
+        }
+
+        binding.imageFavorites.setOnClickListener { view ->
+            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+            //      presenter.saveArticleLike(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        }
+    }
+
+    private val webViewClient = object : WebViewClient() {
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            binding.webNews.visibility = View.VISIBLE
+        }
+    }
+
+    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            when (newState) {
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+//                    presenter.behaviorHide()
+//                    binding.filterButton.visibility = View.VISIBLE
+//                    binding.filterButton.setImageResource(R.drawable.filter_icon)
+                }
+
+                BottomSheetBehavior.STATE_EXPANDED -> {
+                }
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        }
     }
 }

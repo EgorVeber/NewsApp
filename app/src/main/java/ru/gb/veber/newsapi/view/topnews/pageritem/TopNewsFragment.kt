@@ -26,6 +26,7 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.activity.EventOpenBehaviorNews
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
 
 
@@ -37,9 +38,11 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private val newsAdapter = TopNewsAdapter() {
-        presenter.clickNews(it)
-        presenter.saveArticle(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+    private val newsAdapter = TopNewsAdapter {
+        (requireActivity() as EventOpenBehaviorNews).openNews(it)
+        //TODO заменить на activity
+        //presenter.clickNews(it)
+        //presenter.saveArticle(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 
     private val presenter: TopNewsPresenter by moxyPresenter {

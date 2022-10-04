@@ -2,9 +2,11 @@ package ru.gb.veber.newsapi.utils
 
 import android.view.View
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
@@ -25,6 +27,16 @@ fun <T> Single<T>.subscribeDefault(): Single<T> {
 fun Completable.subscribeDefault(): Completable {
     return this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 }
+
+fun BottomSheetBehavior<ConstraintLayout>.collapsed() {
+    state=BottomSheetBehavior.STATE_COLLAPSED
+}
+fun BottomSheetBehavior<ConstraintLayout>.expanded() {
+    state=BottomSheetBehavior.STATE_EXPANDED
+}
+
+
+
 
 fun ImageView.loadGlide(url: String?) {
     Glide.with(context).load(url)

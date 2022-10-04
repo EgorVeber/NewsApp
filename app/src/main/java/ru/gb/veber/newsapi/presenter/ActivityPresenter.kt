@@ -54,4 +54,8 @@ class ActivityPresenter(
     fun openFavoritesScreen() {
         router.replaceScreen(FavoritesViewPagerScreen(sharedPreferenceAccount.getAccountID()))
     }
+
+    fun openScreenWebView(url: String) {
+       // router.navigateTo(WebViewScreen(url))
+    }
 }
