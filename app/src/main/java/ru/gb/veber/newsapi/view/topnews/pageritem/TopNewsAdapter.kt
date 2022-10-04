@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.RoundedCornersTransformation
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
 import ru.gb.veber.newsapi.model.Article
@@ -77,6 +80,7 @@ class NewsHeaderViewHolder(
     override fun bind(item: Article) = with(binding) {
         title.text = item.title
         publishedAt.text = item.publishedAtChange
+        //imageNews.loadGlideNot(item.urlToImage)
         imageNews.loadGlideNot(item.urlToImage)
         root.setOnClickListener {
             onUserClickListener.invoke(item)

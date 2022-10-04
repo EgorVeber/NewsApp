@@ -11,6 +11,8 @@ data class Article(
     var url: String,
     var urlToImage: String?,
     var viewType: Int=0,
+    var isHistory:Boolean=false,
+    var isFavorites:Boolean=false
 )
 
 data class Source(

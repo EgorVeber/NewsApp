@@ -39,7 +39,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
     private val newsAdapter = TopNewsAdapter {
-        (requireActivity() as EventOpenBehaviorNews).openNews(it)
+        (requireActivity() as EventOpenBehaviorNews).openNews(it,arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
         //TODO заменить на activity
         //presenter.clickNews(it)
         //presenter.saveArticle(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)

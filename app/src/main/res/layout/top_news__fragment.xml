@@ -58,7 +58,6 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:background="#f6f6fa"
-                    android:maxHeight="250dp"
                     android:scaleType="fitXY"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

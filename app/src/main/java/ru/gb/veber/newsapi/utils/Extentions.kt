@@ -1,11 +1,16 @@
 package ru.gb.veber.newsapi.utils
 
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -40,17 +45,38 @@ fun BottomSheetBehavior<ConstraintLayout>.expanded() {
 
 fun ImageView.loadGlide(url: String?) {
     Glide.with(context).load(url)
-        .placeholder(R.drawable.loading1)
-        .error(R.drawable.riaplaceholder)
+        .placeholder(R.drawable.newsplaceholder)
+        .error(R.drawable.newsplaceholder)
+        .timeout(2000)
         .transform(MultiTransformation(RoundedCorners(25)))
         .into(this)
 }
 
 fun ImageView.loadGlideNot(url: String?) {
     Glide.with(context).load(url)
-        .placeholder(R.drawable.loading1)
-        .error(R.drawable.riaplaceholder)
-        .into(this)
+        .placeholder(R.drawable.newsplaceholder)
+        .error(R.drawable.newsplaceholder)
+        .timeout(2000)
+        .listener( object :RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean,
+            ): Boolean {
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean,
+            ): Boolean {
+                return false
+            }
+        }).into(this);
 }
 
 const val FORMAT_DATE_REQUEST = "yyyy-MM-dd'T'HH:mm:ss'Z'"

@@ -66,8 +66,8 @@ fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
         title = article.title,
         url = article.url,
         urlToImage = article.urlToImage,
-        isHistory = true,
-        isFavorites = false
+        isHistory = article.isHistory,
+        isFavorites = article.isFavorites
     )
 }
 
