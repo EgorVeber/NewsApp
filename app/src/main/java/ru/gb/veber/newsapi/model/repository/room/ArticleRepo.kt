@@ -16,4 +16,5 @@ interface ArticleRepo {
     fun getArticleById(accountId: Int): Single<List<ArticleDbEntity>>
     fun deleteArticleIsFavoriteById(accountId: Int): Completable
     fun deleteArticleIsHistoryById(accountId: Int): Completable
+    fun deleteArticleById(title: String): Completable
 }

@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+
 @Entity(
     tableName = "accounts",
     indices = [Index("email", unique = true), Index("userName", unique = true)]
@@ -17,4 +18,6 @@ data class AccountDbEntity(
     @ColumnInfo(collate = ColumnInfo.NOCASE)
     val email: String,
     val createdAt: String,
+    @ColumnInfo(name = "save_history")
+    val saveHistory: Boolean,
 )

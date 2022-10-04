@@ -28,4 +28,5 @@ data class Account(
     val createdAt: String,
     var totalHistory: String?="0",
     var totalFavorites: String?="0",
+    var saveHistory: Boolean=true,
 )

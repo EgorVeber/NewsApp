@@ -23,14 +23,19 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.activity.EventOpenBehaviorNews
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
 
 
-class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener {
+interface EventBehaviorToActivity {
+    fun getStateBehavior():Int
+    fun setStateBehavior()
+}
+
+class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener,EventBehaviorToActivity {
 
     private var _binding: TopNewsFragmentBinding? = null
 
@@ -39,15 +44,14 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
     private val newsAdapter = TopNewsAdapter {
-        (requireActivity() as EventOpenBehaviorNews).openNews(it,arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
-        //TODO заменить на activity
-        //presenter.clickNews(it)
-        //presenter.saveArticle(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        presenter.clickNews(it)
+        presenter.saveArticle(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 
     private val presenter: TopNewsPresenter by moxyPresenter {
         TopNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
-            App.instance.router, ArticleRepoImpl(App.instance.newsDb.articleDao()))
+            App.instance.router, ArticleRepoImpl(App.instance.newsDb.articleDao()),
+            RoomRepoImpl(App.instance.newsDb.accountsDao()))
     }
 
     companion object {
@@ -72,8 +76,9 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL)
-        Log.d("TAG", arguments?.getInt(ACCOUNT_ID).toString())
+        presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
+            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        presenter.getAccountSettings(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 
     private var listener = object : RecyclerView.OnScrollListener() {
@@ -102,19 +107,26 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             }
             presenter.filterButtonClick()
         }
-
-
     }
 
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
+
+        articles.forEach {
+            if (it.isHistory)
+                Log.d("articles", it.title + it.isFavorites.toString() + it.isHistory.toString())
+        }
         newsAdapter.articles = articles
-        Log.d("SIZEART", articles.size.toString())
     }
 
-    override fun clickNews(it: Article) {
-        Log.d("TAG", "clickNews() called with: it = $it")
+    override fun clickNews(article: Article) {
+        if (article.isFavorites) {
+            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+        } else {
+            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+        }
+
         binding.filterButton.visibility = View.INVISIBLE
         hideFilter()
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
@@ -124,13 +136,13 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.authorText.show()
         binding.imageFavorites.show()
         binding.descriptionNews.show()
-        binding.imageViewAll.loadGlideNot(it.urlToImage)
-        binding.dateNews.text = stringFromData(it.publishedAt).formatDateDay()
-        binding.titleNews.text = it.title
+        binding.imageViewAll.loadGlideNot(article.urlToImage)
+        binding.dateNews.text = stringFromData(article.publishedAt).formatDateDay()
+        binding.titleNews.text = article.title
 
 
         var spanableStringBuilder =
-            SpannableStringBuilder(it.description)
+            SpannableStringBuilder(article.description)
         spanableStringBuilder.setSpan(
             ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
             spanableStringBuilder.length - 1,
@@ -139,19 +151,29 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         )
 
         binding.descriptionNews.text = spanableStringBuilder
-        binding.authorText.text = it.author
-        binding.sourceText.text = it.source.name
+        binding.authorText.text = article.author
+        binding.sourceText.text = article.source.name
         spanableStringBuilder.removeSpan(spanableStringBuilder)
 
 
 
         binding.descriptionNews.setOnClickListener { view ->
-            presenter.openScreenWebView(it.url)
+            presenter.openScreenWebView(article.url)
         }
 
         binding.imageFavorites.setOnClickListener { view ->
-            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
-            presenter.saveArticleLike(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            if (article.isFavorites) {
+                Log.d("TAG", "article.isFavorites")
+                presenter.deleteFavorites(article)
+                binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+                article.isFavorites = false
+            } else {
+                Log.d("TAG", "else")
+                presenter.saveArticleLike(article,
+                    arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+                binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+                article.isFavorites = true
+            }
         }
     }
 
@@ -228,5 +250,13 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
         Log.d("@@@setMenuVisibility", "setMenuVisibility() called with: menuVisible = $menuVisible")
+    }
+
+    override fun getStateBehavior(): Int {
+       return bSheetB.state
+    }
+
+    override fun setStateBehavior() {
+        bSheetB.collapsed()
     }
 }

@@ -118,12 +118,12 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     @SuppressLint("SetTextI18n")
     override fun clearHistory() {
         binding.totalHistoryText.text = getString(R.string.totalHistory)+" 0"
-        binding.root.showSnackBarError("Success", "", {})
+        binding.nestedScrollAccount.showSnackBarError("Success", "", {})
     }
 
     override fun clearFavorites() {
         binding.totalFavoritesText.text = getString(R.string.totalFavorites)+" 0"
-        binding.root.showSnackBarError("Success", "", {})
+        binding.nestedScrollAccount.showSnackBarError("Success", "", {})
     }
 
     override fun onDestroyView() {

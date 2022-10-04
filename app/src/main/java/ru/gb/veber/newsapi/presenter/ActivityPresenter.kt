@@ -16,9 +16,7 @@ import ru.gb.veber.newsapi.view.activity.ViewMain
 class ActivityPresenter(
     private val router: Router,
     private val sharedPreferenceAccount: SharedPreferenceAccount,
-    private val articleRepoImpl: ArticleRepoImpl,
 ) : MvpPresenter<ViewMain>() {
-    private var currentArticle = 0
     override fun onFirstViewAttach() {
         Log.d("TAG", "onFirstViewAttach() called")
         viewState.init()
@@ -63,39 +61,4 @@ class ActivityPresenter(
     fun openScreenWebView(url: String) {
         // router.navigateTo(WebViewScreen(url))
     }
-
-    fun saveArticle(article: Article, accountId: Int, isLike: Boolean) {
-        if (accountId != ACCOUNT_ID_DEFAULT) {
-            //Проверка на сохранение истории
-            articleRepoImpl.insertArticle(mapToArticleDbEntity(article.apply {
-                isHistory = true
-                if (isLike) isFavorites = true
-            }, accountId)).andThen(
-                articleRepoImpl.getLastArticle()
-            ).subscribe({
-                currentArticle = it.id
-                Log.d(ERROR_DB, it.toString())
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
-        }
-    }
-
-//    fun saveArticleLike(article: Article, accountId: Int) {
-//        if (accountId != ACCOUNT_ID_DEFAULT) {
-//            if (currentArticle != 0) {
-//                var item = mapToArticleDbEntity(article, accountId)
-//                item.isFavorites = true
-//                item.id = currentArticle
-//                articleRepoImpl.updateArticle(item).subscribe({
-//                    //viewState.successInsertArticle()
-//                    Log.d(ERROR_DB, "successInsertArticle")
-//                }, {
-//                    Log.d(ERROR_DB, it.localizedMessage)
-//                })
-//            } else {
-//                saveArticle(article, accountId)
-//            }
-//        }
-//    }
 }

@@ -7,7 +7,7 @@ import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
 
 @Dao
 interface ArticleDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertArticle(articleDbEntity: ArticleDbEntity): Completable
 
     @Update
@@ -15,6 +15,9 @@ interface ArticleDao {
 
     @Delete
     fun deleteArticle(articleDbEntity: ArticleDbEntity): Completable
+
+    @Query("Delete from article where title =:title and is_favorites=1")
+    fun deleteArticleById(title: String): Completable
 
     @Query("Delete from article")
     fun deleteAllArticle(): Completable
@@ -25,7 +28,7 @@ interface ArticleDao {
     @Query("Delete from article where account_id=:accountId and is_history=1 and is_favorites=0")
     fun deleteArticleIsHistoryById(accountId: Int): Completable
 
-    @Query("Select * from article where account_id =:accountId and is_history=1")
+    @Query("Select * from article where account_id =:accountId and is_history=1 and is_favorites=0")
     fun getHistoryArticleById(accountId: Int): Single<List<ArticleDbEntity>>
 
     @Query("Select * from article where account_id =:accountId and is_favorites=1")

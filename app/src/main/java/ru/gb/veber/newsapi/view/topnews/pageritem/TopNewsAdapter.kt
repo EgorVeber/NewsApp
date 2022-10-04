@@ -64,6 +64,7 @@ class NewsViewHolder(
         title.text = item.title
         publishedAt.text = item.publishedAtChange
         imageNews.loadGlide(item.urlToImage)
+        viewedText.text = if (item.isHistory || item.isFavorites) "viewed" else ""
         root.setOnClickListener {
             onUserClickListener.invoke(item)
         }
@@ -82,6 +83,7 @@ class NewsHeaderViewHolder(
         publishedAt.text = item.publishedAtChange
         //imageNews.loadGlideNot(item.urlToImage)
         imageNews.loadGlideNot(item.urlToImage)
+        viewedTextHeader.text = if (item.isHistory || item.isFavorites) "viewed" else ""
         root.setOnClickListener {
             onUserClickListener.invoke(item)
         }

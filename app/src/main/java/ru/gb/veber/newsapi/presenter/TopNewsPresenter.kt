@@ -2,35 +2,43 @@ package ru.gb.veber.newsapi.presenter
 
 import android.util.Log
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.mapToArticle
-import ru.gb.veber.newsapi.utils.mapToArticleDbEntity
+import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 
 class TopNewsPresenter(
     private val newsRepoImpl: NewsRepoImpl,
     private val router: Router,
     private val articleRepoImpl: ArticleRepoImpl,
+    private val roomRepoImpl: RoomRepoImpl,
 ) :
     MvpPresenter<TopNewsView>() {
 
     private var checkFilter = false
     private var currentArticle = 0
+    private var saveHistory = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
     }
 
+    fun getAccountSettings(accountId: Int) {
+        roomRepoImpl.getAccountById(accountId).subscribe({
+            saveHistory = it.saveHistory
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
+    }
+
     fun onBackPressedRouter(): Boolean {
         router.exit()
-        Log.d("@@@", "onBackPressedRouter() TopNewsPresenter")
         return true
     }
 
@@ -38,18 +46,72 @@ class TopNewsPresenter(
         viewState.clickNews(it)
     }
 
-    fun loadNews(category: String) {
-        //newsRepoDataBaseGetDefaultCategory
-        //Какая нибусь сложная штука с любымими источниками или категориями
-        //А можно просто по дефолку новости любимой страны например
-        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, "ru").map { articles ->
+    fun loadNews(category: String, accountID: Int) {
+        Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, "ru").map { articles ->
             articles.articles.map(::mapToArticle).also {
                 newsRepoImpl.changeRequest(it)
             }
+        }, articleRepoImpl.getArticleById(accountID)) { news, articles ->
+            articles.forEach { art ->
+                news.forEach { new ->
+                    if (art.title == new.title) {
+                        if (art.isFavorites) {
+                            new.isFavorites = true
+                        }
+                        if (art.isHistory) {
+                            new.isHistory = true
+                        }
+                    }
+                }
+            }
+            news
         }.subscribe({
+            Log.d("loadNews", it.toString())
+            Log.d("loadNews", it.size.toString())
             viewState.setSources(it)
         }, {
-            Log.d("TAG", it.localizedMessage)
+            Log.d("loadNews", it.localizedMessage)
+        })
+    }
+
+    fun saveArticle(article: Article, accountId: Int) {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            if (saveHistory) {
+                if (!article.isFavorites&& !article.isHistory) {
+                    article.isHistory = true
+                    articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId)).andThen(
+                        articleRepoImpl.getLastArticle()
+                    ).subscribe({
+                        currentArticle = it.id
+                        viewState.successInsertArticle()
+                    }, {
+                        Log.d(ERROR_DB, it.localizedMessage)
+                    })
+                }
+            }
+        }
+    }
+
+    fun saveArticleLike(article: Article, accountId: Int) {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            if (!article.isFavorites) {
+                var item = mapToArticleDbEntity(article, accountId)
+                item.isFavorites = true
+                articleRepoImpl.insertArticle(item).subscribe({
+                    viewState.successInsertArticle()
+                    Log.d(ERROR_DB, "successInsertArticle")
+                }, {
+                    Log.d(ERROR_DB, it.localizedMessage)
+                })
+            }
+        }
+    }
+
+    fun deleteFavorites(article: Article) {
+        articleRepoImpl.deleteArticleById(article.title).subscribe({
+            Log.d("SUCCESS_DELETE", "SUCCESS DELETE BY ID")
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
         })
     }
 
@@ -65,13 +127,14 @@ class TopNewsPresenter(
         })
     }
 
+
     fun filterButtonClick() {
-        if (!checkFilter) {
+        checkFilter = if (!checkFilter) {
             viewState.showFilter()
-            checkFilter = true
+            true
         } else {
             viewState.hideFilter()
-            checkFilter = false
+            false
         }
     }
 
@@ -81,37 +144,5 @@ class TopNewsPresenter(
 
     fun openScreenWebView(url: String) {
         router.navigateTo(WebViewScreen(url))
-    }
-
-    fun saveArticle(it: Article, accountId: Int) {
-        if (accountId != ACCOUNT_ID_DEFAULT) {
-            articleRepoImpl.insertArticle(mapToArticleDbEntity(it, accountId)).andThen(
-                articleRepoImpl.getLastArticle()
-            ).subscribe({
-                currentArticle = it.id
-                Log.d(ERROR_DB, it.toString())
-                viewState.successInsertArticle()
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
-        }
-    }
-
-    fun saveArticleLike(article: Article, accountId: Int) {
-        if (accountId != ACCOUNT_ID_DEFAULT) {
-            if (currentArticle != 0) {
-                var item = mapToArticleDbEntity(article, accountId)
-                item.isFavorites = true
-                item.id = currentArticle
-                articleRepoImpl.updateArticle(item).subscribe({
-                    viewState.successInsertArticle()
-                    Log.d(ERROR_DB, "successInsertArticle")
-                }, {
-                    Log.d(ERROR_DB, it.localizedMessage)
-                })
-            } else {
-                saveArticle(article, accountId)
-            }
-        }
     }
 }

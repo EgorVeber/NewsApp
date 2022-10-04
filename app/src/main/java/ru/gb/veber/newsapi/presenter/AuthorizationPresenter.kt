@@ -36,7 +36,12 @@ class AuthorizationPresenter(
     }
 
     fun createAccount(username: String, email: String, password: String) {
-        roomRepoImpl.createAccount(AccountDbEntity(0, username, password, email, Date().toString()))
+        roomRepoImpl.createAccount(AccountDbEntity(0,
+            username,
+            password,
+            email,
+            Date().toString(),
+            true))
             .andThen(roomRepoImpl.getAccountByUserName(username)).subscribe({
                 viewState.successRegister(it.id)
                 saveIdSharedPref(it)

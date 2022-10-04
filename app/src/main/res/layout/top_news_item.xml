@@ -10,6 +10,14 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp">
 
+        <TextView
+            android:id="@+id/viewedText"
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageNews"
             android:layout_width="120dp"
