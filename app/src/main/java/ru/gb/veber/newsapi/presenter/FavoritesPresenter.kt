@@ -8,7 +8,6 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.favorites.FavoritesView
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
 
 class FavoritesPresenter(
@@ -16,6 +15,9 @@ class FavoritesPresenter(
     private val articleRepoImpl: ArticleRepoImpl,
 ) :
     MvpPresenter<FavoritesView>() {
+
+    private var accountIdS: Int = 0
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
@@ -27,7 +29,8 @@ class FavoritesPresenter(
         return true
     }
 
-    fun getAccountLike(accountID: Int, page: String) {
+    fun getAccountArticle(accountID: Int, page: String) {
+        accountIdS = accountID
         if (accountID != ACCOUNT_ID_DEFAULT) {
             if (page == FAVORITES) {
                 viewState.loading()
@@ -35,9 +38,9 @@ class FavoritesPresenter(
                     if (it.isEmpty()) {
                         viewState.emptyList()
                     } else {
-                        viewState.setSources(it.map(::articleDbEntityToArticle).map {
+                        viewState.setSources(it.map(::articleDbEntityToArticle).reversed().map {
                             it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
-                            it.viewType= VIEW_TYPE_FAVORITES_NEWS
+                            it.viewType = VIEW_TYPE_FAVORITES_NEWS
                             it
                         })
                     }
@@ -50,7 +53,7 @@ class FavoritesPresenter(
                     if (it.isEmpty()) {
                         viewState.emptyList()
                     } else {
-                        viewState.setSources(it.map(::articleDbEntityToArticle).map {
+                        viewState.setSources(it.map(::articleDbEntityToArticle).reversed().map {
                             it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
                             it
                         })
@@ -65,6 +68,20 @@ class FavoritesPresenter(
     }
 
     fun clickNews(it: Article) {
+        viewState.clickNews(it)
+    }
 
+    fun deleteFavorites(article: Article) {
+        var articleNew = article.copy()
+        articleRepoImpl.deleteArticleById(articleNew.title)
+            .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({
+            viewState.updateFavorites(it.map(::articleDbEntityToArticle).map {
+                it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
+                it.viewType = VIEW_TYPE_FAVORITES_NEWS
+                it
+            })
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
     }
 }

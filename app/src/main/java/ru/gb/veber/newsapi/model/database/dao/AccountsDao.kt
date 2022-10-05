@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.model.database.dao
 
+import android.accounts.Account
 import androidx.room.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -13,6 +14,9 @@ interface AccountsDao {
 
     @Update
     fun updateAccount(accountDbEntity: AccountDbEntity): Completable
+
+    @Query("Update accounts set save_history = :saveHistory  where id = :accountId")
+    fun updateAccountById(accountId: Int, saveHistory: Boolean): Completable
 
     @Query("Delete from accounts where id = :accountId")
     fun deleteAccount(accountId: Int): Completable

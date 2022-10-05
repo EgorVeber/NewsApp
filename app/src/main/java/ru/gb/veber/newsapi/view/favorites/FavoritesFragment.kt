@@ -1,14 +1,20 @@
 package ru.gb.veber.newsapi.view.favorites
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
 import ru.gb.veber.newsapi.model.Article
@@ -16,6 +22,7 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 
 class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedListener {
@@ -24,15 +31,49 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
     private val binding get() = _binding!!
 
 
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
     private val presenter: FavoritesPresenter by moxyPresenter {
         FavoritesPresenter(App.instance.router,
             ArticleRepoImpl(App.instance.newsDb.articleDao()))
     }
-    private val historyAdapter = TopNewsAdapter {
-        presenter.clickNews(it)
-        //FavoritesViewPagerAdapter может пригодится
-//        presenter.saveArticle(it,arguments?.getInt(ACCOUNT_ID)?: ACCOUNT_ID_DEFAULT)
+
+    override fun clickNews(article: Article) {
+        bSheetB.expanded()
+        with(binding) {
+            imageViewAll.loadGlideNot(article.urlToImage)
+            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
+            titleNews.text = article.title
+            authorText.text = article.author
+            sourceText.text = article.source.name
+            setSpanDescription(article)
+        }
     }
+
+    private fun FavotitesFragmentBinding.setSpanDescription(article: Article) {
+        SpannableStringBuilder(article.description).also { span ->
+            span.setSpan(
+                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+                span.length - 1,
+                span.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            descriptionNews.text = span
+            span.removeSpan(span)
+        }
+    }
+
+    private var itemListener = object : RecyclerListener {
+
+        override fun clickNews(article: Article) {
+            presenter.clickNews(article)
+        }
+
+        override fun deleteFavorites(article: Article) {
+            presenter.deleteFavorites(article)
+        }
+    }
+
+    private val historyAdapter = TopNewsAdapter(itemListener)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +86,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.getAccountLike(
+        presenter.getAccountArticle(
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
             arguments?.getString(PAGE) ?: PAGE)
     }
@@ -53,12 +94,13 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
     override fun init() {
         binding.likeRecycler.adapter = historyAdapter
         binding.likeRecycler.layoutManager = LinearLayoutManager(requireContext())
+        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer)
     }
 
     override fun setSources(list: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
         Log.d("TAG", "setSources() called with: list = $list")
-        historyAdapter.articles = list
+        historyAdapter.articles = list.toMutableList()
         binding.likeRecycler.show()
     }
 
@@ -75,6 +117,13 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
     override fun emptyList() {
         binding.statusTextLike.show()
         binding.statusTextLike.text = "Empty List"
+    }
+
+    override fun updateFavorites(list: List<Article>) {
+        if (list.isEmpty()) {
+            emptyList()
+        }
+        historyAdapter.articles = list.toMutableList()
     }
 
     override fun onDestroyView() {

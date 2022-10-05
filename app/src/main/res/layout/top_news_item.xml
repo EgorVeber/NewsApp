@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_item"
+    android:layout_margin="10dp"
     style="@style/card_style_base"
     app:cardElevation="5dp">
 
@@ -13,24 +15,25 @@
         <TextView
             android:id="@+id/viewedText"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageFavorites"
             android:layout_width="wrap_content"
-            android:visibility="gone"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:src="@drawable/ic_favorite_36_active"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageNews"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="110dp"
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,25 +41,32 @@
         <TextView
             android:id="@+id/title"
             style="@style/sources_text"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="10dp"
             android:textSize="16sp"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@+id/imageNews"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageNews"
-            app:layout_constraintTop_toTopOf="@+id/imageNews"
-            app:layout_constraintVertical_bias="0.001" />
+            app:layout_constraintTop_toTopOf="@+id/imageNews" />
+
+<!--        app:layout_constraintBottom_toBottomOf="@+id/imageNews"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/imageNews"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/imageNews"-->
+<!--        app:layout_constraintVertical_bias="0.001"-->
 
         <TextView
             android:id="@+id/publishedAt"
             style="@style/sources_text"
-            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:textColor="@color/selectedColor"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageNews"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/title"
-            app:layout_constraintVertical_bias="0.9" />
+            tools:text="2022-10-05 14:22" />
+
+<!--  app:layout_constraintVertical_bias="0.9"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/imageNews"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/title"-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

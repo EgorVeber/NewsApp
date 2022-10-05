@@ -18,6 +18,7 @@
         <item name="materialButtonStyle">@style/MyMaterialButtonStyle</item>
         <item name="switchStyle">@style/MySwitchStyle</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+        <item name="badgeStyle">@style/CustomBadge</item>
     </style>
 
 

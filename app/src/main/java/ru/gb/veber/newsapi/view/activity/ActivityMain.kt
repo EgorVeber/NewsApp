@@ -1,37 +1,22 @@
 package ru.gb.veber.newsapi.view.activity
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Bitmap
-import android.net.http.SslError
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
 import android.util.Log
-import android.view.View
-import android.view.WindowManager
-import android.webkit.*
-import android.widget.PopupWindow
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.github.terrakok.cicerone.androidx.AppNavigator
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.reactivex.rxjava3.core.Completable
 import moxy.MvpAppCompatActivity
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
-import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.allnews.AllNewsFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsFragment
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 
@@ -46,11 +31,18 @@ interface EventLogoutAccountScreen {
     fun bottomNavigationSetTitleCurrentAccount(checkLogin: String)
 }
 
-class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAccountScreen {
+interface EventAddingBadges {
+    fun addBadge()
+    fun removeBage()
+}
+
+class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAccountScreen,
+    EventAddingBadges {
 
     private lateinit var binding: ActivityMainBinding
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
     private var backStack = 1
+    private var counterBadge = 0
 
 
     private val presenter: ActivityPresenter by moxyPresenter {
@@ -87,9 +79,15 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
                 R.id.allNews -> {
                     presenter.openScreenAllNews()
                 }
-                R.id.sourcesNews -> {
+                R.id.favoritesNews -> {
                     // presenter.openScreenSources()
                     presenter.openFavoritesScreen()
+                    val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
+                    if (badgeDrawable != null) {
+                        badgeDrawable.number = 0
+                        counterBadge = 0
+                        binding.bottomNavigationView.removeBadge(R.id.favoritesNews)
+                    }
                 }
                 R.id.actionProfile -> {
                     presenter.openScreenProfile()
@@ -106,10 +104,10 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach {
             if (it is EventBehaviorToActivity) {
-               if( (it as EventBehaviorToActivity).getStateBehavior()==3){
-                   (it as EventBehaviorToActivity).setStateBehavior()
-                   return
-               }
+                if ((it as EventBehaviorToActivity).getStateBehavior() == 3) {
+                    (it as EventBehaviorToActivity).setStateBehavior()
+                    return
+                }
             }
         }
 
@@ -123,7 +121,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
             Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
         } else {
             supportFragmentManager.fragments.forEach { fragment ->
-
                 if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
                     return
                 }
@@ -164,5 +161,29 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     override fun bottomNavigationSetTitleCurrentAccount(checkLogin: String) {
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = checkLogin
+    }
+
+    override fun addBadge() {
+        Log.d("counterBadge", counterBadge.toString())
+        counterBadge += 1
+        var badge = binding.bottomNavigationView.getOrCreateBadge(R.id.favoritesNews)
+        badge.isVisible = true
+        badge.number = counterBadge
+    }
+
+    override fun removeBage() {
+        counterBadge--
+        if (counterBadge <= 0) {
+            counterBadge = 0
+            Log.d("counterBadge", counterBadge.toString())
+            val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
+            if (badgeDrawable != null) {
+                binding.bottomNavigationView.removeBadge(R.id.favoritesNews)
+            }
+        } else {
+            var badge = binding.bottomNavigationView.getOrCreateBadge(R.id.favoritesNews)
+            badge.isVisible = true
+            badge.number = counterBadge
+        }
     }
 }

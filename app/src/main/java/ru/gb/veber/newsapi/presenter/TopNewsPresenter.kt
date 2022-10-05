@@ -11,7 +11,6 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
-import kotlin.math.log
 
 class TopNewsPresenter(
     private val newsRepoImpl: NewsRepoImpl,
@@ -24,6 +23,7 @@ class TopNewsPresenter(
     private var checkFilter = false
     private var currentArticle = 0
     private var saveHistory = false
+    private var list: List<Article> = listOf()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -48,16 +48,17 @@ class TopNewsPresenter(
     }
 
     fun loadNews(category: String, accountID: Int) {
+        if (accountID == ACCOUNT_ID_DEFAULT) {
+            viewState.hideFavorites()
+        }
         Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, "ru").map { articles ->
             articles.articles.map(::mapToArticle).also {
                 newsRepoImpl.changeRequest(it)
             }
         }, articleRepoImpl.getArticleById(accountID)) { news, articles ->
-            var count = 0
             articles.forEach { art ->
                 news.forEach { new ->
                     if (art.title == new.title) {
-                        count++
                         if (art.isFavorites) {
                             new.isFavorites = true
                         }
@@ -67,8 +68,7 @@ class TopNewsPresenter(
                     }
                 }
             }
-
-            Log.d("TAG", count.toString())
+            list = news
             news
         }.subscribe({
             Log.d("loadNews", it.toString())
@@ -78,7 +78,6 @@ class TopNewsPresenter(
             Log.d("loadNews", it.localizedMessage)
         })
     }
-
 
     fun loadNewsCountry(category: String, country: String) {
         newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, country).map { articles ->
@@ -97,16 +96,16 @@ class TopNewsPresenter(
         if (accountId != ACCOUNT_ID_DEFAULT) {
             if (saveHistory) {
                 if (!article.isFavorites && !article.isHistory) {
-                    var articleNew = article
-                    articleNew.isHistory=true
-                    articleRepoImpl.insertArticle(mapToArticleDbEntity(articleNew, accountId)).andThen(
-                        articleRepoImpl.getLastArticle()
-                    ).subscribe({
-                        currentArticle = it.id
-                        viewState.successInsertArticle()
-                    }, {
-                        Log.d(ERROR_DB, it.localizedMessage)
-                    })
+                    var articleNew = article.copy(isHistory = true)//ПОЧЕМУ ЭТО ТАК ВАЖНО
+                    articleRepoImpl.insertArticle(mapToArticleDbEntity(articleNew, accountId))
+                        .andThen(
+                            articleRepoImpl.getLastArticle()
+                        ).subscribe({
+                            currentArticle = it.id
+                            viewState.successInsertArticle()
+                        }, {
+                            Log.d(ERROR_DB, it.localizedMessage)
+                        })
                 }
             }
         }

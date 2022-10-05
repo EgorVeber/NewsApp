@@ -122,4 +122,9 @@
         <!--        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>-->
         <!--        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Button</item>-->
     </style>
+
+
+    <style name="CustomBadge" parent="@style/Widget.MaterialComponents.Badge">
+        <item name="backgroundColor">@color/selectedColor</item>
+    </style>
 </resources>

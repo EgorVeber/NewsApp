@@ -40,7 +40,8 @@ fun mapToAccount(item: AccountDbEntity): Account {
         userName = item.userName,
         email = item.email,
         createdAt = item.createdAt,
-        password = item.password
+        password = item.password,
+        saveHistory = item.saveHistory
     )
 }
 

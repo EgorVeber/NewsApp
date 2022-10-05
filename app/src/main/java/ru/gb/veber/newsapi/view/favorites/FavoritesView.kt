@@ -12,4 +12,6 @@ interface FavoritesView : MvpView {
     fun loading()
     fun notAuthorized()
     fun emptyList()
+    fun updateFavorites(list: List<Article>)
+     fun clickNews(it: Article)
 }

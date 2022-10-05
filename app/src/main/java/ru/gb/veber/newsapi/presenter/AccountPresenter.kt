@@ -9,10 +9,7 @@ import ru.gb.veber.newsapi.core.EditAccountScreen
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
-import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.subscribeDefault
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.account.AccountView
 
 class AccountPresenter(
@@ -22,6 +19,9 @@ class AccountPresenter(
     private val articleRepoImpl: ArticleRepoImpl,
 ) :
     MvpPresenter<AccountView>() {
+
+    private var accountId = ACCOUNT_ID_DEFAULT
+
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -57,7 +57,9 @@ class AccountPresenter(
 
     fun getAccountSettings(accountID: Int?) {
         viewState.loading()
+
         accountID?.let { acc ->
+            accountId = accountID
             Single.zip(roomRepoImpl.getAccountById(acc),
                 articleRepoImpl.getArticleById(accountID)) { account, articles ->
                 account.totalFavorites = articles.filter { it.isFavorites }.size.toString()
@@ -95,6 +97,13 @@ class AccountPresenter(
     fun clearFavorites(accountId: Int) {
         articleRepoImpl.deleteArticleIsFavoriteById(accountId).subscribe({
             viewState.clearFavorites()
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
+    }
+
+    fun updateAccountSaveHistory(checked: Boolean) {
+        roomRepoImpl.updateAccountById(accountId, checked).subscribe({
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })

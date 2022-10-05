@@ -69,6 +69,11 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.totalFavorites.setOnClickListener {
             presenter.clearFavorites(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
         }
+
+
+        binding.saveHistorySwitch.setOnCheckedChangeListener { compoundButton, b ->
+            presenter.updateAccountSaveHistory(b)
+        }
     }
 
 
@@ -81,6 +86,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
             getString(R.string.totalFavorites) + " " + account.totalFavorites
         binding.totalHistoryText.text =
             getString(R.string.totalHistory) + " " + account.totalHistory
+
+        Log.d("TAG", "setAccountInfo() called with: account = $account")
+        binding.saveHistorySwitch.isChecked = account.saveHistory
 
         TransitionManager.beginDelayedTransition(binding.root)
         binding.nestedScrollAccount.show()
@@ -117,12 +125,12 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun clearHistory() {
-        binding.totalHistoryText.text = getString(R.string.totalHistory)+" 0"
+        binding.totalHistoryText.text = getString(R.string.totalHistory) + " 0"
         binding.nestedScrollAccount.showSnackBarError("Success", "", {})
     }
 
     override fun clearFavorites() {
-        binding.totalFavoritesText.text = getString(R.string.totalFavorites)+" 0"
+        binding.totalFavoritesText.text = getString(R.string.totalFavorites) + " 0"
         binding.nestedScrollAccount.showSnackBarError("Success", "", {})
     }
 

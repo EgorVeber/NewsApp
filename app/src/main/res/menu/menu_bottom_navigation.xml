@@ -19,7 +19,7 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/sourcesNews"
+        android:id="@+id/favoritesNews"
         android:icon="@drawable/ic_favorite"
         android:title="Favorites"
         app:showAsAction="ifRoom" />

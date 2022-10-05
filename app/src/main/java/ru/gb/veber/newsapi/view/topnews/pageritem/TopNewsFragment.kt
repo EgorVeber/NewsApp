@@ -2,18 +2,14 @@ package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -30,6 +26,7 @@ import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
 
 
@@ -47,11 +44,19 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
+    private var itemListener = object : RecyclerListener {
 
-    private val newsAdapter = TopNewsAdapter {
-        presenter.clickNews(it)
-        presenter.saveArticle(it, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        override fun clickNews(article: Article) {
+            presenter.clickNews(article)
+            presenter.saveArticle(article, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        }
+
+        override fun deleteFavorites(article: Article) {
+            TODO("Not yet implemented")
+        }
     }
+
+    private val newsAdapter = TopNewsAdapter(itemListener)
 
     private val presenter: TopNewsPresenter by moxyPresenter {
         TopNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
@@ -68,7 +73,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             }
         }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -121,10 +125,8 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
-        Log.d("setSources", "size " + articles.size.toString())
-        Log.d("setSources", articles.filter { it.isHistory }.size.toString())
-        TransitionManager.beginDelayedTransition(binding.root)
-        newsAdapter.articles = articles
+        // TransitionManager.beginDelayedTransition(binding.root)
+        newsAdapter.articles = articles.toMutableList()
     }
 
     override fun clickNews(article: Article) {
@@ -137,12 +139,14 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
         binding.filterButton.visibility = View.INVISIBLE
         hideFilter()
+
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+
         binding.imageViewAll.show()
         binding.titleNews.show()
         binding.dateNews.show()
         binding.authorText.show()
-        binding.imageFavorites.show()
+        //binding.imageFavorites.show()
         binding.descriptionNews.show()
         binding.imageViewAll.loadGlideNot(article.urlToImage)
         binding.dateNews.text = stringFromData(article.publishedAt).formatDateDay()
@@ -171,16 +175,17 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
         binding.imageFavorites.setOnClickListener { view ->
             if (article.isFavorites) {
-                Log.d("TAG", "article.isFavorites")
                 presenter.deleteFavorites(article)
                 binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
                 article.isFavorites = false
+                (requireActivity() as EventAddingBadges).removeBage()
             } else {
                 Log.d("TAG", "else")
                 presenter.saveArticleLike(article,
                     arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
                 binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
                 article.isFavorites = true
+                (requireActivity() as EventAddingBadges).addBadge()
             }
         }
     }
@@ -216,7 +221,12 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
     override fun successInsertArticle() {
+        presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
+            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+    }
 
+    override fun hideFavorites() {
+        binding.imageFavorites.hide()
     }
 
 
@@ -227,11 +237,12 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
                     presenter.behaviorHide()
                     binding.filterButton.visibility = View.VISIBLE
                     binding.filterButton.setImageResource(R.drawable.filter_icon)
-                    presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
-                        arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+
+
                 }
 
                 BottomSheetBehavior.STATE_EXPANDED -> {
+
                 }
             }
         }

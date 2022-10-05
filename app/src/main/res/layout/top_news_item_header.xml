@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_item"
+    android:layout_marginTop="2dp"
     style="@style/card_style_base"
     app:cardElevation="5dp">
 

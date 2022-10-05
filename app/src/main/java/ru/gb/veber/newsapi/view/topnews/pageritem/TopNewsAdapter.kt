@@ -7,9 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.RoundedCornersTransformation
-import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
 import ru.gb.veber.newsapi.model.Article
@@ -21,11 +18,20 @@ import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_
 
 typealias OnUserClickListener = (article: Article) -> Unit
 
+
+
+interface RecyclerListener {
+    fun clickNews(article: Article)
+    fun deleteFavorites(article: Article)
+}
+
+
+
 class TopNewsAdapter(
-    private val onUserClickListener: OnUserClickListener,
+    var listener: RecyclerListener
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
-    var articles: List<Article> = emptyList()
+    var articles: MutableList<Article> = mutableListOf()
         set(value) {
             var diffUtil = TopNewsDiffUtil(field, value)
             val diffResult = DiffUtil.calculateDiff(diffUtil)
@@ -37,18 +43,18 @@ class TopNewsAdapter(
         return when (viewType) {
             VIEW_TYPE_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(parent.context),
                 parent,
-                false), onUserClickListener)
+                false),listener)
             VIEW_TYPE_FAVORITES_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(
                 parent.context),
                 parent,
-                false), onUserClickListener)
+                false),listener)
             VIEW_TYPE_HEADER_NEWS -> NewsHeaderViewHolder(TopNewsItemHeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false), onUserClickListener)
+                false), listener)
             else -> NewsViewHolder(
                 TopNewsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-                onUserClickListener)
+               listener)
         }
     }
 
@@ -65,7 +71,7 @@ class TopNewsAdapter(
 
 class NewsViewHolder(
     private val binding: TopNewsItemBinding,
-    private val onUserClickListener: OnUserClickListener,
+    var listener: RecyclerListener,
 ) : BaseViewHolder(binding.root) {
 
     @SuppressLint("SetTextI18n")
@@ -77,7 +83,11 @@ class NewsViewHolder(
         imageNews.loadGlide(item.urlToImage)
         viewedText.text = if (item.isHistory || item.isFavorites) "viewed" else ""
         root.setOnClickListener {
-            onUserClickListener.invoke(item)
+           // onUserClickListener.invoke(item)
+            listener.clickNews(item)
+        }
+        imageFavorites.setOnClickListener {
+            listener.deleteFavorites(item)
         }
     }
 }
@@ -85,7 +95,7 @@ class NewsViewHolder(
 
 class NewsHeaderViewHolder(
     private val binding: TopNewsItemHeaderBinding,
-    private val onUserClickListener: OnUserClickListener,
+    var listener: RecyclerListener,
 ) : BaseViewHolder(binding.root) {
 
     @SuppressLint("SetTextI18n")
@@ -95,7 +105,8 @@ class NewsHeaderViewHolder(
         imageNews.loadGlideNot(item.urlToImage)
         viewedTextHeader.text = if (item.isHistory || item.isFavorites) "viewed" else ""
         root.setOnClickListener {
-            onUserClickListener.invoke(item)
+           // onUserClickListener.invoke(item)
+            listener.clickNews(item)
         }
     }
 }
