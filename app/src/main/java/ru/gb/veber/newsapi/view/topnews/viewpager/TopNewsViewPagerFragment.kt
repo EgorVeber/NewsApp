@@ -65,6 +65,7 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
                 TECHNOLOGY -> tab.text = CATEGORY_TECHNOLOGY
             }
         }.attach()
+        //binding.viewPager.isUserInputEnabled = false
     }
 
     override fun init() {

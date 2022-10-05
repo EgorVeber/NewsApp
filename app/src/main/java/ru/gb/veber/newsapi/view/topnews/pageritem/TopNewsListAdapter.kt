@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -19,11 +20,23 @@ import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HEADER_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_NEWS
 
-typealias OnUserClickListener = (article: Article) -> Unit
+typealias OnUserClickListener2 = (article: Article) -> Unit
 
-class TopNewsAdapter(
-    private val onUserClickListener: OnUserClickListener,
-) : RecyclerView.Adapter<BaseViewHolder>() {
+class TopNewsListAdapter(
+    private val onUserClickListener: OnUserClickListener2,
+) : ListAdapter<Article,BaseViewHolder>(TopNewsDiffUtilList()) {
+
+
+    class TopNewsDiffUtilList : DiffUtil.ItemCallback<Article>() {
+        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem==newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+            return oldItem==newItem
+        }
+    }
+
 
     var articles: List<Article> = emptyList()
         set(value) {
@@ -61,56 +74,8 @@ class TopNewsAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         holder.bind(articles[position])
     }
+
 }
-
-class NewsViewHolder(
-    private val binding: TopNewsItemBinding,
-    private val onUserClickListener: OnUserClickListener,
-) : BaseViewHolder(binding.root) {
-
-    @SuppressLint("SetTextI18n")
-    override fun bind(item: Article) = with(binding) {
-        imageFavorites.visibility =
-            if (itemViewType == VIEW_TYPE_FAVORITES_NEWS) View.VISIBLE else View.GONE
-        title.text = item.title
-        publishedAt.text = item.publishedAtChange
-        imageNews.loadGlide(item.urlToImage)
-        viewedText.text = if (item.isHistory || item.isFavorites) "viewed" else ""
-        root.setOnClickListener {
-            onUserClickListener.invoke(item)
-        }
-    }
-}
-
-
-class NewsHeaderViewHolder(
-    private val binding: TopNewsItemHeaderBinding,
-    private val onUserClickListener: OnUserClickListener,
-) : BaseViewHolder(binding.root) {
-
-    @SuppressLint("SetTextI18n")
-    override fun bind(item: Article) = with(binding) {
-        title.text = item.title
-        publishedAt.text = item.publishedAtChange
-        imageNews.loadGlideNot(item.urlToImage)
-        viewedTextHeader.text = if (item.isHistory || item.isFavorites) "viewed" else ""
-        root.setOnClickListener {
-            onUserClickListener.invoke(item)
-        }
-    }
-}
-
-
-abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    abstract fun bind(item: Article)
-
-    companion object {
-        const val VIEW_TYPE_NEWS = 0
-        const val VIEW_TYPE_HEADER_NEWS = 1
-        const val VIEW_TYPE_FAVORITES_NEWS = 2
-    }
-}
-
 
 //1 варинат без scaleType обрезается часть содержимого
 //        imageNews.load(item.urlToImage) {

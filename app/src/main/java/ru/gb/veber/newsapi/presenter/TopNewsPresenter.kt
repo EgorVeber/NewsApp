@@ -11,6 +11,7 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
+import kotlin.math.log
 
 class TopNewsPresenter(
     private val newsRepoImpl: NewsRepoImpl,
@@ -52,9 +53,11 @@ class TopNewsPresenter(
                 newsRepoImpl.changeRequest(it)
             }
         }, articleRepoImpl.getArticleById(accountID)) { news, articles ->
+            var count = 0
             articles.forEach { art ->
                 news.forEach { new ->
                     if (art.title == new.title) {
+                        count++
                         if (art.isFavorites) {
                             new.isFavorites = true
                         }
@@ -64,6 +67,8 @@ class TopNewsPresenter(
                     }
                 }
             }
+
+            Log.d("TAG", count.toString())
             news
         }.subscribe({
             Log.d("loadNews", it.toString())
@@ -74,12 +79,27 @@ class TopNewsPresenter(
         })
     }
 
+
+    fun loadNewsCountry(category: String, country: String) {
+        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, country).map { articles ->
+            articles.articles.map(::mapToArticle).also {
+                newsRepoImpl.changeRequest(it)
+            }
+        }.subscribe({
+            viewState.setSources(it)
+        }, {
+            Log.d("TAG", it.localizedMessage)
+        })
+    }
+
+
     fun saveArticle(article: Article, accountId: Int) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             if (saveHistory) {
-                if (!article.isFavorites&& !article.isHistory) {
-                    article.isHistory = true
-                    articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId)).andThen(
+                if (!article.isFavorites && !article.isHistory) {
+                    var articleNew = article
+                    articleNew.isHistory=true
+                    articleRepoImpl.insertArticle(mapToArticleDbEntity(articleNew, accountId)).andThen(
                         articleRepoImpl.getLastArticle()
                     ).subscribe({
                         currentArticle = it.id
@@ -114,19 +134,6 @@ class TopNewsPresenter(
             Log.d(ERROR_DB, it.localizedMessage)
         })
     }
-
-    fun loadNewsCountry(category: String, country: String) {
-        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, country).map { articles ->
-            articles.articles.map(::mapToArticle).also {
-                newsRepoImpl.changeRequest(it)
-            }
-        }.subscribe({
-            viewState.setSources(it)
-        }, {
-            Log.d("TAG", it.localizedMessage)
-        })
-    }
-
 
     fun filterButtonClick() {
         checkFilter = if (!checkFilter) {

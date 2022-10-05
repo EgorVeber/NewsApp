@@ -2,6 +2,8 @@ package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
@@ -11,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -31,17 +34,19 @@ import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Compan
 
 
 interface EventBehaviorToActivity {
-    fun getStateBehavior():Int
+    fun getStateBehavior(): Int
     fun setStateBehavior()
 }
 
-class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener,EventBehaviorToActivity {
+class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener,
+    EventBehaviorToActivity {
 
     private var _binding: TopNewsFragmentBinding? = null
 
     private val binding get() = _binding!!
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
+
 
     private val newsAdapter = TopNewsAdapter {
         presenter.clickNews(it)
@@ -94,6 +99,11 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
 
+//        var itemAnimator = binding.recyclerNews.itemAnimator
+//        if(itemAnimator is DefaultItemAnimator){
+//            itemAnimator.supportsChangeAnimations=false
+//        }
+
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
             addBottomSheetCallback(callBackBehavior)
         }
@@ -111,12 +121,9 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
+        Log.d("setSources", "size " + articles.size.toString())
+        Log.d("setSources", articles.filter { it.isHistory }.size.toString())
         TransitionManager.beginDelayedTransition(binding.root)
-
-        articles.forEach {
-            if (it.isHistory)
-                Log.d("articles", it.title + it.isFavorites.toString() + it.isHistory.toString())
-        }
         newsAdapter.articles = articles
     }
 
@@ -126,6 +133,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         } else {
             binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
         }
+
 
         binding.filterButton.visibility = View.INVISIBLE
         hideFilter()
@@ -219,6 +227,8 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
                     presenter.behaviorHide()
                     binding.filterButton.visibility = View.VISIBLE
                     binding.filterButton.setImageResource(R.drawable.filter_icon)
+                    presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
+                        arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
                 }
 
                 BottomSheetBehavior.STATE_EXPANDED -> {
@@ -253,7 +263,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
     override fun getStateBehavior(): Int {
-       return bSheetB.state
+        return bSheetB.state
     }
 
     override fun setStateBehavior() {

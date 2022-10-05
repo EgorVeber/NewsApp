@@ -8,6 +8,8 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.favorites.FavoritesView
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
 
 class FavoritesPresenter(
     private val router: Router,
@@ -35,6 +37,7 @@ class FavoritesPresenter(
                     } else {
                         viewState.setSources(it.map(::articleDbEntityToArticle).map {
                             it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
+                            it.viewType= VIEW_TYPE_FAVORITES_NEWS
                             it
                         })
                     }
