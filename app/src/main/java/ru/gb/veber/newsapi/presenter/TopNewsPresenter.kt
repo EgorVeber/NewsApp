@@ -23,7 +23,6 @@ class TopNewsPresenter(
     private var checkFilter = false
     private var currentArticle = 0
     private var saveHistory = false
-    private var list: List<Article> = listOf()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -68,7 +67,6 @@ class TopNewsPresenter(
                     }
                 }
             }
-            list = news
             news
         }.subscribe({
             Log.d("loadNews", it.toString())

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_item"
-    android:layout_margin="10dp"
     style="@style/card_style_base"
     app:cardElevation="5dp">
 
@@ -32,39 +31,39 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageNews"
-            android:layout_width="100dp"
+            android:layout_width="110dp"
             android:layout_height="110dp"
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/imageNews"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageNews"
+            app:layout_constraintTop_toTopOf="@+id/imageNews"
+            android:layout_height="wrap_content">
         <TextView
             android:id="@+id/title"
             style="@style/sources_text"
             android:layout_marginStart="10dp"
             android:textSize="16sp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="@+id/imageNews"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageNews"
-            app:layout_constraintTop_toTopOf="@+id/imageNews" />
-
-<!--        app:layout_constraintBottom_toBottomOf="@+id/imageNews"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/imageNews"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/imageNews"-->
-<!--        app:layout_constraintVertical_bias="0.001"-->
+            android:ellipsize="end"
+            android:maxLines="3"/>
 
         <TextView
             android:id="@+id/publishedAt"
             style="@style/sources_text"
             android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
             android:textColor="@color/selectedColor"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="2022-10-05 14:22" />
-
+        </LinearLayout>
 <!--  app:layout_constraintVertical_bias="0.9"-->
 <!--        app:layout_constraintStart_toEndOf="@+id/imageNews"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/title"-->

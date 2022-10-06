@@ -27,7 +27,7 @@ data class SourceDTO(
 
 data class SourcesRequestDTO(
     @SerializedName("status") var status: String? = null,
-    @SerializedName("sources") var sources: List<SourcesDTO> = listOf()
+    @SerializedName("sources") var sources: List<SourcesDTO> = listOf(),
 )
 
 data class SourcesDTO(

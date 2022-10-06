@@ -19,6 +19,9 @@
         <item name="switchStyle">@style/MySwitchStyle</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
         <item name="badgeStyle">@style/CustomBadge</item>
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
+        <item name="colorControlActivated">@color/selectedColor</item>
+<!--        <item name="autoCompleteTextViewStyle">@style/MyAutoCompleteTextViewStyle</item>-->
     </style>
 
 

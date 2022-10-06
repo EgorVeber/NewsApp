@@ -52,6 +52,32 @@
     </style>
 
 
+    <style name="MyOutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <!--        <item name="hintTextColor">@color/selectedColor</item>-->
+        <!--        <item name="boxStrokeWidth">0.8dp</item>-->
+        <!--        <item name="boxStrokeColor">@color/selectedColor</item>-->
+        <!--        <item name="endIconCheckable">true</item>-->
+        <!--        <item name="endIconMode">custom</item>-->
+    </style>
+
+    <style name="MyAutoCompleteTextViewStyle" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
+        <item name="android:popupBackground">@color/black</item>
+        <item name="android:background">?attr/editTextBackground</item>
+        <item name="android:textColor">?attr/editTextColor</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
+        <item name="android:textCursorDrawable">@drawable/abc_text_cursor_material</item>
+    </style>
+
+
+    <style name="MyFilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="hintTextColor">@color/selectedColor</item>
+        <item name="boxStrokeWidth">0.8dp</item>
+        <item name="boxStrokeColor">@color/selectedColor</item>
+        <item name="endIconMode">none</item>
+        <item name="boxBackgroundColor">@color/white</item>
+    </style>
+
 
     <style name="MyMaterialButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="cornerRadius">10dp</item>
@@ -83,8 +109,7 @@
     </style>
 
 
-
-<!--    //Dialog-->
+    <!--    //Dialog-->
     <style name="MyAlertDialogStyle" parent="MaterialAlertDialog.MaterialComponents">
         <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
     </style>
@@ -117,8 +142,10 @@
         <!--        <item name="colorSurface">@color/shrine_pink_light</item>-->
         <!--        <item name="colorOnSurface">@color/shrine_pink_900</item>-->
         <item name="alertDialogStyle">@style/MyAlertDialogStyle</item>
-        <item name="materialAlertDialogTitleTextStyle">@style/MyMaterialAlertDialogTitleTextStyle</item>
-        <item name="materialAlertDialogBodyTextStyle">@style/MyMaterialAlertDialogBodyTextStyle</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MyMaterialAlertDialogTitleTextStyle
+        </item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MyMaterialAlertDialogBodyTextStyle
+        </item>
         <!--        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>-->
         <!--        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.Button</item>-->
     </style>
@@ -127,4 +154,27 @@
     <style name="CustomBadge" parent="@style/Widget.MaterialComponents.Badge">
         <item name="backgroundColor">@color/selectedColor</item>
     </style>
+
+    <string name="defaultCountry">Default: All Country</string>
+    <dimen name="cornerRadiusTextInput">10dp</dimen>
+
+
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!--        &lt;!&ndash; Background for the search query section (e.g. EditText) &ndash;&gt;-->
+        <!--        <item name="queryBackground"> </item>-->
+        <!--        <item name="submitBackground">...</item>-->
+        <!--        &lt;!&ndash; Close button icon &ndash;&gt;-->
+        <!--        <item name="closeIcon">...</item>-->
+        <!--        &lt;!&ndash; Search button icon &ndash;&gt;-->
+        <!--        <item name="searchIcon">...</item>-->
+        <!--        &lt;!&ndash; Go/commit button icon &ndash;&gt;-->
+        <!--        <item name="goIcon">...</item>-->
+        <!--        &lt;!&ndash; Voice search button icon &ndash;&gt;-->
+        <!--        &lt;!&ndash; Commit icon shown in the query suggestion row &ndash;&gt;-->
+        <!--        <item name="commitIcon">...</item>-->
+        <!--        &lt;!&ndash; Layout for query suggestion rows &ndash;&gt;-->
+        <!--        <item name="suggestionRowLayout">...</item>-->
+    </style>
+
+
 </resources>

@@ -2,6 +2,8 @@ package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
@@ -12,6 +14,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -28,6 +31,7 @@ import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 
 
 interface EventBehaviorToActivity {
@@ -97,7 +101,17 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
                 Log.d("recyclerNews", "Нижняя точка 1 ")
             }
         }
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            if (dy > 0) {
+
+            } else {
+            }
+        }
     }
+
+
 
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
@@ -125,7 +139,8 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
-        // TransitionManager.beginDelayedTransition(binding.root)
+        //Чтоб карсиво diff util работали не обязательно
+        TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = articles.toMutableList()
     }
 
@@ -178,7 +193,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
                 presenter.deleteFavorites(article)
                 binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
                 article.isFavorites = false
-                (requireActivity() as EventAddingBadges).removeBage()
+                (requireActivity() as EventAddingBadges).removeBadge()
             } else {
                 Log.d("TAG", "else")
                 presenter.saveArticleLike(article,
@@ -221,8 +236,11 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
     override fun successInsertArticle() {
-        presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
-            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        //Либо без задержки нее важно особо
+        Handler(Looper.getMainLooper()).postDelayed({
+            presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
+                arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        }, 2000)
     }
 
     override fun hideFavorites() {

@@ -17,6 +17,8 @@ import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.allnews.AllNewsFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
+import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsFragment
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 
@@ -33,7 +35,7 @@ interface EventLogoutAccountScreen {
 
 interface EventAddingBadges {
     fun addBadge()
-    fun removeBage()
+    fun removeBadge()
 }
 
 class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAccountScreen,
@@ -171,7 +173,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         badge.number = counterBadge
     }
 
-    override fun removeBage() {
+    override fun removeBadge() {
         counterBadge--
         if (counterBadge <= 0) {
             counterBadge = 0
