@@ -8,4 +8,5 @@ import moxy.viewstate.strategy.StateStrategyType
 interface ViewMain : MvpView {
     fun init()
     fun onCreateSetIconTitleAccount(accountLogin: String)
+    fun completableInsertSources()
 }

@@ -23,7 +23,7 @@
             android:id="@+id/imageFavorites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="2dp"
             android:src="@drawable/ic_favorite_36_active"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"

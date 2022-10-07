@@ -51,11 +51,11 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initialization(arguments?.getInt(ACCOUNT_ID)?:ACCOUNT_ID_DEFAULT)
+        initialization(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 
     private fun initialization(accountID: Int) {
-        binding.viewPager.adapter = TopNewsViewPagerAdapter(requireActivity(),accountID)
+        binding.viewPager.adapter = TopNewsViewPagerAdapter(requireActivity(), accountID)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 BUSINESS -> tab.text = CATEGORY_BUSINESS
@@ -84,7 +84,7 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
     }
 
     companion object {
-        fun getInstance(accountID:Int): TopNewsViewPagerFragment {
+        fun getInstance(accountID: Int): TopNewsViewPagerFragment {
             return TopNewsViewPagerFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ACCOUNT_ID, accountID)

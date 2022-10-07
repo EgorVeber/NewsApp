@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.topnews
+package ru.gb.veber.newsapi.view.searchnews
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,7 +7,7 @@ import android.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 
-class BehaviorActionButton(context: Context, attr: AttributeSet? = null) :
+class BehaviorFilterLayout(context: Context, attr: AttributeSet? = null) :
     CoordinatorLayout.Behavior<View>(context, attr) {
 
     override fun layoutDependsOn(
@@ -15,7 +15,7 @@ class BehaviorActionButton(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        return (dependency is ConstraintLayout)
+        return (dependency is androidx.appcompat.widget.SearchView)
     }
 
     override fun onDependentViewChanged(
@@ -23,8 +23,7 @@ class BehaviorActionButton(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        child.y = (dependency.height - child.height - 100).toFloat()
-        child.x = (dependency.width - child.height - 50).toFloat()
+        child.y = (dependency.y +dependency.height + 20)
         return super.onDependentViewChanged(parent, child, dependency)
     }
 }

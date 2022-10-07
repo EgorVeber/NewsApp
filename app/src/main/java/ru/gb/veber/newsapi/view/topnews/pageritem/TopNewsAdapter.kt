@@ -1,7 +1,6 @@
 package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,20 +17,16 @@ import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_
 
 typealias OnUserClickListener = (article: Article) -> Unit
 
-
-
 interface RecyclerListener {
     fun clickNews(article: Article)
     fun deleteFavorites(article: Article)
 }
 
-
-
 class TopNewsAdapter(
-    var listener: RecyclerListener
+    var listener: RecyclerListener,
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
-    var articles: MutableList<Article> = mutableListOf()
+    var articles: List<Article> = listOf()
         set(value) {
             var diffUtil = TopNewsDiffUtil(field, value)
             val diffResult = DiffUtil.calculateDiff(diffUtil)
@@ -43,18 +38,18 @@ class TopNewsAdapter(
         return when (viewType) {
             VIEW_TYPE_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(parent.context),
                 parent,
-                false),listener)
+                false), listener)
             VIEW_TYPE_FAVORITES_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(
                 parent.context),
                 parent,
-                false),listener)
+                false), listener)
             VIEW_TYPE_HEADER_NEWS -> NewsHeaderViewHolder(TopNewsItemHeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
             else -> NewsViewHolder(
                 TopNewsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-               listener)
+                listener)
         }
     }
 
@@ -83,7 +78,7 @@ class NewsViewHolder(
         imageNews.loadGlide(item.urlToImage)
         viewedText.text = if (item.isHistory || item.isFavorites) "viewed" else ""
         root.setOnClickListener {
-           // onUserClickListener.invoke(item)
+            // onUserClickListener.invoke(item)
             listener.clickNews(item)
         }
         imageFavorites.setOnClickListener {
@@ -105,7 +100,7 @@ class NewsHeaderViewHolder(
         imageNews.loadGlideNot(item.urlToImage)
         viewedTextHeader.text = if (item.isHistory || item.isFavorites) "viewed" else ""
         root.setOnClickListener {
-           // onUserClickListener.invoke(item)
+            // onUserClickListener.invoke(item)
             listener.clickNews(item)
         }
     }

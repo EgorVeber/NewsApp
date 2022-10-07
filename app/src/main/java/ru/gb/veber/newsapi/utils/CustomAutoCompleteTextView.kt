@@ -2,6 +2,7 @@ package ru.gb.veber.newsapi.utils
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -19,6 +20,7 @@ class CustomAutoCompleteTextView : MaterialAutoCompleteTextView {
         return true
     }
 
+
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && isPopupShowing) {
             val inputManager: InputMethodManager =
@@ -26,6 +28,8 @@ class CustomAutoCompleteTextView : MaterialAutoCompleteTextView {
             if (inputManager.hideSoftInputFromWindow(findFocus().windowToken,
                     InputMethodManager.HIDE_NOT_ALWAYS)
             ) {
+                Log.d("onKeyPreIme",
+                    "onKeyPreIme() called with: keyCode = $keyCode, event = $event")
                 return true
             }
         }

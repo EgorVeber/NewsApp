@@ -1,0 +1,27 @@
+package ru.gb.veber.newsapi.model.database.entity
+
+import androidx.room.*
+
+@Entity(
+    tableName = "account_sources",
+    primaryKeys = ["account_id", "sources_id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = AccountDbEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["account_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = SourcesDbEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["sources_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+    ]
+)
+
+data class AccountSourcesDbEntity(
+    @ColumnInfo(name = "account_id") val accountId: Int,
+    @ColumnInfo(name = "sources_id") val sourcesId: Int,
+)

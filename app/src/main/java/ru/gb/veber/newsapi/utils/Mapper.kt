@@ -3,6 +3,7 @@ package ru.gb.veber.newsapi.utils
 import ru.gb.veber.newsapi.model.*
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
+import ru.gb.veber.newsapi.model.database.entity.SourcesDbEntity
 
 
 fun mapToArticle(item: ArticleDTO): Article {
@@ -86,3 +87,32 @@ fun articleDbEntityToArticle(item: ArticleDbEntity): Article {
         urlToImage = item.urlToImage,
     )
 }
+
+
+fun sourcesDtoToEntity(sourcesDTO: SourcesDTO): SourcesDbEntity {
+    return SourcesDbEntity(
+        id = 0,
+        idSources = sourcesDTO.id,
+        name = sourcesDTO.name,
+        description = sourcesDTO.description,
+        url = sourcesDTO.url,
+        category = sourcesDTO.category,
+        language = sourcesDTO.language,
+        country = sourcesDTO.country
+    )
+}
+
+fun sourcesDbEntityToSources(sourcesDb: SourcesDbEntity): Sources {
+    return Sources(
+        id = sourcesDb.id,
+        idSources = sourcesDb.idSources,
+        name = sourcesDb.name,
+        description = sourcesDb.description,
+        url = sourcesDb.url,
+        category = sourcesDb.category,
+        language = sourcesDb.language,
+        country = sourcesDb.country
+    )
+}
+
+

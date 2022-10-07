@@ -112,7 +112,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
 
-
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
@@ -141,7 +140,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     override fun setSources(articles: List<Article>) {
         //Чтоб карсиво diff util работали не обязательно
         TransitionManager.beginDelayedTransition(binding.root)
-        newsAdapter.articles = articles.toMutableList()
+        newsAdapter.articles = articles
     }
 
     override fun clickNews(article: Article) {
@@ -156,6 +155,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         hideFilter()
 
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+
 
         binding.imageViewAll.show()
         binding.titleNews.show()

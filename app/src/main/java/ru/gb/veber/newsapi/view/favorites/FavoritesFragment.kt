@@ -100,7 +100,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
     override fun setSources(list: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
         Log.d("TAG", "setSources() called with: list = $list")
-        historyAdapter.articles = list.toMutableList()
+        historyAdapter.articles = list
         binding.likeRecycler.show()
     }
 
@@ -123,7 +123,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
         if (list.isEmpty()) {
             emptyList()
         }
-        historyAdapter.articles = list.toMutableList()
+        historyAdapter.articles = list
     }
 
     override fun onDestroyView() {

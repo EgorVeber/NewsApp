@@ -12,13 +12,17 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.model.network.NewsRetrofit
+import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
+import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.allnews.AllNewsFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsFragment
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 
@@ -48,7 +52,10 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
 
     private val presenter: ActivityPresenter by moxyPresenter {
-        ActivityPresenter(App.instance.router, SharedPreferenceAccount())
+        ActivityPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
+            App.instance.router,
+            SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
+            SharedPreferenceAccount())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +63,20 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         presenter.getAccountSettings()
+
+//        AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()).getLikeSourcesFromAccount(3)
+//            .subscribe({
+//                it.forEach {
+//                    Log.d(ERROR_DB, it.toString())
+//                }
+//            }, {
+//                Log.d(ERROR_DB, "AccountSources" + it.localizedMessage)
+//            })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.getCheckFirstStartApp()
     }
 
     override fun onResumeFragments() {
@@ -152,6 +173,10 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = accountLogin
         item.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_person_24)
+    }
+
+    override fun completableInsertSources() {
+        Toast.makeText(this, "Check out the sources section", Toast.LENGTH_SHORT).show()
     }
 
     override fun bottomNavigationSetCurrentAccount(checkLogin: String) {
