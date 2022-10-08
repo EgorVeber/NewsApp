@@ -100,10 +100,9 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
                     presenter.openScreenSearchNews()
                 }
                 R.id.allNews -> {
-                    //  presenter.openScreenAllNews()
+                   presenter.openScreenAllNews()
                 }
                 R.id.favoritesNews -> {
-                    // presenter.openScreenSources()
                     presenter.openFavoritesScreen()
                     val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
                     if (badgeDrawable != null) {
@@ -118,7 +117,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
             }
             true
         }
-        binding.bottomNavigationView.selectedItemId = R.id.allNews
+        binding.bottomNavigationView.selectedItemId = R.id.topNews
         binding.bottomNavigationView.setOnItemReselectedListener {
 
         }

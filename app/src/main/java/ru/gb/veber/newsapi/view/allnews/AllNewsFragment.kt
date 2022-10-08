@@ -102,16 +102,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         })
 
 
-//        binding.searchSpinnerCountry.setAdapter(adapterSources)
-        binding.searchSpinnerCountry.onFocusChangeListener =
-            View.OnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    binding.searchSpinnerCountry.showDropDown()
-                }
-            }
 
-        binding.searchSpinnerCountry.threshold = 1
-        binding.searchSpinnerCountry.onItemClickListener = listenerAdapter
 
 
         binding.searchSpinnerCountry.setOnClickListener {
@@ -180,7 +171,6 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
             })
         binding.searchSpinnerCountry.setAdapter(AutoCompleteCountryAdapter(requireContext(),
             sources))
-        // binding.searchSpinnerCountry.setAdapter(adapter)
     }
 
     override fun onDestroyView() {

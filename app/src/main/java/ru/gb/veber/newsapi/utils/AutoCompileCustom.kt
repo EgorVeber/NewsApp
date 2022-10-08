@@ -19,7 +19,7 @@ class AutoCompleteCountryAdapter(
     countryList: List<Sources>,
 ) : ArrayAdapter<Sources>(context, 0, countryList) {
 
-    private val countryListFull: List<Sources>
+     var countryListFull: List<Sources>
 
     init {
         countryListFull = ArrayList(countryList)
@@ -44,7 +44,7 @@ class AutoCompleteCountryAdapter(
         if (sources?.isLike == true) {
             binding.checkSources.show()
         } else {
-            binding.checkSources.hide()
+            binding.checkSources.visibility = View.INVISIBLE
         }
         binding.checkSources.tag = sources
 //        binding.checkSources.isChecked = true

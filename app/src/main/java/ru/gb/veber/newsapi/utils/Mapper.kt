@@ -42,7 +42,9 @@ fun mapToAccount(item: AccountDbEntity): Account {
         email = item.email,
         createdAt = item.createdAt,
         password = item.password,
-        saveHistory = item.saveHistory
+        saveHistory = item.saveHistory,
+        displayOnlySources = item.displayOnlySources,
+        saveSelectHistory = item.saveSelectHistory
     )
 }
 
@@ -53,7 +55,9 @@ fun mapToAccountDbEntity(item: Account): AccountDbEntity {
         email = item.email,
         createdAt = item.createdAt,
         password = item.password,
-        saveHistory = item.saveHistory
+        saveHistory = item.saveHistory,
+        saveSelectHistory = item.saveSelectHistory,
+        displayOnlySources = item.displayOnlySources
     )
 }
 

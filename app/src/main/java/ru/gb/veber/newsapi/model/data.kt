@@ -28,7 +28,7 @@ data class Sources(
     var category: String? = "",
     var language: String? = "",
     var country: String? = "",
-    var isLike:Boolean? = false,
+    var isLike: Boolean? = false,
 )
 
 
@@ -46,4 +46,6 @@ data class Account(
     var totalHistory: String? = "0",
     var totalFavorites: String? = "0",
     var saveHistory: Boolean = true,
+    var saveSelectHistory: Boolean = true,
+    var displayOnlySources: Boolean = false,
 )

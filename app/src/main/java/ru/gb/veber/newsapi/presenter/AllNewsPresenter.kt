@@ -60,7 +60,7 @@ class AllNewsPresenter(
                 for (i in all.indices) {
                     if (lik.idSources == all[i].idSources) {
                         all.removeAt(i)
-                        all.add(0, lik.also { it.isLike=true })
+                        all.add(0, lik.also { it.isLike = true })
                     }
                 }
                 //                all.map { al ->

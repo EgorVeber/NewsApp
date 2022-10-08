@@ -7,6 +7,7 @@ import ru.gb.veber.newsapi.model.Sources
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface SearchNewsView : MvpView {
-    fun init()
      fun setSources(map: List<Sources>)
+     fun hideSelectHistory()
+    fun updateAdapter(likeSources: List<Sources>)
 }

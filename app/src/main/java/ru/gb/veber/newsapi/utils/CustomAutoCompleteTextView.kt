@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.utils
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent
@@ -22,17 +23,29 @@ class CustomAutoCompleteTextView : MaterialAutoCompleteTextView {
     }
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
+        //чтоб не закрывала при беке
         if (keyCode == KeyEvent.KEYCODE_BACK && isPopupShowing) {
             val inputManager: InputMethodManager =
                 context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             if (inputManager.hideSoftInputFromWindow(findFocus().windowToken,
                     InputMethodManager.HIDE_NOT_ALWAYS)
             ) {
-                Log.d("onKeyPreIme",
-                    "onKeyPreIme() called with: keyCode = $keyCode, event = $event")
                 return true
             }
         }
         return super.onKeyPreIme(keyCode, event)
     }
+
+    override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect)
+        if(focused){
+            this.showDropDown()
+        }
+    }
+
+
+//
+//    override fun setOnKeyListener(l: OnKeyListener?) {
+//        this.hideKeyboard()
+//    }
 }

@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.AuthorizationScreen
 import ru.gb.veber.newsapi.core.EditAccountScreen
+import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
@@ -21,6 +22,7 @@ class AccountPresenter(
     MvpPresenter<AccountView>() {
 
     private var accountId = ACCOUNT_ID_DEFAULT
+    private lateinit var accountMain: Account
 
 
     override fun onFirstViewAttach() {
@@ -57,11 +59,11 @@ class AccountPresenter(
 
     fun getAccountSettings(accountID: Int?) {
         viewState.loading()
-
         accountID?.let { acc ->
             accountId = accountID
             Single.zip(roomRepoImpl.getAccountById(acc),
                 articleRepoImpl.getArticleById(accountID)) { account, articles ->
+                accountMain = account
                 account.totalFavorites = articles.filter { it.isFavorites }.size.toString()
                 account.totalHistory = articles.filter { it.isHistory }.size.toString()
                 account
@@ -107,5 +109,15 @@ class AccountPresenter(
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })
+    }
+
+    fun updateAccountShowListFavorite(b: Boolean) {
+        accountMain?.let {
+            it.displayOnlySources = !it.displayOnlySources
+            roomRepoImpl.updateAccount(mapToAccountDbEntity(it)).subscribe({
+            }, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            })
+        }
     }
 }

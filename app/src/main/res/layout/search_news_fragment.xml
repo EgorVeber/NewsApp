@@ -17,6 +17,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:queryHint="KeyWord" />
 
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinnerSearchIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:entries="@array/searchInArray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
     <TextView
         android:id="@+id/titleHistory"
@@ -30,7 +38,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerSearchIn" />
 
 
     <ListView
@@ -39,7 +47,7 @@
         android:layout_height="wrap_content"
         android:maxHeight="200dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputEndDate" />
+        app:layout_constraintTop_toBottomOf="@+id/searchTextInput" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageSearchIcon1"
@@ -103,6 +111,11 @@
         app:layout_constraintStart_toEndOf="@id/imageSearchIcon3"
         app:layout_constraintTop_toTopOf="@+id/imageSearchIcon3" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/grouphistopry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="titleHistory,textSearch3,imageSearchIcon3,textSearch2,imageSearchIcon2,imageSearchIcon1,textSearch1" />
 
     <TextView
         android:id="@+id/titleFilter"
@@ -118,11 +131,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textSearch3" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputEndDate"
+        android:id="@+id/searchTextInput"
         style="@style/MyFilledBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:hint="Select Sources"
         android:theme="@style/TextInputLayoutAppearance"
         app:endIconMode="clear_text"
@@ -135,19 +150,21 @@
             android:id="@+id/searchSpinnerCountry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:paddingStart="1dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkBoxSearchSources"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Only source"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textInputEndDate"
-        app:layout_constraintBottom_toBottomOf="@+id/textInputEndDate"
+        android:text="Only sources"
+        app:layout_constraintBaseline_toBaselineOf="@+id/searchTextInput"
+        app:layout_constraintBottom_toBottomOf="@+id/searchTextInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textInputEndDate"
-        app:layout_constraintTop_toTopOf="@+id/textInputEndDate" />
+        app:layout_constraintStart_toEndOf="@+id/searchTextInput"
+        app:layout_constraintTop_toTopOf="@+id/searchTextInput" />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/searchSourcesButton"
@@ -162,5 +179,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9"
         app:layout_constraintWidth_percent="0.8" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.DatePicker
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
@@ -164,5 +165,20 @@ fun String.checkLogin():String{
     }else{
         this
     }
+}
+
+fun initDatePicker(date: Date, datePicker: DatePicker) {
+    Calendar.getInstance().also {
+        it.time = date
+        datePicker.init(it[Calendar.YEAR], it[Calendar.MONTH], it[Calendar.DAY_OF_MONTH], null)
+    }
+}
+
+fun getDateFromDatePicker(datePicker: DatePicker): Date {
+    return Calendar.getInstance().apply {
+        this[Calendar.YEAR] = datePicker.year
+        this[Calendar.MONTH] = datePicker.month
+        this[Calendar.DAY_OF_MONTH] = datePicker.dayOfMonth
+    }.time
 }
 

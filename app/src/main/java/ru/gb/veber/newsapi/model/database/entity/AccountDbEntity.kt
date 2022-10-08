@@ -20,4 +20,8 @@ data class AccountDbEntity(
     val createdAt: String,
     @ColumnInfo(name = "save_history")
     val saveHistory: Boolean,
+    @ColumnInfo(name = "save_select_history")
+    var saveSelectHistory: Boolean = true,
+    @ColumnInfo(name = "display_only_sources")
+    var displayOnlySources: Boolean = false,
 )

@@ -15,6 +15,7 @@ import androidx.room.PrimaryKey
         onDelete = ForeignKey.CASCADE
     )]
 )
+
 data class ArticleDbEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int,

@@ -67,6 +67,7 @@
         <item name="android:textColor">?attr/editTextColor</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:textCursorDrawable">@drawable/abc_text_cursor_material</item>
+
     </style>
 
 
@@ -118,6 +119,12 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">20dp</item>
     </style>
+
+
+    <style name="ShapeAppearance.App.MediumComponent2" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">16dp</item>
+    </style>
+
 
 
     <style name="MyMaterialAlertDialogTitleTextStyle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
@@ -177,4 +184,9 @@
     </style>
 
 
+    <style name="ThemeOverlay.App.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/selectedColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.MediumComponent2</item>
+    </style>
 </resources>

@@ -74,6 +74,10 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.saveHistorySwitch.setOnCheckedChangeListener { compoundButton, b ->
             presenter.updateAccountSaveHistory(b)
         }
+
+        binding.showFavorites.setOnCheckedChangeListener { compoundButton, b ->
+            presenter.updateAccountShowListFavorite(b)
+        }
     }
 
 

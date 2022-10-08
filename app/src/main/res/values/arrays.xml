@@ -114,4 +114,9 @@
         <item>United States</item>
         <item>Venezuela</item>
     </string-array>
+    <string-array name="searchInArray">
+        <item>Search everywhere</item>
+        <item>Title</item>
+        <item>Description</item>
+    </string-array>
 </resources>

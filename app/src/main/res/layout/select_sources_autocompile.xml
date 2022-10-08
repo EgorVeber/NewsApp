@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal">
-
     <TextView
         android:id="@+id/textSourcesName"
         android:layout_width="wrap_content"
+        android:layout_weight="55"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
         android:ellipsize="end"
@@ -20,9 +20,8 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/checkSources"
         android:layout_width="wrap_content"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:checked="true"
         android:padding="16dp"
         android:src="@drawable/ic_favorite" />
-
 </LinearLayout>
