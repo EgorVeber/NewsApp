@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/rootSelectSources"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
-    android:layout_height="match_parent">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/textSourcesName"
@@ -16,10 +17,12 @@
         android:text="Russia"
         android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/checkSources"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="true" />
+        android:checked="true"
+        android:padding="16dp"
+        android:src="@drawable/ic_favorite" />
 
 </LinearLayout>

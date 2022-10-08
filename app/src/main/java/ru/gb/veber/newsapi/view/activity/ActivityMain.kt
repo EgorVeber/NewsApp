@@ -100,7 +100,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
                     presenter.openScreenSearchNews()
                 }
                 R.id.allNews -> {
-                    presenter.openScreenAllNews()
+                    //  presenter.openScreenAllNews()
                 }
                 R.id.favoritesNews -> {
                     // presenter.openScreenSources()

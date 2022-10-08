@@ -2,6 +2,7 @@ package ru.gb.veber.newsapi.presenter
 
 import android.util.Log
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
@@ -14,6 +15,7 @@ import ru.gb.veber.newsapi.utils.mapToArticle
 import ru.gb.veber.newsapi.utils.sourcesDbEntityToSources
 import ru.gb.veber.newsapi.utils.sourcesDtoToEntity
 import ru.gb.veber.newsapi.view.allnews.AllNewsView
+import java.util.*
 
 class AllNewsPresenter(
     private val newsRepoImpl: NewsRepoImpl,
@@ -52,22 +54,40 @@ class AllNewsPresenter(
     }
 
     fun getSources() {
-        sourcesRepoImpl.getSources().subscribe({
-            listSources = it.map(::sourcesDbEntityToSources)
-            viewState.setSources(it.map(::sourcesDbEntityToSources))
+        Single.zip(sourcesRepoImpl.getSources(),
+            accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId)) { all, like ->
+            like.map { lik ->
+                for (i in all.indices) {
+                    if (lik.idSources == all[i].idSources) {
+                        all.removeAt(i)
+                        all.add(0, lik.also { it.isLike=true })
+                    }
+                }
+                //                all.map { al ->
+//                    if (lik.idSources == al.idSources) {
+//                        al.isLike = true
+////                        Collections.swap(all,1,2 )
+//                    }
+//                }
+            }
+            all
+        }.subscribe({
+            listSources = it
+            viewState.setSources(it)
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })
+
+//        sourcesRepoImpl.getSources().subscribe({
+//            viewState.setSources(it)
+//        }, {
+//            Log.d(ERROR_DB, it.localizedMessage)
+//        })
     }
 
     fun loadNewsSources(text: String) {
-
-        var x = listSources.filter { it.name == text }
-        x.forEach {
-            Log.d("TAG", it.toString())
-        }
-
-        newsRepoImpl.getEverythingKeyWordSearchInSources(x[0].idSources!!).subscribe({ articles ->
+        var x = listSources.find { it.name == text }
+        newsRepoImpl.getEverythingKeyWordSearchInSources(x?.idSources!!).subscribe({ articles ->
             viewState.setNews(articles.articles.map(::mapToArticle).also {
                 if (it.isNotEmpty()) {
                     newsRepoImpl.changeRequest(it)

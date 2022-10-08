@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.SimpleAdapter
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
@@ -37,7 +38,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
     private var _binding: AllNewsFragmentBinding? = null
     private val binding get() = _binding!!
 
-//    private val adapterSources = CustomAdapterSources()
+
 
     private val presenter: AllNewsPresenter by moxyPresenter {
         AllNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
@@ -100,12 +101,6 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
             }
         })
 
-        binding.searchSpinnerCountry.setOnKeyListener { p0, p1, p2 ->
-            if (p1 == KeyEvent.KEYCODE_ENTER && p2?.action == KeyEvent.ACTION_DOWN) {
-                binding.searchSpinnerCountry.hideKeyboard()
-            }
-            true
-        }
 
 //        binding.searchSpinnerCountry.setAdapter(adapterSources)
         binding.searchSpinnerCountry.onFocusChangeListener =
@@ -114,12 +109,29 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
                     binding.searchSpinnerCountry.showDropDown()
                 }
             }
+
         binding.searchSpinnerCountry.threshold = 1
         binding.searchSpinnerCountry.onItemClickListener = listenerAdapter
 
 
+        binding.searchSpinnerCountry.setOnClickListener {
+            // binding.searchSpinnerCountry.showDropDown()
+        }
+
         binding.actionFilterAllNews.setOnClickListener {
             presenter.loadNewsSources(binding.searchSpinnerCountry.text.toString())
+        }
+
+
+        binding.checkBoxSearchSources.setOnClickListener {
+            TransitionManager.beginDelayedTransition(binding.root)
+            if (!binding.checkBoxSearchSources.isChecked) {
+                binding.searchView.show()
+                binding.searchSourcesButton.hide()
+            } else {
+                binding.searchView.hide()
+                binding.searchSourcesButton.show()
+            }
         }
     }
 
@@ -163,11 +175,12 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
     override fun setSources(sources: List<Sources>) {
         val adapter: ArrayAdapter<String> = ArrayAdapter(requireContext(),
-            R.layout.select_sources_autocompile, R.id.textSourcesName, sources.map {
+            android.R.layout.simple_list_item_1, sources.map {
                 it.name
             })
-        binding.searchSpinnerCountry.setAdapter(adapter)
-        binding.listView.adapter = adapter
+        binding.searchSpinnerCountry.setAdapter(AutoCompleteCountryAdapter(requireContext(),
+            sources))
+        // binding.searchSpinnerCountry.setAdapter(adapter)
     }
 
     override fun onDestroyView() {

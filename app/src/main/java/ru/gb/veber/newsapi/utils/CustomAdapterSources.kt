@@ -27,11 +27,10 @@ class CustomAdapterSources(
     override fun getView(position: Int, convert: View?, parent: ViewGroup): View {
         val binding =
             convert?.tag as SelectSourcesAutocompileBinding? ?: createBinding(parent.context)
-
         val sources = getItem(position)
         binding.textSourcesName.text = sources.name
         binding.checkSources.tag = sources
-        binding.checkSources.isChecked = true
+//        binding.checkSources.isChecked = true
         return binding.root
     }
 

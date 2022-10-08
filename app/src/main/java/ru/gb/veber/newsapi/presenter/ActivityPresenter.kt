@@ -21,6 +21,7 @@ class ActivityPresenter(
     private val sourcesRepoImpl: SourcesRepoImpl,
     private val sharedPreferenceAccount: SharedPreferenceAccount,
 ) : MvpPresenter<ViewMain>() {
+
     override fun onFirstViewAttach() {
         Log.d("TAG", "onFirstViewAttach() called")
         viewState.init()

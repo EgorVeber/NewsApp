@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 
 
@@ -19,7 +20,6 @@ class CustomAutoCompleteTextView : MaterialAutoCompleteTextView {
     override fun enoughToFilter(): Boolean {
         return true
     }
-
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && isPopupShowing) {

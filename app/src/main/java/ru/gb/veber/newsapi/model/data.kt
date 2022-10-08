@@ -28,6 +28,7 @@ data class Sources(
     var category: String? = "",
     var language: String? = "",
     var country: String? = "",
+    var isLike:Boolean? = false,
 )
 
 
