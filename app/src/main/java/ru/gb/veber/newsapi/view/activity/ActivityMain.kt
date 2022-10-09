@@ -99,8 +99,8 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
                 R.id.searchNews -> {
                     presenter.openScreenSearchNews()
                 }
-                R.id.allNews -> {
-                   presenter.openScreenAllNews()
+                R.id.actionSources -> {
+                   presenter.openScreenSources()
                 }
                 R.id.favoritesNews -> {
                     presenter.openFavoritesScreen()
@@ -136,7 +136,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
             supportFragmentManager.fragments.last() !is EditAccountFragment
         ) {
-            binding.bottomNavigationView.selectedItemId = R.id.allNews
+            binding.bottomNavigationView.selectedItemId = R.id.topNews
         }
 
         if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
@@ -159,7 +159,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun openMainScreen() {
-        binding.bottomNavigationView.selectedItemId = R.id.allNews
+        binding.bottomNavigationView.selectedItemId = R.id.topNews
     }
 
     override fun bottomNavigationSetDefaultIcon() {

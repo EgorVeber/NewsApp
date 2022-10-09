@@ -2,22 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/topNews"
-        android:icon="@drawable/default_icon"
-        android:title="Top"
+        android:id="@+id/actionSources"
+        android:icon="@drawable/ic_baseline_emoji_people_24"
+        android:title="Sources"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/searchNews"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="Search"
         app:showAsAction="ifRoom" />
-
     <item
-        android:id="@+id/allNews"
-        android:icon="@drawable/sources_icon"
-        android:title="Main"
+        android:id="@+id/topNews"
+        android:icon="@drawable/default_icon"
+        android:title="Top"
         app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/favoritesNews"
         android:icon="@drawable/ic_favorite"

@@ -3,7 +3,6 @@ package ru.gb.veber.newsapi.view.searchnews
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -23,14 +22,17 @@ import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import java.text.SimpleDateFormat
-import java.util.*
+
 
 class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedListener {
 
     private var _binding: SearchNewsFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: AutoCompleteCountryAdapter
+    private var dateInput: String = NOT_INPUT_DATE
+
+    private var datePiker = MaterialDatePicker.Builder.datePicker()
+
 
     private val presenter: SearchNewsPresenter by moxyPresenter {
         SearchNewsPresenter(
@@ -57,49 +59,68 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     private fun initialization() {
-
         binding.searchView.setOnQueryTextListener(searchViewListener)
-
         with(binding.searchSpinnerCountry) {
+            //setOnKeyListener(setOnKeyListenerSpinner)s
             threshold = 1
             onItemClickListener = listenerAdapter
             setOnClickListener {
                 showDropDown()
             }
-            //setOnKeyListener(setOnKeyListenerSpinner)
         }
 
         binding.checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
-           // presenter.notifyAdapter(b)
-            TransitionManager.beginDelayedTransition(binding.root)
-            if (!binding.checkBoxSearchSources.isChecked) {
-                binding.searchView.show()
-                binding.searchSourcesButton.hide()
-            } else {
-                binding.searchView.hide()
-                binding.searchSourcesButton.show()
-            }
+            // presenter.notifyAdapter(b)
+            presenter.changeSearchCriteria(b)
         }
 
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Select date news")
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .build()
-        datePicker.show(requireActivity().supportFragmentManager, "s")
-        datePicker.addOnPositiveButtonClickListener {
-            val text = outputDateFormat.format(it)
-            Log.d("TAG", text)
+        binding.selectDate.setOnClickListener {
+            createDatePiker()
+        }
+        binding.searchSourcesButton.setOnClickListener {
+            var selectedItem = binding.spinnerSortBySources.selectedItem.toString()
+            if (binding.spinnerSortBySources.selectedItemPosition == 0) {
+                selectedItem = ""
+            }
+            presenter.openScreenAllNewsSources(dateInput,
+                binding.searchSpinnerCountry.text.toString(),
+                selectedItem)
         }
     }
 
-    private val outputDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).apply {
-        timeZone = TimeZone.getTimeZone("UTC")
+    private fun createDatePiker() {
+        datePiker.setTitleText("No later than 30 days")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .build().also {
+                it.show(requireActivity().supportFragmentManager, "s")
+                it.addOnPositiveButtonClickListener {
+                    dateInput = outputDateFormat.format(it)
+                    binding.selectDate.text = dateInput
+                }
+                it.addOnNegativeButtonClickListener {
+                    dateInput = NOT_INPUT_DATE
+                    binding.selectDate.text = "Select Date"
+                }
+            }
     }
 
     private val searchViewListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
-            query?.let {
-                presenter.openSearchNews(it)
+            query?.let { keyWord ->
+                var searchIn: String = ""
+                var sortBy: String = ""
+                if (binding.spinnerSortBy.selectedItemPosition != 0) {
+                    sortBy = binding.spinnerSortBy.selectedItem.toString()
+                }
+
+                if (binding.spinnerSearchIn.selectedItemPosition != 0) {
+                    searchIn = binding.spinnerSearchIn.selectedItem.toString()
+                }
+
+                presenter.openScreenAllNews(keyWord,
+                    searchIn,
+                    sortBy,
+                    binding.searchSpinnerCountry.text.toString())
             }
             binding.searchView.clearFocus();
             return true
@@ -116,7 +137,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun hideSelectHistory() {
-        binding.grouphistopry.hide()
+        // binding.grouphistopry.hide()
     }
 
     override fun updateAdapter(likeSources: List<Sources>) {
@@ -124,6 +145,32 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         adapter = AutoCompleteCountryAdapter(requireContext(), likeSources)
         binding.searchSpinnerCountry.setAdapter(adapter)
         binding.searchSpinnerCountry.showDropDown()
+    }
+
+    override fun searchInShow() {
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.groupSearchIn.show()
+        binding.groupSources.hide()
+    }
+
+    override fun sourcesInShow() {
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.groupSearchIn.hide()
+        binding.groupSources.show()
+    }
+
+    override fun selectSources() {
+        binding.searchTextInput.error = "Select Sources"
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.searchTextInput.error = null
+        }, 2000L)
+    }
+
+    override fun errorDateInput() {
+        binding.errorDateText.show()
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.errorDateText.hide()
+        }, 2000L)
     }
 
     private val setOnKeyListenerSpinner = View.OnKeyListener { p0, p1, p2 ->

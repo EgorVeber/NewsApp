@@ -39,7 +39,6 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
     private val binding get() = _binding!!
 
 
-
     private val presenter: AllNewsPresenter by moxyPresenter {
         AllNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
             App.instance.router,
@@ -58,7 +57,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         }
 
         override fun deleteFavorites(article: Article) {
-            TODO("Not yet implemented")
+
         }
     }
 
@@ -79,98 +78,50 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         super.onViewCreated(view, savedInstanceState)
         //textSpinner()
         initialization()
+
+        arguments?.let { arguments ->
+
+            binding.textArgument.text = "ACCOUNT_ID = " + arguments.getInt(ACCOUNT_ID)
+                .toString() + "\nKEY_WORD = " + arguments.getString(KEY_WORD).toString() +
+                    "\nSEARCH_IN = " + arguments.getString(SEARCH_IN)
+                .toString() + "\nSORT_BY_KEY_WORD = " + arguments.getString(SORT_BY_KEY_WORD)
+                .toString() +
+                    "\nSORT_BY_SOURCES = " + arguments.getString(SORT_BY_SOURCES).toString() +
+                    "\nSOURCES_NAME = " + arguments.getString(SOURCES_NAME)
+                .toString() + "\nDATE_SOURCES = " + arguments.getString(DATE_SOURCES).toString()
+
+            Log.d("onViewCreatedAllNews", "ACCOUNT_ID = " + arguments.getInt(ACCOUNT_ID).toString())
+            Log.d("onViewCreatedAllNews", "KEY_WORD = " + arguments.getString(KEY_WORD).toString())
+            Log.d("onViewCreatedAllNews",
+                "SEARCH_IN = " + arguments.getString(SEARCH_IN).toString())
+            Log.d("onViewCreatedAllNews",
+                "SORT_BY_KEY_WORD = " + arguments.getString(SORT_BY_KEY_WORD).toString())
+            Log.d("onViewCreatedAllNews",
+                "SORT_BY_SOURCES = " + arguments.getString(SORT_BY_SOURCES).toString())
+            Log.d("onViewCreatedAllNews",
+                "SOURCES_NAME = " + arguments.getString(SOURCES_NAME).toString())
+            Log.d("onViewCreatedAllNews",
+                "DATE_SOURCES = " + arguments.getString(DATE_SOURCES).toString())
+        }
     }
 
 
     private fun initialization() {
 
-        presenter.getSources()
-        binding.recyclerAllNews.adapter = newsAdapter
-        binding.recyclerAllNews.layoutManager = LinearLayoutManager(requireContext())
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    presenter.loadNews(it)
-                }
-                binding.searchView.clearFocus();
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-        })
-
-
-
-
-
-        binding.searchSpinnerCountry.setOnClickListener {
-            // binding.searchSpinnerCountry.showDropDown()
-        }
-
-        binding.actionFilterAllNews.setOnClickListener {
-            presenter.loadNewsSources(binding.searchSpinnerCountry.text.toString())
-        }
-
-
-        binding.checkBoxSearchSources.setOnClickListener {
-            TransitionManager.beginDelayedTransition(binding.root)
-            if (!binding.checkBoxSearchSources.isChecked) {
-                binding.searchView.show()
-                binding.searchSourcesButton.hide()
-            } else {
-                binding.searchView.hide()
-                binding.searchSourcesButton.show()
-            }
-        }
-    }
-
-
-    private val listenerAdapter =
-        AdapterView.OnItemClickListener { parent, p1, position, id ->
-            when (p1.id) {
-                R.id.rootSelectSources -> {
-                    Log.d("OnItemClickListener",
-                        "null() called with: parent = $parent, p1 = $p1, position = $position, id = $id")
-                }
-                R.id.textSourcesName -> {
-                    Log.d("OnItemClickListener",
-                        "null() called with: parent = $parent, p1 = $p1, position = $position, id = $id")
-                }
-                R.id.checkSources -> {
-                    Log.d("OnItemClickListener",
-                        "null() called with: parent = $parent, p1 = $p1, position = $position, id = $id")
-                }
-            }
-
-            val selectedItem = parent?.getItemAtPosition(position).toString()
-            binding.searchSpinnerCountry.hideKeyboard()
-        }
-
-    override fun init() {
-
+//        binding.recyclerAllNews.adapter = newsAdapter
+//        binding.recyclerAllNews.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun setNews(articles: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = articles
         binding.progressBarAllNews.hide()
-        binding.recyclerAllNews.show()
+//        binding.recyclerAllNews.show()
     }
 
     override fun loading() {
         binding.progressBarAllNews.show()
-        binding.recyclerAllNews.hide()
-    }
-
-    override fun setSources(sources: List<Sources>) {
-        val adapter: ArrayAdapter<String> = ArrayAdapter(requireContext(),
-            android.R.layout.simple_list_item_1, sources.map {
-                it.name
-            })
-        binding.searchSpinnerCountry.setAdapter(AutoCompleteCountryAdapter(requireContext(),
-            sources))
+//        binding.recyclerAllNews.hide()
     }
 
     override fun onDestroyView() {
@@ -183,10 +134,24 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
     }
 
     companion object {
-        fun getInstance(accountID: Int): AllNewsFragment {
+        fun getInstance(
+            accountID: Int,
+            keyWord: String?,
+            searchIn: String?,
+            sortByKeyWord: String?,
+            sortBySources: String?,
+            sourcesName: String?,
+            dateSources: String?,
+        ): AllNewsFragment {
             return AllNewsFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ACCOUNT_ID, accountID)
+                    putString(KEY_WORD, keyWord)
+                    putString(SEARCH_IN, searchIn)
+                    putString(SORT_BY_KEY_WORD, sortByKeyWord)
+                    putString(SORT_BY_SOURCES, sortBySources)
+                    putString(SOURCES_NAME, sourcesName)
+                    putString(DATE_SOURCES, dateSources)
                 }
             }
         }

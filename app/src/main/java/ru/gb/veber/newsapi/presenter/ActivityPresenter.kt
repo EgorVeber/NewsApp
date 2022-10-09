@@ -33,7 +33,7 @@ class ActivityPresenter(
     }
 
     fun openScreenSources() {
-        router.replaceScreen(SourcesScreen)
+        router.replaceScreen(SourcesScreen(sharedPreferenceAccount.getAccountID()))
     }
 
     fun openScreenProfile() {
@@ -42,10 +42,6 @@ class ActivityPresenter(
 
     fun openScreenSearchNews() {
         router.replaceScreen(SearchNewsScreen(sharedPreferenceAccount.getAccountID()))
-    }
-
-    fun openScreenAllNews() {
-        router.replaceScreen(AllNewsScreen(sharedPreferenceAccount.getAccountID()))
     }
 
     fun onBackPressedRouter() {

@@ -28,73 +28,13 @@ class AllNewsPresenter(
 ) :
     MvpPresenter<AllNewsView>() {
 
-    private lateinit var listSources: List<Sources>
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.init()
     }
 
     fun onBackPressedRouter(): Boolean {
         Log.d("Back", "onBackPressedRouter() SourcesDTO")
         router.exit()
         return true
-    }
-
-    fun loadNews(query: String) {
-        viewState.loading()
-        newsRepoImpl.getEverythingKeyWordSearchIn(query).subscribe({ articles ->
-            viewState.setNews(articles.articles.map(::mapToArticle).also {
-                if (it.isNotEmpty()) {
-                    newsRepoImpl.changeRequest(it)
-                }
-            })
-        }, {
-
-        })
-    }
-
-    fun getSources() {
-        Single.zip(sourcesRepoImpl.getSources(),
-            accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId)) { all, like ->
-            like.map { lik ->
-                for (i in all.indices) {
-                    if (lik.idSources == all[i].idSources) {
-                        all.removeAt(i)
-                        all.add(0, lik.also { it.isLike = true })
-                    }
-                }
-                //                all.map { al ->
-//                    if (lik.idSources == al.idSources) {
-//                        al.isLike = true
-////                        Collections.swap(all,1,2 )
-//                    }
-//                }
-            }
-            all
-        }.subscribe({
-            listSources = it
-            viewState.setSources(it)
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        })
-
-//        sourcesRepoImpl.getSources().subscribe({
-//            viewState.setSources(it)
-//        }, {
-//            Log.d(ERROR_DB, it.localizedMessage)
-//        })
-    }
-
-    fun loadNewsSources(text: String) {
-        var x = listSources.find { it.name == text }
-        newsRepoImpl.getEverythingKeyWordSearchInSources(x?.idSources!!).subscribe({ articles ->
-            viewState.setNews(articles.articles.map(::mapToArticle).also {
-                if (it.isNotEmpty()) {
-                    newsRepoImpl.changeRequest(it)
-                }
-            })
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        })
     }
 }

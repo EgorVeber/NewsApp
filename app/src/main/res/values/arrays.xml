@@ -119,4 +119,9 @@
         <item>Title</item>
         <item>Description</item>
     </string-array>
+    <string-array name="sortBy">
+        <item>Published Date</item>
+        <item>Relevancy</item>
+        <item>Popularity</item>
+    </string-array>
 </resources>

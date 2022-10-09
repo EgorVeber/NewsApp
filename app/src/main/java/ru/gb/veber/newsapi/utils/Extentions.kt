@@ -37,10 +37,11 @@ fun Completable.subscribeDefault(): Completable {
 }
 
 fun BottomSheetBehavior<ConstraintLayout>.collapsed() {
-    state=BottomSheetBehavior.STATE_COLLAPSED
+    state = BottomSheetBehavior.STATE_COLLAPSED
 }
+
 fun BottomSheetBehavior<ConstraintLayout>.expanded() {
-    state=BottomSheetBehavior.STATE_EXPANDED
+    state = BottomSheetBehavior.STATE_EXPANDED
 }
 
 
@@ -49,13 +50,15 @@ fun View.showKeyboard() {
     this.requestFocus()
     imm.showSoftInput(this, 0)
 }
+
 // Расширяем функционал вью для скрытия клавиатуры
 fun View.hideKeyboard(): Boolean {
     try {
         val inputMethodManager =
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         return inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
-    } catch (ignored: RuntimeException) { }
+    } catch (ignored: RuntimeException) {
+    }
     return false
 }
 
@@ -73,7 +76,7 @@ fun ImageView.loadGlideNot(url: String?) {
         .placeholder(R.drawable.newsplaceholder)
         .error(R.drawable.newsplaceholder)
         .timeout(2000)
-        .listener( object :RequestListener<Drawable> {
+        .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
@@ -98,18 +101,24 @@ fun ImageView.loadGlideNot(url: String?) {
 const val FORMAT_DATE_REQUEST = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 const val FORMAT_HOUR = "HH:mm"
 const val FORMAT_DATE = "yyyy-MM-dd"
+const val FORMAT_DATE_NEWS = "dd.MM.yyyy"
 const val FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm"
 const val FORMAT_DATE_DAY = "dd MMMM yyyy, HH:mm"
 
 val EMAIL_PATTERN: Pattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
 const val EMAIL_STR: String = "User1@gmail.com"
-val PASSWORD_PATTERN: Pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^\\w\\s]).{6,20}")
+val PASSWORD_PATTERN: Pattern =
+    Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^\\w\\s]).{6,20}")
 const val PASSWORD_STR: String = "Example Zydfhm2022?"
-val LOGIN_PATTERN: Pattern = Pattern.compile("^[A-Z](?=[a-zA-Z0-9._]{4,20}\$)(?!.*[_.]{2})[^_.].*[^_.]\$")
+val LOGIN_PATTERN: Pattern =
+    Pattern.compile("^[A-Z](?=[a-zA-Z0-9._]{4,20}\$)(?!.*[_.]{2})[^_.].*[^_.]\$")
 const val LOGIN_STR: String = "UserName"
 
 fun Date.formatHour(): String = SimpleDateFormat(FORMAT_HOUR, Locale.getDefault()).format(this)
 fun Date.formatDate(): String = SimpleDateFormat(FORMAT_DATE, Locale.getDefault()).format(this)
+fun Date.formatDateNews(): String =
+    SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).format(this)
+
 fun Date.formatDateTime(): String =
     SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault()).format(this)
 
@@ -118,6 +127,10 @@ fun Date.formatDateDay(): String =
 
 fun stringFromData(dateString: String) =
     SimpleDateFormat(FORMAT_DATE_REQUEST, Locale.getDefault()).parse(dateString) ?: Date()
+
+fun stringFromDataNews(dateString: String) =
+    SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).parse(dateString) ?: Date()
+
 
 fun takeDate(count: Int): Date {
     val currentDate = Calendar.getInstance()
@@ -159,12 +172,16 @@ fun Disposable.disposebleBy(bag: CompositeDisposable) {
 }
 
 
-fun String.checkLogin():String{
-    return if(this.length>=7){
-        this.substring(0,7)
-    }else{
+fun String.checkLogin(): String {
+    return if (this.length >= 7) {
+        this.substring(0, 7)
+    } else {
         this
     }
+}
+
+val outputDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).apply {
+    timeZone = TimeZone.getTimeZone("UTC")
 }
 
 fun initDatePicker(date: Date, datePicker: DatePicker) {

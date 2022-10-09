@@ -4,14 +4,15 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
+import ru.gb.veber.newsapi.core.AllNewsScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.ERROR_DB
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.searchnews.SearchNewsView
+import java.util.*
 
 class SearchNewsPresenter(
     private val router: Router,
@@ -21,7 +22,7 @@ class SearchNewsPresenter(
     private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
 ) : MvpPresenter<SearchNewsView>() {
 
-    private lateinit var allSources: List<Sources>
+    private lateinit var allSources: MutableList<Sources>
     private lateinit var likeSources: List<Sources>
     private var accountHistorySelect: Boolean = false
     private lateinit var accountMain: Account
@@ -31,14 +32,13 @@ class SearchNewsPresenter(
         return true
     }
 
-    fun openSearchNews(it: String) {
-
-    }
 
     fun getSources() {
         if (accountId == ACCOUNT_ID_DEFAULT) {
             viewState.hideSelectHistory()
             sourcesRepoImpl.getSources().subscribe({
+
+                allSources = it
                 viewState.setSources(it)
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
@@ -47,6 +47,8 @@ class SearchNewsPresenter(
             Single.zip(sourcesRepoImpl.getSources(),
                 accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId),
                 roomRepoImpl.getAccountById(accountId)) { all, like, account ->
+
+                allSources = all
 
                 like.map {
                     it.isLike = true
@@ -80,7 +82,6 @@ class SearchNewsPresenter(
                     all
                 }
             }.subscribe({
-                allSources = it
                 viewState.setSources(it)
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
@@ -89,11 +90,78 @@ class SearchNewsPresenter(
     }
 
     fun notifyAdapter(b: Boolean) {
-        if(b){
+        if (b) {
             viewState.updateAdapter(allSources)
 
-        }else{
+        } else {
             viewState.updateAdapter(likeSources)
+        }
+    }
+
+    fun changeSearchCriteria(b: Boolean) {
+        if (!b) {
+            viewState.searchInShow()
+
+        } else {
+            viewState.sourcesInShow()
+        }
+    }
+
+    fun openScreenAllNewsSources(
+        date: String,
+        sourcesName: String,
+        sortBy: String,
+    ) {
+        if (sourcesName.isEmpty() || !allSources.map { it.name }.contains(sourcesName)) {
+            viewState.selectSources()
+        } else {
+            if (!checkDate(date)) {
+                viewState.errorDateInput()
+            } else {
+                var sources = allSources.find { it.name == sourcesName }?.idSources
+                if (date == NOT_INPUT_DATE) {
+                    router.navigateTo(AllNewsScreen(accountId = accountId,
+                        sourcesName = sources,
+                        sortBySources = sortBy))
+                } else {
+                    router.navigateTo(AllNewsScreen(accountId = accountId,
+                        sourcesName = sources,
+                        sortBySources = sortBy,
+                        dateSources = date))
+                }
+                //router.navigateTo(AllNewsScreen)
+            }
+        }
+    }
+
+    private fun checkDate(date: String): Boolean {
+        if (date == NOT_INPUT_DATE) {
+            return true
+        }
+        return !(stringFromDataNews(date) > Date() || stringFromDataNews(date) <= takeDate(-30))
+    }
+
+    fun openScreenAllNews(
+        keyWord: String,
+        searchIn: String,
+        sortBy: String,
+        sourcesName: String,
+    ) {
+        if (sourcesName.isEmpty()) {
+            router.navigateTo(AllNewsScreen(accountId = accountId,
+                keyWord = keyWord,
+                searchIn = searchIn,
+                sortByKeyWord = sortBy))
+        } else {
+            if (!allSources.map { it.name }.contains(sourcesName)) {
+                viewState.selectSources()
+            } else {
+                var sources = allSources.find { it.name == sourcesName }?.idSources
+                router.navigateTo(AllNewsScreen(accountId = accountId,
+                    keyWord = keyWord,
+                    searchIn = searchIn,
+                    sortByKeyWord = sortBy, sourcesName = sources))
+            }
         }
     }
 }

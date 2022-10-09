@@ -15,7 +15,9 @@ import ru.gb.veber.newsapi.model.SourcesDTO
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 
 class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
 
@@ -58,8 +60,13 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     }
 
     companion object {
-        fun getInstance(): FragmentSources {
-            return FragmentSources()
+
+        fun getInstance(accountID: Int): FragmentSources {
+            return FragmentSources().apply {
+                arguments = Bundle().apply {
+                    putInt(ACCOUNT_ID, accountID)
+                }
+            }
         }
     }
 }

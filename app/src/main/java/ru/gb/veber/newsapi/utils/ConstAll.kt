@@ -20,3 +20,14 @@ const val ACCOUNT_ID = "ACCOUNT_ID"
 const val ACCOUNT_LOGIN = "ACCOUNT_LOGIN"
 const val ACCOUNT_LOGIN_DEFAULT = "Profile"
 const val PAGE = "PAGE"
+const val NOT_INPUT_DATE = "NOT_INPUT_DATE"
+
+//BUNGLE ALL NEWS
+const val KEY_WORD = "KEY_WORD"
+const val SEARCH_IN = "SEARCH_IN"
+const val SORT_BY_KEY_WORD = "SORT_BY_KEY_WORD"
+const val SORT_BY_SOURCES = "SORT_BY_SOURCES"
+const val SOURCES_NAME = "SOURCES_NAME"
+const val DATE_SOURCES = "DATE_SOURCES"
+
+

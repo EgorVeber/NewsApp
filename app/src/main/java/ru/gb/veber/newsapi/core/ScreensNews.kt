@@ -35,9 +35,9 @@ object AuthorizationScreen : FragmentScreen {
 }
 
 
-object SourcesScreen : FragmentScreen {
+data class SourcesScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return FragmentSources.getInstance()
+        return FragmentSources.getInstance(accountId)
     }
 }
 
@@ -53,9 +53,17 @@ data class FavoritesViewPagerScreen(private val accountId: Int) : FragmentScreen
     }
 }
 
-data class AllNewsScreen(private val accountId: Int) : FragmentScreen {
+data class AllNewsScreen(
+    private val accountId: Int,
+    private val keyWord: String?="",
+    private val searchIn: String?="",
+    private val sortByKeyWord: String?="",
+    private val sortBySources: String?="",
+    private val sourcesName: String?="",
+    private val dateSources: String?="",
+) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return AllNewsFragment.getInstance(accountId)
+        return AllNewsFragment.getInstance(accountId,keyWord,searchIn,sortByKeyWord,sortBySources,sourcesName,dateSources)
     }
 }
 
@@ -71,10 +79,10 @@ data class WebViewScreen(private val url: String) : FragmentScreen {
     }
 }
 
-data class EditAccountScreen(private val accountId:Int ) : FragmentScreen {
+data class EditAccountScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return EditAccountFragment.getInstance(Bundle().apply {
-            putInt(ACCOUNT_ID,accountId)
+            putInt(ACCOUNT_ID, accountId)
         })
     }
 }
