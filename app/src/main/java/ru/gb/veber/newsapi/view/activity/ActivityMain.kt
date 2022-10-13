@@ -100,7 +100,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
                     presenter.openScreenSearchNews()
                 }
                 R.id.actionSources -> {
-                   presenter.openScreenSources()
+                    presenter.openScreenSources()
                 }
                 R.id.favoritesNews -> {
                     presenter.openFavoritesScreen()
@@ -124,6 +124,14 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun onBackPressed() {
+
+
+        if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
+            supportFragmentManager.fragments.last() !is EditAccountFragment
+        ) {
+            binding.bottomNavigationView.selectedItemId = R.id.topNews
+        }
+
         supportFragmentManager.fragments.forEach {
             if (it is EventBehaviorToActivity) {
                 if ((it as EventBehaviorToActivity).getStateBehavior() == 3) {
@@ -131,12 +139,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
                     return
                 }
             }
-        }
-
-        if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
-            supportFragmentManager.fragments.last() !is EditAccountFragment
-        ) {
-            binding.bottomNavigationView.selectedItemId = R.id.topNews
         }
 
         if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {

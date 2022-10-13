@@ -73,9 +73,9 @@ class FavoritesPresenter(
 
     fun deleteFavorites(article: Article) {
         var articleNew = article.copy()
-        articleRepoImpl.deleteArticleById(articleNew.title)
+        articleRepoImpl.deleteArticleById(articleNew.title, accountIdS)
             .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({
-            viewState.updateFavorites(it.map(::articleDbEntityToArticle).map {
+            viewState.updateFavorites(it.map(::articleDbEntityToArticle).reversed().map {
                 it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
                 it.viewType = VIEW_TYPE_FAVORITES_NEWS
                 it

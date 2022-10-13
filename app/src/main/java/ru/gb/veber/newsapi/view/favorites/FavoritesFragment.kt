@@ -32,6 +32,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
 
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
+
     private val presenter: FavoritesPresenter by moxyPresenter {
         FavoritesPresenter(App.instance.router,
             ArticleRepoImpl(App.instance.newsDb.articleDao()))
@@ -49,7 +50,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
         }
     }
 
-    private fun FavotitesFragmentBinding.setSpanDescription(article: Article) {
+    private fun setSpanDescription(article: Article) {
         SpannableStringBuilder(article.description).also { span ->
             span.setSpan(
                 ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
@@ -57,7 +58,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
                 span.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
             )
-            descriptionNews.text = span
+            binding.descriptionNews.text = span
             span.removeSpan(span)
         }
     }

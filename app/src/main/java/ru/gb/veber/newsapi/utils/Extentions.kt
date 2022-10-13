@@ -128,6 +128,10 @@ fun Date.formatDateDay(): String =
 fun stringFromData(dateString: String) =
     SimpleDateFormat(FORMAT_DATE_REQUEST, Locale.getDefault()).parse(dateString) ?: Date()
 
+//эТО из за календаря потом убрать надо
+fun stringFromDataPiker(dateString: String) =
+    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(dateString) ?: Date()
+
 fun stringFromDataNews(dateString: String) =
     SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).parse(dateString) ?: Date()
 

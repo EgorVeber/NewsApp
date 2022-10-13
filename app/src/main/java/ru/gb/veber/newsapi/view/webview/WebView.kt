@@ -6,5 +6,5 @@ import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface WebView : MvpView {
-    fun init(url: String)
+    fun showPage()
 }

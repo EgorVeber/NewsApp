@@ -2,24 +2,23 @@ package ru.gb.veber.newsapi.view.allnews
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.SimpleAdapter
-import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AllNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
@@ -29,6 +28,7 @@ import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.AllNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 
@@ -37,7 +37,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
     private var _binding: AllNewsFragmentBinding? = null
     private val binding get() = _binding!!
-
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
     private val presenter: AllNewsPresenter by moxyPresenter {
         AllNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
@@ -52,8 +52,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
     private var itemListener = object : RecyclerListener {
 
         override fun clickNews(article: Article) {
-//            presenter.clickNews(article)
-//            presenter.saveArticle(article, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.clickNews(article)
         }
 
         override fun deleteFavorites(article: Article) {
@@ -76,52 +75,130 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
     @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //textSpinner()
         initialization()
+        arguments?.let {
+            presenter.getNews(
+                it.getInt(ACCOUNT_ID),
+                it.getString(KEY_WORD),
+                it.getString(SEARCH_IN),
+                it.getString(SORT_BY_KEY_WORD),
+                it.getString(SORT_BY_SOURCES),
+                it.getString(SOURCES_NAME),
+                it.getString(DATE_SOURCES))
+        }
+        presenter.getAccountSettings(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+    }
 
-        arguments?.let { arguments ->
+    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            when (newState) {
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+                }
+                BottomSheetBehavior.STATE_EXPANDED -> {
+                    arguments?.let {
+                        presenter.getNews(
+                            it.getInt(ACCOUNT_ID),
+                            it.getString(KEY_WORD),
+                            it.getString(SEARCH_IN),
+                            it.getString(SORT_BY_KEY_WORD),
+                            it.getString(SORT_BY_SOURCES),
+                            it.getString(SOURCES_NAME),
+                            it.getString(DATE_SOURCES))
+                    }
+                }
+            }
+        }
 
-            binding.textArgument.text = "ACCOUNT_ID = " + arguments.getInt(ACCOUNT_ID)
-                .toString() + "\nKEY_WORD = " + arguments.getString(KEY_WORD).toString() +
-                    "\nSEARCH_IN = " + arguments.getString(SEARCH_IN)
-                .toString() + "\nSORT_BY_KEY_WORD = " + arguments.getString(SORT_BY_KEY_WORD)
-                .toString() +
-                    "\nSORT_BY_SOURCES = " + arguments.getString(SORT_BY_SOURCES).toString() +
-                    "\nSOURCES_NAME = " + arguments.getString(SOURCES_NAME)
-                .toString() + "\nDATE_SOURCES = " + arguments.getString(DATE_SOURCES).toString()
-
-            Log.d("onViewCreatedAllNews", "ACCOUNT_ID = " + arguments.getInt(ACCOUNT_ID).toString())
-            Log.d("onViewCreatedAllNews", "KEY_WORD = " + arguments.getString(KEY_WORD).toString())
-            Log.d("onViewCreatedAllNews",
-                "SEARCH_IN = " + arguments.getString(SEARCH_IN).toString())
-            Log.d("onViewCreatedAllNews",
-                "SORT_BY_KEY_WORD = " + arguments.getString(SORT_BY_KEY_WORD).toString())
-            Log.d("onViewCreatedAllNews",
-                "SORT_BY_SOURCES = " + arguments.getString(SORT_BY_SOURCES).toString())
-            Log.d("onViewCreatedAllNews",
-                "SOURCES_NAME = " + arguments.getString(SOURCES_NAME).toString())
-            Log.d("onViewCreatedAllNews",
-                "DATE_SOURCES = " + arguments.getString(DATE_SOURCES).toString())
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
         }
     }
 
-
     private fun initialization() {
 
-//        binding.recyclerAllNews.adapter = newsAdapter
-//        binding.recyclerAllNews.layoutManager = LinearLayoutManager(requireContext())
+        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
+            addBottomSheetCallback(callBackBehavior)
+        }
+        binding.allNewsRecycler.adapter = newsAdapter
+        binding.allNewsRecycler.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun setNews(articles: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = articles
         binding.progressBarAllNews.hide()
-//        binding.recyclerAllNews.show()
+        binding.allNewsRecycler.show()
     }
 
     override fun loading() {
         binding.progressBarAllNews.show()
-//        binding.recyclerAllNews.hide()
+        binding.allNewsRecycler.hide()
+    }
+
+    override fun clickNews(article: Article) {
+
+        if (article.isFavorites) {
+            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+        } else {
+            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+        }
+
+        with(binding) {
+            imageViewAll.loadGlideNot(article.urlToImage)
+            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
+            titleNews.text = article.title
+            authorText.text = article.author
+            sourceText.text = article.source.name
+            setSpan(article)
+        }
+
+        bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+        presenter.saveArticle(article, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+
+
+        binding.descriptionNews.setOnClickListener { view ->
+            presenter.openScreenWebView(article.url)
+        }
+
+        binding.imageFavorites.setOnClickListener { view ->
+            if (article.isFavorites) {
+                presenter.deleteFavorites(article)
+                binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+                article.isFavorites = false
+                (requireActivity() as EventAddingBadges).removeBadge()
+            } else {
+                Log.d("TAG", "else")
+                presenter.saveArticleLike(article)
+                binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+                article.isFavorites = true
+                (requireActivity() as EventAddingBadges).addBadge()
+            }
+        }
+    }
+
+    override fun successInsertArticle() {
+        arguments?.let {
+            presenter.getNews(
+                it.getInt(ACCOUNT_ID),
+                it.getString(KEY_WORD),
+                it.getString(SEARCH_IN),
+                it.getString(SORT_BY_KEY_WORD),
+                it.getString(SORT_BY_SOURCES),
+                it.getString(SOURCES_NAME),
+                it.getString(DATE_SOURCES))
+        }
+    }
+
+    private fun setSpan(article: Article) {
+        SpannableStringBuilder(article.description).also { span ->
+            span.setSpan(
+                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+                span.length - 1,
+                span.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            binding.descriptionNews.text = span
+            span.removeSpan(span)
+        }
     }
 
     override fun onDestroyView() {

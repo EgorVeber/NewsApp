@@ -32,7 +32,6 @@ class SearchNewsPresenter(
         return true
     }
 
-
     fun getSources() {
         if (accountId == ACCOUNT_ID_DEFAULT) {
             viewState.hideSelectHistory()
@@ -127,9 +126,8 @@ class SearchNewsPresenter(
                     router.navigateTo(AllNewsScreen(accountId = accountId,
                         sourcesName = sources,
                         sortBySources = sortBy,
-                        dateSources = date))
+                        dateSources = stringFromDataPiker(date).formatDate()))
                 }
-                //router.navigateTo(AllNewsScreen)
             }
         }
     }

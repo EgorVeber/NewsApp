@@ -84,7 +84,7 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
 
 
     override fun getEverythingKeyWordSearchInSources(
-        sources: String,
+        sources: String?,
         q: String?,
         searchIn: String?,
         sortBy: String?,

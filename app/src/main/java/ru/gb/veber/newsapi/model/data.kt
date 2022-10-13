@@ -1,7 +1,9 @@
 package ru.gb.veber.newsapi.model
 
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
+import ru.gb.veber.newsapi.utils.formatDateNews
+import ru.gb.veber.newsapi.utils.formatDateTime
+import java.util.*
+
 
 data class Article(
     var id: Int? = 0,
@@ -16,7 +18,7 @@ data class Article(
     var viewType: Int = 0,
     var isHistory: Boolean = false,
     var isFavorites: Boolean = false,
-    var dateAdded: String? = null,
+    var dateAdded: String? = Date().formatDateTime(),
 )
 
 data class Sources(

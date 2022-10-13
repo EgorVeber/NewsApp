@@ -11,4 +11,7 @@ import ru.gb.veber.newsapi.model.Sources
 interface AllNewsView:MvpView {
     fun setNews(articles: List<Article>)
     fun loading()
+     fun clickNews(article: Article)
+    fun successInsertArticle()
+
 }

@@ -47,7 +47,7 @@ interface NewsApi {
 
     @GET(EVERYTHING)
     fun getEverythingKeyWordSearchInSources(
-        @Query("sources") sources: String,
+        @Query("sources") sources: String? = null,
         @Query("q") q: String? = null,
         @Query("searchIn") searchIn: String? = null,
         @Query("sortBy") sortBy: String? = null,

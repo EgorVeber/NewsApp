@@ -23,6 +23,7 @@ class TopNewsPresenter(
     private var checkFilter = false
     private var currentArticle = 0
     private var saveHistory = false
+    private  var accountIdPresenter = ACCOUNT_ID_DEFAULT
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -30,6 +31,7 @@ class TopNewsPresenter(
     }
 
     fun getAccountSettings(accountId: Int) {
+        accountIdPresenter=accountId
         roomRepoImpl.getAccountById(accountId).subscribe({
             saveHistory = it.saveHistory
         }, {
@@ -51,10 +53,23 @@ class TopNewsPresenter(
             viewState.hideFavorites()
         }
         Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, "ru").map { articles ->
-            articles.articles.map(::mapToArticle).also {
-                newsRepoImpl.changeRequest(it)
-            }
+            articles.articles.map(::mapToArticle).also { newsRepoImpl.changeRequest(it) }
         }, articleRepoImpl.getArticleById(accountID)) { news, articles ->
+
+
+//            news.forEach {
+//                it.publishedAt = stringFromData(it.publishedAt).formatDate()
+//                Log.d("forEach", "forEach  = $it")
+//            }
+//            Log.d("forEach", "groupBy")
+//            var i = 0;
+//            news.groupBy { it.publishedAt }.forEach {
+//                Log.d("forEach", "Key $i = " + it.key!!)
+//                Log.d("forEach", "Value $i (${it.value.last().viewType})= " + it.value.toString())
+//                i++
+//            }
+
+
             articles.forEach { art ->
                 news.forEach { new ->
                     if (art.title == new.title) {
@@ -125,7 +140,7 @@ class TopNewsPresenter(
     }
 
     fun deleteFavorites(article: Article) {
-        articleRepoImpl.deleteArticleById(article.title).subscribe({
+        articleRepoImpl.deleteArticleById(article.title, accountIdPresenter).subscribe({
             Log.d("SUCCESS_DELETE", "SUCCESS DELETE BY ID")
         }, {
             Log.d(ERROR_DB, it.localizedMessage)

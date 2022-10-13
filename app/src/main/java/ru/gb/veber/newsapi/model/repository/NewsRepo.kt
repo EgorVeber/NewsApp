@@ -29,7 +29,7 @@ interface NewsRepo {
 
     //EVERYTHING
     fun getEverythingKeyWordSearchInSources(
-        sources: String,
+        sources: String?=null,
         q: String? = null,
         searchIn: String? = null,
         sortBy: String? = null,
