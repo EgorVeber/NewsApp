@@ -3,6 +3,7 @@ package ru.gb.veber.newsapi.presenter
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.utils.*
@@ -75,13 +76,17 @@ class FavoritesPresenter(
         var articleNew = article.copy()
         articleRepoImpl.deleteArticleById(articleNew.title, accountIdS)
             .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({
-            viewState.updateFavorites(it.map(::articleDbEntityToArticle).reversed().map {
-                it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
-                it.viewType = VIEW_TYPE_FAVORITES_NEWS
-                it
+                viewState.updateFavorites(it.map(::articleDbEntityToArticle).reversed().map {
+                    it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
+                    it.viewType = VIEW_TYPE_FAVORITES_NEWS
+                    it
+                })
+            }, {
+                Log.d(ERROR_DB, it.localizedMessage)
             })
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        })
+    }
+
+    fun openScreenWebView(url: String) {
+        router.navigateTo(WebViewScreen(url))
     }
 }

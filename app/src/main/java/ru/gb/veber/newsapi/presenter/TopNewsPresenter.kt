@@ -23,7 +23,7 @@ class TopNewsPresenter(
     private var checkFilter = false
     private var currentArticle = 0
     private var saveHistory = false
-    private  var accountIdPresenter = ACCOUNT_ID_DEFAULT
+    private var accountIdPresenter = ACCOUNT_ID_DEFAULT
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -31,7 +31,7 @@ class TopNewsPresenter(
     }
 
     fun getAccountSettings(accountId: Int) {
-        accountIdPresenter=accountId
+        accountIdPresenter = accountId
         roomRepoImpl.getAccountById(accountId).subscribe({
             saveHistory = it.saveHistory
         }, {

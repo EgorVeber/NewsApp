@@ -29,11 +29,12 @@ import ru.gb.veber.newsapi.presenter.AllNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
+import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 
 
-class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener {
+class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener,EventBehaviorToActivity {
 
     private var _binding: AllNewsFragmentBinding? = null
     private val binding get() = _binding!!
@@ -232,5 +233,14 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
                 }
             }
         }
+    }
+
+    override fun getStateBehavior(): Int {
+        Log.d("supportFragmentManager", "getStateBehavior() called ${bSheetB.state}")
+        return bSheetB.state
+    }
+
+    override fun setStateBehavior() {
+        bSheetB.collapsed()
     }
 }

@@ -29,19 +29,28 @@ class ActivityPresenter(
     }
 
     fun openScreenNews() {
-        router.replaceScreen(TopNewsViewPagerScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(TopNewsViewPagerScreen(sharedPreferenceAccount.getAccountID()))
+        viewState.hideAllBehavior()
     }
 
     fun openScreenSources() {
-        router.replaceScreen(SourcesScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(SourcesScreen(sharedPreferenceAccount.getAccountID()))
+        viewState.hideAllBehavior()
     }
 
     fun openScreenProfile() {
-        router.replaceScreen(ProfileScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(ProfileScreen(sharedPreferenceAccount.getAccountID()))
+        viewState.hideAllBehavior()
     }
 
     fun openScreenSearchNews() {
-        router.replaceScreen(SearchNewsScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(SearchNewsScreen(sharedPreferenceAccount.getAccountID()))
+        viewState.hideAllBehavior()
+    }
+
+    fun openFavoritesScreen() {
+        router.newRootScreen(FavoritesViewPagerScreen(sharedPreferenceAccount.getAccountID()))
+        viewState.hideAllBehavior()
     }
 
     fun onBackPressedRouter() {
@@ -53,10 +62,6 @@ class ActivityPresenter(
         if (sharedPreferenceAccount.getAccountID() != ACCOUNT_ID_DEFAULT) {
             viewState.onCreateSetIconTitleAccount(sharedPreferenceAccount.getAccountLogin())
         }
-    }
-
-    fun openFavoritesScreen() {
-        router.replaceScreen(FavoritesViewPagerScreen(sharedPreferenceAccount.getAccountID()))
     }
 
     fun openScreenWebView(url: String) {

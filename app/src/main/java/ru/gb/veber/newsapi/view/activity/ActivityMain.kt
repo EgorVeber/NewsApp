@@ -21,10 +21,12 @@ import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.allnews.AllNewsFragment
+import ru.gb.veber.newsapi.view.favorites.FavoritesFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
+import kotlin.math.log
 
 
 interface OpenScreen {
@@ -89,11 +91,18 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         App.instance.navigationHolder.removeNavigator()
     }
 
+    override fun hideAllBehavior() {
+        supportFragmentManager.fragments.forEach { fm ->
+            if (fm is EventBehaviorToActivity) {
+                (fm as EventBehaviorToActivity).setStateBehavior()
+            }
+        }
+    }
+
     override fun init() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.topNews -> {
-                    Log.d("TAG", "init() called")
                     presenter.openScreenNews()
                 }
                 R.id.searchNews -> {
@@ -124,21 +133,22 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun onBackPressed() {
-
-
-        if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
-            supportFragmentManager.fragments.last() !is EditAccountFragment
-        ) {
-            binding.bottomNavigationView.selectedItemId = R.id.topNews
-        }
-
         supportFragmentManager.fragments.forEach {
+            if (supportFragmentManager.fragments.last() is WebViewFragment) {
+                return@forEach
+            }
             if (it is EventBehaviorToActivity) {
                 if ((it as EventBehaviorToActivity).getStateBehavior() == 3) {
                     (it as EventBehaviorToActivity).setStateBehavior()
                     return
                 }
             }
+        }
+
+        if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
+            supportFragmentManager.fragments.last() !is EditAccountFragment
+        ) {
+            binding.bottomNavigationView.selectedItemId = R.id.topNews
         }
 
         if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
@@ -158,6 +168,43 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
             backStack = 1
         }, {
         })
+
+
+//11
+//        supportFragmentManager.fragments.forEach {
+//            if (it is EventBehaviorToActivity) {
+//                if ((it as EventBehaviorToActivity).getStateBehavior() == 3) {
+//                    (it as EventBehaviorToActivity).setStateBehavior()
+//                    Log.d("supportFragmentManager", "onBackPressed() called")
+//                    return@forEach
+//                } else if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
+//                    Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
+//                    Log.d("supportFragmentManager", "count  = " +
+//                            supportFragmentManager.backStackEntryCount.toString() + " backStack = " + backStack.toString())
+//                } else {
+//                    if (it is BackPressedListener && it.onBackPressedRouter()) {
+//                        return@forEach
+//                    }
+//                }
+//            }
+//        }
+////
+////        if (supportFragmentManager.fragments.last() !is WebViewFragment &&
+////            supportFragmentManager.fragments.last() !is EditAccountFragment &&
+////            supportFragmentManager.fragments.last() !is AllNewsFragment
+////        ) {
+////            binding.bottomNavigationView.selectedItemId = R.id.topNews
+////            Log.d("supportFragmentManager", "last")
+////        }
+//
+//
+//        backStack = 0
+//        Completable.create {
+//            it.onComplete()
+//        }.delay(2000L, TimeUnit.MILLISECONDS).subscribe({
+//            backStack = 1
+//        }, {
+//        })
     }
 
     override fun openMainScreen() {

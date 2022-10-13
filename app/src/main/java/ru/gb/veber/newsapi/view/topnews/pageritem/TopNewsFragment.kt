@@ -161,7 +161,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.titleNews.show()
         binding.dateNews.show()
         binding.authorText.show()
-        //binding.imageFavorites.show()
         binding.descriptionNews.show()
         binding.imageViewAll.loadGlideNot(article.urlToImage)
         binding.dateNews.text = stringFromData(article.publishedAt).formatDateDay()
@@ -292,6 +291,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
     override fun getStateBehavior(): Int {
+        Log.d("supportFragmentManager", "getStateBehavior() called ${bSheetB.state}")
         return bSheetB.state
     }
 

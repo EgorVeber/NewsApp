@@ -22,10 +22,12 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 
-class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedListener {
+class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedListener,
+    EventBehaviorToActivity {
 
     private var _binding: FavotitesFragmentBinding? = null
     private val binding get() = _binding!!
@@ -47,6 +49,10 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
             authorText.text = article.author
             sourceText.text = article.source.name
             setSpanDescription(article)
+        }
+
+        binding.descriptionNews.setOnClickListener {
+            presenter.openScreenWebView(article.url)
         }
     }
 
@@ -96,6 +102,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
         binding.likeRecycler.adapter = historyAdapter
         binding.likeRecycler.layoutManager = LinearLayoutManager(requireContext())
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer)
+
     }
 
     override fun setSources(list: List<Article>) {
@@ -143,5 +150,13 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
                 putString(PAGE, page)
             }
         }
+    }
+
+    override fun getStateBehavior(): Int {
+        return bSheetB.state
+    }
+
+    override fun setStateBehavior() {
+        bSheetB.collapsed()
     }
 }
