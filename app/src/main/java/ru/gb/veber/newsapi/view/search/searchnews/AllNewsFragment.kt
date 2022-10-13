@@ -106,41 +106,46 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         binding.titleSearch.text = "$keyWord $sourcesId $s $dateSources"
     }
 
-    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            when (newState) {
-                BottomSheetBehavior.STATE_COLLAPSED -> {
-                }
-                BottomSheetBehavior.STATE_EXPANDED -> {
-                    arguments?.let {
-                        presenter.getNews(
-                            it.getInt(ACCOUNT_ID),
-                            it.getString(KEY_WORD),
-                            it.getString(SEARCH_IN),
-                            it.getString(SORT_BY_KEY_WORD),
-                            it.getString(SORT_BY_SOURCES),
-                            it.getString(SOURCES_ID),
-                            it.getString(DATE_SOURCES),
-                            it.getString(SOURCES_NAME))
-                    }
-                }
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        }
-    }
+//    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
+//        override fun onStateChanged(bottomSheet: View, newState: Int) {
+//            when (newState) {
+//                BottomSheetBehavior.STATE_COLLAPSED -> {
+//                    Log.d("TAG",
+//                        "STATE_COLLAPSED() called with: bottomSheet = $bottomSheet, newState = $newState")
+//                }
+//                BottomSheetBehavior.STATE_EXPANDED -> {
+//                    Log.d("TAG",
+//                        "STATE_EXPANDED() called with: bottomSheet = $bottomSheet, newState = $newState")
+//                    arguments?.let {
+//                        presenter.getNews(
+//                            it.getInt(ACCOUNT_ID),
+//                            it.getString(KEY_WORD),
+//                            it.getString(SEARCH_IN),
+//                            it.getString(SORT_BY_KEY_WORD),
+//                            it.getString(SORT_BY_SOURCES),
+//                            it.getString(SOURCES_ID),
+//                            it.getString(DATE_SOURCES),
+//                            it.getString(SOURCES_NAME))
+//                    }
+//                }
+//            }
+//        }
+//
+//        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+//        }
+//    }
 
     private fun initialization() {
 
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
-            addBottomSheetCallback(callBackBehavior)
+            //addBottomSheetCallback(callBackBehavior)
         }
         binding.allNewsRecycler.adapter = newsAdapter
         binding.allNewsRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.backMainScreenImage.setOnClickListener {
             presenter.exit()
         }
+
     }
 
     override fun setNews(articles: List<Article>) {
@@ -163,6 +168,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
             binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
         }
 
+
         with(binding) {
             imageViewAll.loadGlideNot(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
@@ -173,12 +179,19 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         }
 
         bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
+
+
         presenter.saveArticle(article, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
 
 
         binding.descriptionNews.setOnClickListener { view ->
             presenter.openScreenWebView(article.url)
         }
+
+        binding.saveSources.setOnClickListener {
+            presenter.saveSources()
+        }
+
 
         binding.imageFavorites.setOnClickListener { view ->
             if (article.isFavorites) {
@@ -196,18 +209,31 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         }
     }
 
+    override fun showSaveSources() {
+        binding.saveSources.show()
+    }
+
+    override fun hideSaveSources() {
+        binding.saveSources.hide()
+    }
+
+    override fun successSaveSources() {
+        binding.saveSources.hide()
+        binding.root.showSnackBarError("Source Saved ", "", {})
+    }
+
     override fun successInsertArticle() {
-//        arguments?.let {
-//            presenter.getNews(
-//                it.getInt(ACCOUNT_ID),
-//                it.getString(KEY_WORD),
-//                it.getString(SEARCH_IN),
-//                it.getString(SORT_BY_KEY_WORD),
-//                it.getString(SORT_BY_SOURCES),
-//                it.getString(SOURCES_ID),
-//                it.getString(DATE_SOURCES),
-//                it.getString(SOURCES_NAME))
-//        }
+        arguments?.let {
+            presenter.getNews(
+                it.getInt(ACCOUNT_ID),
+                it.getString(KEY_WORD),
+                it.getString(SEARCH_IN),
+                it.getString(SORT_BY_KEY_WORD),
+                it.getString(SORT_BY_SOURCES),
+                it.getString(SOURCES_ID),
+                it.getString(DATE_SOURCES),
+                it.getString(SOURCES_NAME))
+        }
     }
 
     private fun setSpan(article: Article) {

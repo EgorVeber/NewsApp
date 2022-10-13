@@ -14,4 +14,5 @@ interface SourcesDao {
 
     @Query("Select * from sources")
     fun getSources(): Single<List<SourcesDbEntity>>
+
 }

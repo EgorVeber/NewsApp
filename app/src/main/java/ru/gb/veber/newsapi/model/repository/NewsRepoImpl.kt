@@ -39,7 +39,7 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
             }
 
             if (it.author == null || it.author.equals("") || it.author.equals(" ")) {
-                it.author = "Anonymous source"
+                it.author = "Anonymous author"
             }
             it
         }.also {

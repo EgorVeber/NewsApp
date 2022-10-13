@@ -22,7 +22,7 @@ class BehaviorRecycler(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        child.y = (dependency.y +dependency.height + 20)
+        child.y = (dependency.y + dependency.height * 1.5F)
         return super.onDependentViewChanged(parent, child, dependency)
     }
 }

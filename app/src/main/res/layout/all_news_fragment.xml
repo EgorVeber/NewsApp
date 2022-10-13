@@ -128,6 +128,19 @@
                     app:layout_constraintTop_toBottomOf="@+id/descriptionNews" />
 
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveSources"
+                    style="@style/MyMaterialTextButton"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:text="Save Sources"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/authorText" />
+
+
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageFavorites"
                     android:layout_width="wrap_content"

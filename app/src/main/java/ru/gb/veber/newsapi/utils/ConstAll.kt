@@ -32,3 +32,5 @@ const val SOURCES_ID = "SOURCES_ID"
 const val DATE_SOURCES = "DATE_SOURCES"
 
 
+const val UNVERIFIED_SOURCES = "Unverified source"
+

@@ -13,6 +13,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:ellipsize="end"
+        android:text="asdasdasdasdsadsaasdasdasdasdsadsadasdaDAAAAAAAAAAAAasdasdasdasdsadsadasdaDAAAAAAAAAAAAasdasdasdasdsadsadasdaDAAAAAAAAAAAAasdasdasdasdsadsadasdaDAAAAAAAAAAAAasdasdasdasdsadsadasdaDAAAAAAAAAAAAasdasdasdasdsadsadasdaDAAAAAAAAAAAAdasdaDAAAAAAAAAAAA"
         android:maxLines="3"
         android:textSize="16sp"
         app:layout_constrainedWidth="true"
@@ -42,12 +43,12 @@
     <TextView
         android:id="@+id/publishedAt"
         style="@style/sources_text"
+        android:text="asdasdasdasdsadsadasdaDAAAAAAAAAAAA"
         android:layout_marginStart="5dp"
-        android:text="asdasdsadasdasdsa"
         android:textColor="@color/gray2"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageNews" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageNews"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <View
         android:layout_width="match_parent"

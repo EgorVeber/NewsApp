@@ -124,4 +124,8 @@
         <item>Relevancy</item>
         <item>Popularity</item>
     </string-array>
+    <string-array name="sortBySources">
+        <item>Published Date</item>
+        <item>Popularity</item>
+    </string-array>
 </resources>

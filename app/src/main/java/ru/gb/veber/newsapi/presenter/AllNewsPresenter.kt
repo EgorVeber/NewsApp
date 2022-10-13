@@ -6,6 +6,8 @@ import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
@@ -27,6 +29,10 @@ class AllNewsPresenter(
     MvpPresenter<AllNewsView>() {
 
     private var saveHistory = false
+    private  var likeSources: List<Sources> = listOf()
+    private  var allSources: List<Sources> = listOf()
+    private var sourcesID: Int = 0
+
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -44,7 +50,32 @@ class AllNewsPresenter(
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })
+        getSourcesLike()
+        getSources()
     }
+
+    private fun getSourcesLike() {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId).subscribe({
+                likeSources = it
+                Log.d("getSourcesLike", it.toString())
+            }, {
+                Log.d("getSourcesLike", it.localizedMessage)
+            })
+        }
+    }
+
+    private fun getSources() {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            sourcesRepoImpl.getSources().subscribe({
+                allSources = it
+                Log.d("getSourcesLike", it.toString())
+            }, {
+                Log.d("getSourcesLike", it.localizedMessage)
+            })
+        }
+    }
+
 
     fun getNews(
         accountId: Int,
@@ -83,19 +114,6 @@ class AllNewsPresenter(
             }
         }, articleRepoImpl.getArticleById(accountId)) { news, articles ->
 
-//            news.forEach {
-//                it.publishedAt = stringFromData(it.publishedAt).formatDate()
-//                Log.d("forEach", "forEach  = $it")
-//            }
-//            Log.d("forEach", "groupBy")
-//            var i = 0;
-//            news.groupBy { it.publishedAt }.forEach {
-//                Log.d("forEach", "Key $i = " + it.key!!)
-//                Log.d("forEach", "Value $i (${it.value.last().viewType})= " + it.value.toString())
-//                i++
-//            }
-
-
             articles.forEach { art ->
                 news.forEach { new ->
                     if (art.title == new.title) {
@@ -122,7 +140,33 @@ class AllNewsPresenter(
     }
 
     fun clickNews(article: Article) {
+        var like = likeSources.find { it.idSources == article.source.id }?.id ?: 0
+        sourcesID = allSources.find { it.idSources == article.source.id }?.id ?: 0
+
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            if (like != 0) {
+                viewState.hideSaveSources()
+            } else if (sourcesID != 0) {
+                viewState.showSaveSources()
+            }
+        }
+        Log.d("clickNews", sourcesID.toString())
+
         viewState.clickNews(article)
+    }
+
+    fun saveSources() {
+        accountSourcesRepoImpl.insert(AccountSourcesDbEntity(accountId, sourcesID)).subscribe({
+            viewState.successSaveSources()
+            accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId).subscribe({
+                likeSources = it
+                Log.d("getSourcesLike", it.toString())
+            }, {
+                Log.d("getSourcesLike", it.localizedMessage)
+            })
+        }, {
+            Log.d("saveSources", "error saveSources  " + it.localizedMessage)
+        })
     }
 
     fun saveArticle(article: Article, i: Int) {
