@@ -11,7 +11,7 @@ import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.view.searchnews.SearchNewsView
+import ru.gb.veber.newsapi.view.search.SearchNewsView
 import java.util.*
 
 class SearchNewsPresenter(
@@ -117,16 +117,17 @@ class SearchNewsPresenter(
             if (!checkDate(date)) {
                 viewState.errorDateInput()
             } else {
-                var sources = allSources.find { it.name == sourcesName }?.idSources
+                var sourcesId = allSources.find { it.name == sourcesName }?.idSources
                 if (date == NOT_INPUT_DATE) {
                     router.navigateTo(AllNewsScreen(accountId = accountId,
-                        sourcesName = sources,
-                        sortBySources = sortBy))
+                        sourcesId = sourcesId,
+                        sortBySources = sortBy, sourcesName = sourcesName))
                 } else {
                     router.navigateTo(AllNewsScreen(accountId = accountId,
-                        sourcesName = sources,
+                        sourcesId = sourcesId,
                         sortBySources = sortBy,
-                        dateSources = stringFromDataPiker(date).formatDate()))
+                        dateSources = stringFromDataPiker(date).formatDate(),
+                        sourcesName = sourcesName))
                 }
             }
         }
@@ -154,12 +155,20 @@ class SearchNewsPresenter(
             if (!allSources.map { it.name }.contains(sourcesName)) {
                 viewState.selectSources()
             } else {
-                var sources = allSources.find { it.name == sourcesName }?.idSources
+                var sourcesId = allSources.find { it.name == sourcesName }?.idSources
                 router.navigateTo(AllNewsScreen(accountId = accountId,
                     keyWord = keyWord,
                     searchIn = searchIn,
-                    sortByKeyWord = sortBy, sourcesName = sources))
+                    sortByKeyWord = sortBy, sourcesId = sourcesId, sourcesName = sourcesName))
             }
         }
+    }
+
+    fun pikerPositive(l: Long) {
+        viewState.pikerPositive(l)
+    }
+
+    fun pikerNegative() {
+        viewState.pikerNegative()
     }
 }

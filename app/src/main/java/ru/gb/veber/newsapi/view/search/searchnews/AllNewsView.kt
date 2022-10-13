@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.allnews
+package ru.gb.veber.newsapi.view.search.searchnews
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
@@ -13,5 +13,8 @@ interface AllNewsView:MvpView {
     fun loading()
      fun clickNews(article: Article)
     fun successInsertArticle()
+    fun hideFavorites()
+    fun setTitle(keyWord: String?, sourcesId: String?, s: String?, dateSources: String?)
+    fun emptyList()
 
 }

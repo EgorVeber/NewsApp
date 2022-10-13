@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.searchnews
+package ru.gb.veber.newsapi.view.search
 
 import android.os.Bundle
 import android.os.Handler
@@ -82,9 +82,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
             if (binding.spinnerSortBySources.selectedItemPosition == 0) {
                 selectedItem = ""
             }
-            presenter.openScreenAllNewsSources(dateInput,
-                binding.searchSpinnerCountry.text.toString(),
-                selectedItem)
+            presenter.openScreenAllNewsSources(dateInput, binding.searchSpinnerCountry.text.toString(), selectedItem)
         }
     }
 
@@ -94,15 +92,25 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
             .build().also {
                 it.show(requireActivity().supportFragmentManager, "s")
                 it.addOnPositiveButtonClickListener {
-                    dateInput = outputDateFormat.format(it)
-                    binding.selectDate.text = dateInput
+                    presenter.pikerPositive(it)
                 }
                 it.addOnNegativeButtonClickListener {
-                    dateInput = NOT_INPUT_DATE
-                    binding.selectDate.text = "Select Date"
+                    presenter.pikerNegative()
+
                 }
             }
     }
+
+    override fun pikerPositive(l: Long) {
+        dateInput = outputDateFormat.format(l)
+        binding.selectDate.text = dateInput
+    }
+
+    override fun pikerNegative() {
+        dateInput = NOT_INPUT_DATE
+        binding.selectDate.text = "Select Date"
+    }
+
 
     private val searchViewListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
@@ -117,10 +125,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
                     searchIn = binding.spinnerSearchIn.selectedItem.toString()
                 }
 
-                presenter.openScreenAllNews(keyWord,
-                    searchIn,
-                    sortBy,
-                    binding.searchSpinnerCountry.text.toString())
+                presenter.openScreenAllNews(keyWord, searchIn, sortBy, binding.searchSpinnerCountry.text.toString())
             }
             binding.searchView.clearFocus();
             return true

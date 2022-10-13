@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.allnews
+package ru.gb.veber.newsapi.view.search.searchnews
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -34,11 +34,13 @@ import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 
 
-class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener,EventBehaviorToActivity {
+class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener,
+    EventBehaviorToActivity {
 
     private var _binding: AllNewsFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
+
 
     private val presenter: AllNewsPresenter by moxyPresenter {
         AllNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
@@ -59,6 +61,13 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         override fun deleteFavorites(article: Article) {
 
         }
+    }
+
+
+    override fun emptyList() {
+        binding.progressBarAllNews.hide()
+        binding.allNewsRecycler.show()
+        binding.statusTextList.show()
     }
 
     private val newsAdapter = TopNewsAdapter(itemListener)
@@ -84,10 +93,17 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
                 it.getString(SEARCH_IN),
                 it.getString(SORT_BY_KEY_WORD),
                 it.getString(SORT_BY_SOURCES),
-                it.getString(SOURCES_NAME),
-                it.getString(DATE_SOURCES))
+                it.getString(SOURCES_ID),
+                it.getString(DATE_SOURCES),
+                it.getString(SOURCES_NAME))
         }
         presenter.getAccountSettings(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    override fun setTitle(keyWord: String?, sourcesId: String?, s: String?, dateSources: String?) {
+        binding.titleSearch.text = "$keyWord $sourcesId $s $dateSources"
     }
 
     private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -103,8 +119,9 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
                             it.getString(SEARCH_IN),
                             it.getString(SORT_BY_KEY_WORD),
                             it.getString(SORT_BY_SOURCES),
-                            it.getString(SOURCES_NAME),
-                            it.getString(DATE_SOURCES))
+                            it.getString(SOURCES_ID),
+                            it.getString(DATE_SOURCES),
+                            it.getString(SOURCES_NAME))
                     }
                 }
             }
@@ -121,6 +138,9 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         }
         binding.allNewsRecycler.adapter = newsAdapter
         binding.allNewsRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.backMainScreenImage.setOnClickListener {
+            presenter.exit()
+        }
     }
 
     override fun setNews(articles: List<Article>) {
@@ -177,16 +197,17 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
     }
 
     override fun successInsertArticle() {
-        arguments?.let {
-            presenter.getNews(
-                it.getInt(ACCOUNT_ID),
-                it.getString(KEY_WORD),
-                it.getString(SEARCH_IN),
-                it.getString(SORT_BY_KEY_WORD),
-                it.getString(SORT_BY_SOURCES),
-                it.getString(SOURCES_NAME),
-                it.getString(DATE_SOURCES))
-        }
+//        arguments?.let {
+//            presenter.getNews(
+//                it.getInt(ACCOUNT_ID),
+//                it.getString(KEY_WORD),
+//                it.getString(SEARCH_IN),
+//                it.getString(SORT_BY_KEY_WORD),
+//                it.getString(SORT_BY_SOURCES),
+//                it.getString(SOURCES_ID),
+//                it.getString(DATE_SOURCES),
+//                it.getString(SOURCES_NAME))
+//        }
     }
 
     private fun setSpan(article: Article) {
@@ -218,8 +239,9 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
             searchIn: String?,
             sortByKeyWord: String?,
             sortBySources: String?,
-            sourcesName: String?,
+            sourcesId: String?,
             dateSources: String?,
+            sourcesName: String?,
         ): AllNewsFragment {
             return AllNewsFragment().apply {
                 arguments = Bundle().apply {
@@ -229,10 +251,15 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
                     putString(SORT_BY_KEY_WORD, sortByKeyWord)
                     putString(SORT_BY_SOURCES, sortBySources)
                     putString(SOURCES_NAME, sourcesName)
+                    putString(SOURCES_ID, sourcesId)
                     putString(DATE_SOURCES, dateSources)
                 }
             }
         }
+    }
+
+    override fun hideFavorites() {
+        binding.imageFavorites.hide()
     }
 
     override fun getStateBehavior(): Int {

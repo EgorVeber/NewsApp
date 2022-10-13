@@ -70,7 +70,7 @@ fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
         publishedAt = article.publishedAt,
         sourceId = article.source.id ?: "none",
         sourceName = article.source.name,
-        title = article.title,
+        title = article.title.toString(),
         url = article.url,
         urlToImage = article.urlToImage,
         isHistory = article.isHistory,

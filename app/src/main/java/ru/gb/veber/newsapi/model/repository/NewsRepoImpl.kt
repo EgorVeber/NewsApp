@@ -24,6 +24,10 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
                 it.publishedAtChange = publishedDate.formatDateTime()
             }
 
+
+            if(it.title==null||it.description.equals("")){
+                it.title=it.publishedAt
+            }
             if (it.source.id == null) {
                 it.source.id = "Не проверенный источник"
             }

@@ -12,7 +12,8 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.view.allnews.AllNewsView
+import ru.gb.veber.newsapi.view.search.searchnews.AllNewsView
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 
 class AllNewsPresenter(
     private val newsRepoImpl: NewsRepoImpl,
@@ -53,12 +54,17 @@ class AllNewsPresenter(
         sortBySources: String?,
         sourcesId: String?,
         dateSources: String?,
+        sourcesName: String?,
     ) {
         Log.d("loadNews",
             "getNews() called with: accountId = $accountId, keyWord = $keyWord, searchIn = $searchIn, sortByKeyWord = $sortByKeyWord, sortBySources = $sortBySources, sourcesId = $sourcesId, dateSources = $dateSources")
         if (accountId == ACCOUNT_ID_DEFAULT) {
-            //viewState.hideFavorites()
+            viewState.hideFavorites()
         }
+        viewState.setTitle(keyWord,
+            sourcesName,
+            if (!keyWord.isNullOrEmpty()) sortByKeyWord else sortBySources,
+            dateSources)
 
 
         Single.zip(newsRepoImpl.getEverythingKeyWordSearchInSources(
@@ -69,10 +75,14 @@ class AllNewsPresenter(
             dateSources,
             dateSources
         ).map { articles ->
-            articles.articles.map(::mapToArticle).also { newsRepoImpl.changeRequest(it) }
+            articles.articles.map(::mapToArticle).also {
+                newsRepoImpl.changeRequest(it)
+                it.map { art ->
+                    art.viewType = VIEW_TYPE_SEARCH_NEWS
+                }
+            }
         }, articleRepoImpl.getArticleById(accountId)) { news, articles ->
 
-            news[0].viewType = 0
 //            news.forEach {
 //                it.publishedAt = stringFromData(it.publishedAt).formatDate()
 //                Log.d("forEach", "forEach  = $it")
@@ -100,13 +110,14 @@ class AllNewsPresenter(
             }
             news
         }.subscribe({
-            it.forEach {
-                Log.d("loadNews", it.title)
+            if (it.isEmpty()) {
+                viewState.emptyList()
+            } else {
+                viewState.setNews(it)
             }
-            Log.d("loadNews", it.size.toString())
-            viewState.setNews(it)
         }, {
             Log.d("loadNews", it.localizedMessage)
+            viewState.emptyList()
         })
     }
 
@@ -118,10 +129,10 @@ class AllNewsPresenter(
         if (accountId != ACCOUNT_ID_DEFAULT) {
             if (saveHistory) {
                 if (!article.isFavorites && !article.isHistory) {
-                    var articleNew = article.copy(isHistory = true)//ПОЧЕМУ ЭТО ТАК ВАЖНО
+                    var articleNew = article.copy(isHistory = true)
                     articleRepoImpl.insertArticle(mapToArticleDbEntity(articleNew, accountId))
                         .subscribe({
-                            //viewState.successInsertArticle()
+                            viewState.successInsertArticle()
                         }, {
                             Log.d(ERROR_DB, it.localizedMessage)
                         })
@@ -135,11 +146,13 @@ class AllNewsPresenter(
     }
 
     fun deleteFavorites(article: Article) {
-        articleRepoImpl.deleteArticleById(article.title, accountId).subscribe({
-            Log.d("SUCCESS_DELETE", "SUCCESS DELETE BY ID")
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        })
+        article.title?.let {
+            articleRepoImpl.deleteArticleById(it, accountId).subscribe({
+                Log.d("SUCCESS_DELETE", "SUCCESS DELETE BY ID")
+            }, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            })
+        }
     }
 
     fun saveArticleLike(article: Article) {
@@ -155,5 +168,9 @@ class AllNewsPresenter(
                 })
             }
         }
+    }
+
+    fun exit() {
+        router.exit()
     }
 }

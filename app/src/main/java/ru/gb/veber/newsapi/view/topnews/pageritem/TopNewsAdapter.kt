@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.gb.veber.newsapi.databinding.SearchNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
 import ru.gb.veber.newsapi.model.Article
@@ -14,6 +15,7 @@ import ru.gb.veber.newsapi.utils.loadGlideNot
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HEADER_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_NEWS
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 
 typealias OnUserClickListener = (article: Article) -> Unit
 
@@ -44,6 +46,10 @@ class TopNewsAdapter(
                 parent,
                 false), listener)
             VIEW_TYPE_HEADER_NEWS -> NewsHeaderViewHolder(TopNewsItemHeaderBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false), listener)
+            VIEW_TYPE_SEARCH_NEWS -> SearchNewsViewHolder(SearchNewsItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
@@ -87,6 +93,23 @@ class NewsViewHolder(
     }
 }
 
+class SearchNewsViewHolder(
+    private val binding: SearchNewsItemBinding,
+    var listener: RecyclerListener,
+) : BaseViewHolder(binding.root) {
+
+    @SuppressLint("SetTextI18n")
+    override fun bind(item: Article) = with(binding) {
+        title.text = item.title
+        publishedAt.text = item.publishedAtChange
+        imageNews.loadGlide(item.urlToImage)
+        viewedText.text = if (item.isHistory || item.isFavorites) "viewed" else ""
+        root.setOnClickListener {
+            listener.clickNews(item)
+        }
+    }
+}
+
 
 class NewsHeaderViewHolder(
     private val binding: TopNewsItemHeaderBinding,
@@ -114,6 +137,7 @@ abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         const val VIEW_TYPE_NEWS = 0
         const val VIEW_TYPE_HEADER_NEWS = 1
         const val VIEW_TYPE_FAVORITES_NEWS = 2
+        const val VIEW_TYPE_SEARCH_NEWS = 3
     }
 }
 

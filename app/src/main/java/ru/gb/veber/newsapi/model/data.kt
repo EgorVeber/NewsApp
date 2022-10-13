@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.model
 
-import ru.gb.veber.newsapi.utils.formatDateNews
 import ru.gb.veber.newsapi.utils.formatDateTime
 import java.util.*
 
@@ -12,7 +11,7 @@ data class Article(
     var publishedAt: String,
     var publishedAtChange: String?,
     var source: Source,
-    var title: String,
+    var title: String?,
     var url: String,
     var urlToImage: String?,
     var viewType: Int = 0,

@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.searchnews
+package ru.gb.veber.newsapi.view.search
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
@@ -19,4 +19,7 @@ interface SearchNewsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun errorDateInput()
+
+    fun pikerPositive(l: Long)
+    fun pikerNegative()
 }

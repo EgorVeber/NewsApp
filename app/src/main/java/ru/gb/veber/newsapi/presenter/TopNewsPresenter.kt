@@ -140,11 +140,12 @@ class TopNewsPresenter(
     }
 
     fun deleteFavorites(article: Article) {
-        articleRepoImpl.deleteArticleById(article.title, accountIdPresenter).subscribe({
+        article.title?.let {
+        articleRepoImpl.deleteArticleById(it, accountIdPresenter).subscribe({
             Log.d("SUCCESS_DELETE", "SUCCESS DELETE BY ID")
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
-        })
+        })}
     }
 
     fun filterButtonClick() {

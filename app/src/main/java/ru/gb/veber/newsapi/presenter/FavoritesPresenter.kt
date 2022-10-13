@@ -74,7 +74,8 @@ class FavoritesPresenter(
 
     fun deleteFavorites(article: Article) {
         var articleNew = article.copy()
-        articleRepoImpl.deleteArticleById(articleNew.title, accountIdS)
+        article.title?.let {
+        articleRepoImpl.deleteArticleById(it, accountIdS)
             .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({
                 viewState.updateFavorites(it.map(::articleDbEntityToArticle).reversed().map {
                     it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
@@ -83,7 +84,8 @@ class FavoritesPresenter(
                 })
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
-            })
+            })}
+
     }
 
     fun openScreenWebView(url: String) {
