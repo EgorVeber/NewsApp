@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.marginBottom
 
 class BehaviorRecycler(context: Context, attr: AttributeSet? = null) :
     CoordinatorLayout.Behavior<View>(context, attr) {

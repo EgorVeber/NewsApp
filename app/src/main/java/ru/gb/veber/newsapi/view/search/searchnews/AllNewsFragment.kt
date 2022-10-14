@@ -52,16 +52,16 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
             AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
     }
 
-    private var itemListener = object : RecyclerListener {
 
+    private var itemListener = object : RecyclerListener {
         override fun clickNews(article: Article) {
             presenter.clickNews(article)
         }
 
-        override fun deleteFavorites(article: Article) {
-
-        }
+        override fun deleteFavorites(article: Article) {}
     }
+
+    private val newsAdapter = TopNewsAdapter(itemListener)
 
 
     override fun emptyList() {
@@ -70,7 +70,6 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         binding.statusTextList.show()
     }
 
-    private val newsAdapter = TopNewsAdapter(itemListener)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -106,46 +105,16 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         binding.titleSearch.text = "$keyWord $sourcesId $s $dateSources"
     }
 
-//    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
-//        override fun onStateChanged(bottomSheet: View, newState: Int) {
-//            when (newState) {
-//                BottomSheetBehavior.STATE_COLLAPSED -> {
-//                    Log.d("TAG",
-//                        "STATE_COLLAPSED() called with: bottomSheet = $bottomSheet, newState = $newState")
-//                }
-//                BottomSheetBehavior.STATE_EXPANDED -> {
-//                    Log.d("TAG",
-//                        "STATE_EXPANDED() called with: bottomSheet = $bottomSheet, newState = $newState")
-//                    arguments?.let {
-//                        presenter.getNews(
-//                            it.getInt(ACCOUNT_ID),
-//                            it.getString(KEY_WORD),
-//                            it.getString(SEARCH_IN),
-//                            it.getString(SORT_BY_KEY_WORD),
-//                            it.getString(SORT_BY_SOURCES),
-//                            it.getString(SOURCES_ID),
-//                            it.getString(DATE_SOURCES),
-//                            it.getString(SOURCES_NAME))
-//                    }
-//                }
-//            }
-//        }
-//
-//        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-//        }
-//    }
 
     private fun initialization() {
+        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer)
 
-        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
-            //addBottomSheetCallback(callBackBehavior)
-        }
         binding.allNewsRecycler.adapter = newsAdapter
         binding.allNewsRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.backMainScreenImage.setOnClickListener {
-            presenter.exit()
-        }
 
+        binding.backMainScreenImage.setOnClickListener { presenter.exit() }
+
+        binding.saveSources.setOnClickListener { presenter.saveSources() }
     }
 
     override fun setNews(articles: List<Article>) {
@@ -162,12 +131,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
     override fun clickNews(article: Article) {
 
-        if (article.isFavorites) {
-            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
-        } else {
-            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
-        }
-
+        Log.d("clickNews", "clickNews() called with: article = $article")
 
         with(binding) {
             imageViewAll.loadGlideNot(article.urlToImage)
@@ -178,34 +142,12 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
             setSpan(article)
         }
 
-        bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
-
-
-        presenter.saveArticle(article, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
-
-
         binding.descriptionNews.setOnClickListener { view ->
             presenter.openScreenWebView(article.url)
         }
 
-        binding.saveSources.setOnClickListener {
-            presenter.saveSources()
-        }
-
-
-        binding.imageFavorites.setOnClickListener { view ->
-            if (article.isFavorites) {
-                presenter.deleteFavorites(article)
-                binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
-                article.isFavorites = false
-                (requireActivity() as EventAddingBadges).removeBadge()
-            } else {
-                Log.d("TAG", "else")
-                presenter.saveArticleLike(article)
-                binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
-                article.isFavorites = true
-                (requireActivity() as EventAddingBadges).addBadge()
-            }
+        binding.imageFavorites.setOnClickListener {
+            presenter.setOnClickImageFavorites(article)
         }
     }
 
@@ -215,6 +157,26 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
     override fun hideSaveSources() {
         binding.saveSources.hide()
+    }
+
+    override fun sheetExpanded() {
+        bSheetB.expanded()
+    }
+
+    override fun setLikeResourcesActive() {
+        binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+    }
+
+    override fun setLikeResourcesNegative() {
+        binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+    }
+
+    override fun addBadge() {
+        (requireActivity() as EventAddingBadges).addBadge()
+    }
+
+    override fun removeBadge() {
+        (requireActivity() as EventAddingBadges).removeBadge()
     }
 
     override fun successSaveSources() {
@@ -289,7 +251,6 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
     }
 
     override fun getStateBehavior(): Int {
-        Log.d("supportFragmentManager", "getStateBehavior() called ${bSheetB.state}")
         return bSheetB.state
     }
 
@@ -297,3 +258,32 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         bSheetB.collapsed()
     }
 }
+
+//    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
+//        override fun onStateChanged(bottomSheet: View, newState: Int) {
+//            when (newState) {
+//                BottomSheetBehavior.STATE_COLLAPSED -> {
+//                    Log.d("TAG",
+//                        "STATE_COLLAPSED() called with: bottomSheet = $bottomSheet, newState = $newState")
+//                }
+//                BottomSheetBehavior.STATE_EXPANDED -> {
+//                    Log.d("TAG",
+//                        "STATE_EXPANDED() called with: bottomSheet = $bottomSheet, newState = $newState")
+//                    arguments?.let {
+//                        presenter.getNews(
+//                            it.getInt(ACCOUNT_ID),
+//                            it.getString(KEY_WORD),
+//                            it.getString(SEARCH_IN),
+//                            it.getString(SORT_BY_KEY_WORD),
+//                            it.getString(SORT_BY_SOURCES),
+//                            it.getString(SOURCES_ID),
+//                            it.getString(DATE_SOURCES),
+//                            it.getString(SOURCES_NAME))
+//                    }
+//                }
+//            }
+//        }
+//
+//        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+//        }
+//    }

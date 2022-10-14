@@ -14,12 +14,10 @@
 
         <TextView
             android:id="@+id/name"
-
             style="@style/sources_text" />
 
         <TextView
             android:id="@+id/description"
-
             style="@style/sources_text" />
 
         <TextView

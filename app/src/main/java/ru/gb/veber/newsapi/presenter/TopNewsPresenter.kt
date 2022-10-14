@@ -56,20 +56,6 @@ class TopNewsPresenter(
             articles.articles.map(::mapToArticle).also { newsRepoImpl.changeRequest(it) }
         }, articleRepoImpl.getArticleById(accountID)) { news, articles ->
 
-
-//            news.forEach {
-//                it.publishedAt = stringFromData(it.publishedAt).formatDate()
-//                Log.d("forEach", "forEach  = $it")
-//            }
-//            Log.d("forEach", "groupBy")
-//            var i = 0;
-//            news.groupBy { it.publishedAt }.forEach {
-//                Log.d("forEach", "Key $i = " + it.key!!)
-//                Log.d("forEach", "Value $i (${it.value.last().viewType})= " + it.value.toString())
-//                i++
-//            }
-
-
             articles.forEach { art ->
                 news.forEach { new ->
                     if (art.title == new.title) {
@@ -141,11 +127,12 @@ class TopNewsPresenter(
 
     fun deleteFavorites(article: Article) {
         article.title?.let {
-        articleRepoImpl.deleteArticleById(it, accountIdPresenter).subscribe({
-            Log.d("SUCCESS_DELETE", "SUCCESS DELETE BY ID")
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        })}
+            articleRepoImpl.deleteArticleById(it, accountIdPresenter).subscribe({
+                Log.d("SUCCESS_DELETE", "SUCCESS DELETE BY ID")
+            }, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            })
+        }
     }
 
     fun filterButtonClick() {

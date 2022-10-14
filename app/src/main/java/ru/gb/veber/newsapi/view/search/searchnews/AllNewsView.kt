@@ -2,6 +2,7 @@ package ru.gb.veber.newsapi.view.search.searchnews
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.SkipStrategy
 import moxy.viewstate.strategy.StateStrategyType
 import ru.gb.veber.newsapi.model.Article
 
@@ -16,5 +17,11 @@ interface AllNewsView:MvpView {
     fun emptyList()
     fun hideSaveSources()
     fun showSaveSources()
+    @StateStrategyType(SkipStrategy::class)
     fun successSaveSources()
+    fun sheetExpanded()
+    fun setLikeResourcesNegative()
+    fun setLikeResourcesActive()
+    fun removeBadge()
+    fun addBadge()
 }
