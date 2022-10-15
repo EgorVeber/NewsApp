@@ -43,7 +43,8 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
 
     private val presenter: AllNewsPresenter by moxyPresenter {
-        AllNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
+        AllNewsPresenter(
+            NewsRepoImpl(NewsRetrofit.newsTopSingle),
             App.instance.router,
             ArticleRepoImpl(App.instance.newsDb.articleDao()),
             RoomRepoImpl(App.instance.newsDb.accountsDao()),
@@ -124,6 +125,10 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         binding.allNewsRecycler.show()
     }
 
+    override fun changeNews(articleListHistory: MutableList<Article>) {
+        newsAdapter.articles = articleListHistory
+    }
+
     override fun loading() {
         binding.progressBarAllNews.show()
         binding.allNewsRecycler.hide()
@@ -131,7 +136,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
     override fun clickNews(article: Article) {
 
-        Log.d("clickNews", "clickNews() called with: article = $article")
+        Log.d("clickNews", article.title.toString() + " " + article.isFavorites)
 
         with(binding) {
             imageViewAll.loadGlideNot(article.urlToImage)
@@ -258,32 +263,3 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         bSheetB.collapsed()
     }
 }
-
-//    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
-//        override fun onStateChanged(bottomSheet: View, newState: Int) {
-//            when (newState) {
-//                BottomSheetBehavior.STATE_COLLAPSED -> {
-//                    Log.d("TAG",
-//                        "STATE_COLLAPSED() called with: bottomSheet = $bottomSheet, newState = $newState")
-//                }
-//                BottomSheetBehavior.STATE_EXPANDED -> {
-//                    Log.d("TAG",
-//                        "STATE_EXPANDED() called with: bottomSheet = $bottomSheet, newState = $newState")
-//                    arguments?.let {
-//                        presenter.getNews(
-//                            it.getInt(ACCOUNT_ID),
-//                            it.getString(KEY_WORD),
-//                            it.getString(SEARCH_IN),
-//                            it.getString(SORT_BY_KEY_WORD),
-//                            it.getString(SORT_BY_SOURCES),
-//                            it.getString(SOURCES_ID),
-//                            it.getString(DATE_SOURCES),
-//                            it.getString(SOURCES_NAME))
-//                    }
-//                }
-//            }
-//        }
-//
-//        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-//        }
-//    }

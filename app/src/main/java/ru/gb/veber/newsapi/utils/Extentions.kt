@@ -64,8 +64,8 @@ fun View.hideKeyboard(): Boolean {
 
 fun ImageView.loadGlide(url: String?) {
     Glide.with(context).load(url)
-        .placeholder(R.drawable.newsplaceholder)
-        .error(R.drawable.newsplaceholder)
+        .placeholder(R.drawable.chipmunk)
+        .error(R.drawable.chipmunk)
         .timeout(2000)
         .transform(MultiTransformation(RoundedCorners(25)))
         .into(this)
@@ -73,8 +73,8 @@ fun ImageView.loadGlide(url: String?) {
 
 fun ImageView.loadGlideNot(url: String?) {
     Glide.with(context).load(url)
-        .placeholder(R.drawable.newsplaceholder)
-        .error(R.drawable.newsplaceholder)
+        .placeholder(R.drawable.chipmunk)
+        .error(R.drawable.chipmunk)
         .timeout(2000)
         .listener(object : RequestListener<Drawable> {
             override fun onLoadFailed(

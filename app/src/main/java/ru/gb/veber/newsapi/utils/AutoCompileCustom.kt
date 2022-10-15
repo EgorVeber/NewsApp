@@ -1,18 +1,15 @@
 package ru.gb.veber.newsapi.utils
 
+import android.content.Context
+import android.support.annotation.NonNull
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import java.util.*
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.view.View;
-import android.widget.*
-import androidx.appcompat.widget.AppCompatImageView
-import ru.gb.veber.newsapi.R
+import android.widget.ArrayAdapter
+import android.widget.Filter
 import ru.gb.veber.newsapi.databinding.SelectSourcesAutocompileBinding
 import ru.gb.veber.newsapi.model.Sources
-
-import java.util.ArrayList;
+import java.util.*
 
 class AutoCompleteCountryAdapter(
     context: Context,

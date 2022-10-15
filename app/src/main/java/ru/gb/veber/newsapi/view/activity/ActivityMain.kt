@@ -16,9 +16,9 @@ import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.view.search.searchnews.AllNewsFragment
+import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
+import ru.gb.veber.newsapi.view.search.searchnews.AllNewsFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit

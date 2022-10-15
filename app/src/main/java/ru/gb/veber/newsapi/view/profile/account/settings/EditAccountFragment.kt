@@ -166,7 +166,6 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
     }
 
     private fun rxTextChangerValidation() {
-
         RxTextView.textChanges(binding.passwordChangeEditText)
             .filter { it.toString().isNotEmpty() }
             .subscribe({
@@ -174,7 +173,7 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
             }, {
                 Log.d("RxTextView", it.localizedMessage)
             })
-
+        
         RxTextView.textChanges(binding.userNameChangeEditText)
             .filter { it.toString().isNotEmpty() }
             .subscribe({

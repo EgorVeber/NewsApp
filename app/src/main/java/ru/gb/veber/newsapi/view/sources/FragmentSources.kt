@@ -17,7 +17,6 @@ import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 
 class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
 

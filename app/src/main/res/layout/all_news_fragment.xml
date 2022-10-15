@@ -48,8 +48,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:paddingBottom="?actionBarSize"
         android:padding="5dp"
+        android:paddingBottom="?actionBarSize"
         app:layout_behavior=".view.search.searchnews.BehaviorRecycler" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -133,12 +133,12 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/saveSources"
                     style="@style/MyMaterialTextButton"
-                    android:layout_marginStart="10dp"
                     android:layout_width="wrap_content"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:background="?selectableItemBackground"
                     android:text="Save Sources"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/authorText" />
 

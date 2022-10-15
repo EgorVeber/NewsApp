@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.model.repository
 
+import android.util.Log
 import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.ArticlesDTO
@@ -13,6 +14,10 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
 
     override fun changeRequest(list: List<Article>): List<Article> {
         return list.map {
+
+            Log.d("changeRequest", it.title.toString())
+            Log.d("changeRequestTrim", it.title.toString().trim())
+
             var publishedDate = stringFromData(it.publishedAt)
             var SDF = SimpleDateFormat("yyyy-MM-dd")
 
@@ -25,8 +30,8 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
             }
 
 
-            if(it.title==null||it.description.equals("")){
-                it.title=it.publishedAt
+            if (it.title == null || it.description.equals("")) {
+                it.title = it.publishedAt
             }
             if (it.source.id == null) {
                 it.source.id = "Не проверенный источник"

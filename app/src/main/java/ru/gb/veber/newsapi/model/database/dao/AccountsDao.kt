@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.model.database.dao
 
-import android.accounts.Account
 import androidx.room.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single

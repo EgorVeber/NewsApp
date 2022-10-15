@@ -5,13 +5,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.view.search.searchnews.AllNewsFragment
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
 import ru.gb.veber.newsapi.view.search.SearchNewsFragment
+import ru.gb.veber.newsapi.view.search.searchnews.AllNewsFragment
 import ru.gb.veber.newsapi.view.sources.FragmentSources
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.view.webview.WebViewFragment

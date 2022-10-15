@@ -9,7 +9,10 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.ERROR_DB
+import ru.gb.veber.newsapi.utils.mapToArticle
+import ru.gb.veber.newsapi.utils.mapToArticleDbEntity
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 
 class TopNewsPresenter(

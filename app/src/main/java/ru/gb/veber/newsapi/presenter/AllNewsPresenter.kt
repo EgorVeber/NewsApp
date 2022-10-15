@@ -2,10 +2,9 @@ package ru.gb.veber.newsapi.presenter
 
 import android.util.Log
 import com.github.terrakok.cicerone.Router
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
-import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.Sources
@@ -16,7 +15,6 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.search.searchnews.AllNewsView
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 
@@ -37,9 +35,9 @@ class AllNewsPresenter(
     private var sourcesID: Int = 0
 
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-    }
+    private var articleListHistory: MutableList<Article> = mutableListOf()
+    private val bag = CompositeDisposable()
+
 
     fun onBackPressedRouter(): Boolean {
         Log.d("Back", "onBackPressedRouter() SourcesDTO")
@@ -53,30 +51,28 @@ class AllNewsPresenter(
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })
-        getSourcesLike()
-        getSources()
+        if (accountId == ACCOUNT_ID_DEFAULT) {
+            viewState.hideFavorites()
+        } else {
+            getSourcesLike()
+            getSources()
+        }
     }
 
     private fun getSourcesLike() {
-        if (accountId != ACCOUNT_ID_DEFAULT) {
-            accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId).subscribe({
-                likeSources = it
-                Log.d("getSourcesLike", it.toString())
-            }, {
-                Log.d("getSourcesLike", it.localizedMessage)
-            })
-        }
+        accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId).subscribe({
+            likeSources = it
+        }, {
+            Log.d("getSourcesLike", it.localizedMessage)
+        }).disposebleBy(bag)
     }
 
     private fun getSources() {
-        if (accountId != ACCOUNT_ID_DEFAULT) {
-            sourcesRepoImpl.getSources().subscribe({
-                allSources = it
-                Log.d("getSourcesLike", it.toString())
-            }, {
-                Log.d("getSourcesLike", it.localizedMessage)
-            })
-        }
+        sourcesRepoImpl.getSources().subscribe({
+            allSources = it
+        }, {
+            Log.d("getSourcesLike", it.localizedMessage)
+        }).disposebleBy(bag)
     }
 
     fun saveSources() {
@@ -90,7 +86,7 @@ class AllNewsPresenter(
             })
         }, {
             Log.d("saveSources", "error saveSources  " + it.localizedMessage)
-        })
+        }).disposebleBy(bag)
     }
 
 
@@ -104,12 +100,9 @@ class AllNewsPresenter(
         dateSources: String?,
         sourcesName: String?,
     ) {
-        Log.d("loadNews",
-            "getNews() called with: accountId = $accountId, keyWord = $keyWord, searchIn = $searchIn, sortByKeyWord = $sortByKeyWord, sortBySources = $sortBySources, sourcesId = $sourcesId, dateSources = $dateSources")
-        if (accountId == ACCOUNT_ID_DEFAULT) {
-            viewState.hideFavorites()
-        }
-        viewState.setTitle(keyWord,
+
+        viewState.setTitle(
+            keyWord,
             sourcesName,
             if (!keyWord.isNullOrEmpty()) sortByKeyWord else sortBySources,
             dateSources)
@@ -148,12 +141,18 @@ class AllNewsPresenter(
             if (it.isEmpty()) {
                 viewState.emptyList()
             } else {
+                articleListHistory = it.toMutableList()
                 viewState.setNews(it)
+            }
+            Log.d("loadNews", "Size it list" + it.size.toString())
+
+            it.forEach { arct ->
+                Log.d("loadNews", "list $arct")
             }
         }, {
             Log.d("loadNews", it.localizedMessage)
             viewState.emptyList()
-        })
+        }).disposebleBy(bag)
     }
 
     fun clickNews(article: Article) {
@@ -178,13 +177,14 @@ class AllNewsPresenter(
         if (accountId != ACCOUNT_ID_DEFAULT) {
             if (saveHistory) {
                 if (!article.isFavorites && !article.isHistory) {
-                    var articleNew = article.copy(isHistory = true)
-                    articleRepoImpl.insertArticle(mapToArticleDbEntity(articleNew, accountId))
+                    article.isHistory = true
+                    articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId))
                         .subscribe({
-                            viewState.successInsertArticle()
+                            articleListHistory.find { it.title == article.title }?.isHistory = true
+                            viewState.changeNews(articleListHistory)
                         }, {
                             Log.d(ERROR_DB, it.localizedMessage)
-                        })
+                        }).disposebleBy(bag)
                 }
             }
         }
@@ -209,26 +209,25 @@ class AllNewsPresenter(
     }
 
     private fun deleteFavorites(article: Article) {
-        article.title?.let {
-            articleRepoImpl.deleteArticleById(it, accountId).subscribe({
-                viewState.successInsertArticle()
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
-        }
+        article.isFavorites = false
+        articleRepoImpl.deleteArticleById(article.title.toString(), accountId).subscribe({
+            articleListHistory.find { it.title == article.title }?.isFavorites = false
+            viewState.changeNews(articleListHistory)
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        }).disposebleBy(bag)
     }
 
     private fun saveArticleLike(article: Article) {
-        if (!article.isFavorites) {
-            var item = mapToArticleDbEntity(article, accountId)
-            item.isFavorites = true
-            articleRepoImpl.insertArticle(item).subscribe({
-                viewState.successInsertArticle()
-                Log.d(ERROR_DB, "successInsertArticle")
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
-        }
+        var item = mapToArticleDbEntity(article, accountId)
+        item.isFavorites = true
+        articleRepoImpl.insertArticle(item).subscribe({
+            articleListHistory.find { it.title == article.title }?.isFavorites = true
+            viewState.changeNews(articleListHistory)
+            Log.d(ERROR_DB, "successInsertArticle")
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        }).disposebleBy(bag)
     }
 
 
@@ -238,5 +237,14 @@ class AllNewsPresenter(
 
     fun exit() {
         router.exit()
+    }
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bag.dispose()
     }
 }

@@ -2,14 +2,9 @@ package ru.gb.veber.newsapi.model.repository.room
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.dao.AccountSourcesDao
-import ru.gb.veber.newsapi.model.database.dao.AccountsDao
-import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.model.database.entity.SourcesDbEntity
-import ru.gb.veber.newsapi.utils.mapToAccount
 import ru.gb.veber.newsapi.utils.sourcesDbEntityToSources
 import ru.gb.veber.newsapi.utils.subscribeDefault
 

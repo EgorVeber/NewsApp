@@ -31,7 +31,6 @@ import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 
 
 interface EventBehaviorToActivity {
