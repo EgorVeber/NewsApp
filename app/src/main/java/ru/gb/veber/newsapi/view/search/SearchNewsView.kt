@@ -26,4 +26,5 @@ interface SearchNewsView : MvpView {
     fun hideSelectHistory()
     @StateStrategyType(SkipStrategy::class)
     fun emptyHistory()
+    fun hideEmptyList()
 }

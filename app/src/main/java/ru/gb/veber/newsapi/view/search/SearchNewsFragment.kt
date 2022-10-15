@@ -48,10 +48,17 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun emptyHistory() {
+        Log.d("hideEmptyList", "hideEmptyList() called")
         binding.emptyHistory.show()
     }
 
     private val historySelectAdapter = HistorySelectAdapter(itemListener)
+
+
+    override fun hideEmptyList() {
+        Log.d("hideEmptyList", "hideEmptyList() called")
+        binding.emptyHistory.hide()
+    }
 
     private val presenter: SearchNewsPresenter by moxyPresenter {
         SearchNewsPresenter(

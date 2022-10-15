@@ -42,6 +42,7 @@ class SearchNewsPresenter(
     fun getSources() {
         if (accountIdPresenter == ACCOUNT_ID_DEFAULT) {
             viewState.hideSelectHistory()
+            viewState.hideEmptyList()
             sourcesRepoImpl.getSources().subscribe({
 
                 allSources = it
@@ -92,15 +93,6 @@ class SearchNewsPresenter(
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
             })
-        }
-    }
-
-    fun notifyAdapter(b: Boolean) {
-        if (b) {
-            viewState.updateAdapter(allSources)
-
-        } else {
-            viewState.updateAdapter(likeSources)
         }
     }
 
@@ -212,16 +204,18 @@ class SearchNewsPresenter(
     }
 
     fun getHistorySelect() {
-        historySelectRepoImpl.getHistoryById(accountIdPresenter).subscribe({
-            if (it.isEmpty()) {
-                viewState.emptyHistory()
-                viewState.setHistory(listOf())
-            } else {
-                viewState.setHistory(it.map(::mapToHistorySelect).reversed())
-            }
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        })
+        if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
+            historySelectRepoImpl.getHistoryById(accountIdPresenter).subscribe({
+                if (it.isEmpty()) {
+                    viewState.setHistory(listOf())
+                    viewState.emptyHistory()
+                } else {
+                    viewState.setHistory(it.map(::mapToHistorySelect).reversed())
+                }
+            }, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            })
+        }
     }
 
     fun openScreenNewsHistory(historySelect: HistorySelect) {
