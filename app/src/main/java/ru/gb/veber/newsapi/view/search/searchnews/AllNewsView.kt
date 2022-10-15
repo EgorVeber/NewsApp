@@ -11,7 +11,6 @@ interface AllNewsView:MvpView {
     fun setNews(articles: List<Article>)
     fun loading()
     fun clickNews(article: Article)
-    fun successInsertArticle()
     fun hideFavorites()
     fun setTitle(keyWord: String?, sourcesId: String?, s: String?, dateSources: String?)
     fun emptyList()

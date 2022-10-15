@@ -7,16 +7,15 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.*
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.search.searchnews.AllNewsView
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
+import java.util.*
 
 class AllNewsPresenter(
     private val newsRepoImpl: NewsRepoImpl,
@@ -45,7 +44,7 @@ class AllNewsPresenter(
         return true
     }
 
-    fun getAccountSettings(accountId: Int) {
+    fun getAccountSettings() {
         roomRepoImpl.getAccountById(accountId).subscribe({
             saveHistory = it.saveHistory
         }, {
@@ -90,31 +89,36 @@ class AllNewsPresenter(
     }
 
 
-    fun getNews(
-        accountId: Int,
-        keyWord: String?,
-        searchIn: String?,
-        sortByKeyWord: String?,
-        sortBySources: String?,
-        sourcesId: String?,
-        dateSources: String?,
-        sourcesName: String?,
-    ) {
+    fun getNews(historySelect: HistorySelect?) {
+//        historySelectRepoImpl.insertSelect(HistorySelectDbEntity(0,
+//            accountId,
+//            keyWord.toString(),
+//            searchIn.toString(),
+//            sortByKeyWord.toString(),
+//            sortBySources.toString(),
+//            sourcesId.toString(),
+//            dateSources.toString(),
+//            sourcesName.toString())).subscribe({
+//            Log.d("historySelectRepoImpl", "success insert")
+//        }, {
+//            Log.d("historySelectRepoImpl", "error insert" + it.localizedMessage)
+//        })
+
 
         viewState.setTitle(
-            keyWord,
-            sourcesName,
-            if (!keyWord.isNullOrEmpty()) sortByKeyWord else sortBySources,
-            dateSources)
+            historySelect?.keyWord,
+            historySelect?.sourcesName,
+            if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            historySelect?.dateSources)
 
 
         Single.zip(newsRepoImpl.getEverythingKeyWordSearchInSources(
-            sourcesId,
-            keyWord,
-            searchIn,
-            if (!keyWord.isNullOrEmpty()) sortByKeyWord else sortBySources,
-            dateSources,
-            dateSources
+            historySelect?.sourcesId,
+            historySelect?.keyWord,
+            historySelect?.searchIn,
+            if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            historySelect?.dateSources,
+            historySelect?.dateSources
         ).map { articles ->
             articles.articles.map(::mapToArticle).also {
                 newsRepoImpl.changeRequest(it)
@@ -144,11 +148,6 @@ class AllNewsPresenter(
                 articleListHistory = it.toMutableList()
                 viewState.setNews(it)
             }
-            Log.d("loadNews", "Size it list" + it.size.toString())
-
-            it.forEach { arct ->
-                Log.d("loadNews", "list $arct")
-            }
         }, {
             Log.d("loadNews", it.localizedMessage)
             viewState.emptyList()
@@ -164,10 +163,10 @@ class AllNewsPresenter(
             } else if (sourcesID != 0) {
                 viewState.showSaveSources()
             }
+            viewState.clickNews(article)
+            saveArticle(article, accountId)
         }
 
-        viewState.clickNews(article)
-        saveArticle(article, accountId)
         if (article.isFavorites) viewState.setLikeResourcesActive()
         else viewState.setLikeResourcesNegative()
         viewState.sheetExpanded()
@@ -178,6 +177,7 @@ class AllNewsPresenter(
             if (saveHistory) {
                 if (!article.isFavorites && !article.isHistory) {
                     article.isHistory = true
+                    article.dateAdded = Date().formatDateTime()
                     articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId))
                         .subscribe({
                             articleListHistory.find { it.title == article.title }?.isHistory = true

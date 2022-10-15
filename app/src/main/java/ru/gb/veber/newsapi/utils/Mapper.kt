@@ -3,6 +3,7 @@ package ru.gb.veber.newsapi.utils
 import ru.gb.veber.newsapi.model.*
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
+import ru.gb.veber.newsapi.model.database.entity.HistorySelectDbEntity
 import ru.gb.veber.newsapi.model.database.entity.SourcesDbEntity
 
 
@@ -61,6 +62,22 @@ fun mapToAccountDbEntity(item: Account): AccountDbEntity {
     )
 }
 
+
+fun mapToHistorySelectDbEntity(item: HistorySelect): HistorySelectDbEntity {
+    return HistorySelectDbEntity(
+        id = item.id,
+        accountID = item.accountID,
+        keyWord = item.keyWord.toString(),
+        searchIn = item.searchIn.toString(),
+        sortByKeyWord = item.sortByKeyWord.toString(),
+        sortBySources = item.sortBySources.toString(),
+        sourcesId = item.sourcesId.toString(),
+        dateSources = item.dateSources.toString(),
+        sourcesName = item.sourcesName.toString()
+    )
+}
+
+
 fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
     return ArticleDbEntity(
         id = 0,
@@ -74,7 +91,8 @@ fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
         url = article.url,
         urlToImage = article.urlToImage,
         isHistory = article.isHistory,
-        isFavorites = article.isFavorites
+        isFavorites = article.isFavorites,
+        dateAdded = article.dateAdded.toString()
     )
 }
 

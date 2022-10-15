@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +18,10 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AllNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.*
 import ru.gb.veber.newsapi.presenter.AllNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
@@ -87,17 +84,9 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         super.onViewCreated(view, savedInstanceState)
         initialization()
         arguments?.let {
-            presenter.getNews(
-                it.getInt(ACCOUNT_ID),
-                it.getString(KEY_WORD),
-                it.getString(SEARCH_IN),
-                it.getString(SORT_BY_KEY_WORD),
-                it.getString(SORT_BY_SOURCES),
-                it.getString(SOURCES_ID),
-                it.getString(DATE_SOURCES),
-                it.getString(SOURCES_NAME))
+            presenter.getNews(it.getParcelable(HISTORY_SELECT_BUNDLE))
         }
-        presenter.getAccountSettings(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        presenter.getAccountSettings()
     }
 
 
@@ -136,15 +125,13 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
     override fun clickNews(article: Article) {
 
-        Log.d("clickNews", article.title.toString() + " " + article.isFavorites)
-
         with(binding) {
             imageViewAll.loadGlideNot(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
             titleNews.text = article.title
             authorText.text = article.author
             sourceText.text = article.source.name
-            setSpan(article)
+            setSpan(article.description.toString())
         }
 
         binding.descriptionNews.setOnClickListener { view ->
@@ -189,22 +176,8 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         binding.root.showSnackBarError("Source Saved ", "", {})
     }
 
-    override fun successInsertArticle() {
-        arguments?.let {
-            presenter.getNews(
-                it.getInt(ACCOUNT_ID),
-                it.getString(KEY_WORD),
-                it.getString(SEARCH_IN),
-                it.getString(SORT_BY_KEY_WORD),
-                it.getString(SORT_BY_SOURCES),
-                it.getString(SOURCES_ID),
-                it.getString(DATE_SOURCES),
-                it.getString(SOURCES_NAME))
-        }
-    }
-
-    private fun setSpan(article: Article) {
-        SpannableStringBuilder(article.description).also { span ->
+    private fun setSpan(description: String) {
+        SpannableStringBuilder(description).also { span ->
             span.setSpan(
                 ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
                 span.length - 1,
@@ -227,25 +200,13 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
     companion object {
         fun getInstance(
-            accountID: Int,
-            keyWord: String?,
-            searchIn: String?,
-            sortByKeyWord: String?,
-            sortBySources: String?,
-            sourcesId: String?,
-            dateSources: String?,
-            sourcesName: String?,
+            accountId: Int,
+            historySelect: HistorySelect,
         ): AllNewsFragment {
             return AllNewsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ACCOUNT_ID, accountID)
-                    putString(KEY_WORD, keyWord)
-                    putString(SEARCH_IN, searchIn)
-                    putString(SORT_BY_KEY_WORD, sortByKeyWord)
-                    putString(SORT_BY_SOURCES, sortBySources)
-                    putString(SOURCES_NAME, sourcesName)
-                    putString(SOURCES_ID, sourcesId)
-                    putString(DATE_SOURCES, dateSources)
+                    putInt(ACCOUNT_ID, accountId)
+                    putParcelable(HISTORY_SELECT_BUNDLE, historySelect)
                 }
             }
         }

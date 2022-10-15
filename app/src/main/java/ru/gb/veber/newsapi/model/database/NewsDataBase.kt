@@ -4,18 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import ru.gb.veber.newsapi.model.database.dao.AccountSourcesDao
-import ru.gb.veber.newsapi.model.database.dao.AccountsDao
-import ru.gb.veber.newsapi.model.database.dao.ArticleDao
-import ru.gb.veber.newsapi.model.database.dao.SourcesDao
-import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
-import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
-import ru.gb.veber.newsapi.model.database.entity.SourcesDbEntity
+import ru.gb.veber.newsapi.model.database.dao.*
+import ru.gb.veber.newsapi.model.database.entity.*
 
 @Database(
     version = 1,
-    entities = [AccountDbEntity::class, ArticleDbEntity::class, SourcesDbEntity::class, AccountSourcesDbEntity::class]
+    entities = [
+        AccountDbEntity::class,
+        ArticleDbEntity::class,
+        SourcesDbEntity::class,
+        AccountSourcesDbEntity::class,
+        HistorySelectDbEntity::class]
 )
 abstract class NewsDataBase : RoomDatabase() {
 
@@ -23,6 +22,7 @@ abstract class NewsDataBase : RoomDatabase() {
     abstract fun articleDao(): ArticleDao
     abstract fun sourcesDao(): SourcesDao
     abstract fun accountSourcesDao(): AccountSourcesDao
+    abstract fun historySelectDao():HistorySelectDao
 
     companion object {
         fun createDb(context: Context): NewsDataBase {

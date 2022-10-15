@@ -11,6 +11,14 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="helperTextSortedBy,spinnerSortBy,searchView,spinnerSearchIn,helperTextSearchIn" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupSources"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="searchSourcesButton,spinnerSortBySources,helperTextSources,selectDate" />
+
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
@@ -208,13 +216,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/titleFilter" />
 
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupSources"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="searchSourcesButton,spinnerSortBySources,helperTextSources,selectDate" />
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinnerSortBySources"

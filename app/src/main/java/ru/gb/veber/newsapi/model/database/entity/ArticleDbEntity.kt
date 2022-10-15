@@ -37,5 +37,7 @@ data class ArticleDbEntity(
     var isHistory: Boolean,
     @ColumnInfo(name = "is_favorites")
     var isFavorites: Boolean,
+    @ColumnInfo(name = "date_added")
+    var dateAdded: String,
 )
 

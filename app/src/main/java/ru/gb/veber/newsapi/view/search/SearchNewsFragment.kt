@@ -17,6 +17,7 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
@@ -38,6 +39,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         SearchNewsPresenter(
             App.instance.router,
             RoomRepoImpl(App.instance.newsDb.accountsDao()),
+            HistorySelectRepoImpl(App.instance.newsDb.historySelectDao()),
             arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT,
             SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
             AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
@@ -60,6 +62,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
 
     private fun initialization() {
         binding.searchView.setOnQueryTextListener(searchViewListener)
+
         with(binding.searchSpinnerCountry) {
             //setOnKeyListener(setOnKeyListenerSpinner)s
             threshold = 1

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
+import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
@@ -54,24 +55,10 @@ data class FavoritesViewPagerScreen(private val accountId: Int) : FragmentScreen
 }
 
 
-data class AllNewsScreen(
-    private val accountId: Int,
-    private val keyWord: String? = "",
-    private val searchIn: String? = "",
-    private val sortByKeyWord: String? = "",
-    private val sortBySources: String? = "",
-    private val sourcesId: String? = "",
-    private val sourcesName: String? = "",
-    private val dateSources: String? = "",
-) : FragmentScreen {
+data class AllNewsScreen(private val accountId: Int, private val historySelect: HistorySelect) :
+    FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return AllNewsFragment.getInstance(accountId,
-            keyWord,
-            searchIn,
-            sortByKeyWord,
-            sortBySources,
-            sourcesId,
-            dateSources,sourcesName)
+        return AllNewsFragment.getInstance(accountId, historySelect)
     }
 }
 

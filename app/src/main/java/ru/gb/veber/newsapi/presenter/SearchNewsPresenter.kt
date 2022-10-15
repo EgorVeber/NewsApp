@@ -6,8 +6,10 @@ import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.AllNewsScreen
 import ru.gb.veber.newsapi.model.Account
+import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.utils.*
@@ -17,7 +19,8 @@ import java.util.*
 class SearchNewsPresenter(
     private val router: Router,
     private val roomRepoImpl: RoomRepoImpl,
-    private val accountId: Int,
+    private val historySelectRepoImpl: HistorySelectRepoImpl,
+    private val accountIdPresenter: Int,
     private val sourcesRepoImpl: SourcesRepoImpl,
     private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
 ) : MvpPresenter<SearchNewsView>() {
@@ -33,7 +36,7 @@ class SearchNewsPresenter(
     }
 
     fun getSources() {
-        if (accountId == ACCOUNT_ID_DEFAULT) {
+        if (accountIdPresenter == ACCOUNT_ID_DEFAULT) {
             viewState.hideSelectHistory()
             sourcesRepoImpl.getSources().subscribe({
 
@@ -44,8 +47,8 @@ class SearchNewsPresenter(
             })
         } else {
             Single.zip(sourcesRepoImpl.getSources(),
-                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId),
-                roomRepoImpl.getAccountById(accountId)) { all, like, account ->
+                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountIdPresenter),
+                roomRepoImpl.getAccountById(accountIdPresenter)) { all, like, account ->
 
                 allSources = all
 
@@ -119,15 +122,31 @@ class SearchNewsPresenter(
             } else {
                 var sourcesId = allSources.find { it.name == sourcesName }?.idSources
                 if (date == NOT_INPUT_DATE) {
-                    router.navigateTo(AllNewsScreen(accountId = accountId,
-                        sourcesId = sourcesId,
-                        sortBySources = sortBy, sourcesName = sourcesName))
-                } else {
-                    router.navigateTo(AllNewsScreen(accountId = accountId,
+                    var x = HistorySelect(
+                        0, accountID = accountIdPresenter,
                         sourcesId = sourcesId,
                         sortBySources = sortBy,
-                        dateSources = stringFromDataPiker(date).formatDate(),
-                        sourcesName = sourcesName))
+                        sourcesName = sourcesName,
+                    )
+                    router.navigateTo(AllNewsScreen(accountIdPresenter, x))
+                    historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+                        .subscribe({}, {
+                            Log.d(ERROR_DB, it.localizedMessage)
+                        })
+                } else {
+                    var x = HistorySelect(
+                        0, accountID = accountIdPresenter,
+                        sourcesId = sourcesId,
+                        sortBySources = sortBy,
+                        sourcesName = sourcesName,
+                        dateSources = stringFromDataPiker(date).formatDate()
+                    )
+
+                    router.navigateTo(AllNewsScreen(accountIdPresenter, x))
+                    historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+                        .subscribe({}, {
+                            Log.d(ERROR_DB, it.localizedMessage)
+                        })
                 }
             }
         }
@@ -147,19 +166,36 @@ class SearchNewsPresenter(
         sourcesName: String,
     ) {
         if (sourcesName.isEmpty()) {
-            router.navigateTo(AllNewsScreen(accountId = accountId,
+
+
+            var x = HistorySelect(id = 0, accountID = accountIdPresenter,
                 keyWord = keyWord,
                 searchIn = searchIn,
-                sortByKeyWord = sortBy))
+                sortByKeyWord = sortBy)
+
+
+            router.navigateTo(AllNewsScreen(accountIdPresenter, x))
+            historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x)).subscribe({}, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            })
         } else {
             if (!allSources.map { it.name }.contains(sourcesName)) {
                 viewState.selectSources()
             } else {
                 var sourcesId = allSources.find { it.name == sourcesName }?.idSources
-                router.navigateTo(AllNewsScreen(accountId = accountId,
+
+                var x = HistorySelect(
+                    0, accountID = accountIdPresenter,
                     keyWord = keyWord,
                     searchIn = searchIn,
-                    sortByKeyWord = sortBy, sourcesId = sourcesId, sourcesName = sourcesName))
+                    sortByKeyWord = sortBy,
+                    sourcesId = sourcesId,
+                    sourcesName = sourcesName
+                )
+                router.navigateTo(AllNewsScreen(accountIdPresenter, x))
+                historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x)).subscribe({}, {
+                    Log.d(ERROR_DB, it.localizedMessage)
+                })
             }
         }
     }
