@@ -75,7 +75,7 @@ class SearchNewsPresenter(
                     return@zip like
                 }
                 if (like.isEmpty()) {
-                    viewState.hideSelectHistory()
+                    //viewState.hideSelectHistory()
                     return@zip all
                 } else {
                     for (j in like.size - 1 downTo 0) {

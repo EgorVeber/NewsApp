@@ -24,6 +24,14 @@
 <!--      <item name="autoCompleteTextViewStyle">@style/MyAutoCompleteTextViewStyle</item>-->
         <item name="materialCalendarTheme">@style/ThemeOverlay.App.DatePicker</item>
     </style>
-
-
+    <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSecondary">@color/black</item>
+        <item name="colorSecondaryVariant">@color/black</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/black</item>
+    </style>
 </resources>

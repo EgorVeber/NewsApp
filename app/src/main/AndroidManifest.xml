@@ -14,13 +14,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NewsAPI"
+        android:theme="@style/SplashTheme"
         tools:targetApi="31">
         <activity
             android:name=".view.activity.ActivityMain"
-            android:windowSoftInputMode="adjustPan"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:exported="true">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -54,7 +54,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     private val presenter: AuthorizationPresenter by moxyPresenter {
         AuthorizationPresenter(App.instance.router,
-            RoomRepoImpl(App.instance.newsDb.accountsDao()),SharedPreferenceAccount())
+            RoomRepoImpl(App.instance.newsDb.accountsDao()), SharedPreferenceAccount())
     }
 
     override fun onCreateView(
@@ -176,13 +176,13 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     override fun successSignIn(id: Int) {
         //binding.root.showSnackBarError("Successful authorization", "", {})
         presenter.openScreenProfile(id)
-      //  (requireActivity() as BottomNavigationSetIcon).setDefault()
+        //  (requireActivity() as BottomNavigationSetIcon).setDefault()
     }
 
     override fun successRegister(id: Int) {
         binding.root.showSnackBarError("Account created successfully", "", {})
         presenter.openScreenProfile(id)
-       // (requireActivity() as BottomNavigationSetIcon).setDefault()
+        // (requireActivity() as BottomNavigationSetIcon).setDefault()
     }
 
 
