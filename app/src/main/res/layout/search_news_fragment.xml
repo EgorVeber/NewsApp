@@ -151,7 +151,7 @@
         android:id="@+id/groupHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="titleHistory,deleteHistoryAll,recyclerHistory" />
+        app:constraint_referenced_ids="emptyHistory,titleHistory,deleteHistoryAll,recyclerHistory" />
 
     <TextView
         android:id="@+id/titleHistory"
@@ -172,6 +172,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="10dp"
         android:background="?selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
@@ -190,6 +191,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleHistory" />
 
+    <TextView
+        android:id="@+id/emptyHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Empty List"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerHistory"
+        app:layout_constraintEnd_toEndOf="@+id/recyclerHistory"
+        app:layout_constraintStart_toStartOf="@+id/recyclerHistory"
+        app:layout_constraintTop_toTopOf="@+id/recyclerHistory" />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkBoxSearchSources"

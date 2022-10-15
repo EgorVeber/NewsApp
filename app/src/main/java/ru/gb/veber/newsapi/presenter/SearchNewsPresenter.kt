@@ -213,7 +213,12 @@ class SearchNewsPresenter(
 
     fun getHistorySelect() {
         historySelectRepoImpl.getHistoryById(accountIdPresenter).subscribe({
-            viewState.setHistory(it.map(::mapToHistorySelect).reversed())
+            if (it.isEmpty()) {
+                viewState.emptyHistory()
+                viewState.setHistory(listOf())
+            } else {
+                viewState.setHistory(it.map(::mapToHistorySelect).reversed())
+            }
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })
@@ -226,6 +231,7 @@ class SearchNewsPresenter(
     fun clearHistory() {
         historySelectRepoImpl.deleteSelectById(accountIdPresenter).subscribe({
             viewState.setHistory(listOf())
+            viewState.emptyHistory()
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })

@@ -24,4 +24,6 @@ interface SearchNewsView : MvpView {
     fun pikerNegative()
     fun setHistory(map: List<HistorySelect>)
     fun hideSelectHistory()
+    @StateStrategyType(SkipStrategy::class)
+    fun emptyHistory()
 }

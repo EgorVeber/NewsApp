@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.TransitionManager
+import androidx.transition.*
 import com.google.android.material.datepicker.MaterialDatePicker
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -48,6 +45,10 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         override fun deleteHistoryItem(historySelect: HistorySelect) {
             presenter.deleteHistory(historySelect)
         }
+    }
+
+    override fun emptyHistory() {
+        binding.emptyHistory.show()
     }
 
     private val historySelectAdapter = HistorySelectAdapter(itemListener)
@@ -192,13 +193,25 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun searchInShow() {
-       TransitionManager.beginDelayedTransition(binding.root)
+
+        TransitionSet().also { transition ->
+            transition.duration = 400L
+            transition.addTransition(Fade())
+            transition.addTransition(ChangeBounds())
+            TransitionManager.beginDelayedTransition(binding.root, transition)
+        }
         binding.groupSearchIn.show()
         binding.groupSources.hide()
     }
 
     override fun sourcesInShow() {
-       TransitionManager.beginDelayedTransition(binding.root)
+
+        TransitionSet().also { transition ->
+            transition.duration = 400L
+            transition.addTransition(Fade())
+            transition.addTransition(ChangeBounds())
+            TransitionManager.beginDelayedTransition(binding.root, transition)
+        }
         binding.groupSearchIn.hide()
         binding.groupSources.show()
     }
