@@ -15,4 +15,7 @@ interface HistorySelectDao {
 
     @Query("Select * from history_select where account_id =:accountId")
     fun getHistoryById(accountId: Int): Single<List<HistorySelectDbEntity>>
+
+    @Query("Delete  from history_select where account_id =:accountIdPresenter")
+     fun deleteHistoryById(accountIdPresenter: Int): Completable
 }

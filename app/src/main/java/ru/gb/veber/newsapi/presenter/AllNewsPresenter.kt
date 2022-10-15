@@ -163,10 +163,10 @@ class AllNewsPresenter(
             } else if (sourcesID != 0) {
                 viewState.showSaveSources()
             }
-            viewState.clickNews(article)
             saveArticle(article, accountId)
         }
 
+        viewState.clickNews(article)
         if (article.isFavorites) viewState.setLikeResourcesActive()
         else viewState.setLikeResourcesNegative()
         viewState.sheetExpanded()

@@ -4,15 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.HistorySelectItemBinding
-import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.utils.hide
 import ru.gb.veber.newsapi.utils.show
 
 
 interface RecyclerListenerHistorySelect {
-    fun clickNews(historySelect: HistorySelect)
-    fun deleteFavorites(historySelect: HistorySelect)
+    fun clickHistoryItem(historySelect: HistorySelect)
+    fun deleteHistoryItem(historySelect: HistorySelect)
 }
 
 class HistorySelectAdapter(
@@ -44,7 +43,10 @@ class HistorySelectViewHolder(
     fun bind(item: HistorySelect) = with(binding) {
 
         root.setOnClickListener {
-            listener.clickNews(item)
+            listener.clickHistoryItem(item)
+        }
+        deleteHistoryItem.setOnClickListener {
+            listener.deleteHistoryItem(item)
         }
 
         if (item.keyWord.toString().isEmpty()) {

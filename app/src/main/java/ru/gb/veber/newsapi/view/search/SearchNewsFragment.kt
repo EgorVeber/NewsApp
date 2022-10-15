@@ -41,12 +41,12 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     private var datePiker = MaterialDatePicker.Builder.datePicker()
 
     private var itemListener = object : RecyclerListenerHistorySelect {
-        override fun clickNews(historySelect: HistorySelect) {
-
+        override fun clickHistoryItem(historySelect: HistorySelect) {
+            presenter.openScreenNewsHistory(historySelect)
         }
 
-        override fun deleteFavorites(historySelect: HistorySelect) {
-
+        override fun deleteHistoryItem(historySelect: HistorySelect) {
+            presenter.deleteHistory(historySelect)
         }
     }
 
@@ -101,7 +101,6 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
 
 
         binding.checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
-            // presenter.notifyAdapter(b)
             presenter.changeSearchCriteria(b)
         }
 
@@ -116,6 +115,10 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
             presenter.openScreenAllNewsSources(dateInput,
                 binding.searchSpinnerCountry.text.toString(),
                 selectedItem)
+        }
+
+        binding.deleteHistoryAll.setOnClickListener {
+            presenter.clearHistory()
         }
     }
 
@@ -178,7 +181,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun hideSelectHistory() {
-        // binding.grouphistopry.hide()
+        binding.groupHistory.hide()
     }
 
     override fun updateAdapter(likeSources: List<Sources>) {
@@ -189,13 +192,13 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun searchInShow() {
-        TransitionManager.beginDelayedTransition(binding.root)
+       TransitionManager.beginDelayedTransition(binding.root)
         binding.groupSearchIn.show()
         binding.groupSources.hide()
     }
 
     override fun sourcesInShow() {
-        TransitionManager.beginDelayedTransition(binding.root)
+       TransitionManager.beginDelayedTransition(binding.root)
         binding.groupSearchIn.hide()
         binding.groupSources.show()
     }

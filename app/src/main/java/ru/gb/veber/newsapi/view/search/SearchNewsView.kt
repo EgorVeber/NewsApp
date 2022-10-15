@@ -10,7 +10,6 @@ import ru.gb.veber.newsapi.model.Sources
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface SearchNewsView : MvpView {
     fun setSources(map: List<Sources>)
-    fun hideSelectHistory()
     fun updateAdapter(likeSources: List<Sources>)
     fun searchInShow()
     fun sourcesInShow()
@@ -24,4 +23,5 @@ interface SearchNewsView : MvpView {
     fun pikerPositive(l: Long)
     fun pikerNegative()
     fun setHistory(map: List<HistorySelect>)
+    fun hideSelectHistory()
 }

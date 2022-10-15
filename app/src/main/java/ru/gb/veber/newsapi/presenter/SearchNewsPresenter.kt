@@ -63,7 +63,6 @@ class SearchNewsPresenter(
                 likeSources = like
 
                 if (!account.saveSelectHistory) {
-                    viewState.hideSelectHistory()
                     accountHistorySelect = account.saveSelectHistory
                 }
 
@@ -75,6 +74,7 @@ class SearchNewsPresenter(
                     return@zip like
                 }
                 if (like.isEmpty()) {
+                    viewState.hideSelectHistory()
                     return@zip all
                 } else {
                     for (j in like.size - 1 downTo 0) {
@@ -107,7 +107,6 @@ class SearchNewsPresenter(
     fun changeSearchCriteria(b: Boolean) {
         if (!b) {
             viewState.searchInShow()
-
         } else {
             viewState.sourcesInShow()
         }
@@ -214,7 +213,27 @@ class SearchNewsPresenter(
 
     fun getHistorySelect() {
         historySelectRepoImpl.getHistoryById(accountIdPresenter).subscribe({
-            viewState.setHistory(it.map(::mapToHistorySelect))
+            viewState.setHistory(it.map(::mapToHistorySelect).reversed())
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
+    }
+
+    fun openScreenNewsHistory(historySelect: HistorySelect) {
+        router.navigateTo(AllNewsScreen(accountIdPresenter, historySelect))
+    }
+
+    fun clearHistory() {
+        historySelectRepoImpl.deleteSelectById(accountIdPresenter).subscribe({
+            viewState.setHistory(listOf())
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
+    }
+
+    fun deleteHistory(historySelect: HistorySelect) {
+        historySelectRepoImpl.deleteSelect(mapToHistorySelectDbEntity(historySelect)).subscribe({
+            getHistorySelect()
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })

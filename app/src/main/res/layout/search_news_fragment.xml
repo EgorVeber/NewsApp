@@ -147,9 +147,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="titleHistory,deleteHistoryAll,recyclerHistory" />
+
     <TextView
         android:id="@+id/titleHistory"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
@@ -158,9 +164,22 @@
         android:textColor="#DD000000"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/helperTextSources" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/deleteHistoryAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_baseline_delete_36"
+        app:layout_constraintBottom_toBottomOf="@id/titleHistory"
+        app:layout_constraintStart_toEndOf="@+id/titleHistory"
+        app:layout_constraintTop_toTopOf="@+id/titleHistory" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerHistory"

@@ -9,4 +9,5 @@ interface HistorySelectRepo {
     fun insertSelect(historyDbEntity: HistorySelectDbEntity): Completable
     fun deleteSelect(historyDbEntity: HistorySelectDbEntity): Completable
     fun getHistoryById(accountId: Int): Single<List<HistorySelectDbEntity>>
+   fun deleteSelectById(accountIdPresenter: Int):Completable
 }
