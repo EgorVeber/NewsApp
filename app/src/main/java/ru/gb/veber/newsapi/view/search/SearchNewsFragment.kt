@@ -3,18 +3,22 @@ package ru.gb.veber.newsapi.view.search
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
+import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
@@ -23,6 +27,8 @@ import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
+import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 
 
 class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedListener {
@@ -34,6 +40,17 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
 
     private var datePiker = MaterialDatePicker.Builder.datePicker()
 
+    private var itemListener = object : RecyclerListenerHistorySelect {
+        override fun clickNews(historySelect: HistorySelect) {
+
+        }
+
+        override fun deleteFavorites(historySelect: HistorySelect) {
+
+        }
+    }
+
+    private val historySelectAdapter = HistorySelectAdapter(itemListener)
 
     private val presenter: SearchNewsPresenter by moxyPresenter {
         SearchNewsPresenter(
@@ -57,7 +74,14 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.getSources()
+        presenter.getHistorySelect()
         initialization()
+    }
+
+    override fun setHistory(list: List<HistorySelect>) {
+        TransitionManager.beginDelayedTransition(binding.root)
+        Log.d("TAG", "setHistory() called with: list = $list")
+        historySelectAdapter.historySelectList = list
     }
 
     private fun initialization() {
@@ -72,6 +96,10 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
             }
         }
 
+        binding.recyclerHistory.adapter = historySelectAdapter
+        binding.recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
+
+
         binding.checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
             // presenter.notifyAdapter(b)
             presenter.changeSearchCriteria(b)
@@ -85,7 +113,9 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
             if (binding.spinnerSortBySources.selectedItemPosition == 0) {
                 selectedItem = ""
             }
-            presenter.openScreenAllNewsSources(dateInput, binding.searchSpinnerCountry.text.toString(), selectedItem)
+            presenter.openScreenAllNewsSources(dateInput,
+                binding.searchSpinnerCountry.text.toString(),
+                selectedItem)
         }
     }
 
@@ -128,7 +158,10 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
                     searchIn = binding.spinnerSearchIn.selectedItem.toString()
                 }
 
-                presenter.openScreenAllNews(keyWord, searchIn, sortBy, binding.searchSpinnerCountry.text.toString())
+                presenter.openScreenAllNews(keyWord,
+                    searchIn,
+                    sortBy,
+                    binding.searchSpinnerCountry.text.toString())
             }
             binding.searchView.clearFocus();
             return true

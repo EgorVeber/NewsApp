@@ -77,6 +77,20 @@ fun mapToHistorySelectDbEntity(item: HistorySelect): HistorySelectDbEntity {
     )
 }
 
+fun mapToHistorySelect(item: HistorySelectDbEntity): HistorySelect {
+    return HistorySelect(
+        id = item.id,
+        accountID = item.accountID,
+        keyWord = item.keyWord,
+        searchIn = item.searchIn,
+        sortByKeyWord = item.sortByKeyWord,
+        sortBySources = item.sortBySources,
+        sourcesId = item.sourcesId,
+        dateSources = item.dateSources,
+        sourcesName = item.sourcesName
+    )
+}
+
 
 fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
     return ArticleDbEntity(

@@ -19,7 +19,7 @@ class HistorySelectRepoImpl(private val historySelectDao: HistorySelectDao) : Hi
         return historySelectDao.deleteASelect(historyDbEntity).subscribeDefault()
     }
 
-    override fun getHistory(): Single<List<HistorySelectDbEntity>> {
-        return historySelectDao.getHistory().subscribeDefault()
+    override fun getHistoryById(accountId: Int): Single<List<HistorySelectDbEntity>> {
+        return historySelectDao.getHistoryById(accountId).subscribeDefault()
     }
 }

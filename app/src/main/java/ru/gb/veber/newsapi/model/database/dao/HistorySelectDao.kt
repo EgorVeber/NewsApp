@@ -13,6 +13,6 @@ interface HistorySelectDao {
     @Delete
     fun deleteASelect(historyDbEntity: HistorySelectDbEntity): Completable
 
-    @Query("Select * from history_select")
-    fun getHistory(): Single<List<HistorySelectDbEntity>>
+    @Query("Select * from history_select where account_id =:accountId")
+    fun getHistoryById(accountId: Int): Single<List<HistorySelectDbEntity>>
 }

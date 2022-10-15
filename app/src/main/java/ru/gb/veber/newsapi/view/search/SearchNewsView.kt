@@ -4,6 +4,7 @@ import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.SkipStrategy
 import moxy.viewstate.strategy.StateStrategyType
+import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 
 @StateStrategyType(AddToEndSingleStrategy::class)
@@ -22,4 +23,5 @@ interface SearchNewsView : MvpView {
 
     fun pikerPositive(l: Long)
     fun pikerNegative()
+    fun setHistory(map: List<HistorySelect>)
 }

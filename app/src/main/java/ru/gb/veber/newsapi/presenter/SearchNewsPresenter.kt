@@ -35,6 +35,10 @@ class SearchNewsPresenter(
         return true
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     fun getSources() {
         if (accountIdPresenter == ACCOUNT_ID_DEFAULT) {
             viewState.hideSelectHistory()
@@ -206,5 +210,13 @@ class SearchNewsPresenter(
 
     fun pikerNegative() {
         viewState.pikerNegative()
+    }
+
+    fun getHistorySelect() {
+        historySelectRepoImpl.getHistoryById(accountIdPresenter).subscribe({
+            viewState.setHistory(it.map(::mapToHistorySelect))
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
     }
 }

@@ -23,5 +23,5 @@ interface AllNewsView:MvpView {
     fun setLikeResourcesActive()
     fun removeBadge()
     fun addBadge()
-     fun changeNews(articleListHistory: MutableList<Article>)
+    fun changeNews(articleListHistory: MutableList<Article>)
 }

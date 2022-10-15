@@ -8,5 +8,5 @@ import ru.gb.veber.newsapi.model.database.entity.HistorySelectDbEntity
 interface HistorySelectRepo {
     fun insertSelect(historyDbEntity: HistorySelectDbEntity): Completable
     fun deleteSelect(historyDbEntity: HistorySelectDbEntity): Completable
-    fun getHistory(): Single<List<HistorySelectDbEntity>>
+    fun getHistoryById(accountId: Int): Single<List<HistorySelectDbEntity>>
 }
