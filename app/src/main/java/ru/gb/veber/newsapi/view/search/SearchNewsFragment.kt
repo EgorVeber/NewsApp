@@ -89,8 +89,6 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun setHistory(list: List<HistorySelect>) {
-        TransitionManager.beginDelayedTransition(binding.root)
-        Log.d("TAG", "setHistory() called with: list = $list")
         historySelectAdapter.historySelectList = list
     }
 

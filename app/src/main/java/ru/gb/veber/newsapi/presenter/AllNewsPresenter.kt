@@ -133,9 +133,10 @@ class AllNewsPresenter(
         if (accountId != ACCOUNT_ID_DEFAULT) {
             var isLikeSources = likeSources.find { it.idSources == article.source.id }?.id ?: 0
             sourcesID = allSources.find { it.idSources == article.source.id }?.id ?: 0
-            if (isLikeSources != 0) {
+
+            if (isLikeSources != 0 || sourcesID == 0) {
                 viewState.hideSaveSources()
-            } else if (sourcesID != 0) {
+            } else {
                 viewState.showSaveSources()
             }
             saveArticle(article)

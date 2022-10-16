@@ -2,11 +2,14 @@ package ru.gb.veber.newsapi.view.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.HistorySelectItemBinding
 import ru.gb.veber.newsapi.model.HistorySelect
+import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.utils.hide
 import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.view.sources.SourcesDiffUtil
 
 
 interface RecyclerListenerHistorySelect {
@@ -20,9 +23,12 @@ class HistorySelectAdapter(
 
     var historySelectList: List<HistorySelect> = listOf()
         set(value) {
+            var diffUtil = HistoryDiffUtil(field, value)
+            var diffResult = DiffUtil.calculateDiff(diffUtil)
             field = value
-            notifyDataSetChanged()
+            diffResult.dispatchUpdatesTo(this)
         }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistorySelectViewHolder {
         return HistorySelectViewHolder(HistorySelectItemBinding.inflate(
@@ -45,6 +51,7 @@ class HistorySelectViewHolder(
         root.setOnClickListener {
             listener.clickHistoryItem(item)
         }
+
         deleteHistoryItem.setOnClickListener {
             listener.deleteHistoryItem(item)
         }
