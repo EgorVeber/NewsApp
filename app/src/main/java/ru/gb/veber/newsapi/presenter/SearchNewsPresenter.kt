@@ -27,8 +27,8 @@ class SearchNewsPresenter(
 
     private lateinit var allSources: MutableList<Sources>
     private lateinit var likeSources: List<Sources>
-    private var accountHistorySelect: Boolean = false
     private lateinit var accountMain: Account
+    private var accountHistorySelect: Boolean = false
 
     fun onBackPressedRouter(): Boolean {
         router.exit()

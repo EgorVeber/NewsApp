@@ -2,6 +2,7 @@ package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.SkipStrategy
 import moxy.viewstate.strategy.StateStrategyType
 import ru.gb.veber.newsapi.model.Article
 
@@ -16,4 +17,13 @@ interface TopNewsView : MvpView {
     fun visibilityFilterButton()
     fun successInsertArticle()
     fun hideFavorites()
+    fun emptyList()
+    fun changeNews(articleListHistory: MutableList<Article>)
+    fun setLikeResourcesNegative()
+    fun setLikeResourcesActive()
+    @StateStrategyType(SkipStrategy::class)
+    fun removeBadge()
+    @StateStrategyType(SkipStrategy::class)
+    fun addBadge()
+    fun sheetExpanded()
 }

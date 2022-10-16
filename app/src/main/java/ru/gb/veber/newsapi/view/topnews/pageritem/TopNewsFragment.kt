@@ -51,20 +51,27 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
         override fun clickNews(article: Article) {
             presenter.clickNews(article)
-            presenter.saveArticle(article, arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
         }
 
         override fun deleteFavorites(article: Article) {
-            TODO("Not yet implemented")
+
         }
+    }
+
+    override fun emptyList() {
+        binding.progressBarTopNews.hide()
+        binding.recyclerNews.show()
+        binding.statusTextList.show()
     }
 
     private val newsAdapter = TopNewsAdapter(itemListener)
 
     private val presenter: TopNewsPresenter by moxyPresenter {
         TopNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
-            App.instance.router, ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            RoomRepoImpl(App.instance.newsDb.accountsDao()))
+            App.instance.router,
+            ArticleRepoImpl(App.instance.newsDb.articleDao()),
+            RoomRepoImpl(App.instance.newsDb.accountsDao()),
+            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 
     companion object {
@@ -88,119 +95,93 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
-            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL)
         presenter.getAccountSettings(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
-
-    private var listener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (!recyclerView.canScrollVertically(1)) {
-                Log.d("recyclerNews", "Нижняя точка 1 ")
-            }
-        }
-
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-            if (dy > 0) {
-
-            } else {
-            }
-        }
-    }
-
 
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
 
-//        var itemAnimator = binding.recyclerNews.itemAnimator
-//        if(itemAnimator is DefaultItemAnimator){
-//            itemAnimator.supportsChangeAnimations=false
-//        }
-
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
             addBottomSheetCallback(callBackBehavior)
         }
 
-        binding.recyclerNews.addOnScrollListener(listener)
 
-        binding.filterButton.setOnClickListener {
-            if (bSheetB.state == BottomSheetBehavior.STATE_EXPANDED) {
-                presenter.loadNewsCountry(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
-                    "us")
-            }
-            presenter.filterButtonClick()
-        }
+//        binding.filterButton.setOnClickListener {
+//            if (bSheetB.state == BottomSheetBehavior.STATE_EXPANDED) {
+//                presenter.loadNewsCountry(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
+//                    "us")
+//            }
+//            presenter.filterButtonClick()
+//        }
     }
 
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
-        //Чтоб карсиво diff util работали не обязательно
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = articles
+        binding.progressBarTopNews.hide()
+        binding.recyclerNews.show()
+    }
+
+    override fun changeNews(articleListHistory: MutableList<Article>) {
+        newsAdapter.articles = articleListHistory
+    }
+
+    override fun sheetExpanded() {
+        bSheetB.expanded()
     }
 
     override fun clickNews(article: Article) {
-        if (article.isFavorites) {
-            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
-        } else {
-            binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
-        }
 
-
-        binding.filterButton.visibility = View.INVISIBLE
         hideFilter()
-
-        bSheetB.state = BottomSheetBehavior.STATE_EXPANDED
-
-
-        binding.imageViewAll.show()
-        binding.titleNews.show()
-        binding.dateNews.show()
-        binding.authorText.show()
-        binding.descriptionNews.show()
-        binding.imageViewAll.loadGlideNot(article.urlToImage)
-        binding.dateNews.text = stringFromData(article.publishedAt).formatDateDay()
-        binding.titleNews.text = article.title
-
-
-        var spanableStringBuilder =
-            SpannableStringBuilder(article.description)
-        spanableStringBuilder.setSpan(
-            ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
-            spanableStringBuilder.length - 1,
-            spanableStringBuilder.length,
-            Spannable.SPAN_INCLUSIVE_INCLUSIVE
-        )
-
-        binding.descriptionNews.text = spanableStringBuilder
-        binding.authorText.text = article.author
-        binding.sourceText.text = article.source.name
-        spanableStringBuilder.removeSpan(spanableStringBuilder)
-
-
+        with(binding) {
+            imageViewAll.loadGlideNot(article.urlToImage)
+            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
+            titleNews.text = article.title
+            authorText.text = article.author
+            sourceText.text = article.source.name
+            setSpanDescription(article)
+        }
 
         binding.descriptionNews.setOnClickListener { view ->
             presenter.openScreenWebView(article.url)
         }
 
-        binding.imageFavorites.setOnClickListener { view ->
-            if (article.isFavorites) {
-                presenter.deleteFavorites(article)
-                binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
-                article.isFavorites = false
-                (requireActivity() as EventAddingBadges).removeBadge()
-            } else {
-                Log.d("TAG", "else")
-                presenter.saveArticleLike(article,
-                    arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
-                binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
-                article.isFavorites = true
-                (requireActivity() as EventAddingBadges).addBadge()
-            }
+        binding.imageFavorites.setOnClickListener {
+            presenter.setOnClickImageFavorites(article)
         }
+    }
+
+
+    private fun setSpanDescription(article: Article) {
+        SpannableStringBuilder(article.description).also { span ->
+            span.setSpan(
+                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+                span.length - 1,
+                span.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            binding.descriptionNews.text = span
+            span.removeSpan(span)
+        }
+    }
+
+    override fun setLikeResourcesActive() {
+        binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+    }
+
+    override fun setLikeResourcesNegative() {
+        binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+    }
+
+    override fun addBadge() {
+        (requireActivity() as EventAddingBadges).addBadge()
+    }
+
+    override fun removeBadge() {
+        (requireActivity() as EventAddingBadges).removeBadge()
     }
 
     override fun showFilter() {
@@ -234,11 +215,11 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
     override fun successInsertArticle() {
-        //Либо без задержки нее важно особо
-        Handler(Looper.getMainLooper()).postDelayed({
-            presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
-                arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
-        }, 2000)
+//        //Либо без задержки нее важно особо
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL,
+//                arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+//        }, 2000)
     }
 
     override fun hideFavorites() {
@@ -253,12 +234,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
                     presenter.behaviorHide()
                     binding.filterButton.visibility = View.VISIBLE
                     binding.filterButton.setImageResource(R.drawable.filter_icon)
-
-
-                }
-
-                BottomSheetBehavior.STATE_EXPANDED -> {
-
                 }
             }
         }
@@ -267,11 +242,18 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
     }
 
+
     override fun onBackPressedRouter(): Boolean {
-        Log.d("Back", "onBackPressedRouter() FragmentNew override")
         return presenter.onBackPressedRouter()
     }
 
+    override fun getStateBehavior(): Int {
+        return bSheetB.state
+    }
+
+    override fun setStateBehavior() {
+        bSheetB.collapsed()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -279,22 +261,4 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.d("@@@onSaveInstanceState", "onSaveInstanceState() called with: outState = $outState")
-    }
-
-    override fun setMenuVisibility(menuVisible: Boolean) {
-        super.setMenuVisibility(menuVisible)
-        Log.d("@@@setMenuVisibility", "setMenuVisibility() called with: menuVisible = $menuVisible")
-    }
-
-    override fun getStateBehavior(): Int {
-        Log.d("supportFragmentManager", "getStateBehavior() called ${bSheetB.state}")
-        return bSheetB.state
-    }
-
-    override fun setStateBehavior() {
-        bSheetB.collapsed()
-    }
 }

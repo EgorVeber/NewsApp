@@ -10,7 +10,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:padding="5dp" />
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        android:paddingBottom="?actionBarSize"
+        />
+
+    <TextView
+        android:id="@+id/statusTextList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:text="Empty List"
+        android:textColor="@color/black"
+        android:textSize="36sp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressBarTopNews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/filterButton"

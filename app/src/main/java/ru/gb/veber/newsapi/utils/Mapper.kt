@@ -4,6 +4,12 @@ import ru.gb.veber.newsapi.model.*
 import ru.gb.veber.newsapi.model.database.entity.*
 
 
+
+
+fun mapToArticleDTO(item: ArticlesDTO): List<Article> {
+    return item.articles.map(::mapToArticle)
+}
+
 fun mapToArticle(item: ArticleDTO): Article {
     return Article(
         author = item.author,
@@ -16,6 +22,7 @@ fun mapToArticle(item: ArticleDTO): Article {
         urlToImage = item.urlToImage,
     )
 }
+
 
 
 fun mapToSourcesDbEntity(sourcesId: String, sourcesName: String): Source {

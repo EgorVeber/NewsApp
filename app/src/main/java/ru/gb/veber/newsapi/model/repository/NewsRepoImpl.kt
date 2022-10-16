@@ -47,8 +47,6 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
                 it.author = "Anonymous author"
             }
             it
-        }.also {
-            it[0].viewType = 1
         }
     }
 

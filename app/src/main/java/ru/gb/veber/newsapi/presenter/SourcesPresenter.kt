@@ -53,27 +53,26 @@ class SourcesPresenter(
                 allSources = all
                 like.map { it.isLike = true }
                 likeSources = like
-                if (like.isEmpty()) {
-                    return@zip all
-                } else {
-                    for (j in like.size - 1 downTo 0) {
-                        for (i in all.indices) {
-                            if (like[j].idSources == all[i].idSources) {
-                                all.removeAt(i)
-                                all.add(0, like[j].also { it.isLike = true })
-                            }
+
+                for (j in like.size - 1 downTo 0) {
+                    for (i in all.indices) {
+                        if (like[j].idSources == all[i].idSources) {
+                            all.removeAt(i)
+                            all.add(0, like[j].also { it.isLike = true })
                         }
                     }
-                    all.forEach { sor ->
-                        article.forEach { art ->
-                            if (sor.idSources == art.sourceId) {
-                                if (art.isFavorites) sor.totalFavorites += 1
-                                else sor.totalHistory += 1
-                            }
-                        }
-                    }
-                    all
                 }
+
+                all.forEach { sor ->
+                    article.forEach { art ->
+                        if (sor.idSources == art.sourceId) {
+                            if (art.isFavorites) sor.totalFavorites += 1
+                            else sor.totalHistory += 1
+                        }
+                    }
+                }
+
+                all
             }.subscribe({
                 viewState.setSources(it)
             }, {

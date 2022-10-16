@@ -32,7 +32,7 @@ class AllNewsPresenter(
     MvpPresenter<AllNewsView>() {
 
     private var saveHistory = false
-    private var likeSources: List<Sources> = listOf()
+    private var likeSources: MutableList<Sources> = mutableListOf()
     private var allSources: List<Sources> = listOf()
     private var sourcesID: Int = 0
 
@@ -63,7 +63,7 @@ class AllNewsPresenter(
 
     private fun getSourcesLike() {
         accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId).subscribe({
-            likeSources = it
+            likeSources = it.toMutableList()
         }, {
             Log.d("getSourcesLike", it.localizedMessage)
         }).disposebleBy(bag)
@@ -73,40 +73,12 @@ class AllNewsPresenter(
         sourcesRepoImpl.getSources().subscribe({
             allSources = it
         }, {
-            Log.d("getSourcesLike", it.localizedMessage)
-        }).disposebleBy(bag)
-    }
-
-    fun saveSources() {
-        accountSourcesRepoImpl.insert(AccountSourcesDbEntity(accountId, sourcesID)).subscribe({
-            viewState.successSaveSources()
-            accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId).subscribe({
-                likeSources = it
-                Log.d("getSourcesLike", it.toString())
-            }, {
-                Log.d("getSourcesLike", it.localizedMessage)
-            })
-        }, {
-            Log.d("saveSources", "error saveSources  " + it.localizedMessage)
+            Log.d("getSourcesAll", it.localizedMessage)
         }).disposebleBy(bag)
     }
 
 
     fun getNews(historySelect: HistorySelect?) {
-//        historySelectRepoImpl.insertSelect(HistorySelectDbEntity(0,
-//            accountId,
-//            keyWord.toString(),
-//            searchIn.toString(),
-//            sortByKeyWord.toString(),
-//            sortBySources.toString(),
-//            sourcesId.toString(),
-//            dateSources.toString(),
-//            sourcesName.toString())).subscribe({
-//            Log.d("historySelectRepoImpl", "success insert")
-//        }, {
-//            Log.d("historySelectRepoImpl", "error insert" + it.localizedMessage)
-//        })
-
 
         viewState.setTitle(
             historySelect?.keyWord,
@@ -166,29 +138,38 @@ class AllNewsPresenter(
             } else if (sourcesID != 0) {
                 viewState.showSaveSources()
             }
-            saveArticle(article, accountId)
+            saveArticle(article)
         }
-
+        Log.d("article.source.id", article.source.id.toString())
         viewState.clickNews(article)
         if (article.isFavorites) viewState.setLikeResourcesActive()
         else viewState.setLikeResourcesNegative()
         viewState.sheetExpanded()
     }
 
-    private fun saveArticle(article: Article, i: Int) {
-        if (accountId != ACCOUNT_ID_DEFAULT) {
-            if (saveHistory) {
-                if (!article.isFavorites && !article.isHistory) {
-                    article.isHistory = true
-                    article.dateAdded = Date().formatDateTime()
-                    articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId))
-                        .subscribe({
-                            articleListHistory.find { it.title == article.title }?.isHistory = true
-                            viewState.changeNews(articleListHistory)
-                        }, {
-                            Log.d(ERROR_DB, it.localizedMessage)
-                        }).disposebleBy(bag)
-                }
+
+    fun saveSources() {
+        accountSourcesRepoImpl.insert(AccountSourcesDbEntity(accountId, sourcesID)).subscribe({
+            viewState.successSaveSources()
+            getSourcesLike()
+        }, {
+            Log.d("saveSources", "error saveSources  " + it.localizedMessage)
+        }).disposebleBy(bag)
+    }
+
+
+    private fun saveArticle(article: Article) {
+        if (saveHistory) {
+            if (!article.isFavorites && !article.isHistory) {
+                article.isHistory = true
+                article.dateAdded = Date().formatDateTime()
+                articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId))
+                    .subscribe({
+                        articleListHistory.find { it.title == article.title }?.isHistory = true
+                        viewState.changeNews(articleListHistory)
+                    }, {
+                        Log.d(ERROR_DB, it.localizedMessage)
+                    }).disposebleBy(bag)
             }
         }
     }
