@@ -9,6 +9,7 @@ import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HEADER_NEWS
@@ -21,10 +22,10 @@ class TopNewsPresenter(
     private val articleRepoImpl: ArticleRepoImpl,
     private val roomRepoImpl: RoomRepoImpl,
     private val accountIdPresenter: Int,
+    private val countryRepoImpl: CountryRepoImpl,
 ) :
     MvpPresenter<TopNewsView>() {
 
-    private var checkFilter = false
     private var saveHistory = false
     private val bag = CompositeDisposable()
     private var articleListHistory: MutableList<Article> = mutableListOf()
@@ -32,11 +33,12 @@ class TopNewsPresenter(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
+
     }
 
-    fun getAccountSettings(accountId: Int) {
+    fun getAccountSettings() {
         if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
-            roomRepoImpl.getAccountById(accountId).subscribe({
+            roomRepoImpl.getAccountById(accountIdPresenter).subscribe({
                 saveHistory = it.saveHistory
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
@@ -79,16 +81,17 @@ class TopNewsPresenter(
 
     fun clickNews(article: Article) {
 
-        if(accountIdPresenter!= ACCOUNT_ID_DEFAULT){
+        if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
             saveArticle(article)
         }
         viewState.clickNews(article)
         if (article.isFavorites) viewState.setLikeResourcesActive()
         else viewState.setLikeResourcesNegative()
+        viewState.hideFilter()
         viewState.sheetExpanded()
     }
 
-    fun saveArticle(article: Article) {
+    private fun saveArticle(article: Article) {
         if (saveHistory) {
             if (!article.isFavorites && !article.isHistory) {
                 article.isHistory = true
@@ -145,11 +148,6 @@ class TopNewsPresenter(
         }
     }
 
-
-    fun behaviorHide() {
-        checkFilter = false
-    }
-
     fun openScreenWebView(url: String) {
         router.navigateTo(WebViewScreen(url))
     }
@@ -165,27 +163,32 @@ class TopNewsPresenter(
     }
 
 
-//    fun filterButtonClick() {
-//        checkFilter = if (!checkFilter) {
-//            viewState.showFilter()
-//            true
-//        } else {
-//            viewState.hideFilter()
-//            false
-//        }
-//    }
+    fun filterButtonClick() {
+        viewState.sheetExpanded()
+        viewState.hideGroupArticle()
 
+        viewState.showGroupFilter()
 
-    //    fun loadNewsCountry(category: String, country: String) {
-//        newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, country).map { articles ->
-//            articles.articles.map(::mapToArticle).also {
-//                newsRepoImpl.changeRequest(it)
-//            }
-//        }.subscribe({
-//            viewState.setSources(it)
-//        }, {
-//            Log.d("TAG", it.localizedMessage)
-//        })
-//    }
+        viewState.hideFilter()
+        viewState.showViewpagerButton()
+    }
 
+    fun updateViewPager() {
+
+    }
+
+    fun behaviorCollapsed() {
+        viewState.hideGroupFilter()
+        viewState.hideViewPagerButton()
+        viewState.showFilter()
+        viewState.showGroupArticle()
+    }
+
+    fun getCountry() {
+        countryRepoImpl.getCountry().subscribe({
+            viewState.setCountry(it.map { country -> country.id })
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
+    }
 }

@@ -2,9 +2,7 @@ package ru.gb.veber.newsapi.model.repository.room
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.model.database.dao.ArticleDao
 import ru.gb.veber.newsapi.model.database.dao.CountryDao
-import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.model.database.entity.CountryDbEntity
 import ru.gb.veber.newsapi.utils.subscribeDefault
 

@@ -1,10 +1,7 @@
 package ru.gb.veber.newsapi.view.search
 
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
-import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
-import ru.gb.veber.newsapi.model.Sources
 
 class HistoryDiffUtil(
     private val oldItems: List<HistorySelect>,

@@ -28,8 +28,13 @@ import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Compan
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SPORTS
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.TECHNOLOGY
 
+
+interface EventTopNews {
+    fun updateViewPager(string: String)
+}
+
 class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
-    BackPressedListener {
+    BackPressedListener, EventTopNews {
 
     private var _binding: TopNewsViewPagerFragmentBinding? = null
     private val binding get() = _binding!!
@@ -89,5 +94,10 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
                 }
             }
         }
+    }
+
+    override fun updateViewPager(string: String) {
+//        binding.viewPager.adapter= TopNewsViewPagerAdapter (requireActivity(),
+//        arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 }

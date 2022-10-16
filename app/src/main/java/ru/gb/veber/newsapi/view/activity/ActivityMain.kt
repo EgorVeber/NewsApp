@@ -159,42 +159,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         }, {
         })
 
-
-//11
-//        supportFragmentManager.fragments.forEach {
-//            if (it is EventBehaviorToActivity) {
-//                if ((it as EventBehaviorToActivity).getStateBehavior() == 3) {
-//                    (it as EventBehaviorToActivity).setStateBehavior()
-//                    Log.d("supportFragmentManager", "onBackPressed() called")
-//                    return@forEach
-//                } else if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
-//                    Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
-//                    Log.d("supportFragmentManager", "count  = " +
-//                            supportFragmentManager.backStackEntryCount.toString() + " backStack = " + backStack.toString())
-//                } else {
-//                    if (it is BackPressedListener && it.onBackPressedRouter()) {
-//                        return@forEach
-//                    }
-//                }
-//            }
-//        }
-////
-////        if (supportFragmentManager.fragments.last() !is WebViewFragment &&
-////            supportFragmentManager.fragments.last() !is EditAccountFragment &&
-////            supportFragmentManager.fragments.last() !is AllNewsFragment
-////        ) {
-////            binding.bottomNavigationView.selectedItemId = R.id.topNews
-////            Log.d("supportFragmentManager", "last")
-////        }
-//
-//
-//        backStack = 0
-//        Completable.create {
-//            it.onComplete()
-//        }.delay(2000L, TimeUnit.MILLISECONDS).subscribe({
-//            backStack = 1
-//        }, {
-//        })
     }
 
     override fun openMainScreen() {

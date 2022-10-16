@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.utils
+package ru.gb.veber.newsapi.view.search
 
 import android.content.Context
 import android.support.annotation.NonNull
@@ -9,9 +9,11 @@ import android.widget.ArrayAdapter
 import android.widget.Filter
 import ru.gb.veber.newsapi.databinding.SelectSourcesAutocompileBinding
 import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.utils.hide
+import ru.gb.veber.newsapi.utils.show
 import java.util.*
 
-class AutoCompleteCountryAdapter(
+class SourcesAdapterAutoCompile(
     context: Context,
     countryList: List<Sources>,
 ) : ArrayAdapter<Sources>(context, 0, countryList) {

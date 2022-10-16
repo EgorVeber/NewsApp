@@ -1,8 +1,6 @@
 package ru.gb.veber.newsapi.view.sources
 
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
-import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.Sources
 
 class SourcesDiffUtil(

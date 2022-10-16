@@ -40,6 +40,10 @@ fun BottomSheetBehavior<ConstraintLayout>.collapsed() {
     state = BottomSheetBehavior.STATE_COLLAPSED
 }
 
+fun BottomSheetBehavior<ConstraintLayout>.half() {
+    state = BottomSheetBehavior.STATE_HALF_EXPANDED
+}
+
 fun BottomSheetBehavior<ConstraintLayout>.expanded() {
     state = BottomSheetBehavior.STATE_EXPANDED
 }

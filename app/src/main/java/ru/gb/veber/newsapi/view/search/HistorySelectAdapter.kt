@@ -6,10 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.HistorySelectItemBinding
 import ru.gb.veber.newsapi.model.HistorySelect
-import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.utils.hide
 import ru.gb.veber.newsapi.utils.show
-import ru.gb.veber.newsapi.view.sources.SourcesDiffUtil
 
 
 interface RecyclerListenerHistorySelect {

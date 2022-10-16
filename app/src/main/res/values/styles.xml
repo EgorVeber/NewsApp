@@ -72,13 +72,12 @@
 
 
     <style name="MyFilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
-        <item name="hintTextColor">@color/selectedColor</item>
         <item name="boxStrokeWidth">0.8dp</item>
         <item name="boxStrokeColor">@color/selectedColor</item>
         <item name="endIconMode">none</item>
         <item name="boxBackgroundColor">@color/white</item>
     </style>
-
+<!--    <item name="hintTextColor">@color/selectedColor</item>-->
 
     <style name="MyMaterialButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="cornerRadius">10dp</item>

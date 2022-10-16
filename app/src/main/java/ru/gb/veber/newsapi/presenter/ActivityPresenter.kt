@@ -2,11 +2,9 @@ package ru.gb.veber.newsapi.presenter
 
 import android.util.Log
 import com.github.terrakok.cicerone.Router
-import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.*
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.database.entity.CountryDbEntity
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl

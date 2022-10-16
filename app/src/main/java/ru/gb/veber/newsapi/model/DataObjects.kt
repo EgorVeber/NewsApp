@@ -21,6 +21,7 @@ data class Article(
     var dateAdded: String? = Date().formatDateTime(),
 )
 
+
 data class Sources(
     val id: Int,
     val idSources: String? = "",
@@ -31,8 +32,8 @@ data class Sources(
     var language: String? = "",
     var country: String? = "",
     var isLike: Boolean = false,
-    var totalHistory: Int=0,
-    var totalFavorites: Int=0,
+    var totalHistory: Int = 0,
+    var totalFavorites: Int = 0,
 )
 
 @Parcelize

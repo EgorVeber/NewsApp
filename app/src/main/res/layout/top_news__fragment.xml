@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,8 +13,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:padding="5dp"
-        android:paddingBottom="?actionBarSize"
-        />
+        android:paddingBottom="?actionBarSize" />
 
     <TextView
         android:id="@+id/statusTextList"
@@ -42,6 +42,17 @@
         app:srcCompat="@drawable/filter_icon"
         app:tint="@color/white" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/updateViewPager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/selectedColor"
+        android:text="Фильтр"
+        android:visibility="gone"
+        app:layout_behavior=".view.topnews.BehaviorActionButton"
+        app:srcCompat="@drawable/check_icon"
+        app:tint="@color/white" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_sheet_container"
         android:layout_width="match_parent"
@@ -54,24 +65,39 @@
         app:behavior_peekHeight="0dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <WebView
-            android:id="@+id/webNews"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/countryTextInput"
+            style="@style/MyFilledBox"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="Select Country"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:endIconMode="clear_text"
+            app:helperText="Default All Country"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.8"
+            >
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/countryAutoComplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:paddingStart="5dp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/groupArticle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageViewAll"
                     android:layout_width="match_parent"
@@ -150,38 +176,6 @@
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/imageViewAll"
                     app:layout_constraintEnd_toEndOf="parent" />
-
-                <TextView
-                    android:id="@+id/filterTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:paddingEnd="15dp"
-                    android:text="Критерии поиска"
-                    android:textColor="@color/black"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/countrySpiner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_margin="20dp"
-                    android:entries="@array/countryName"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/filterTitle" />
-
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchViewKeyWord"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/countrySpiner" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

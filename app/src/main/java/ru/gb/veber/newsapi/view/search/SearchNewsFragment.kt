@@ -35,7 +35,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
 
     private var _binding: SearchNewsFragmentBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: AutoCompleteCountryAdapter
+    private lateinit var adapter: SourcesAdapterAutoCompile
     private var dateInput: String = NOT_INPUT_DATE
 
     private var datePiker = MaterialDatePicker.Builder.datePicker()
@@ -184,7 +184,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun setSources(sources: List<Sources>) = with(binding) {
-        adapter = AutoCompleteCountryAdapter(requireContext(), sources)
+        adapter = SourcesAdapterAutoCompile(requireContext(), sources)
         searchSpinnerCountry.setAdapter(adapter)
     }
 
@@ -194,7 +194,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
 
     override fun updateAdapter(likeSources: List<Sources>) {
         binding.searchTextInput.editText?.setText("")
-        adapter = AutoCompleteCountryAdapter(requireContext(), likeSources)
+        adapter = SourcesAdapterAutoCompile(requireContext(), likeSources)
         binding.searchSpinnerCountry.setAdapter(adapter)
         binding.searchSpinnerCountry.showDropDown()
     }
