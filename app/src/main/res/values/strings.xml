@@ -8,4 +8,6 @@ You agree to the User Agreement and Commenting Rules.</string>
     <string name="totalHistory">Total History</string>
     <string name="select_country">Select country</string>
     <string name="back">back</string>
+    <string name="category">category:</string>
+    <string name="language">language:</string>
 </resources>

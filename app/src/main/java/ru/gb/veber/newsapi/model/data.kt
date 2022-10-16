@@ -1,12 +1,9 @@
 package ru.gb.veber.newsapi.model
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import ru.gb.veber.newsapi.utils.formatDateTime
 import java.util.*
-
 
 data class Article(
     var id: Int? = 0,
@@ -47,7 +44,7 @@ data class HistorySelect(
     var sourcesId: String? = "",
     var dateSources: String? = "",
     var sourcesName: String? = "",
-): Parcelable
+) : Parcelable
 
 
 data class Source(

@@ -46,7 +46,6 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     override fun setSources(list: List<SourcesDTO>) {
         TransitionManager.beginDelayedTransition(binding.root)
         sourcesAdapter.sources = list
-        binding.listCountSources.text = "Всего издательств (источников): ${list.size} "
     }
 
     override fun onDestroyView() {

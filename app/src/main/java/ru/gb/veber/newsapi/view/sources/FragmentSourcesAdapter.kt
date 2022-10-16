@@ -32,7 +32,6 @@ class SourcesViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: SourcesDTO) = with(binding) {
-        idSources.text = item.id
         name.text = item.name
         description.text = item.description
         url.text = item.url
