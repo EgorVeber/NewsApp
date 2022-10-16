@@ -41,7 +41,7 @@ class AutoCompleteCountryAdapter(
         if (sources?.isLike == true) {
             binding.checkSources.show()
         } else {
-            binding.checkSources.visibility = View.INVISIBLE
+            binding.checkSources.hide()
         }
         binding.countryName.text = sources?.country
         binding.checkSources.tag = sources

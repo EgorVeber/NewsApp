@@ -7,20 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.rxjava3.core.Completable
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.subscribeDefault
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import java.util.concurrent.TimeUnit
 
 class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
 
@@ -33,7 +32,9 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
             App.instance.router,
             AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()),
-            SourcesRepoImpl(App.instance.newsDb.sourcesDao())
+            SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
+            ArticleRepoImpl(App.instance.newsDb.articleDao()),
+            HistorySelectRepoImpl(App.instance.newsDb.historySelectDao())
         )
     }
 
@@ -47,6 +48,10 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
 
         override fun imageClick(source: Sources) {
             presenter.imageClick(source)
+        }
+
+        override fun newsClick(source: String?, name: String?) {
+            presenter.openAllNews(source,name)
         }
     }
 

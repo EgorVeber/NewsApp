@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_item"
     style="@style/card_style_base"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
     android:elevation="20dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,10 +18,11 @@
             android:id="@+id/imageFavorites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:src="@drawable/ic_favorite_36"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/openNewsSources"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
 
 
         <androidx.constraintlayout.widget.Barrier
@@ -38,20 +41,21 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="New York MAGAZINE"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="New ddds dasa"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.5" />
 
         <TextView
             android:id="@+id/helperTextTH"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:text="@string/total_history"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -74,7 +78,6 @@
             android:id="@+id/helperTextTF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:text="@string/total_favorites"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -89,19 +92,19 @@
             android:text="150"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="@id/helperTextTF"
-            app:layout_constraintStart_toEndOf="@id/helperTextTF"/>
+            app:layout_constraintStart_toEndOf="@id/helperTextTF"
+            app:layout_constraintTop_toTopOf="@id/helperTextTF" />
 
         <TextView
             android:id="@+id/country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:text="Russia"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/name"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
+            app:layout_constraintTop_toBottomOf="@+id/helperTextTF" />
 
         <TextView
             android:id="@+id/helperTextCategory"
@@ -109,8 +112,8 @@
             android:layout_height="wrap_content"
             android:text="@string/category"
             android:textColor="@color/gray2"
-            app:layout_constraintTop_toBottomOf="@+id/country"
-            app:layout_constraintStart_toStartOf="@+id/country" />
+            app:layout_constraintStart_toStartOf="@+id/country"
+            app:layout_constraintTop_toBottomOf="@+id/country" />
 
         <TextView
             android:id="@+id/category"
@@ -120,7 +123,7 @@
             android:text="general"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/country"
+            app:layout_constraintBottom_toBottomOf="@+id/helperTextCategory"
             app:layout_constraintStart_toEndOf="@+id/helperTextCategory" />
 
 
@@ -131,8 +134,8 @@
             android:layout_marginStart="20dp"
             android:text="@string/language"
             android:textColor="@color/gray2"
-            app:layout_constraintTop_toBottomOf="@+id/country"
-            app:layout_constraintStart_toEndOf="@+id/category" />
+            app:layout_constraintStart_toEndOf="@+id/category"
+            app:layout_constraintTop_toBottomOf="@+id/country" />
 
         <TextView
             android:id="@+id/language"
@@ -142,20 +145,47 @@
             android:text="russia"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/country"
+            app:layout_constraintBottom_toBottomOf="@+id/helperTextCategory"
             app:layout_constraintStart_toEndOf="@+id/helperTextLanguage" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/openNewsSources"
+            style="@style/MyMaterialTextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:text="News"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageFavorites"
+            app:layout_constraintStart_toEndOf="@+id/openWebSiteSources"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/openWebSiteSources"
+            style="@style/MyMaterialTextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:text="WebSite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/openNewsSources"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
+
 
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
+            android:paddingStart="5dp"
             android:paddingTop="5dp"
             android:paddingEnd="5dp"
-            android:paddingBottom="5dp"
             android:text="Новости, статьи, фотографии, видео. Семь дней в неделю, 24 часа в сутки."
             android:textColor="@color/black"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/country"
             app:layout_constraintTop_toBottomOf="@+id/helperTextCategory" />
 
@@ -163,11 +193,11 @@
             android:id="@+id/url"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="https://lenta.ru"
-            android:textColor="@color/selectedColor"
-            app:layout_constraintStart_toStartOf="@+id/description"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
+            android:text="https://wwta.russsssssssss"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/openWebSiteSources"
+            app:layout_constraintStart_toStartOf="@+id/description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

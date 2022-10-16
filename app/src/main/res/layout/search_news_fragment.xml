@@ -126,17 +126,15 @@
         android:id="@+id/searchTextInput"
         style="@style/MyFilledBox"
         android:layout_width="0dp"
+        android:layout_margin="10dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:hint="Default All Sources"
         android:theme="@style/TextInputLayoutAppearance"
         app:endIconMode="clear_text"
         app:hintTextColor="@color/selectedColor"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleFilter"
-        app:layout_constraintWidth_percent="0.8">
+        app:layout_constraintTop_toBottomOf="@+id/titleFilter">
 
         <ru.gb.veber.newsapi.utils.CustomAutoCompleteTextView
             android:id="@+id/searchSpinnerCountry"

@@ -12,6 +12,7 @@ import ru.gb.veber.newsapi.model.Sources
 interface SourcesListener {
     fun openUrl(url: String?)
     fun imageClick(source: Sources)
+    fun newsClick(source: String?, name: String?)
 }
 
 class FragmentSourcesAdapter(
@@ -59,7 +60,12 @@ class SourcesViewHolder(
         totalFavorites.text = item.totalFavorites.toString()
         totalHistory.text = item.totalHistory.toString()
 
-        url.setOnClickListener {
+
+        openNewsSources.setOnClickListener {
+            listener.newsClick(item.idSources, item.name)
+        }
+
+        openWebSiteSources.setOnClickListener {
             listener.openUrl(item.url)
         }
 

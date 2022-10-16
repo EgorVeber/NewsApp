@@ -4,16 +4,17 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
+import ru.gb.veber.newsapi.core.AllNewsScreen
 import ru.gb.veber.newsapi.core.WebViewScreen
+import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.mapToAccountDbEntity
-import ru.gb.veber.newsapi.utils.sourcesToDbEntity
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.sources.FragmentSourcesView
 
 class SourcesPresenter(
@@ -21,6 +22,8 @@ class SourcesPresenter(
     private val router: Router,
     private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
     private val sourcesRepoImpl: SourcesRepoImpl,
+    private val articleRepoImpl: ArticleRepoImpl,
+    private val historySelectRepoImpl: HistorySelectRepoImpl,
 ) :
     MvpPresenter<FragmentSourcesView>() {
 
@@ -42,9 +45,11 @@ class SourcesPresenter(
                 Log.d(ERROR_DB, it.localizedMessage)
             })
         } else {
-            Single.zip(sourcesRepoImpl.getSources(),
-                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountIdPresenter)) { all, like ->
-
+            Single.zip(
+                sourcesRepoImpl.getSources(),
+                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountIdPresenter),
+                articleRepoImpl.getArticleById(accountIdPresenter)
+            ) { all, like, article ->
                 allSources = all
                 like.map { it.isLike = true }
                 likeSources = like
@@ -56,6 +61,14 @@ class SourcesPresenter(
                             if (like[j].idSources == all[i].idSources) {
                                 all.removeAt(i)
                                 all.add(0, like[j].also { it.isLike = true })
+                            }
+                        }
+                    }
+                    all.forEach { sor ->
+                        article.forEach { art ->
+                            if (sor.idSources == art.sourceId) {
+                                if (art.isFavorites) sor.totalFavorites += 1
+                                else sor.totalHistory += 1
                             }
                         }
                     }
@@ -94,8 +107,17 @@ class SourcesPresenter(
         }
     }
 
-    private fun updateSourcesList() {
-
-
+    fun openAllNews(source: String?, name: String?) {
+        router.navigateTo(AllNewsScreen(accountIdPresenter,
+            HistorySelect(0, accountIdPresenter, sourcesId = source, sourcesName = name)))
+        var x = HistorySelect(
+            0, accountID = accountIdPresenter,
+            sourcesId = source,
+            sourcesName = name,
+        )
+        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+            .subscribe({}, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            })
     }
 }

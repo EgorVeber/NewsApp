@@ -22,8 +22,7 @@
         android:gravity="end"
         android:maxLines="1"
         android:padding="16dp"
-        android:text="Russia"
-        android:textAppearance="?attr/textAppearanceSubtitle1" />
+        android:text="Russia" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/checkSources"
