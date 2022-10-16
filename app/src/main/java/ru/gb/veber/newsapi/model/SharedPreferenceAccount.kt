@@ -2,6 +2,7 @@ package ru.gb.veber.newsapi.model
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.utils.*
 
@@ -37,6 +38,17 @@ class SharedPreferenceAccount {
     fun setAccountLogin(login: String) {
         App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,
             Context.MODE_PRIVATE).edit().putString(ACCOUNT_LOGIN, login).apply()
+    }
+
+    fun getArrayCountry(): HashMap<String, String> {
+        var hashMap = hashMapOf<String, String>()
+        var name = App.instance.applicationContext.resources.getStringArray(R.array.countryName)
+        var code = App.instance.applicationContext.resources.getStringArray(R.array.countryCode)
+
+        for (i in name.indices) {
+            hashMap[name[i]] = code[i]
+        }
+        return hashMap
     }
 }
 

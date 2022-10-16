@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="countryCode">
-        <item>All</item>
-        <item>ae</item>
         <item>ar</item>
         <item>au</item>
         <item>at</item>
@@ -53,13 +51,12 @@
         <item>th</item>
         <item>tr</item>
         <item>ua</item>
+        <item>ae</item>
         <item>gb</item>
         <item>us</item>
         <item>ve</item>
     </string-array>
     <string-array name="countryName">
-        <item>All</item>
-        <item>UAE</item>
         <item>Argentina</item>
         <item>Australia</item>
         <item>Austria</item>
@@ -75,7 +72,7 @@
         <item>France</item>
         <item>Germany</item>
         <item>Greece</item>
-        <item>hk</item>
+        <item>Hong Kong</item>
         <item>Hungary</item>
         <item>India</item>
         <item>Indonesia</item>
@@ -110,6 +107,7 @@
         <item>Thailand</item>
         <item>Turkey</item>
         <item>Ukraine</item>
+        <item>UAE</item>
         <item>United Kingdom</item>
         <item>United States</item>
         <item>Venezuela</item>

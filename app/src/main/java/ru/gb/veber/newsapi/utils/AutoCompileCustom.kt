@@ -16,7 +16,7 @@ class AutoCompleteCountryAdapter(
     countryList: List<Sources>,
 ) : ArrayAdapter<Sources>(context, 0, countryList) {
 
-     var countryListFull: List<Sources>
+    var countryListFull: List<Sources>
 
     init {
         countryListFull = ArrayList(countryList)
@@ -43,8 +43,8 @@ class AutoCompleteCountryAdapter(
         } else {
             binding.checkSources.visibility = View.INVISIBLE
         }
+        binding.countryName.text = sources?.country
         binding.checkSources.tag = sources
-//        binding.checkSources.isChecked = true
         return binding.root
     }
 

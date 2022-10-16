@@ -14,6 +14,7 @@ import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
@@ -52,7 +53,8 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         ActivityPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
             App.instance.router,
             SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
-            SharedPreferenceAccount())
+            SharedPreferenceAccount(),
+            CountryRepoImpl(App.instance.newsDb.countryDao()))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,20 +63,12 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         presenter.getAccountSettings()
-
-//        AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()).getLikeSourcesFromAccount(3)
-//            .subscribe({
-//                it.forEach {
-//                    Log.d(ERROR_DB, it.toString())
-//                }
-//            }, {
-//                Log.d(ERROR_DB, "AccountSources" + it.localizedMessage)
-//            })
+        presenter.getCheckFirstStartApp()
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.getCheckFirstStartApp()
+        //  presenter.getCheckFirstStartApp()
     }
 
     override fun onResumeFragments() {
@@ -220,7 +214,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun completableInsertSources() {
-        Toast.makeText(this, "Check out the sources section", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Sources loaded", Toast.LENGTH_SHORT).show()
     }
 
     override fun bottomNavigationSetCurrentAccount(checkLogin: String) {

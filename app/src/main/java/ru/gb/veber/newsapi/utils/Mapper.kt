@@ -1,10 +1,7 @@
 package ru.gb.veber.newsapi.utils
 
 import ru.gb.veber.newsapi.model.*
-import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
-import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
-import ru.gb.veber.newsapi.model.database.entity.HistorySelectDbEntity
-import ru.gb.veber.newsapi.model.database.entity.SourcesDbEntity
+import ru.gb.veber.newsapi.model.database.entity.*
 
 
 fun mapToArticle(item: ArticleDTO): Article {
@@ -163,6 +160,11 @@ fun sourcesToDbEntity(sources: Sources): SourcesDbEntity {
         language = sources.language,
         country = sources.country
     )
+}
+
+
+fun mapToCountry(key: String, value: String): CountryDbEntity {
+    return CountryDbEntity(key, value)
 }
 
 

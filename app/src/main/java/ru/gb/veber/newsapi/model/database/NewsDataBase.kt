@@ -14,7 +14,8 @@ import ru.gb.veber.newsapi.model.database.entity.*
         ArticleDbEntity::class,
         SourcesDbEntity::class,
         AccountSourcesDbEntity::class,
-        HistorySelectDbEntity::class]
+        HistorySelectDbEntity::class,
+        CountryDbEntity::class]
 )
 abstract class NewsDataBase : RoomDatabase() {
 
@@ -22,7 +23,8 @@ abstract class NewsDataBase : RoomDatabase() {
     abstract fun articleDao(): ArticleDao
     abstract fun sourcesDao(): SourcesDao
     abstract fun accountSourcesDao(): AccountSourcesDao
-    abstract fun historySelectDao():HistorySelectDao
+    abstract fun historySelectDao(): HistorySelectDao
+    abstract fun countryDao(): CountryDao
 
     companion object {
         fun createDb(context: Context): NewsDataBase {
