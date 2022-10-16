@@ -10,4 +10,6 @@ You agree to the User Agreement and Commenting Rules.</string>
     <string name="back">back</string>
     <string name="category">category:</string>
     <string name="language">language:</string>
+    <string name="total_history">Total History:\u0020</string>
+    <string name="total_favorites">Total Favorites:\u0020</string>
 </resources>

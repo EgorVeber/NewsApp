@@ -93,6 +93,8 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
         Log.d("TAG", "setAccountInfo() called with: account = $account")
         binding.saveHistorySwitch.isChecked = account.saveHistory
+        binding.showFavorites.isChecked=account.displayOnlySources
+
 
         TransitionManager.beginDelayedTransition(binding.root)
         binding.nestedScrollAccount.show()

@@ -113,7 +113,7 @@ class AccountPresenter(
 
     fun updateAccountShowListFavorite(b: Boolean) {
         accountMain?.let {
-            it.displayOnlySources = !it.displayOnlySources
+            it.displayOnlySources = b
             roomRepoImpl.updateAccount(mapToAccountDbEntity(it)).subscribe({
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)

@@ -12,7 +12,7 @@ import ru.gb.veber.newsapi.model.database.entity.SourcesDbEntity
 
 @Dao
 interface AccountSourcesDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insert(accountSourcesDbEntity: AccountSourcesDbEntity): Completable
 
     @Query("Select * from sources join account_sources on sources.id = account_sources.sources_id  where account_sources.account_id =:accountId")

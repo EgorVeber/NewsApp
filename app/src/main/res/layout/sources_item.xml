@@ -16,8 +16,9 @@
             android:id="@+id/imageFavorites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:src="@drawable/ic_favorite_36"
-            app:layout_constraintBottom_toBottomOf="@+id/name"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -47,11 +48,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/isHistory"
+            android:id="@+id/helperTextTH"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Is History:15"
+            android:text="@string/total_history"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintHorizontal_bias="0.2"
@@ -59,17 +60,37 @@
             app:layout_constraintTop_toTopOf="@+id/barrier" />
 
         <TextView
-            android:id="@+id/isFavorites"
+            android:id="@+id/totalHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="150"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/helperTextTH"
+            app:layout_constraintTop_toTopOf="@+id/barrier" />
+
+
+        <TextView
+            android:id="@+id/helperTextTF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Is Favorites:10"
+            android:text="@string/total_favorites"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="@+id/barrier2"
-            app:layout_constraintTop_toBottomOf="@+id/isHistory" />
+            app:layout_constraintTop_toBottomOf="@+id/totalHistory" />
 
+        <TextView
+            android:id="@+id/totalFavorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="150"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/helperTextTF"
+            app:layout_constraintStart_toEndOf="@id/helperTextTF"/>
 
         <TextView
             android:id="@+id/country"
@@ -142,8 +163,8 @@
         <TextView
             android:id="@+id/url"
             android:layout_width="wrap_content"
-            android:padding="10dp"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="https://lenta.ru"
             android:textColor="@color/selectedColor"
             app:layout_constraintStart_toStartOf="@+id/description"

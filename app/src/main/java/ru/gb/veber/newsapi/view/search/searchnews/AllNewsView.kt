@@ -21,7 +21,9 @@ interface AllNewsView:MvpView {
     fun sheetExpanded()
     fun setLikeResourcesNegative()
     fun setLikeResourcesActive()
+    @StateStrategyType(SkipStrategy::class)
     fun removeBadge()
+    @StateStrategyType(SkipStrategy::class)
     fun addBadge()
     fun changeNews(articleListHistory: MutableList<Article>)
 }

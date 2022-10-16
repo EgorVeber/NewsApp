@@ -149,6 +149,20 @@ fun sourcesDbEntityToSources(sourcesDb: SourcesDbEntity): Sources {
         language = sourcesDb.language,
         country = sourcesDb.country
     )
+
+}
+
+fun sourcesToDbEntity(sources: Sources): SourcesDbEntity {
+    return SourcesDbEntity(
+        id = sources.id,
+        idSources = sources.idSources,
+        name = sources.name,
+        description = sources.description,
+        url = sources.url,
+        category = sources.category,
+        language = sources.language,
+        country = sources.country
+    )
 }
 
 
