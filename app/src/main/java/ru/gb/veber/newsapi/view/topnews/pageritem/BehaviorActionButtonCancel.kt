@@ -1,12 +1,13 @@
-package ru.gb.veber.newsapi.view.topnews
+package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class BehaviorActionButton(context: Context, attr: AttributeSet? = null) :
+class BehaviorActionButtonCancel(context: Context, attr: AttributeSet? = null) :
     CoordinatorLayout.Behavior<View>(context, attr) {
 
     override fun layoutDependsOn(
@@ -14,7 +15,7 @@ class BehaviorActionButton(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        return (dependency is ConstraintLayout)
+        return (dependency is FloatingActionButton)
     }
 
     override fun onDependentViewChanged(
@@ -22,8 +23,8 @@ class BehaviorActionButton(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        child.y = (dependency.height - child.height - 100).toFloat()
-        child.x = (dependency.width - child.height - 50).toFloat()
+        child.y = dependency.y
+        child.x = 50F
         return super.onDependentViewChanged(parent, child, dependency)
     }
 }

@@ -80,33 +80,6 @@
         app:layout_constraintStart_toStartOf="@id/spinnerSortBy"
         app:layout_constraintTop_toBottomOf="@id/spinnerSortBy" />
 
-
-    <!--    <androidx.appcompat.widget.AppCompatImageView-->
-    <!--        android:id="@+id/imageSearchIcon3"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="10dp"-->
-    <!--        android:layout_marginTop="5dp"-->
-    <!--        android:src="@drawable/ic_baseline_search_24"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/titleHistory" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/textSearch3"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="10dp"-->
-    <!--        android:text="Select 3"-->
-    <!--        android:textColor="@color/black"-->
-    <!--        app:layout_constraintStart_toEndOf="@id/imageSearchIcon3"-->
-    <!--        app:layout_constraintTop_toTopOf="@+id/imageSearchIcon3" />-->
-
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/recyclerHistory"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="200dp" />-->
-
-
     <TextView
         android:id="@+id/titleFilter"
         android:layout_width="wrap_content"

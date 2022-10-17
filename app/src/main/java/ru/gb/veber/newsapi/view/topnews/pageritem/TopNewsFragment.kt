@@ -51,8 +51,10 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         override fun clickNews(article: Article) {
             presenter.clickNews(article)
         }
+
         override fun deleteFavorites(article: Article) {}
     }
+
 
     private val newsAdapter = TopNewsAdapter(itemListener)
 
@@ -89,25 +91,21 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
             addBottomSheetCallback(callBackBehavior)
         }
-//
-//        with(binding.countryAutoComplete) {
-//            //setOnKeyListener(setOnKeyListenerSpinner)s
-//            threshold = 1
-//            onItemClickListener = listenerAdapter
-//            setOnClickListener {
-//                showDropDown()
-//            }
-//        }
 
-
-
-
-        binding.updateViewPager.setOnClickListener {
-            presenter.updateViewPager()
+        with(binding.countryAutoComplete) {
+            threshold = 1
+            onItemClickListener = listenerAdapter
+            setOnClickListener {
+                showDropDown()
+            }
         }
 
         binding.filterButton.setOnClickListener {
             presenter.filterButtonClick()
+        }
+
+        binding.cancelFilter.setOnClickListener {
+            presenter.cancelButtonClick()
         }
 
 
@@ -136,7 +134,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun clickNews(article: Article) {
 
-        hideFilter()
         with(binding) {
             imageViewAll.loadGlideNot(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
@@ -189,28 +186,45 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.filterButton.show()
     }
 
-    override fun hideFilter() {
-        binding.filterButton.hide()
-    }
 
-    override fun hideGroupArticle() {
-        binding.groupArticle.hide()
-    }
-
-    override fun showGroupArticle() {
-        binding.groupArticle.show()
-    }
-
-
-    override fun showGroupFilter() {
+    override fun showCountryList() {
+        TransitionManager.beginDelayedTransition(binding.root)
         binding.countryTextInput.show()
-        binding.countryAutoComplete.show()
     }
 
-    override fun hideGroupFilter() {
-        binding.countryTextInput.hide()
-        binding.countryAutoComplete.hide()
+    override fun setAlfa() {
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.recyclerNews.alpha = 0F
     }
+
+    override fun showCancelButton() {
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.cancelFilter.show()
+    }
+
+    override fun hideCancelButton() {
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.cancelFilter.hide()
+    }
+
+    override fun setAlfaCancel() {
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.recyclerNews.alpha = 1F
+    }
+
+    override fun hideCountryList() {
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.countryTextInput.hide()
+    }
+
+    override fun setImageFilterButtonCancel() {
+        binding.filterButton.setImageResource(R.drawable.filter_icon)
+    }
+
+    override fun setImageFilterButton() {
+        binding.filterButton.setImageResource(R.drawable.check_icon)
+    }
+
 
     override fun behaviorHide() {
         bSheetB.collapsed()
@@ -226,6 +240,9 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.imageFavorites.hide()
     }
 
+    override fun hideFilter() {
+        binding.filterButton.hide()
+    }
 
     private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -241,17 +258,12 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
     private val listenerAdapter = AdapterView.OnItemClickListener { parent, p1, position, id ->
-        p1.hideKeyboard()
+        binding.countryAutoComplete.hideKeyboard()
     }
 
     override fun setCountry(country: List<String>) {
-        Log.d("setCountry", "setCountry() called with: country = $country")
-//        binding.searchSpinnerCountry.setAdapter(ArrayAdapter(requireContext(),
-//            android.R.layout.simple_list_item_1, country))
-        val adapter2 = ArrayAdapter(
-            requireContext(), android.R.layout.simple_dropdown_item_1line, country
-        )
-      binding.countryAutoComplete.setAdapter(adapter2)
+        binding.countryAutoComplete.setAdapter(ArrayAdapter(requireContext(),
+            android.R.layout.simple_list_item_1, country.sortedBy { it }))
     }
 
 
@@ -259,10 +271,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
         binding.statusTextList.show()
-    }
-
-    override fun hideViewPagerButton() {
-        binding.updateViewPager.hide()
     }
 
     override fun onBackPressedRouter(): Boolean {
@@ -276,11 +284,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     override fun setStateBehavior() {
         bSheetB.collapsed()
     }
-
-    override fun showViewpagerButton() {
-        binding.updateViewPager.show()
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

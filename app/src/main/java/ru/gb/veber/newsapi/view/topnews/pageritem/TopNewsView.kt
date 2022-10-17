@@ -12,7 +12,6 @@ interface TopNewsView : MvpView {
     fun setSources(articles: List<Article>)
     fun clickNews(it: Article)
     fun showFilter()
-    fun hideFilter()
     fun behaviorHide()
     fun visibilityFilterButton()
     fun hideFavorites()
@@ -21,17 +20,22 @@ interface TopNewsView : MvpView {
     fun setLikeResourcesNegative()
     fun setLikeResourcesActive()
 
+
     @StateStrategyType(SkipStrategy::class)
     fun removeBadge()
 
     @StateStrategyType(SkipStrategy::class)
     fun addBadge()
     fun sheetExpanded()
-    fun hideGroupArticle()
-    fun showGroupArticle()
-    fun hideViewPagerButton()
-    fun showViewpagerButton()
-    fun showGroupFilter()
-    fun hideGroupFilter()
+    fun setAlfa()
+
+    fun setImageFilterButton()
      fun setCountry(map: List<String>)
+    fun showCountryList()
+    fun hideFilter()
+    fun setAlfaCancel()
+    fun setImageFilterButtonCancel()
+    fun hideCountryList()
+    fun showCancelButton()
+    fun hideCancelButton()
 }

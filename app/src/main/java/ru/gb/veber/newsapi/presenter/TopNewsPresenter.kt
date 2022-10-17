@@ -27,6 +27,7 @@ class TopNewsPresenter(
     MvpPresenter<TopNewsView>() {
 
     private var saveHistory = false
+    private var filterFlag = false
     private val bag = CompositeDisposable()
     private var articleListHistory: MutableList<Article> = mutableListOf()
 
@@ -80,15 +81,16 @@ class TopNewsPresenter(
 
 
     fun clickNews(article: Article) {
-
-        if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
-            saveArticle(article)
+        if (!filterFlag) {
+            if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
+                saveArticle(article)
+            }
+            viewState.clickNews(article)
+            if (article.isFavorites) viewState.setLikeResourcesActive()
+            else viewState.setLikeResourcesNegative()
+            viewState.hideFilter()
+            viewState.sheetExpanded()
         }
-        viewState.clickNews(article)
-        if (article.isFavorites) viewState.setLikeResourcesActive()
-        else viewState.setLikeResourcesNegative()
-        viewState.hideFilter()
-        viewState.sheetExpanded()
     }
 
     private fun saveArticle(article: Article) {
@@ -164,24 +166,28 @@ class TopNewsPresenter(
 
 
     fun filterButtonClick() {
-        viewState.sheetExpanded()
-        viewState.hideGroupArticle()
-
-        viewState.showGroupFilter()
-
-        viewState.hideFilter()
-        viewState.showViewpagerButton()
+        if (!filterFlag) {
+            viewState.setAlfa()
+            viewState.setImageFilterButton()
+            viewState.showCountryList()
+            viewState.showCancelButton()
+        } else {
+            //validation
+        }
+        filterFlag = !filterFlag
     }
 
-    fun updateViewPager() {
-
+    fun cancelButtonClick() {
+        filterFlag = !filterFlag
+        viewState.setAlfaCancel()
+        viewState.setImageFilterButtonCancel()
+        viewState.hideCountryList()
+        viewState.hideCancelButton()
     }
+
 
     fun behaviorCollapsed() {
-        viewState.hideGroupFilter()
-        viewState.hideViewPagerButton()
         viewState.showFilter()
-        viewState.showGroupArticle()
     }
 
     fun getCountry() {
