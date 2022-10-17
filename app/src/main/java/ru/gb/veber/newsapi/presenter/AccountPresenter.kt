@@ -118,7 +118,8 @@ class AccountPresenter(
     }
 
     fun updateAccountSaveHistorySelect(checked: Boolean) {
-        roomRepoImpl.updateAccountById(accountId, checked).subscribe({
+        accountMain.saveSelectHistory = checked
+        roomRepoImpl.updateAccount(mapToAccountDbEntity(accountMain)).subscribe({
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })

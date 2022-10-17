@@ -27,7 +27,6 @@ class SearchNewsPresenter(
 
     private lateinit var allSources: MutableList<Sources>
     private lateinit var likeSources: List<Sources>
-    private lateinit var accountMain: Account
     private var accountHistorySelect: Boolean = false
 
     fun onBackPressedRouter(): Boolean {
@@ -55,19 +54,11 @@ class SearchNewsPresenter(
                 accountSourcesRepoImpl.getLikeSourcesFromAccount(accountIdPresenter),
                 roomRepoImpl.getAccountById(accountIdPresenter)) { all, like, account ->
 
+                accountHistorySelect = account.saveSelectHistory
                 allSources = all
-
-                like.map {
-                    it.isLike = true
-                }
-
+                like.map { it.isLike = true }
                 likeSources = like
 
-                if (!account.saveSelectHistory) {
-                    accountHistorySelect = account.saveSelectHistory
-                }
-
-                accountMain = account
                 if (account.displayOnlySources && like.isNotEmpty()) {
                     Log.d("displayOnlySources",
                         "getSources() called with: all = $all, like = $like, account = $account")
