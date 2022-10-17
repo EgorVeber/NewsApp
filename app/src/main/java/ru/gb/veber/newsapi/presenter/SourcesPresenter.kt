@@ -87,23 +87,27 @@ class SourcesPresenter(
     }
 
     fun imageClick(source: Sources) {
-        if (source.isLike) {
-            source.isLike = false
-            accountSourcesRepoImpl.deleteSourcesLike(accountIdPresenter, source.id).subscribe({
-                getSources()
-                Log.d("DbImageClick", "success deleteSourcesLike")
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
-        } else {
-            source.isLike = true
-            accountSourcesRepoImpl.insert(AccountSourcesDbEntity(accountIdPresenter, source.id))
-                .subscribe({
+        if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
+            if (source.isLike) {
+                source.isLike = false
+                accountSourcesRepoImpl.deleteSourcesLike(accountIdPresenter, source.id).subscribe({
                     getSources()
-                    Log.d("DbImageClick", "success insert")
+                    Log.d("DbImageClick", "success deleteSourcesLike")
                 }, {
                     Log.d(ERROR_DB, it.localizedMessage)
                 })
+            } else {
+                source.isLike = true
+                accountSourcesRepoImpl.insert(AccountSourcesDbEntity(accountIdPresenter, source.id))
+                    .subscribe({
+                        getSources()
+                        Log.d("DbImageClick", "success insert")
+                    }, {
+                        Log.d(ERROR_DB, it.localizedMessage)
+                    })
+            }
+        }else{
+            viewState.setLogin()
         }
     }
 

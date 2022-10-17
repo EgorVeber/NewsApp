@@ -75,6 +75,10 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
             presenter.updateAccountSaveHistory(b)
         }
 
+        binding.saveHistorySelectSwitch.setOnCheckedChangeListener { compoundButton, b ->
+            presenter.updateAccountSaveHistorySelect(b)
+        }
+
         binding.showFavorites.setOnCheckedChangeListener { compoundButton, b ->
             presenter.updateAccountShowListFavorite(b)
         }
@@ -93,7 +97,8 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
         Log.d("TAG", "setAccountInfo() called with: account = $account")
         binding.saveHistorySwitch.isChecked = account.saveHistory
-        binding.showFavorites.isChecked=account.displayOnlySources
+        binding.saveHistorySelectSwitch.isChecked = account.saveSelectHistory
+        binding.showFavorites.isChecked = account.displayOnlySources
 
 
         TransitionManager.beginDelayedTransition(binding.root)

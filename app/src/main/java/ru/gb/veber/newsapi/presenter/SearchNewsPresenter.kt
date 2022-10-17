@@ -123,10 +123,13 @@ class SearchNewsPresenter(
                         sourcesName = sourcesName,
                     )
                     router.navigateTo(AllNewsScreen(accountIdPresenter, x))
-                    historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
-                        .subscribe({}, {
-                            Log.d(ERROR_DB, it.localizedMessage)
-                        })
+
+                    if (accountHistorySelect) {
+                        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+                            .subscribe({}, {
+                                Log.d(ERROR_DB, it.localizedMessage)
+                            })
+                    }
                 } else {
                     var x = HistorySelect(
                         0, accountID = accountIdPresenter,
@@ -137,10 +140,12 @@ class SearchNewsPresenter(
                     )
 
                     router.navigateTo(AllNewsScreen(accountIdPresenter, x))
-                    historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
-                        .subscribe({}, {
-                            Log.d(ERROR_DB, it.localizedMessage)
-                        })
+                    if (accountHistorySelect) {
+                        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+                            .subscribe({}, {
+                                Log.d(ERROR_DB, it.localizedMessage)
+                            })
+                    }
                 }
             }
         }
@@ -169,9 +174,12 @@ class SearchNewsPresenter(
 
 
             router.navigateTo(AllNewsScreen(accountIdPresenter, x))
-            historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x)).subscribe({}, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
+
+            if (accountHistorySelect) {
+                historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x)).subscribe({}, {
+                    Log.d(ERROR_DB, it.localizedMessage)
+                })
+            }
         } else {
             if (!allSources.map { it.name }.contains(sourcesName)) {
                 viewState.selectSources()
@@ -187,9 +195,13 @@ class SearchNewsPresenter(
                     sourcesName = sourcesName
                 )
                 router.navigateTo(AllNewsScreen(accountIdPresenter, x))
-                historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x)).subscribe({}, {
-                    Log.d(ERROR_DB, it.localizedMessage)
-                })
+
+                if (accountHistorySelect) {
+                    historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+                        .subscribe({}, {
+                            Log.d(ERROR_DB, it.localizedMessage)
+                        })
+                }
             }
         }
     }

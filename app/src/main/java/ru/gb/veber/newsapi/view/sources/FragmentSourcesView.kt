@@ -8,4 +8,5 @@ import ru.gb.veber.newsapi.model.Sources
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface FragmentSourcesView : MvpView {
     fun setSources(list: List<Sources>)
+    fun setLogin()
 }

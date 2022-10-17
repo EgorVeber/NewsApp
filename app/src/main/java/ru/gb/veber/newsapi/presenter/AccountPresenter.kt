@@ -116,4 +116,11 @@ class AccountPresenter(
             })
         }
     }
+
+    fun updateAccountSaveHistorySelect(checked: Boolean) {
+        roomRepoImpl.updateAccountById(accountId, checked).subscribe({
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
+    }
 }

@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerNews"
         android:layout_width="match_parent"
@@ -22,14 +19,14 @@
         android:id="@+id/countryTextInput"
         style="@style/MyFilledBox"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
         android:hint="SelectCountry"
         android:theme="@style/TextInputLayoutAppearance"
         android:visibility="gone"
         app:endIconMode="clear_text"
-        app:helperText="Default All Country"
+        app:helperText="Applies to all tabs"
         app:hintTextColor="@color/selectedColor">
 
         <ru.gb.veber.newsapi.utils.CustomAutoCompleteTextView

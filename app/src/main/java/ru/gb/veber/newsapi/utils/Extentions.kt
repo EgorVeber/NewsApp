@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -186,6 +187,10 @@ fun String.checkLogin(): String {
     } else {
         this
     }
+}
+
+fun View.showText(string: String) {
+    Toast.makeText(this.context, string, Toast.LENGTH_SHORT).show()
 }
 
 val outputDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).apply {
