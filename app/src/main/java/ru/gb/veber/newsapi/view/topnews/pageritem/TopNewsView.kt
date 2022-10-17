@@ -27,16 +27,19 @@ interface TopNewsView : MvpView {
     @StateStrategyType(SkipStrategy::class)
     fun addBadge()
     fun sheetExpanded()
-    fun setAlfa()
 
-    fun setImageFilterButton()
+
+
      fun setCountry(map: List<String>)
-    fun showCountryList()
+
     fun hideFilter()
     fun setAlfaCancel()
     fun setImageFilterButtonCancel()
     fun hideCountryList()
-    fun showCancelButton()
     fun hideCancelButton()
-    fun animationShow()
+    fun fadeRecyclerShowCountry()
+    fun errorCountry()
+     fun updateViewPagerEvent()
+
+
 }

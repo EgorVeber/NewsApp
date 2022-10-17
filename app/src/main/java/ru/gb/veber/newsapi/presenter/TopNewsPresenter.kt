@@ -6,7 +6,10 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
+import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.Country
+import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
@@ -23,23 +26,31 @@ class TopNewsPresenter(
     private val roomRepoImpl: RoomRepoImpl,
     private val accountIdPresenter: Int,
     private val countryRepoImpl: CountryRepoImpl,
+    private val sharedPreferenceAccount: SharedPreferenceAccount,
 ) :
     MvpPresenter<TopNewsView>() {
 
+
+    private lateinit var account: Account
+    private var myCountry: String = ALL_COUNTRY_VALUE
     private var saveHistory = false
+
     private var filterFlag = false
-    private val bag = CompositeDisposable()
+
     private var articleListHistory: MutableList<Article> = mutableListOf()
+    private var listCountry: MutableList<Country> = mutableListOf()
+
+    private val bag = CompositeDisposable()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-
     }
 
     fun getAccountSettings() {
         if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
             roomRepoImpl.getAccountById(accountIdPresenter).subscribe({
+                account = it
                 saveHistory = it.saveHistory
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
@@ -50,11 +61,11 @@ class TopNewsPresenter(
     }
 
     fun loadNews(category: String) {
-        Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, "ru"),
+        var countryCode = sharedPreferenceAccount.getAccountCountry()
+        Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, countryCode),
             articleRepoImpl.getArticleById(accountIdPresenter)) { news, articles ->
             var newsModified = mapToArticleDTO(news).also { newsRepoImpl.changeRequest(it) }
             articles.forEach { art ->
-                Log.d("TAG", "loadNews() called with: art = $art")
                 newsModified.forEach { new ->
                     if (art.title == new.title) {
                         if (art.isFavorites) {
@@ -75,6 +86,7 @@ class TopNewsPresenter(
                 viewState.setSources(it)
             }
         }, {
+            viewState.emptyList()
             Log.d(ERROR_DB, it.localizedMessage)
         }).disposebleBy(bag)
     }
@@ -165,17 +177,25 @@ class TopNewsPresenter(
     }
 
 
-    fun filterButtonClick() {
+    fun filterButtonClick(country: String) {
         if (!filterFlag) {
-//            viewState.setAlfa()
-//            viewState.setImageFilterButton()
-//            viewState.showCountryList()
-//            viewState.showCancelButton()
-            viewState.animationShow()
+            viewState.fadeRecyclerShowCountry()
+            filterFlag = !filterFlag
         } else {
-            //validation
+            if (country.isEmpty() || !listCountry.map { it.id }.contains(country)) {
+                viewState.errorCountry()
+            } else {
+                account.myCountry = country
+                roomRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
+                    var countryCode =
+                        listCountry.find { it.id == country }?.code ?: ALL_COUNTRY_VALUE
+                    sharedPreferenceAccount.setAccountCountry(countryCode)
+                    viewState.updateViewPagerEvent()
+                }, {
+                    Log.d(ERROR_DB, it.localizedMessage)
+                })
+            }
         }
-        filterFlag = !filterFlag
     }
 
     fun cancelButtonClick() {
@@ -193,7 +213,9 @@ class TopNewsPresenter(
 
     fun getCountry() {
         countryRepoImpl.getCountry().subscribe({
-            viewState.setCountry(it.map { country -> country.id })
+            listCountry = it.map(::mapToDbEntityCountry) as MutableList<Country>
+            listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
+            viewState.setCountry(listCountry.map { country -> country.id })
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })

@@ -24,4 +24,6 @@ data class AccountDbEntity(
     var saveSelectHistory: Boolean = true,
     @ColumnInfo(name = "display_only_sources")
     var displayOnlySources: Boolean = false,
+    @ColumnInfo(name = "my_country")
+    var myCountry: String,
 )

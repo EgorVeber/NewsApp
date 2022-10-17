@@ -2,10 +2,11 @@ package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
@@ -24,6 +24,7 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
@@ -33,6 +34,7 @@ import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
+import ru.gb.veber.newsapi.view.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
 
 
@@ -67,9 +69,8 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             ArticleRepoImpl(App.instance.newsDb.articleDao()),
             RoomRepoImpl(App.instance.newsDb.accountsDao()),
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-            CountryRepoImpl(App.instance.newsDb.countryDao()))
+            CountryRepoImpl(App.instance.newsDb.countryDao()), SharedPreferenceAccount())
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,14 +78,15 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         savedInstanceState: Bundle?,
     ): View {
         _binding = TopNewsFragmentBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL)
-        presenter.getAccountSettings()
         presenter.getCountry()
+        presenter.getAccountSettings()
     }
 
     override fun init() {
@@ -104,19 +106,12 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
 
         binding.filterButton.setOnClickListener {
-            presenter.filterButtonClick()
+            presenter.filterButtonClick(binding.countryAutoComplete.text.toString())
         }
 
         binding.cancelFilter.setOnClickListener {
             presenter.cancelButtonClick()
         }
-
-
-        //            requireActivity().supportFragmentManager.fragments.forEach {
-//                if (it is EventTopNews) {
-//                    (it as EventTopNews).updateViewPager("asdasd")
-//                }
-//            }
     }
 
     @SuppressLint("SetTextI18n")
@@ -189,22 +184,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.filterButton.show()
     }
 
-
-    override fun showCountryList() {
-        TransitionManager.beginDelayedTransition(binding.root)
-        binding.countryTextInput.show()
-    }
-
-    override fun setAlfa() {
-        TransitionManager.beginDelayedTransition(binding.root)
-        binding.recyclerNews.alpha = 0F
-    }
-
-    override fun showCancelButton() {
-        TransitionManager.beginDelayedTransition(binding.root)
-        binding.cancelFilter.show()
-    }
-
     override fun hideCancelButton() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.cancelFilter.hide()
@@ -222,10 +201,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun setImageFilterButtonCancel() {
         binding.filterButton.setImageResource(R.drawable.filter_icon)
-    }
-
-    override fun setImageFilterButton() {
-        binding.filterButton.setImageResource(R.drawable.check_icon)
     }
 
 
@@ -288,16 +263,33 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         bSheetB.collapsed()
     }
 
-    override fun animationShow() {
+    override fun fadeRecyclerShowCountry() {
         TransitionSet().also { transition ->
             transition.duration = 500L
-            transition.addTransition(Fade())
+            transition.addTransition(Fade(Fade.IN))
+            transition.addTransition(Fade(Fade.OUT))
             TransitionManager.beginDelayedTransition(binding.root, transition)
         }
         binding.recyclerNews.alpha = 0F
         binding.filterButton.setImageResource(R.drawable.check_icon)
         binding.countryTextInput.show()
         binding.cancelFilter.show()
+    }
+
+    override fun errorCountry() {
+        binding.countryTextInput.error = "Select Sources"
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.countryTextInput.error = null
+        }, 2000L)
+    }
+
+
+    override fun updateViewPagerEvent() {
+        requireActivity().supportFragmentManager.fragments.forEach {
+            if (it is EventTopNews) {
+                (it as EventTopNews).updateViewPager()
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -307,11 +299,12 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     companion object {
         private const val BUNDLE_KEY = "BUNDLE_KEY"
-        fun getInstance(category: String, accountId: Int) = TopNewsFragment().apply {
-            arguments = Bundle().apply {
-                putString(BUNDLE_KEY, category)
-                putInt(ACCOUNT_ID, accountId)
+        fun getInstance(category: String, accountId: Int) =
+            TopNewsFragment().apply {
+                arguments = Bundle().apply {
+                    putString(BUNDLE_KEY, category)
+                    putInt(ACCOUNT_ID, accountId)
+                }
             }
-        }
     }
 }

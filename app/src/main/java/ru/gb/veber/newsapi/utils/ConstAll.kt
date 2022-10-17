@@ -17,9 +17,14 @@ const val ERROR_DB = "ERROR_DB"
 const val FILE_SETTINGS = "FILE_SETTINGS"
 const val FIRST_START_APP = "FIRST_START_APP"
 const val ACCOUNT_ID = "ACCOUNT_ID"
+const val COUNTRY_KEY = "COUNTRY_KEY"
 const val HISTORY_SELECT_BUNDLE = "HISTORY_SELECT_BUNDLE"
 const val ACCOUNT_LOGIN = "ACCOUNT_LOGIN"
 const val ACCOUNT_LOGIN_DEFAULT = "Profile"
+const val ACCOUNT_COUNTRY = "ACCOUNT_COUNTRY"
+
+
+
 const val PAGE = "PAGE"
 const val NOT_INPUT_DATE = "NOT_INPUT_DATE"
 
@@ -34,4 +39,8 @@ const val DATE_SOURCES = "DATE_SOURCES"
 
 
 const val UNVERIFIED_SOURCES = "Unverified source"
+const val ALL_COUNTRY = "All Country"
+const val ALL_COUNTRY_VALUE = ""
+
+
 

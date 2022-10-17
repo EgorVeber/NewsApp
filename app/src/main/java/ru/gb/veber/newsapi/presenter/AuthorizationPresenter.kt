@@ -41,7 +41,10 @@ class AuthorizationPresenter(
             password,
             email,
             Date().toString(),
-            true))
+            saveHistory = true,
+            saveSelectHistory = true,
+            displayOnlySources = false,
+            myCountry = ALL_COUNTRY))
             .andThen(roomRepoImpl.getAccountByUserName(username)).subscribe({
                 viewState.successRegister(it.id)
                 saveIdSharedPref(it)

@@ -4,8 +4,6 @@ import ru.gb.veber.newsapi.model.*
 import ru.gb.veber.newsapi.model.database.entity.*
 
 
-
-
 fun mapToArticleDTO(item: ArticlesDTO): List<Article> {
     return item.articles.map(::mapToArticle)
 }
@@ -22,7 +20,6 @@ fun mapToArticle(item: ArticleDTO): Article {
         urlToImage = item.urlToImage,
     )
 }
-
 
 
 fun mapToSourcesDbEntity(sourcesId: String, sourcesName: String): Source {
@@ -62,7 +59,8 @@ fun mapToAccountDbEntity(item: Account): AccountDbEntity {
         password = item.password,
         saveHistory = item.saveHistory,
         saveSelectHistory = item.saveSelectHistory,
-        displayOnlySources = item.displayOnlySources
+        displayOnlySources = item.displayOnlySources,
+        myCountry = item.myCountry
     )
 }
 
@@ -172,6 +170,10 @@ fun sourcesToDbEntity(sources: Sources): SourcesDbEntity {
 
 fun mapToCountry(key: String, value: String): CountryDbEntity {
     return CountryDbEntity(key, value)
+}
+
+fun mapToDbEntityCountry(countryDbEntity: CountryDbEntity): Country {
+    return Country(countryDbEntity.id, countryDbEntity.isoThree)
 }
 
 

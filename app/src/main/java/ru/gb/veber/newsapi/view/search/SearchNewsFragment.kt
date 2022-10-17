@@ -52,7 +52,6 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun emptyHistory() {
-        Log.d("hideEmptyList", "hideEmptyList() called")
         binding.emptyHistory.show()
     }
 
@@ -161,7 +160,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         override fun onQueryTextSubmit(query: String?): Boolean {
             query?.let { keyWord ->
                 var searchIn: String = ""
-                var sortBy: String = ""
+                var sortBy: String = "publishedAt"
                 if (binding.spinnerSortBy.selectedItemPosition != 0) {
                     sortBy = binding.spinnerSortBy.selectedItem.toString()
                 }

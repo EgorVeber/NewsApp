@@ -12,6 +12,7 @@ import ru.gb.veber.newsapi.databinding.TopNewsViewPagerFragmentBinding
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.ALL_COUNTRY
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.BUSINESS
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_BUSINESS
@@ -30,7 +31,7 @@ import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Compan
 
 
 interface EventTopNews {
-    fun updateViewPager(string: String)
+    fun updateViewPager()
 }
 
 class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
@@ -58,7 +59,8 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
     }
 
     private fun initialization(accountID: Int) {
-        binding.viewPager.adapter = TopNewsViewPagerAdapter(requireActivity(), accountID)
+        binding.viewPager.adapter =
+            TopNewsViewPagerAdapter(requireActivity(), accountID)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 BUSINESS -> tab.text = CATEGORY_BUSINESS
@@ -70,7 +72,6 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
                 TECHNOLOGY -> tab.text = CATEGORY_TECHNOLOGY
             }
         }.attach()
-        //binding.viewPager.isUserInputEnabled = false
     }
 
     override fun init() {
@@ -96,8 +97,8 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
         }
     }
 
-    override fun updateViewPager(string: String) {
-//        binding.viewPager.adapter= TopNewsViewPagerAdapter (requireActivity(),
-//        arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+    override fun updateViewPager() {
+        binding.viewPager.adapter = TopNewsViewPagerAdapter(requireActivity(),
+            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 }

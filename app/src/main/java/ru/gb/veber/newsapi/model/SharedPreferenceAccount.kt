@@ -40,6 +40,18 @@ class SharedPreferenceAccount {
             Context.MODE_PRIVATE).edit().putString(ACCOUNT_LOGIN, login).apply()
     }
 
+    fun getAccountCountry(): String {
+        return App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,
+            AppCompatActivity.MODE_PRIVATE).getString(ACCOUNT_COUNTRY, ALL_COUNTRY_VALUE)
+            ?: ALL_COUNTRY_VALUE
+    }
+
+    fun setAccountCountry(country: String) {
+        App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,
+            Context.MODE_PRIVATE).edit().putString(ACCOUNT_COUNTRY, country).apply()
+    }
+
+
     fun getArrayCountry(): HashMap<String, String> {
         var hashMap = hashMapOf<String, String>()
         var name = App.instance.applicationContext.resources.getStringArray(R.array.countryName)
