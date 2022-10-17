@@ -21,9 +21,11 @@ object NewsRetrofit {
 
     private fun client() = OkHttpClient.Builder().addInterceptor { chain ->
         val request = chain.request()
-        val url = request.url.newBuilder().addQueryParameter(API_KEY, BuildConfig.KEY_NEWS)
-            .addQueryParameter(PAGE_SIZE,
-                PAGE_SIZE_COUNT).build()
+
+        val url = request.url.newBuilder()
+            .addQueryParameter(API_KEY, BuildConfig.KEY_NEWS)
+            .addQueryParameter(PAGE_SIZE, PAGE_SIZE_COUNT).build()
+
         chain.proceed(request.newBuilder().url(url).build())
     }.build()
 }

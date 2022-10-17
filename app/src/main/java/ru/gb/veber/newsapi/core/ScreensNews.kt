@@ -11,8 +11,8 @@ import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
-import ru.gb.veber.newsapi.view.search.SearchNewsFragment
-import ru.gb.veber.newsapi.view.search.searchnews.AllNewsFragment
+import ru.gb.veber.newsapi.view.search.SearchFragment
+import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.view.sources.FragmentSources
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
@@ -55,16 +55,16 @@ data class FavoritesViewPagerScreen(private val accountId: Int) : FragmentScreen
 }
 
 
-data class AllNewsScreen(private val accountId: Int, private val historySelect: HistorySelect) :
+data class SearchNewsScreen(private val accountId: Int, private val historySelect: HistorySelect) :
     FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return AllNewsFragment.getInstance(accountId, historySelect)
+        return SearchNewsFragment.getInstance(accountId, historySelect)
     }
 }
 
-data class SearchNewsScreen(private val accountId: Int) : FragmentScreen {
+data class SearchScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return SearchNewsFragment.getInstance(accountId)
+        return SearchFragment.getInstance(accountId)
     }
 }
 
@@ -81,12 +81,4 @@ data class EditAccountScreen(private val accountId: Int) : FragmentScreen {
         })
     }
 }
-
-
-//data class FragmentNewsScreen(private val category: String) : FragmentScreen {
-//    override fun createFragment(factory: FragmentFactory): Fragment {
-//        return TopNewsFragment.getInstance(category)
-//    }
-//}
-
 

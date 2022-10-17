@@ -2,7 +2,6 @@ package ru.gb.veber.newsapi.view.profile.account.settings
 
 import android.os.Bundle
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +13,13 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.presenter.EditAccountPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
+import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
 
 class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressedListener {
 
@@ -26,7 +27,8 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
     private val binding get() = _binding!!
 
     private val presenter: EditAccountPresenter by moxyPresenter {
-        EditAccountPresenter(App.instance.router, RoomRepoImpl(App.instance.newsDb.accountsDao()),
+        EditAccountPresenter(App.instance.router,
+            AccountRepoImpl(App.instance.newsDb.accountsDao()),
             SharedPreferenceAccount())
     }
 
@@ -50,7 +52,6 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
         arguments?.getInt(ACCOUNT_ID).also { accountID ->
             presenter.getAccountDataBase(accountID ?: ACCOUNT_ID_DEFAULT)
         }
-
         initialization()
     }
 
@@ -62,11 +63,9 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
 
         binding.saveChangeAccount.setOnClickListener {
             if (checkNullSignUpData()) {
-                Log.d("userEmail", userEmail)
                 presenter.checkSaveAccount(userLogin, userPassword, userEmail)
             }
         }
-
         rxTextChangerValidation()
     }
 
@@ -81,10 +80,6 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
 
     override fun onBackPressedRouter(): Boolean {
         return presenter.onBackPressedRouter()
-    }
-
-    companion object {
-        fun getInstance(bundle: Bundle) = EditAccountFragment().apply { arguments = bundle }
     }
 
 
@@ -105,64 +100,63 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
 
     override fun errorLoadingAccount() {
         binding.constrainEditInformation.show()
-        binding.root.showSnackBarError("Error loading account", "", {})
+        binding.root.showSnackBarError(getString(R.string.errorLoadingAccount), "", {})
     }
 
     override fun passwordIsValidate(it: CharSequence?) {
         binding.passwordChange.error = null
         userPassword = it.toString()
         if (userLogin != "" && userEmail != "") {
-            binding.saveChangeAccount.alpha = 1F
+            binding.saveChangeAccount.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
     override fun passwordNotValidate(it: CharSequence?) {
         userPassword = ""
         binding.passwordChange.error = getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
-        binding.saveChangeAccount.alpha = 0.5F
+        binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     override fun loginIsValidate(it: CharSequence?) {
         binding.userNameChange.error = null
         userLogin = it.toString()
         if (userPassword != "" && userEmail != "") {
-            binding.saveChangeAccount.alpha = 1F
+            binding.saveChangeAccount.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
     override fun loginNotValidate() {
         binding.userNameChange.error = getString(R.string.errorInputEmail) + "($LOGIN_STR)"
         userLogin = ""
-        binding.saveChangeAccount.alpha = 0.5F
+        binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     override fun emailRegisterIsValidate(it: CharSequence?) {
         binding.emailChange.error = null
         userEmail = it.toString()
         if (userLogin != "" && userPassword != "") {
-            binding.saveChangeAccount.alpha = 1F
+            binding.saveChangeAccount.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
     override fun emailRegisterNotValidate() {
         userEmail = ""
         binding.emailChange.error = getString(R.string.errorInputEmail) + "($EMAIL_STR)"
-        binding.saveChangeAccount.alpha = 0.5F
+        binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     override fun successUpdateAccount(userLogin: String) {
-        binding.root.showSnackBarError("Data updated", "", {})
+        binding.root.showSnackBarError(getString(R.string.dataUpdated), "", {})
         presenter.backAccountScreen()
-        (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetTitleCurrentAccount(
-            userLogin)
+        (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetTitleCurrentAccount(userLogin)
     }
 
     override fun errorUpdateAccount() {
-        binding.root.showSnackBarError("Email and username must be unique", "", {})
+        binding.root.showSnackBarError(getString(R.string.uniqueEmailUsername), "", {})
     }
 
     override fun noChangeAccount() {
-        binding.root.showSnackBarError("No change Account", "", {})
+        binding.root.showSnackBarError(getString(R.string.noChangeAccount), "", {})
     }
 
     private fun rxTextChangerValidation() {
@@ -171,15 +165,13 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
             .subscribe({
                 presenter.passwordValidation(it)
             }, {
-                Log.d("RxTextView", it.localizedMessage)
             })
-        
+
         RxTextView.textChanges(binding.userNameChangeEditText)
             .filter { it.toString().isNotEmpty() }
             .subscribe({
                 presenter.loginValidation(it)
             }, {
-                Log.d("RxTextView", it.localizedMessage)
             })
 
         RxTextView.textChanges(binding.emailChangeEditText)
@@ -187,7 +179,11 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
             .subscribe({
                 presenter.emailRegisterValidation(it)
             }, {
-                Log.d("RxTextView", it.localizedMessage)
             })
     }
+
+    companion object {
+        fun getInstance(bundle: Bundle) = EditAccountFragment().apply { arguments = bundle }
+    }
+
 }

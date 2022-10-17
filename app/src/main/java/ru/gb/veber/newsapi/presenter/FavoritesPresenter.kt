@@ -25,7 +25,6 @@ class FavoritesPresenter(
     }
 
     fun onBackPressedRouter(): Boolean {
-        Log.d("Back", "onBackPressedRouter() SourcesDTO")
         router.exit()
         return true
     }

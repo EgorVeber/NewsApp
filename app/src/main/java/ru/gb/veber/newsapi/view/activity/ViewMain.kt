@@ -10,4 +10,5 @@ interface ViewMain : MvpView {
     fun onCreateSetIconTitleAccount(accountLogin: String)
     fun completableInsertSources()
     fun hideAllBehavior()
+    fun errorSourcesDownload()
 }

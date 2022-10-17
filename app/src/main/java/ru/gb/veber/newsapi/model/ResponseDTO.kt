@@ -1,7 +1,5 @@
 package ru.gb.veber.newsapi.model
 
-import com.google.gson.annotations.SerializedName
-
 data class ArticlesDTO(
     val articles: List<ArticleDTO>,
     val status: String,
@@ -9,7 +7,7 @@ data class ArticlesDTO(
 )
 
 data class ArticleDTO(
-    var author: String? = "Аноним",
+    var author: String? = "",
     val content: String,
     val description: String?,
     var publishedAt: String,
@@ -20,22 +18,22 @@ data class ArticleDTO(
 )
 
 data class SourceDTO(
-    var id: String? = "Не проверенный источник",
+    var id: String? = "",
     val name: String,
 )
 
 
 data class SourcesRequestDTO(
-    @SerializedName("status") var status: String? = null,
-    @SerializedName("sources") var sources: List<SourcesDTO> = listOf(),
+    var status: String? = null,
+    var sources: List<SourcesDTO> = listOf(),
 )
 
 data class SourcesDTO(
-    @SerializedName("id") var id: String? = null,
-    @SerializedName("name") var name: String? = null,
-    @SerializedName("description") var description: String? = null,
-    @SerializedName("url") var url: String? = null,
-    @SerializedName("category") var category: String? = null,
-    @SerializedName("language") var language: String? = null,
-    @SerializedName("country") var country: String? = null,
+    var id: String? = null,
+    var name: String? = null,
+    var description: String? = null,
+    var url: String? = null,
+    var category: String? = null,
+    var language: String? = null,
+    var country: String? = null,
 )

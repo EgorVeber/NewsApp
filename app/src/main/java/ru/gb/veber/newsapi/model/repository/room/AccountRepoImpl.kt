@@ -8,7 +8,7 @@ import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.utils.mapToAccount
 import ru.gb.veber.newsapi.utils.subscribeDefault
 
-class RoomRepoImpl(private val accountDao: AccountsDao) : RoomRepo {
+class AccountRepoImpl(private val accountDao: AccountsDao) : AccountRepo {
 
     override fun createAccount(accountDbEntity: AccountDbEntity): Completable {
         return accountDao.createAccount(accountDbEntity).subscribeDefault()

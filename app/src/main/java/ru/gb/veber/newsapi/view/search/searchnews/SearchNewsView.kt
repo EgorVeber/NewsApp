@@ -7,7 +7,7 @@ import moxy.viewstate.strategy.StateStrategyType
 import ru.gb.veber.newsapi.model.Article
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface AllNewsView:MvpView {
+interface SearchNewsView:MvpView {
     fun setNews(articles: List<Article>)
     fun loading()
     fun clickNews(article: Article)

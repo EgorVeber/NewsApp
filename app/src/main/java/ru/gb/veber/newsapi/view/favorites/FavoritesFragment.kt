@@ -5,7 +5,6 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,6 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
 
     private var _binding: FavotitesFragmentBinding? = null
     private val binding get() = _binding!!
-
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
@@ -107,7 +105,6 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
 
     override fun setSources(list: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
-        Log.d("TAG", "setSources() called with: list = $list")
         historyAdapter.articles = list
         binding.likeRecycler.show()
     }
@@ -119,12 +116,12 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
     override fun notAuthorized() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.statusTextLike.show()
-        binding.statusTextLike.text = "Not authorized"
+        binding.statusTextLike.text = getString(R.string.notAuthorized)
     }
 
     override fun emptyList() {
         binding.statusTextLike.show()
-        binding.statusTextLike.text = "Empty List"
+        binding.statusTextLike.text = getString(R.string.EmptyList)
     }
 
     override fun updateFavorites(list: List<Article>) {

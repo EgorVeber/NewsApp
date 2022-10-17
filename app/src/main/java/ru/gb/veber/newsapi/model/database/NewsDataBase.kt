@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import ru.gb.veber.newsapi.model.database.dao.*
 import ru.gb.veber.newsapi.model.database.entity.*
+import ru.gb.veber.newsapi.utils.DATABASE_NAME
 
 @Database(
     version = 1,
@@ -28,7 +29,7 @@ abstract class NewsDataBase : RoomDatabase() {
 
     companion object {
         fun createDb(context: Context): NewsDataBase {
-            return Room.databaseBuilder(context, NewsDataBase::class.java, "news.db").build()
+            return Room.databaseBuilder(context, NewsDataBase::class.java, DATABASE_NAME).build()
         }
     }
 }

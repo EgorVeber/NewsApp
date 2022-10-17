@@ -9,14 +9,14 @@ import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationView
 import java.util.*
 
 class AuthorizationPresenter(
     private val router: Router,
-    private val roomRepoImpl: RoomRepoImpl,
+    private val roomRepoImpl: AccountRepoImpl,
     private val sharedPreferenceAccount: SharedPreferenceAccount,
 ) :
     MvpPresenter<AuthorizationView>() {
@@ -24,13 +24,11 @@ class AuthorizationPresenter(
     private val bag = CompositeDisposable()
 
     override fun onFirstViewAttach() {
-        Log.d("TAG", "onFirstViewAttach() called")
         viewState.init()
         super.onFirstViewAttach()
     }
 
     fun onBackPressedRouter(): Boolean {
-        Log.d("@@@", "onBackPressedRouter() ActivityPresenter")
         router.exit()
         return true
     }
@@ -51,7 +49,7 @@ class AuthorizationPresenter(
             }, {
                 viewState.errorRegister()
                 Log.d(ERROR_DB, it.localizedMessage)
-            }).disposebleBy(bag)
+            }).disposableBy(bag)
     }
 
     fun checkSignIn(userLogin: String, userPassword: String) {
@@ -65,13 +63,12 @@ class AuthorizationPresenter(
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
             viewState.emptyAccount()
-        }).disposebleBy(bag)
+        }).disposableBy(bag)
     }
 
     private fun saveIdSharedPref(accountId: Account) {
         sharedPreferenceAccount.setAccountID(accountId.id)
         sharedPreferenceAccount.setAccountLogin(accountId.userName.checkLogin())
-        // sharedPreferenceAccount.setAccountCountry(accountId.myCountry)
         viewState.setBottomNavigationIcon(accountId.userName.checkLogin())
     }
 

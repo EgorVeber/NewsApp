@@ -36,7 +36,6 @@ fun mapToSources(item: SourceDTO): Source {
     )
 }
 
-//ROOM
 fun mapToAccount(item: AccountDbEntity): Account {
     return Account(
         id = item.id,
@@ -102,7 +101,7 @@ fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
         author = article.author,
         description = article.description,
         publishedAt = article.publishedAt,
-        sourceId = article.source.id ?: "none",
+        sourceId = article.source.id ?: "",
         sourceName = article.source.name,
         title = article.title.toString(),
         url = article.url,
@@ -154,20 +153,6 @@ fun sourcesDbEntityToSources(sourcesDb: SourcesDbEntity): Sources {
     )
 
 }
-
-fun sourcesToDbEntity(sources: Sources): SourcesDbEntity {
-    return SourcesDbEntity(
-        id = sources.id,
-        idSources = sources.idSources,
-        name = sources.name,
-        description = sources.description,
-        url = sources.url,
-        category = sources.category,
-        language = sources.language,
-        country = sources.country
-    )
-}
-
 
 fun mapToCountry(key: String, value: String): CountryDbEntity {
     return CountryDbEntity(key, value)

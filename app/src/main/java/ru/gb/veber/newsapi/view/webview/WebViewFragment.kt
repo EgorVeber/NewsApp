@@ -1,14 +1,10 @@
 package ru.gb.veber.newsapi.view.webview
 
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -77,28 +73,10 @@ class WebViewFragment : MvpAppCompatFragment(), WebView, BackPressedListener {
         override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
             super.onPageFinished(view, url)
             presenter.successLoading()
-            Log.d("webViewClient", "onPageFinished() called with: view = $view, url = $url")
-        }
-
-        override fun onPageStarted(view: android.webkit.WebView?, url: String?, favicon: Bitmap?) {
-            super.onPageStarted(view, url, favicon)
-            Log.d("webViewClient",
-                "onPageStarted() called with: view = $view, url = $url, favicon = $favicon")
-        }
-
-        override fun onReceivedError(
-            view: android.webkit.WebView?,
-            request: WebResourceRequest?,
-            error: WebResourceError?,
-        ) {
-            super.onReceivedError(view, request, error)
-            Log.d("webViewClient",
-                "onReceivedError() called with: view = $view, request = $request, error = $error")
         }
     }
 
     override fun showPage() {
-
         binding.webNews.show()
         binding.progressBarWebView.hide()
     }

@@ -22,8 +22,12 @@ class BehaviorActionButton(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        child.y = (dependency.height - child.height - 100).toFloat()
-        child.x = (dependency.width - child.height - 50).toFloat()
+        child.y = (dependency.height - child.height - BIAS_VERTICAL).toFloat()
+        child.x = (dependency.width - child.height - MARGIN_END).toFloat()
         return super.onDependentViewChanged(parent, child, dependency)
+    }
+    companion object{
+        const val BIAS_VERTICAL = 100
+        const val MARGIN_END = 50
     }
 }

@@ -7,7 +7,6 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,10 +26,10 @@ import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
@@ -68,7 +67,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         TopNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
             App.instance.router,
             ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            RoomRepoImpl(App.instance.newsDb.accountsDao()),
+            AccountRepoImpl(App.instance.newsDb.accountsDao()),
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
             CountryRepoImpl(App.instance.newsDb.countryDao()), SharedPreferenceAccount())
     }
@@ -85,7 +84,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.loadNews(arguments?.getString(BUNDLE_KEY) ?: CATEGORY_GENERAL)
+        presenter.loadNews(arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL)
         presenter.getCountry()
         presenter.getAccountSettings()
     }
@@ -114,7 +113,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             presenter.cancelButtonClick()
         }
     }
-
 
 
     @SuppressLint("SetTextI18n")
@@ -194,7 +192,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun setAlfaCancel() {
         TransitionManager.beginDelayedTransition(binding.root)
-        binding.recyclerNews.alpha = 1F
+        binding.recyclerNews.alpha = ALFA_FILTER_SHOW
     }
 
     override fun hideCountryList() {
@@ -238,7 +236,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
     }
 
-    private val listenerAdapter = AdapterView.OnItemClickListener { parent, p1, position, id ->
+    private val listenerAdapter = AdapterView.OnItemClickListener { _, _, _, _ ->
         binding.countryAutoComplete.hideKeyboard()
     }
 
@@ -248,7 +246,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.countryAutoComplete.setText(binding.countryAutoComplete.adapter.getItem(index)
             .toString(), false);
     }
-
 
 
     override fun emptyList() {
@@ -271,22 +268,23 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun fadeRecyclerShowCountry() {
         TransitionSet().also { transition ->
-            transition.duration = 500L
+            transition.duration = DURATION_FILTER_HIDE
             transition.addTransition(Fade(Fade.IN))
             transition.addTransition(Fade(Fade.OUT))
             TransitionManager.beginDelayedTransition(binding.root, transition)
+
+            binding.recyclerNews.alpha = ALFA_FILTER_HIDE
+            binding.filterButton.setImageResource(R.drawable.check_icon)
+            binding.countryTextInput.show()
+            binding.cancelFilter.show()
         }
-        binding.recyclerNews.alpha = 0F
-        binding.filterButton.setImageResource(R.drawable.check_icon)
-        binding.countryTextInput.show()
-        binding.cancelFilter.show()
     }
 
     override fun errorCountry() {
-        binding.countryTextInput.error = "Select Sources"
+        binding.countryTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.countryTextInput.error = null
-        }, 2000L)
+        }, DURATION_ERROR_INPUT)
     }
 
 
@@ -298,19 +296,23 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     companion object {
-        private const val BUNDLE_KEY = "BUNDLE_KEY"
+        private const val CATEGORY_KEY = "CATEGORY_KEY"
+        const val ALFA_FILTER_SHOW = 1F
+        const val ALFA_FILTER_HIDE = 0.5F
+        const val DURATION_FILTER_HIDE = 500L
         fun getInstance(category: String, accountId: Int) =
             TopNewsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(BUNDLE_KEY, category)
+                    putString(CATEGORY_KEY, category)
                     putInt(ACCOUNT_ID, accountId)
                 }
             }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

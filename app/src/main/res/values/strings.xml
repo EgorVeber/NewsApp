@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">NewsAPI</string>
-    <string name="TermsOfUserRegister">Click Register or Login
-You agree to the User Agreement and Commenting Rules.</string>
+    <string name="TermsOfUserRegister">Click Register or LoginYou agree to the User Agreement and Commenting Rules.</string>
     <string name="teamSite"><![CDATA[https://mservices.ria.ru/docs/get/article?project=ria.ru&lang=rus&article_id=1748006692]]></string>
     <string name="errorInputEmail">Wrong format</string>
     <string name="totalFavorites">Total Favorites</string>
@@ -12,4 +11,40 @@ You agree to the User Agreement and Commenting Rules.</string>
     <string name="language">language:</string>
     <string name="total_history">Total History:\u0020</string>
     <string name="total_favorites">Total Favorites:\u0020</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="readon">Read on</string>
+    <string name="anonymousAuthor">Anonymous author</string>
+    <string name="sourceLoaded">Sources loaded</string>
+    <string name="errorSourcesDownload">errorSourcesDownload</string>
+    <string name="pressAgain">Press again to exit</string>
+    <string name="EmptyList">Empty List</string>
+    <string name="notAuthorized">Not authorized</string>
+    <string name="userNone">This user does not exist</string>
+    <string name="createAccount">Account created successfully</string>
+    <string name="checkLogin">Check your login</string>
+    <string name="checkEmail">Check your email</string>
+    <string name="uniqueEmailUsername">Email and username must be unique</string>
+    <string name="InvaligPassword">Invalid password</string>
+    <string name="deleteAccount">Delete account</string>
+    <string name="warningAccount">You will not be able to recover your account</string>
+    <string name="clearHistory">Clear history</string>
+    <string name="clearFavorites">Clear Favorites</string>
+    <string name="errorLoadingAccount">Error loading account</string>
+    <string name="noChangeAccount">No change Account</string>
+    <string name="dataUpdated">Data updated</string>
+    <string name="inputDateЕhrive">No later than 30 days</string>
+    <string name="selectDatePiker">Select Date</string>
+    <string name="errorSelectSources">Select Sources</string>
+    <string name="sourcesSaved">\"Source Saved \"</string>
+    <string name="loginAddToFAvorites">Log in to add to favorites</string>
+    <string name="categoryBusiness">Business</string>
+    <string name="categoryEntertaiment">Entertainment</string>
+    <string name="categoryGeneral">General</string>
+    <string name="categoruHealth">Health</string>
+    <string name="categoruScience">Science</string>
+    <string name="categoruSports">Sports</string>
+    <string name="categoryTechnology">Technology</string>
+    <string name="favoritesLike">Favorites</string>
+    <string name="favoritesHistory">History</string>
 </resources>

@@ -8,14 +8,14 @@ import ru.gb.veber.newsapi.core.AuthorizationScreen
 import ru.gb.veber.newsapi.core.EditAccountScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.account.AccountView
 
 class AccountPresenter(
     private val router: Router,
-    private val roomRepoImpl: RoomRepoImpl,
+    private val roomRepoImpl: AccountRepoImpl,
     private val sharedPreferenceAccount: SharedPreferenceAccount,
     private val articleRepoImpl: ArticleRepoImpl,
 ) :
@@ -32,7 +32,6 @@ class AccountPresenter(
 
     fun onBackPressedRouter(): Boolean {
         router.exit()
-        Log.d("Back", "onBackPressedRouter() Profile")
         return true
     }
 

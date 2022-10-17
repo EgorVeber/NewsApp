@@ -6,7 +6,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,7 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
 import ru.gb.veber.newsapi.utils.EMAIL_STR
 import ru.gb.veber.newsapi.utils.LOGIN_STR
@@ -43,7 +42,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     private val constraintSetLogin = ConstraintSet()
     private val changeBounds = ChangeBounds().apply {
         duration = DURATION_REGISTER
-        interpolator = AnticipateOvershootInterpolator(1F)
+        interpolator = AnticipateOvershootInterpolator(ALFA_LOGIN_BUTTON)
     }
 
     private var userLogin: String = ""
@@ -54,7 +53,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     private val presenter: AuthorizationPresenter by moxyPresenter {
         AuthorizationPresenter(App.instance.router,
-            RoomRepoImpl(App.instance.newsDb.accountsDao()), SharedPreferenceAccount())
+            AccountRepoImpl(App.instance.newsDb.accountsDao()), SharedPreferenceAccount())
     }
 
     override fun onCreateView(
@@ -86,7 +85,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             TransitionManager.beginDelayedTransition(binding.root, changeBounds)
             presenter.changeRegisterAnim()
             if (checkNullRegisterData()) {
-                binding.registerButton.alpha = 1F
+                binding.registerButton.alpha = ALFA_LOGIN_BUTTON
             }
         }
 
@@ -94,7 +93,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             TransitionManager.beginDelayedTransition(binding.root, changeBounds)
             presenter.changeLoginAnim()
             if (checkNullSignUpData()) {
-                binding.signInButton.alpha = 1F
+                binding.signInButton.alpha = ALFA_LOGIN_BUTTON
             }
         }
 
@@ -119,7 +118,6 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             .subscribe({
                 presenter.passwordValidation(it)
             }, {
-                Log.d("RxTextView", it.localizedMessage)
             })
 
         RxTextView.textChanges(binding.userNameEditText)
@@ -128,7 +126,6 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             .subscribe({
                 presenter.loginValidation(it)
             }, {
-                Log.d("RxTextView", it.localizedMessage)
             })
 
         RxTextView.textChanges(binding.passwordRegisterEditText)
@@ -137,17 +134,14 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             .subscribe({
                 presenter.passwordRegisterValidation(it)
             }, {
-                Log.d("RxTextView", it.localizedMessage)
             })
 
         RxTextView.textChanges(binding.userNameRegisterEditText)
             .filter { it.toString().isNotEmpty() }
             .skip(4)
             .subscribe({
-                Log.d("PASSWORD", it.toString())
                 presenter.loginRegisterValidation(it)
             }, {
-                Log.d("RxTextView", it.localizedMessage)
             })
 
 
@@ -157,32 +151,27 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             .subscribe({
                 presenter.emailRegisterValidation(it)
             }, {
-                Log.d("RxTextView", it.localizedMessage)
             })
     }
 
 
     override fun errorSignIn() {
-        binding.passwordTextInput.error = "Invalid password"
+        binding.passwordTextInput.error = getString(R.string.InvaligPassword)
     }
 
     override fun errorRegister() {
-        Log.d("PASSWORD", "errorRegister() called")
-        binding.userNameRegisterTextInput.error = "Check your login"
-        binding.emailRegisterTextInput.error = "Check your email"
-        binding.root.showSnackBarError("Email and username must be unique", "", {})
+        binding.userNameRegisterTextInput.error = getString(R.string.checkLogin)
+        binding.emailRegisterTextInput.error = getString(R.string.checkEmail)
+        binding.root.showSnackBarError(getString(R.string.uniqueEmailUsername), "", {})
     }
 
     override fun successSignIn(id: Int) {
-        //binding.root.showSnackBarError("Successful authorization", "", {})
         presenter.openScreenProfile(id)
-        //  (requireActivity() as BottomNavigationSetIcon).setDefault()
     }
 
     override fun successRegister(id: Int) {
-        binding.root.showSnackBarError("Account created successfully", "", {})
+        binding.root.showSnackBarError(getString(R.string.createAccount), "", {})
         presenter.openScreenProfile(id)
-        // (requireActivity() as BottomNavigationSetIcon).setDefault()
     }
 
 
@@ -191,7 +180,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun emptyAccount() {
-        binding.userNameTextInput.error = "This user does not exist"
+        binding.userNameTextInput.error = getString(R.string.userNone)
     }
 
     override fun setBottomNavigationIcon(checkLogin: String) {
@@ -203,21 +192,21 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         binding.userNameTextInput.error = null
         userLogin = charSequence.toString()
         if (userPassword != "") {
-            binding.signInButton.alpha = 1F
+            binding.signInButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
     override fun loginNotValidate() {
         binding.userNameTextInput.error = getString(R.string.errorInputEmail) + "($LOGIN_STR)"
         userLogin = ""
-        binding.signInButton.alpha = 0.5F
+        binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     override fun passwordIsValidate(it: CharSequence?) {
         binding.passwordTextInput.error = null
         userPassword = it.toString()
         if (userLogin != "") {
-            binding.signInButton.alpha = 1F
+            binding.signInButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
@@ -225,14 +214,14 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         userPassword = ""
         binding.passwordTextInput.error =
             getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
-        binding.signInButton.alpha = 0.5F
+        binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     override fun loginRegisterIsValidate(it: CharSequence?) {
         binding.userNameRegisterTextInput.error = null
         userRegisterLogin = it.toString()
         if (userRegisterPassword != "" && userEmail != "") {
-            binding.registerButton.alpha = 1F
+            binding.registerButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
@@ -240,14 +229,14 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         binding.userNameRegisterTextInput.error =
             getString(R.string.errorInputEmail) + "($LOGIN_STR)"
         userRegisterLogin = ""
-        binding.registerButton.alpha = 0.5F
+        binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     override fun passwordRegisterIsValidate(it: CharSequence?) {
         binding.passwordRegisterTextInput.error = null
         userRegisterPassword = it.toString()
         if (userRegisterLogin != "" && userEmail != "") {
-            binding.registerButton.alpha = 1F
+            binding.registerButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
@@ -255,14 +244,14 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         userRegisterPassword = ""
         binding.passwordRegisterTextInput.error =
             getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
-        binding.registerButton.alpha = 0.5F
+        binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     override fun emailRegisterIsValidate(it: CharSequence?) {
         binding.emailRegisterTextInput.error = null
         userEmail = it.toString()
         if (userRegisterLogin != "" && userRegisterPassword != "") {
-            binding.registerButton.alpha = 1F
+            binding.registerButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
@@ -270,7 +259,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         userEmail = ""
         binding.emailRegisterTextInput.error =
             getString(R.string.errorInputEmail) + "($EMAIL_STR)"
-        binding.registerButton.alpha = 0.5F
+        binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     override fun setRegisterAnim() {
@@ -330,15 +319,15 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         SpannableStringBuilder(binding.privacyPolicy.text).apply {
 
             setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
-                R.color.selectedColor)), 41, 55, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                R.color.selectedColor)), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
             setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
-                R.color.selectedColor)), 60, 76, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                R.color.selectedColor)), SPAN_START_START_POLICY, SPAN_START_END_POLICY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            setSpan(UnderlineSpan(), 41, 55, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(UnderlineSpan(), 60, 76, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(UnderlineSpan(), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(UnderlineSpan(), SPAN_START_START_POLICY, SPAN_START_END_POLICY, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             binding.privacyPolicy.text = this
             removeSpan(this)
@@ -363,8 +352,13 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     companion object {
-
         const val DURATION_REGISTER = 650L
+        const val ALFA_LOGIN_BUTTON = 1F
+        const val ALFA_HALF_LOGIN_BUTTON = 0.5F
+        const val SPAN_START_INDEX_PRIVACY = 41
+        const val SPAN_START_END_PRIVACY = 55
+        const val SPAN_START_START_POLICY= 60
+        const val SPAN_START_END_POLICY = 76
         fun getInstance(): AuthorizationFragment {
             return AuthorizationFragment()
         }

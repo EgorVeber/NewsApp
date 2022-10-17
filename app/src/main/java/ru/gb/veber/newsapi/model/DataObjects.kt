@@ -7,6 +7,21 @@ import ru.gb.veber.newsapi.utils.ALL_COUNTRY_VALUE
 import ru.gb.veber.newsapi.utils.formatDateTime
 import java.util.*
 
+data class Account(
+    val id: Int,
+    var userName: String,
+    var email: String,
+    var password: String,
+    val createdAt: String,
+    var totalHistory: String? = "0",
+    var totalFavorites: String? = "0",
+    var saveHistory: Boolean = true,
+    var saveSelectHistory: Boolean = true,
+    var displayOnlySources: Boolean = false,
+    var myCountry: String = ALL_COUNTRY,
+    var countryCode: String = ALL_COUNTRY_VALUE,
+)
+
 data class Article(
     var id: Int? = 0,
     var author: String?,
@@ -23,11 +38,10 @@ data class Article(
     var dateAdded: String? = Date().formatDateTime(),
 )
 
-data class Country(
-    val id: String,
-    val code: String,
+data class Source(
+    var id: String?,
+    var name: String,
 )
-
 
 data class Sources(
     val id: Int,
@@ -56,23 +70,7 @@ data class HistorySelect(
     var sourcesName: String? = "",
 ) : Parcelable
 
-
-data class Source(
-    var id: String?,
-    var name: String,
-)
-
-data class Account(
-    val id: Int,
-    var userName: String,
-    var email: String,
-    var password: String,
-    val createdAt: String,
-    var totalHistory: String? = "0",
-    var totalFavorites: String? = "0",
-    var saveHistory: Boolean = true,
-    var saveSelectHistory: Boolean = true,
-    var displayOnlySources: Boolean = false,
-    var myCountry: String = ALL_COUNTRY,
-    var countryCode: String = ALL_COUNTRY_VALUE,
+data class Country(
+    val id: String,
+    val code: String,
 )

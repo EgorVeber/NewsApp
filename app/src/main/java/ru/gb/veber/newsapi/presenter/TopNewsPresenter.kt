@@ -10,12 +10,12 @@ import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.Country
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HEADER_NEWS
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 import java.util.*
 
@@ -23,7 +23,7 @@ class TopNewsPresenter(
     private val newsRepoImpl: NewsRepoImpl,
     private val router: Router,
     private val articleRepoImpl: ArticleRepoImpl,
-    private val roomRepoImpl: RoomRepoImpl,
+    private val roomRepoImpl: AccountRepoImpl,
     private val accountIdPresenter: Int,
     private val countryRepoImpl: CountryRepoImpl,
     private val sharedPreferenceAccount: SharedPreferenceAccount,
@@ -53,7 +53,7 @@ class TopNewsPresenter(
                 saveHistory = it.saveHistory
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
-            }).disposebleBy(bag)
+            }).disposableBy(bag)
         } else {
             viewState.hideFavorites()
         }
@@ -76,7 +76,7 @@ class TopNewsPresenter(
                     }
                 }
             }
-            newsModified.also { it[0].viewType = VIEW_TYPE_HEADER_NEWS }
+            newsModified.also { it[0].viewType = VIEW_TYPE_TOP_NEWS_HEADER }
         }.subscribeDefault().subscribe({
             if (it.isEmpty()) {
                 viewState.emptyList()
@@ -87,7 +87,7 @@ class TopNewsPresenter(
         }, {
             viewState.emptyList()
             Log.d(ERROR_DB, it.localizedMessage)
-        }).disposebleBy(bag)
+        }).disposableBy(bag)
     }
 
 
@@ -115,7 +115,7 @@ class TopNewsPresenter(
                         viewState.changeNews(articleListHistory)
                     }, {
                         Log.d(ERROR_DB, it.localizedMessage)
-                    }).disposebleBy(bag)
+                    }).disposableBy(bag)
             }
         }
     }
@@ -126,10 +126,8 @@ class TopNewsPresenter(
         articleRepoImpl.insertArticle(item).subscribe({
             articleListHistory.find { it.title == article.title }?.isFavorites = true
             viewState.changeNews(articleListHistory)
-            Log.d(ERROR_DB, "successInsertArticle")
         }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        }).disposebleBy(bag)
+        }).disposableBy(bag)
     }
 
 
@@ -140,7 +138,7 @@ class TopNewsPresenter(
             viewState.changeNews(articleListHistory)
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
-        }).disposebleBy(bag)
+        }).disposableBy(bag)
     }
 
 

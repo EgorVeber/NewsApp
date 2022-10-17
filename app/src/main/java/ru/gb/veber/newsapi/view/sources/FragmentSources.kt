@@ -6,11 +6,10 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.model.Sources
@@ -21,7 +20,6 @@ import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.utils.showText
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 
@@ -43,7 +41,7 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     }
 
     override fun setLogin() {
-        binding.root.showText("Log in to add to favorites")
+        binding.root.showText(getString(R.string.loginAddToFAvorites))
     }
 
     private val listener = object : SourcesListener {

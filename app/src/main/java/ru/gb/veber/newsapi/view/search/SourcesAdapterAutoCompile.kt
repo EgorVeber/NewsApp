@@ -55,13 +55,13 @@ class SourcesAdapterAutoCompile(
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             val results = FilterResults()
             val suggestions: MutableList<Sources> = ArrayList()
-            if (constraint == null || constraint.length == 0) {
+            if (constraint == null || constraint.isEmpty()) {
                 suggestions.addAll(countryListFull)
             } else {
                 val filterPattern =
                     constraint.toString().lowercase(Locale.getDefault()).trim { it <= ' ' }
                 for (item in countryListFull) {
-                    if (item.name!!.toLowerCase().contains(filterPattern)) {
+                    if (item.name!!.toLowerCase(Locale.ROOT).contains(filterPattern)) {
                         suggestions.add(item)
                     }
                 }

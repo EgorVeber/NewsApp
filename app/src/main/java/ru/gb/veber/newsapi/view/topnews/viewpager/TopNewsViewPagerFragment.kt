@@ -7,21 +7,14 @@ import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayoutMediator
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsViewPagerFragmentBinding
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.ALL_COUNTRY
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.BUSINESS
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_BUSINESS
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_ENTERTAINMENT
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_HEALTH
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_SCIENCE
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_SPORTS
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_TECHNOLOGY
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.ENTERTAINMENT
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.GENERAL
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.HEALTH
@@ -63,13 +56,13 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
             TopNewsViewPagerAdapter(requireActivity(), accountID)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
-                BUSINESS -> tab.text = CATEGORY_BUSINESS
-                ENTERTAINMENT -> tab.text = CATEGORY_ENTERTAINMENT
-                GENERAL -> tab.text = CATEGORY_GENERAL
-                HEALTH -> tab.text = CATEGORY_HEALTH
-                SCIENCE -> tab.text = CATEGORY_SCIENCE
-                SPORTS -> tab.text = CATEGORY_SPORTS
-                TECHNOLOGY -> tab.text = CATEGORY_TECHNOLOGY
+                BUSINESS -> tab.text = getString(R.string.categoryBusiness)
+                ENTERTAINMENT -> tab.text = getString(R.string.categoryEntertaiment)
+                GENERAL -> tab.text = getString(R.string.categoryGeneral)
+                HEALTH -> tab.text = getString(R.string.categoruHealth)
+                SCIENCE -> tab.text = getString(R.string.categoruScience)
+                SPORTS -> tab.text = getString(R.string.categoruSports)
+                TECHNOLOGY -> tab.text = getString(R.string.categoryTechnology)
             }
         }.attach()
     }

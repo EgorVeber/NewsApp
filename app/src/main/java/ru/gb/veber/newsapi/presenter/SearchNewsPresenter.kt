@@ -3,241 +3,221 @@ package ru.gb.veber.newsapi.presenter
 import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
-import ru.gb.veber.newsapi.core.AllNewsScreen
-import ru.gb.veber.newsapi.model.Account
+import ru.gb.veber.newsapi.core.WebViewScreen
+import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.view.search.SearchNewsView
+import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsView
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import java.util.*
 
 class SearchNewsPresenter(
+    private val newsRepoImpl: NewsRepoImpl,
     private val router: Router,
-    private val roomRepoImpl: RoomRepoImpl,
-    private val historySelectRepoImpl: HistorySelectRepoImpl,
-    private val accountIdPresenter: Int,
+    private val articleRepoImpl: ArticleRepoImpl,
+    private val roomRepoImpl: AccountRepoImpl,
+    private val accountId: Int,
     private val sourcesRepoImpl: SourcesRepoImpl,
     private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
-) : MvpPresenter<SearchNewsView>() {
+) :
+    MvpPresenter<SearchNewsView>() {
 
-    private lateinit var allSources: MutableList<Sources>
-    private lateinit var likeSources: List<Sources>
-    private var accountHistorySelect: Boolean = false
+    private var saveHistory = false
+    private var likeSources: MutableList<Sources> = mutableListOf()
+    private var allSources: List<Sources> = listOf()
+    private var sourcesID: Int = 0
+
+
+    private var articleListHistory: MutableList<Article> = mutableListOf()
+    private val bag = CompositeDisposable()
+
 
     fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    fun getAccountSettings() {
+        roomRepoImpl.getAccountById(accountId).subscribe({
+            saveHistory = it.saveHistory
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
+        if (accountId == ACCOUNT_ID_DEFAULT) {
+            viewState.hideFavorites()
+        } else {
+            getSourcesLike()
+            getSources()
+        }
     }
 
-    fun getSources() {
-        if (accountIdPresenter == ACCOUNT_ID_DEFAULT) {
-            viewState.hideSelectHistory()
-            viewState.hideEmptyList()
-            sourcesRepoImpl.getSources().subscribe({
+    private fun getSourcesLike() {
+        accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId).subscribe({
+            likeSources = it.toMutableList()
+        }, {
+        }).disposableBy(bag)
+    }
 
-                allSources = it
-                viewState.setSources(it)
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
-        } else {
-            Single.zip(sourcesRepoImpl.getSources(),
-                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountIdPresenter),
-                roomRepoImpl.getAccountById(accountIdPresenter)) { all, like, account ->
+    private fun getSources() {
+        sourcesRepoImpl.getSources().subscribe({
+            allSources = it
+        }, {
+        }).disposableBy(bag)
+    }
 
-                accountHistorySelect = account.saveSelectHistory
-                allSources = all
-                like.map { it.isLike = true }
-                likeSources = like
 
-                if (account.displayOnlySources && like.isNotEmpty()) {
-                    Log.d("displayOnlySources",
-                        "getSources() called with: all = $all, like = $like, account = $account")
-                    likeSources = like
-                    return@zip like
+    fun getNews(historySelect: HistorySelect?) {
+
+        viewState.setTitle(
+            historySelect?.keyWord,
+            historySelect?.sourcesName,
+            if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            historySelect?.dateSources)
+
+
+        Single.zip(newsRepoImpl.getEverythingKeyWordSearchInSources(
+            historySelect?.sourcesId,
+            historySelect?.keyWord,
+            historySelect?.searchIn,
+            if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            historySelect?.dateSources,
+            historySelect?.dateSources
+        ).map { articles ->
+            articles.articles.map(::mapToArticle).also {
+                newsRepoImpl.changeRequest(it)
+                it.map { art ->
+                    art.viewType = VIEW_TYPE_SEARCH_NEWS
                 }
-                if (like.isEmpty()) {
-                    return@zip all
-                } else {
-                    for (j in like.size - 1 downTo 0) {
-                        for (i in all.indices) {
-                            if (like[j].idSources == all[i].idSources) {
-                                all.removeAt(i)
-                                all.add(0, like[j].also { it.isLike = true })
-                            }
+            }
+        }, articleRepoImpl.getArticleById(accountId)) { news, articles ->
+
+            articles.forEach { art ->
+                news.forEach { new ->
+                    if (art.title == new.title) {
+                        if (art.isFavorites) {
+                            new.isFavorites = true
+                        }
+                        if (art.isHistory) {
+                            new.isHistory = true
                         }
                     }
-                    all
                 }
-            }.subscribe({
-                viewState.setSources(it)
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
-        }
-    }
-
-    fun changeSearchCriteria(b: Boolean) {
-        if (!b) {
-            viewState.searchInShow()
-        } else {
-            viewState.sourcesInShow()
-        }
-    }
-
-    fun openScreenAllNewsSources(
-        date: String,
-        sourcesName: String,
-        sortBy: String,
-    ) {
-        if (sourcesName.isEmpty() || !allSources.map { it.name }.contains(sourcesName)) {
-            viewState.selectSources()
-        } else {
-            if (!checkDate(date)) {
-                viewState.errorDateInput()
+            }
+            news
+        }.subscribe({
+            if (it.isEmpty()) {
+                viewState.emptyList()
             } else {
-                var sourcesId = allSources.find { it.name == sourcesName }?.idSources
-                if (date == NOT_INPUT_DATE) {
-                    var x = HistorySelect(
-                        0, accountID = accountIdPresenter,
-                        sourcesId = sourcesId,
-                        sortBySources = sortBy,
-                        sourcesName = sourcesName,
-                    )
-                    router.navigateTo(AllNewsScreen(accountIdPresenter, x))
-
-                    if (accountHistorySelect) {
-                        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
-                            .subscribe({}, {
-                                Log.d(ERROR_DB, it.localizedMessage)
-                            })
-                    }
-                } else {
-                    var x = HistorySelect(
-                        0, accountID = accountIdPresenter,
-                        sourcesId = sourcesId,
-                        sortBySources = sortBy,
-                        sourcesName = sourcesName,
-                        dateSources = stringFromDataPiker(date).formatDate()
-                    )
-
-                    router.navigateTo(AllNewsScreen(accountIdPresenter, x))
-                    if (accountHistorySelect) {
-                        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
-                            .subscribe({}, {
-                                Log.d(ERROR_DB, it.localizedMessage)
-                            })
-                    }
-                }
+                articleListHistory = it.toMutableList()
+                viewState.setNews(it)
             }
-        }
+        }, {
+            viewState.emptyList()
+        }).disposableBy(bag)
     }
 
-    private fun checkDate(date: String): Boolean {
-        if (date == NOT_INPUT_DATE) {
-            return true
-        }
-        return !(stringFromDataNews(date) > Date() || stringFromDataNews(date) <= takeDate(-30))
-    }
+    fun clickNews(article: Article) {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            var isLikeSources = likeSources.find { it.idSources == article.source.id }?.id ?: 0
+            sourcesID = allSources.find { it.idSources == article.source.id }?.id ?: 0
 
-    fun openScreenAllNews(
-        keyWord: String,
-        searchIn: String,
-        sortBy: String,
-        sourcesName: String,
-    ) {
-        if (sourcesName.isEmpty()) {
-
-
-            var x = HistorySelect(id = 0, accountID = accountIdPresenter,
-                keyWord = keyWord,
-                searchIn = searchIn,
-                sortByKeyWord = sortBy)
-
-
-            router.navigateTo(AllNewsScreen(accountIdPresenter, x))
-
-            if (accountHistorySelect) {
-                historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x)).subscribe({}, {
-                    Log.d(ERROR_DB, it.localizedMessage)
-                })
-            }
-        } else {
-            if (!allSources.map { it.name }.contains(sourcesName)) {
-                viewState.selectSources()
+            if (isLikeSources != 0 || sourcesID == 0) {
+                viewState.hideSaveSources()
             } else {
-                var sourcesId = allSources.find { it.name == sourcesName }?.idSources
+                viewState.showSaveSources()
+            }
+            saveArticle(article)
+        }
+        viewState.clickNews(article)
+        if (article.isFavorites) viewState.setLikeResourcesActive()
+        else viewState.setLikeResourcesNegative()
+        viewState.sheetExpanded()
+    }
 
-                var x = HistorySelect(
-                    0, accountID = accountIdPresenter,
-                    keyWord = keyWord,
-                    searchIn = searchIn,
-                    sortByKeyWord = sortBy,
-                    sourcesId = sourcesId,
-                    sourcesName = sourcesName
-                )
-                router.navigateTo(AllNewsScreen(accountIdPresenter, x))
 
-                if (accountHistorySelect) {
-                    historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
-                        .subscribe({}, {
-                            Log.d(ERROR_DB, it.localizedMessage)
-                        })
-                }
+    fun saveSources() {
+        accountSourcesRepoImpl.insert(AccountSourcesDbEntity(accountId, sourcesID)).subscribe({
+            viewState.successSaveSources()
+            getSourcesLike()
+        }, {
+        }).disposableBy(bag)
+    }
+
+
+    private fun saveArticle(article: Article) {
+        if (saveHistory) {
+            if (!article.isFavorites && !article.isHistory) {
+                article.isHistory = true
+                article.dateAdded = Date().formatDateTime()
+                articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId))
+                    .subscribe({
+                        articleListHistory.find { it.title == article.title }?.isHistory = true
+                        viewState.changeNews(articleListHistory)
+                    }, {
+                        Log.d(ERROR_DB, it.localizedMessage)
+                    }).disposableBy(bag)
             }
         }
     }
 
-    fun pikerPositive(l: Long) {
-        viewState.pikerPositive(l)
-    }
 
-    fun pikerNegative() {
-        viewState.pikerNegative()
-    }
+    fun setOnClickImageFavorites(article: Article) {
+        if (article.isFavorites) {
+            viewState.setLikeResourcesNegative()
+            viewState.removeBadge()
 
-    fun getHistorySelect() {
-        if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
-            historySelectRepoImpl.getHistoryById(accountIdPresenter).subscribe({
-                if (it.isEmpty()) {
-                    viewState.setHistory(listOf())
-                    viewState.emptyHistory()
-                } else {
-                    viewState.setHistory(it.map(::mapToHistorySelect).reversed())
-                }
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
+            deleteFavorites(article)
+            article.isFavorites = false
+
+        } else {
+            viewState.addBadge()
+            viewState.setLikeResourcesActive()
+
+            saveArticleLike(article)
+            article.isFavorites = true
         }
     }
 
-    fun openScreenNewsHistory(historySelect: HistorySelect) {
-        router.navigateTo(AllNewsScreen(accountIdPresenter, historySelect))
-    }
-
-    fun clearHistory() {
-        historySelectRepoImpl.deleteSelectById(accountIdPresenter).subscribe({
-            viewState.setHistory(listOf())
-            viewState.emptyHistory()
+    private fun deleteFavorites(article: Article) {
+        article.isFavorites = false
+        articleRepoImpl.deleteArticleById(article.title.toString(), accountId).subscribe({
+            articleListHistory.find { it.title == article.title }?.isFavorites = false
+            viewState.changeNews(articleListHistory)
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
-        })
+        }).disposableBy(bag)
     }
 
-    fun deleteHistory(historySelect: HistorySelect) {
-        historySelectRepoImpl.deleteSelect(mapToHistorySelectDbEntity(historySelect)).subscribe({
-            getHistorySelect()
+    private fun saveArticleLike(article: Article) {
+        var item = mapToArticleDbEntity(article, accountId)
+        item.isFavorites = true
+        articleRepoImpl.insertArticle(item).subscribe({
+            articleListHistory.find { it.title == article.title }?.isFavorites = true
+            viewState.changeNews(articleListHistory)
         }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        })
+        }).disposableBy(bag)
+    }
+
+
+    fun openScreenWebView(url: String) {
+        router.navigateTo(WebViewScreen(url))
+    }
+
+    fun exit() {
+        router.exit()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bag.dispose()
     }
 }

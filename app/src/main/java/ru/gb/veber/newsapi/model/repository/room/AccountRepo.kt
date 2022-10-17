@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 
-interface RoomRepo {
+interface AccountRepo {
     fun createAccount(accountDbEntity: AccountDbEntity): Completable
     fun updateAccount(accountDbEntity: AccountDbEntity): Completable
     fun updateAccountById(accountId: Int, saveHistory: Boolean): Completable

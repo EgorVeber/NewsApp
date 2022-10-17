@@ -3,7 +3,6 @@ package ru.gb.veber.newsapi.view.profile.account
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,8 @@ import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
 import ru.gb.veber.newsapi.databinding.DialogDeleteAccountBinding
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.presenter.AccountPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
@@ -29,7 +28,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     private val binding get() = _binding!!
 
     private val presenter: AccountPresenter by moxyPresenter {
-        AccountPresenter(App.instance.router, RoomRepoImpl(App.instance.newsDb.accountsDao()),
+        AccountPresenter(App.instance.router, AccountRepoImpl(App.instance.newsDb.accountsDao()),
             SharedPreferenceAccount(), ArticleRepoImpl(App.instance.newsDb.articleDao()))
     }
 
@@ -95,7 +94,6 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.totalHistoryText.text =
             getString(R.string.totalHistory) + " " + account.totalHistory
 
-        Log.d("TAG", "setAccountInfo() called with: account = $account")
         binding.saveHistorySwitch.isChecked = account.saveHistory
         binding.saveHistorySelectSwitch.isChecked = account.saveSelectHistory
         binding.showFavorites.isChecked = account.displayOnlySources
@@ -103,7 +101,6 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
         TransitionManager.beginDelayedTransition(binding.root)
         binding.nestedScrollAccount.show()
-        Log.d("setAccountInfo", "setAccountInfo() called with: account = $account")
     }
 
     override fun loading() {
@@ -118,8 +115,8 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         val dialogBinding = DialogDeleteAccountBinding.inflate(layoutInflater)
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setCancelable(true)
-            .setTitle("Delete account")
-            .setMessage("You will not be able to recover your account")
+            .setTitle(getString(R.string.deleteAccount))
+            .setMessage(getString(R.string.warningAccount))
             .setView(dialogBinding.root)
             .create()
         dialog.show()
@@ -137,12 +134,12 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     @SuppressLint("SetTextI18n")
     override fun clearHistory() {
         binding.totalHistoryText.text = getString(R.string.totalHistory) + " 0"
-        binding.nestedScrollAccount.showSnackBarError("Success", "", {})
+        binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearHistory), "", {})
     }
 
     override fun clearFavorites() {
         binding.totalFavoritesText.text = getString(R.string.totalFavorites) + " 0"
-        binding.nestedScrollAccount.showSnackBarError("Success", "", {})
+        binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearFavorites), "", {})
     }
 
     override fun onDestroyView() {

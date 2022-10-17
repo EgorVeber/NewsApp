@@ -21,7 +21,6 @@ class CustomAutoCompleteTextView : MaterialAutoCompleteTextView {
     }
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
-        //чтоб не закрывала при беке
         if (keyCode == KeyEvent.KEYCODE_BACK && isPopupShowing) {
             val inputManager: InputMethodManager =
                 context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -36,14 +35,8 @@ class CustomAutoCompleteTextView : MaterialAutoCompleteTextView {
 
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect)
-        if(focused){
+        if (focused) {
             this.showDropDown()
         }
     }
-
-
-//
-//    override fun setOnKeyListener(l: OnKeyListener?) {
-//        this.hideKeyboard()
-//    }
 }

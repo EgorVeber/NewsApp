@@ -4,7 +4,7 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
-import ru.gb.veber.newsapi.core.AllNewsScreen
+import ru.gb.veber.newsapi.core.SearchNewsScreen
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
@@ -32,7 +32,6 @@ class SourcesPresenter(
     private lateinit var likeSources: List<Sources>
 
     fun onBackPressedRouter(): Boolean {
-        Log.d("Back", "onBackPressedRouter() SourcesDTO")
         router.exit()
         return true
     }
@@ -92,7 +91,6 @@ class SourcesPresenter(
                 source.isLike = false
                 accountSourcesRepoImpl.deleteSourcesLike(accountIdPresenter, source.id).subscribe({
                     getSources()
-                    Log.d("DbImageClick", "success deleteSourcesLike")
                 }, {
                     Log.d(ERROR_DB, it.localizedMessage)
                 })
@@ -101,7 +99,6 @@ class SourcesPresenter(
                 accountSourcesRepoImpl.insert(AccountSourcesDbEntity(accountIdPresenter, source.id))
                     .subscribe({
                         getSources()
-                        Log.d("DbImageClick", "success insert")
                     }, {
                         Log.d(ERROR_DB, it.localizedMessage)
                     })
@@ -112,7 +109,7 @@ class SourcesPresenter(
     }
 
     fun openAllNews(source: String?, name: String?) {
-        router.navigateTo(AllNewsScreen(accountIdPresenter,
+        router.navigateTo(SearchNewsScreen(accountIdPresenter,
             HistorySelect(0, accountIdPresenter, sourcesId = source, sourcesName = name)))
         var x = HistorySelect(
             0, accountID = accountIdPresenter,

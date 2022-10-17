@@ -13,11 +13,10 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.utils.loadGlide
 import ru.gb.veber.newsapi.utils.loadGlideNot
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HEADER_NEWS
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
 
-typealias OnUserClickListener = (article: Article) -> Unit
 
 interface RecyclerListener {
     fun clickNews(article: Article)
@@ -38,14 +37,14 @@ class TopNewsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            VIEW_TYPE_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(parent.context),
+            VIEW_TYPE_TOP_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
             VIEW_TYPE_FAVORITES_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(
                 parent.context),
                 parent,
                 false), listener)
-            VIEW_TYPE_HEADER_NEWS -> NewsHeaderViewHolder(TopNewsItemHeaderBinding.inflate(
+            VIEW_TYPE_TOP_NEWS_HEADER -> NewsHeaderViewHolder(TopNewsItemHeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
@@ -84,7 +83,6 @@ class NewsViewHolder(
         imageNews.loadGlide(item.urlToImage)
         viewedText.text = if (item.isHistory || item.isFavorites) "viewed" else ""
         root.setOnClickListener {
-            // onUserClickListener.invoke(item)
             listener.clickNews(item)
         }
         imageFavorites.setOnClickListener {
@@ -123,7 +121,6 @@ class NewsHeaderViewHolder(
         imageNews.loadGlideNot(item.urlToImage)
         viewedTextHeader.text = if (item.isHistory || item.isFavorites) "viewed" else ""
         root.setOnClickListener {
-            // onUserClickListener.invoke(item)
             listener.clickNews(item)
         }
     }
@@ -134,19 +131,10 @@ abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     abstract fun bind(item: Article)
 
     companion object {
-        const val VIEW_TYPE_NEWS = 0
-        const val VIEW_TYPE_HEADER_NEWS = 1
+        const val VIEW_TYPE_TOP_NEWS = 0
+        const val VIEW_TYPE_TOP_NEWS_HEADER = 1
         const val VIEW_TYPE_FAVORITES_NEWS = 2
         const val VIEW_TYPE_SEARCH_NEWS = 3
     }
 }
-
-
-//1 варинат без scaleType обрезается часть содержимого
-//        imageNews.load(item.urlToImage) {
-//            transformations(RoundedCornersTransformation(25f))
-//            placeholder(R.drawable.loading1)
-//            error(R.drawable.plaecehodler2)
-//        }
-//2 варинат без scaleType загружает не обрезанную но мелькая относительно контейнера
 

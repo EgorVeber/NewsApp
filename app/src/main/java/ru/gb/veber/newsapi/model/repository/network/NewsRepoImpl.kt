@@ -1,7 +1,9 @@
-package ru.gb.veber.newsapi.model.repository
+package ru.gb.veber.newsapi.model.repository.network
 
-import android.util.Log
+import android.annotation.SuppressLint
 import io.reactivex.rxjava3.core.Single
+import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.ArticlesDTO
 import ru.gb.veber.newsapi.model.SourcesRequestDTO
@@ -12,39 +14,44 @@ import java.util.*
 
 class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
 
+    @SuppressLint("SimpleDateFormat")
     override fun changeRequest(list: List<Article>): List<Article> {
         return list.map {
 
-            Log.d("changeRequest", it.title.toString())
-            Log.d("changeRequestTrim", it.title.toString().trim())
+            val publishedDate = stringFromData(it.publishedAt)
+            val simpleFormat = SimpleDateFormat(FORMAT_DATE)
 
-            var publishedDate = stringFromData(it.publishedAt)
-            var SDF = SimpleDateFormat("yyyy-MM-dd")
+            val todayStr = App.instance.applicationContext.getString(R.string.today)
+            val yesterdayStr = App.instance.applicationContext.getString(R.string.yesterday)
+            val readOnStr = App.instance.applicationContext.getString(R.string.readon)
+            val anonymousOnStr = App.instance.applicationContext.getString(R.string.anonymousAuthor)
 
-            if (SDF.format(publishedDate).equals(SDF.format(Date()))) {
-                it.publishedAtChange = "Today ${publishedDate.formatHour()}"
-            } else if (SDF.format(publishedDate).equals(SDF.format(takeDate(-1)))) {
-                it.publishedAtChange = "Yesterday ${publishedDate.formatHour()}"
+            if (simpleFormat.format(publishedDate).equals(simpleFormat.format(Date()))) {
+                it.publishedAtChange = "$todayStr ${publishedDate.formatHour()}"
+            } else if (simpleFormat.format(publishedDate)
+                    .equals(simpleFormat.format(takeDate(-1)))
+            ) {
+                it.publishedAtChange = "$yesterdayStr ${publishedDate.formatHour()}"
             } else {
                 it.publishedAtChange = publishedDate.formatDateTime()
             }
-
 
             if (it.title == null || it.description.equals("")) {
                 it.title = it.publishedAt
             }
             if (it.source.id == null) {
-                it.source.id = "Не проверенный источник"
+                it.source.id = ""
             }
 
             if (it.description.equals("") || it.description == null) {
-                it.description = " Read on ${it.source.name}"
+                it.description = " $readOnStr ${it.source.name}"
+
             } else {
                 it.description += "."
             }
 
             if (it.author == null || it.author.equals("") || it.author.equals(" ")) {
-                it.author = "Anonymous author"
+                it.author = anonymousOnStr
             }
             it
         }

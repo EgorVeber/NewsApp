@@ -1,7 +1,6 @@
 package ru.gb.veber.newsapi.view.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.github.terrakok.cicerone.androidx.AppNavigator
@@ -13,13 +12,13 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
-import ru.gb.veber.newsapi.view.search.searchnews.AllNewsFragment
+import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
@@ -45,9 +44,8 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
     private lateinit var binding: ActivityMainBinding
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
-    private var backStack = 1
-    private var counterBadge = 0
-
+    private var backStack = COUNTER_BACKSTACK
+    private var counterBadge = COUNTER_BADGE
 
     private val presenter: ActivityPresenter by moxyPresenter {
         ActivityPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
@@ -64,11 +62,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         setContentView(binding.root)
         presenter.getAccountSettings()
         presenter.getCheckFirstStartApp()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //  presenter.getCheckFirstStartApp()
     }
 
     override fun onResumeFragments() {
@@ -135,14 +128,14 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
             }
         }
 
-        if (supportFragmentManager.fragments.last() !is AllNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
+        if (supportFragmentManager.fragments.last() !is SearchNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
             supportFragmentManager.fragments.last() !is EditAccountFragment
         ) {
             binding.bottomNavigationView.selectedItemId = R.id.topNews
         }
 
         if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
-            Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.pressAgain), Toast.LENGTH_SHORT).show()
         } else {
             supportFragmentManager.fragments.forEach { fragment ->
                 if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
@@ -154,7 +147,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         backStack = 0
         Completable.create {
             it.onComplete()
-        }.delay(2000L, TimeUnit.MILLISECONDS).subscribe({
+        }.delay(DELAY_BACK_STACK, TimeUnit.MILLISECONDS).subscribe({
             backStack = 1
         }, {
         })
@@ -178,7 +171,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun completableInsertSources() {
-        Toast.makeText(this, "Sources loaded", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.sourceLoaded), Toast.LENGTH_SHORT).show()
     }
 
     override fun bottomNavigationSetCurrentAccount(checkLogin: String) {
@@ -193,7 +186,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun addBadge() {
-        Log.d("counterBadge", counterBadge.toString())
         counterBadge += 1
         var badge = binding.bottomNavigationView.getOrCreateBadge(R.id.favoritesNews)
         badge.isVisible = true
@@ -204,7 +196,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         counterBadge--
         if (counterBadge <= 0) {
             counterBadge = 0
-            Log.d("counterBadge", counterBadge.toString())
             val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
             if (badgeDrawable != null) {
                 binding.bottomNavigationView.removeBadge(R.id.favoritesNews)
@@ -214,5 +205,9 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
             badge.isVisible = true
             badge.number = counterBadge
         }
+    }
+
+    override fun errorSourcesDownload() {
+        binding.root.showText(getString(R.string.errorSourcesDownload))
     }
 }

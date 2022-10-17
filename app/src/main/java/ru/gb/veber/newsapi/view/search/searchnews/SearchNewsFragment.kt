@@ -20,12 +20,12 @@ import ru.gb.veber.newsapi.databinding.AllNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.RoomRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
-import ru.gb.veber.newsapi.presenter.AllNewsPresenter
+import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
@@ -34,7 +34,7 @@ import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 
 
-class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener,
+class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedListener,
     EventBehaviorToActivity {
 
     private var _binding: AllNewsFragmentBinding? = null
@@ -42,12 +42,12 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
 
-    private val presenter: AllNewsPresenter by moxyPresenter {
-        AllNewsPresenter(
+    private val presenter: SearchNewsPresenter by moxyPresenter {
+        SearchNewsPresenter(
             NewsRepoImpl(NewsRetrofit.newsTopSingle),
             App.instance.router,
             ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            RoomRepoImpl(App.instance.newsDb.accountsDao()),
+            AccountRepoImpl(App.instance.newsDb.accountsDao()),
             arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT,
             SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
             AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
@@ -176,7 +176,7 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
 
     override fun successSaveSources() {
         binding.saveSources.hide()
-        binding.root.showSnackBarError("Source Saved ", "", {})
+        binding.root.showSnackBarError(getString(R.string.sourcesSaved), "", {})
     }
 
     private fun setSpan(description: String) {
@@ -205,8 +205,8 @@ class AllNewsFragment : MvpAppCompatFragment(), AllNewsView, BackPressedListener
         fun getInstance(
             accountId: Int,
             historySelect: HistorySelect,
-        ): AllNewsFragment {
-            return AllNewsFragment().apply {
+        ): SearchNewsFragment {
+            return SearchNewsFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ACCOUNT_ID, accountId)
                     putParcelable(HISTORY_SELECT_BUNDLE, historySelect)

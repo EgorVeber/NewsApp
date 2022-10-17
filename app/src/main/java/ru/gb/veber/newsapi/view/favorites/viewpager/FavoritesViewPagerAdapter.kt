@@ -29,6 +29,5 @@ class FavoritesViewPagerAdapter(fragmentManager: FragmentActivity, private val a
                 else -> FAVORITES
             }
         return FavoritesFragment.getInstance(page, accountID)
-
     }
 }

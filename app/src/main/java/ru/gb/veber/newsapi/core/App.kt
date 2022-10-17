@@ -5,11 +5,6 @@ import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.model.database.NewsDataBase
 
-
-
-//TODO Норма картинки сделать везде и фильтр recycler и анимации загрузки
-
-
 class App : Application() {
 
     private val cicerone: Cicerone<Router> by lazy { Cicerone.create() }
@@ -19,23 +14,10 @@ class App : Application() {
     val newsDb: NewsDataBase by lazy {
         NewsDataBase.createDb(this)
     }
-
-    // private lateinit var connetivityListener: ConnetivityListener
-
-    //  val database: GithubDB by lazy { GithubDB.create(this) }
-
     override fun onCreate() {
         super.onCreate()
         instance = this
-//        connetivityListener = ConnetivityListener(
-//            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        )
     }
+    companion object { lateinit var instance: App }
 
-//    fun getConnectObservable() = connetivityListener.status()
-//    fun getConnectSingle() = connetivityListener.statusSingle()
-
-    companion object {
-        lateinit var instance: App
-    }
 }

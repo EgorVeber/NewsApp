@@ -7,15 +7,14 @@ import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayoutMediator
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavoritesViewPagerFragmentBinding
 import ru.gb.veber.newsapi.presenter.FavoritesViewPagerPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES_POSITION
-import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.HISTORY
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.HISTORY_POSITION
 
 class FavoritesViewPagerFragment : MvpAppCompatFragment(), FavoritesViewPagerView,
@@ -49,9 +48,9 @@ class FavoritesViewPagerFragment : MvpAppCompatFragment(), FavoritesViewPagerVie
             binding.favoritesHistoryViewPager) { tab, position ->
             when (position) {
                 FAVORITES_POSITION -> {
-                    tab.text = FAVORITES
+                    tab.text = getString(R.string.favoritesLike)
                 }
-                HISTORY_POSITION -> tab.text = HISTORY
+                HISTORY_POSITION -> tab.text = getString(R.string.favoritesHistory)
             }
         }.attach()
     }

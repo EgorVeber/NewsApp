@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.model.repository
+package ru.gb.veber.newsapi.model.repository.network
 
 import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.model.Article
@@ -52,6 +52,4 @@ interface NewsRepo {
         language: String? = null,
         country: String? = null,
     ): Single<SourcesRequestDTO>
-
-
 }

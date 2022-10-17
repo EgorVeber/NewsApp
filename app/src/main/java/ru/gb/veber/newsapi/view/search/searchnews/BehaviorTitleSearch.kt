@@ -22,7 +22,10 @@ class BehaviorTitleSearch(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        child.x = (dependency.x + dependency.width + 30)
+        child.x = (dependency.x + dependency.width + MARGIN_LEFT)
         return super.onDependentViewChanged(parent, child, dependency)
+    }
+    companion object{
+        const val MARGIN_LEFT= 30
     }
 }

@@ -1,15 +1,13 @@
 package ru.gb.veber.newsapi.presenter
 
-import android.util.Log
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.*
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.mapToCountry
 import ru.gb.veber.newsapi.utils.sourcesDtoToEntity
 import ru.gb.veber.newsapi.view.activity.ViewMain
@@ -24,7 +22,6 @@ class ActivityPresenter(
 ) : MvpPresenter<ViewMain>() {
 
     override fun onFirstViewAttach() {
-        Log.d("TAG", "onFirstViewAttach() called")
         viewState.init()
         super.onFirstViewAttach()
     }
@@ -45,7 +42,7 @@ class ActivityPresenter(
     }
 
     fun openScreenSearchNews() {
-        router.newRootScreen(SearchNewsScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(SearchScreen(sharedPreferenceAccount.getAccountID()))
         viewState.hideAllBehavior()
     }
 
@@ -55,7 +52,6 @@ class ActivityPresenter(
     }
 
     fun onBackPressedRouter() {
-        Log.d("Navigate", " router.exit() ActivityPresenter")
         router.exit()
     }
 
@@ -63,10 +59,6 @@ class ActivityPresenter(
         if (sharedPreferenceAccount.getAccountID() != ACCOUNT_ID_DEFAULT) {
             viewState.onCreateSetIconTitleAccount(sharedPreferenceAccount.getAccountLogin())
         }
-    }
-
-    fun openScreenWebView(url: String) {
-        // router.navigateTo(WebViewScreen(url))
     }
 
     fun getCheckFirstStartApp() {
@@ -95,10 +87,10 @@ class ActivityPresenter(
                 .subscribe({
                     viewState.completableInsertSources()
                 }, {
-                    Log.d(ERROR_DB, "insertAll " + it.localizedMessage)
+                        viewState.errorSourcesDownload()
                 })
         }, {
-            Log.d(ERROR_DB, " getSources " + it.localizedMessage)
+            viewState.errorSourcesDownload()
         })
     }
 }

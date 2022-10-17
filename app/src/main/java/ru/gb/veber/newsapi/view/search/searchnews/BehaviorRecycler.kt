@@ -22,7 +22,10 @@ class BehaviorRecycler(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        child.y = (dependency.y + dependency.height * 1.5F)
+        child.y = (dependency.y + dependency.height * BIAS_VERTICAL)
         return super.onDependentViewChanged(parent, child, dependency)
+    }
+    companion object{
+        const val BIAS_VERTICAL = 1.5F
     }
 }

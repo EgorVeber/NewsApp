@@ -23,10 +23,4 @@ class AccountSourcesRepoImpl(private val accountSourcesDao: AccountSourcesDao) :
     override fun deleteSourcesLike(accountId: Int, sourcesId: Int): Completable {
         return accountSourcesDao.deleteSourcesLike(accountId,sourcesId).subscribeDefault()
     }
-
-
-//    override fun getLikeSourcesFromAccount(accountId: Int): Single<Map<SourcesDbEntity, AccountSourcesDbEntity>> {
-//        return accountSourcesDao.getLikeSourcesFromAccount(accountId)
-//            .subscribeDefault()
-//    }
 }
