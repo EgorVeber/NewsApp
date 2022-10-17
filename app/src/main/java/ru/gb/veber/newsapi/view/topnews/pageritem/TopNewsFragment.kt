@@ -13,7 +13,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
 import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -283,6 +286,18 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun setStateBehavior() {
         bSheetB.collapsed()
+    }
+
+    override fun animationShow() {
+        TransitionSet().also { transition ->
+            transition.duration = 500L
+            transition.addTransition(Fade())
+            TransitionManager.beginDelayedTransition(binding.root, transition)
+        }
+        binding.recyclerNews.alpha = 0F
+        binding.filterButton.setImageResource(R.drawable.check_icon)
+        binding.countryTextInput.show()
+        binding.cancelFilter.show()
     }
 
     override fun onDestroyView() {

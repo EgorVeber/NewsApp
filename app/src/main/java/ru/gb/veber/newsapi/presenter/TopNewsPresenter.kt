@@ -167,10 +167,11 @@ class TopNewsPresenter(
 
     fun filterButtonClick() {
         if (!filterFlag) {
-            viewState.setAlfa()
-            viewState.setImageFilterButton()
-            viewState.showCountryList()
-            viewState.showCancelButton()
+//            viewState.setAlfa()
+//            viewState.setImageFilterButton()
+//            viewState.showCountryList()
+//            viewState.showCancelButton()
+            viewState.animationShow()
         } else {
             //validation
         }

@@ -38,4 +38,5 @@ interface TopNewsView : MvpView {
     fun hideCountryList()
     fun showCancelButton()
     fun hideCancelButton()
+    fun animationShow()
 }
