@@ -32,7 +32,6 @@ class TopNewsPresenter(
 
 
     private lateinit var account: Account
-    private var myCountry: String = ALL_COUNTRY_VALUE
     private var saveHistory = false
 
     private var filterFlag = false
@@ -61,7 +60,7 @@ class TopNewsPresenter(
     }
 
     fun loadNews(category: String) {
-        var countryCode = sharedPreferenceAccount.getAccountCountry()
+        var countryCode = sharedPreferenceAccount.getAccountCountryCode()
         Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, countryCode),
             articleRepoImpl.getArticleById(accountIdPresenter)) { news, articles ->
             var newsModified = mapToArticleDTO(news).also { newsRepoImpl.changeRequest(it) }
@@ -185,15 +184,18 @@ class TopNewsPresenter(
             if (country.isEmpty() || !listCountry.map { it.id }.contains(country)) {
                 viewState.errorCountry()
             } else {
-                account.myCountry = country
-                roomRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
-                    var countryCode =
-                        listCountry.find { it.id == country }?.code ?: ALL_COUNTRY_VALUE
-                    sharedPreferenceAccount.setAccountCountry(countryCode)
-                    viewState.updateViewPagerEvent()
-                }, {
-                    Log.d(ERROR_DB, it.localizedMessage)
-                })
+                var countryCode = listCountry.find { it.id == country }?.code ?: ALL_COUNTRY_VALUE
+                sharedPreferenceAccount.setAccountCountryCode(countryCode)
+                sharedPreferenceAccount.setAccountCountry(country)
+                viewState.updateViewPagerEvent()
+                if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
+                    account.myCountry = country
+                    account.countryCode = countryCode
+                    roomRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
+                    }, {
+                        Log.d(ERROR_DB, it.localizedMessage)
+                    })
+                }
             }
         }
     }
@@ -212,10 +214,13 @@ class TopNewsPresenter(
     }
 
     fun getCountry() {
-        countryRepoImpl.getCountry().subscribe({
-            listCountry = it.map(::mapToDbEntityCountry) as MutableList<Country>
+        countryRepoImpl.getCountry().subscribe({ country ->
+            listCountry = country.map(::mapToDbEntityCountry) as MutableList<Country>
             listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
-            viewState.setCountry(listCountry.map { country -> country.id })
+            var list: MutableList<String> =
+                listCountry.map { country -> country.id }.sortedBy { it } as MutableList<String>
+            var index = list.indexOf(sharedPreferenceAccount.getAccountCountry())
+            viewState.setCountry(list, index)
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })

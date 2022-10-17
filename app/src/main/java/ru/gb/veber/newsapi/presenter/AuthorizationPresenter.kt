@@ -44,7 +44,7 @@ class AuthorizationPresenter(
             saveHistory = true,
             saveSelectHistory = true,
             displayOnlySources = false,
-            myCountry = ALL_COUNTRY))
+            myCountry = ALL_COUNTRY, countryCode = ALL_COUNTRY_VALUE))
             .andThen(roomRepoImpl.getAccountByUserName(username)).subscribe({
                 viewState.successRegister(it.id)
                 saveIdSharedPref(it)
@@ -71,6 +71,7 @@ class AuthorizationPresenter(
     private fun saveIdSharedPref(accountId: Account) {
         sharedPreferenceAccount.setAccountID(accountId.id)
         sharedPreferenceAccount.setAccountLogin(accountId.userName.checkLogin())
+        // sharedPreferenceAccount.setAccountCountry(accountId.myCountry)
         viewState.setBottomNavigationIcon(accountId.userName.checkLogin())
     }
 
@@ -80,7 +81,6 @@ class AuthorizationPresenter(
 
     fun openMain() {
         viewState.sendActivityOpenScreen()
-        // router.replaceScreen(AllNewsScreen(0))
     }
 
     fun openScreenWebView(string: String) {

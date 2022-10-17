@@ -60,7 +60,8 @@ fun mapToAccountDbEntity(item: Account): AccountDbEntity {
         saveHistory = item.saveHistory,
         saveSelectHistory = item.saveSelectHistory,
         displayOnlySources = item.displayOnlySources,
-        myCountry = item.myCountry
+        myCountry = item.myCountry,
+        countryCode = item.countryCode
     )
 }
 

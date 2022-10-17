@@ -29,8 +29,7 @@ interface TopNewsView : MvpView {
     fun sheetExpanded()
 
 
-
-     fun setCountry(map: List<String>)
+    fun setCountry(map: List<String>, index: Int)
 
     fun hideFilter()
     fun setAlfaCancel()
@@ -39,7 +38,5 @@ interface TopNewsView : MvpView {
     fun hideCancelButton()
     fun fadeRecyclerShowCountry()
     fun errorCountry()
-     fun updateViewPagerEvent()
-
-
+    fun updateViewPagerEvent()
 }

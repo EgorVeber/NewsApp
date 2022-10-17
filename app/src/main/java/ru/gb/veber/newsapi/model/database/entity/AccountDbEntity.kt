@@ -26,4 +26,6 @@ data class AccountDbEntity(
     var displayOnlySources: Boolean = false,
     @ColumnInfo(name = "my_country")
     var myCountry: String,
+    @ColumnInfo(name = "country_code")
+    var countryCode: String,
 )

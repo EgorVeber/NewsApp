@@ -3,6 +3,7 @@ package ru.gb.veber.newsapi.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import ru.gb.veber.newsapi.utils.ALL_COUNTRY
+import ru.gb.veber.newsapi.utils.ALL_COUNTRY_VALUE
 import ru.gb.veber.newsapi.utils.formatDateTime
 import java.util.*
 
@@ -73,4 +74,5 @@ data class Account(
     var saveSelectHistory: Boolean = true,
     var displayOnlySources: Boolean = false,
     var myCountry: String = ALL_COUNTRY,
+    var countryCode: String = ALL_COUNTRY_VALUE,
 )

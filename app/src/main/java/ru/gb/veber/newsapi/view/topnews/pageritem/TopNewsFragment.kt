@@ -239,9 +239,11 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.countryAutoComplete.hideKeyboard()
     }
 
-    override fun setCountry(country: List<String>) {
+    override fun setCountry(country: List<String>, index: Int) {
         binding.countryAutoComplete.setAdapter(ArrayAdapter(requireContext(),
-            android.R.layout.simple_list_item_1, country.sortedBy { it }))
+            android.R.layout.simple_list_item_1, country))
+        binding.countryAutoComplete.setText(binding.countryAutoComplete.adapter.getItem(index)
+            .toString(), false);
     }
 
 

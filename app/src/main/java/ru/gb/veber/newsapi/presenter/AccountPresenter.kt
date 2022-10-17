@@ -40,6 +40,7 @@ class AccountPresenter(
         router.replaceScreen(AuthorizationScreen)
         sharedPreferenceAccount.setAccountID(ACCOUNT_ID_DEFAULT)
         sharedPreferenceAccount.setAccountLogin(ACCOUNT_LOGIN_DEFAULT)
+        //sharedPreferenceAccount.setAccountCountry(ALL_COUNTRY_VALUE)
     }
 
     fun openScreenEditAccount(accountID: Int) {
@@ -72,11 +73,6 @@ class AccountPresenter(
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
             })
-//            roomRepoImpl.getAccountById(it).subscribe({ account ->
-//                viewState.setAccountInfo(account)
-//            }, {
-//                Log.d(ERROR_DB, it.localizedMessage)
-//            })
         }
     }
 
