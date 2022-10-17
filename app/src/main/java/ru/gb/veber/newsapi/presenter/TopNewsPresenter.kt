@@ -215,11 +215,15 @@ class TopNewsPresenter(
 
     fun getCountry() {
         countryRepoImpl.getCountry().subscribe({ country ->
+
             listCountry = country.map(::mapToDbEntityCountry) as MutableList<Country>
             listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
             var list: MutableList<String> =
                 listCountry.map { country -> country.id }.sortedBy { it } as MutableList<String>
             var index = list.indexOf(sharedPreferenceAccount.getAccountCountry())
+            if (index == -1) {
+                index = 0
+            }
             viewState.setCountry(list, index)
         }, {
             Log.d(ERROR_DB, it.localizedMessage)

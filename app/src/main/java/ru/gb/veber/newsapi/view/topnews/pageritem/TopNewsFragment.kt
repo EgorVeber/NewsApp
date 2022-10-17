@@ -7,6 +7,7 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -113,6 +114,8 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             presenter.cancelButtonClick()
         }
     }
+
+
 
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
@@ -245,6 +248,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.countryAutoComplete.setText(binding.countryAutoComplete.adapter.getItem(index)
             .toString(), false);
     }
+
 
 
     override fun emptyList() {
