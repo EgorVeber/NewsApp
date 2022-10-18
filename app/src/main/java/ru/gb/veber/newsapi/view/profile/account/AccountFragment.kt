@@ -16,6 +16,7 @@ import ru.gb.veber.newsapi.databinding.DialogDeleteAccountBinding
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.AccountPresenter
 import ru.gb.veber.newsapi.utils.*
@@ -29,7 +30,8 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     private val presenter: AccountPresenter by moxyPresenter {
         AccountPresenter(App.instance.router, AccountRepoImpl(App.instance.newsDb.accountsDao()),
-            SharedPreferenceAccount(), ArticleRepoImpl(App.instance.newsDb.articleDao()))
+            SharedPreferenceAccount(), ArticleRepoImpl(App.instance.newsDb.articleDao()),
+            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
     }
 
     override fun onCreateView(
@@ -62,13 +64,18 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.deleteAccount.setOnClickListener {
             presenter.showDialog()
         }
+
         binding.totalHistory.setOnClickListener {
             presenter.clearHistory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
         }
+
         binding.totalFavorites.setOnClickListener {
             presenter.clearFavorites(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
         }
 
+        binding.totalSources.setOnClickListener {
+            presenter.clearSources(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        }
 
         binding.saveHistorySwitch.setOnCheckedChangeListener { compoundButton, b ->
             presenter.updateAccountSaveHistory(b)
@@ -93,6 +100,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
             getString(R.string.totalFavorites) + " " + account.totalFavorites
         binding.totalHistoryText.text =
             getString(R.string.totalHistory) + " " + account.totalHistory
+
+        binding.totalSourcesText.text =
+            getString(R.string.totalSources) + " " + account.totalSources
 
         binding.saveHistorySwitch.isChecked = account.saveHistory
         binding.saveHistorySelectSwitch.isChecked = account.saveSelectHistory
@@ -140,6 +150,11 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     override fun clearFavorites() {
         binding.totalFavoritesText.text = getString(R.string.totalFavorites) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearFavorites), "", {})
+    }
+
+    override fun clearSources() {
+        binding.totalSourcesText.text = getString(R.string.totalSources) + " 0"
+        binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearSources), "", {})
     }
 
     override fun onDestroyView() {

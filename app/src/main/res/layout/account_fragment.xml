@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -45,7 +44,7 @@
                 android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginStart="10dp"
@@ -55,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="Account" />
+                    android:text="@string/account" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -87,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Edit Information"
+                        android:text="@string/edit_information"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -119,7 +118,6 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
-                        android:text="Total Favorites 0"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -129,6 +127,7 @@
                         android:layout_marginEnd="10dp"
                         android:src="@drawable/ic_baseline_delete_24" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/totalHistory"
@@ -156,7 +155,43 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
-                        android:text="Total History 0"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_delete_24" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/totalSources"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="?selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_baseline_emoji_people_24" />
+
+                    <TextView
+                        android:id="@+id/totalSourcesText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -189,10 +224,11 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_weight="4"
-                        android:text="Requests per day"
+                        android:text="@string/requests_per_day"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -223,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="60 из 100" />
+                        android:text="@string/_60_100" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -250,7 +286,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Logout"
+                        android:text="@string/logout"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -274,7 +310,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="Appearance" />
+                    android:text="@string/appearance" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -304,7 +340,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Font size"
+                        android:text="@string/font_size"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -331,7 +367,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Dark theme"
+                        android:text="@string/dark_theme"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -363,7 +399,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Image upload"
+                        android:text="@string/image_upload"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -394,7 +430,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="Screen settings" />
+                    android:text="@string/screen_settings" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -424,7 +460,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Save history"
+                        android:text="@string/save_history"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -458,7 +494,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Save history Select"
+                        android:text="@string/save_history_select"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -493,7 +529,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Customize Category"
+                        android:text="@string/customize_category"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -521,7 +557,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Show favorites sources in a list"
+                        android:text="@string/show_favorites_sources_in_a_list"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -553,7 +589,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="Notification" />
+                    android:text="@string/notification" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -582,7 +618,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Get Notification FireBase"
+                        android:text="@string/get_notification_firebase"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -613,7 +649,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="Additional Information" />
+                    android:text="@string/additional_information" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -643,7 +679,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="About the application"
+                        android:text="@string/about_the_application"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -670,7 +706,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Privacy Policy"
+                        android:text="@string/privacy_policy"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -698,7 +734,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
-                        android:text="Technical support"
+                        android:text="@string/technical_support"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -729,10 +765,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="5dp"
-                    android:text="Delete account"
+                    android:text="@string/delete_account"
                     android:textColor="@color/colorError"
                     android:textSize="16sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

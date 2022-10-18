@@ -4,27 +4,27 @@
     <item
         android:id="@+id/actionSources"
         android:icon="@drawable/ic_baseline_emoji_people_24"
-        android:title="Sources"
+        android:title="@string/menuSources"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/searchNews"
         android:icon="@drawable/ic_baseline_search_24"
-        android:title="Search"
+        android:title="@string/menuSearch"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/topNews"
         android:icon="@drawable/default_icon"
-        android:title="Top"
+        android:title="@string/menuTop"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/favoritesNews"
         android:icon="@drawable/ic_favorite"
-        android:title="Favorites"
+        android:title="@string/menuFavorites"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/actionProfile"
         android:icon="@drawable/ic_baseline_person_add_alt_1_24"
-        android:title="Profile"
+        android:title="@string/menuProfile"
         app:showAsAction="ifRoom" />
 </menu>

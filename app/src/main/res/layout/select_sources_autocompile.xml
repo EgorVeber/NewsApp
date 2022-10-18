@@ -21,8 +21,7 @@
         android:background="?selectableItemBackground"
         android:gravity="end"
         android:maxLines="1"
-        android:padding="16dp"
-        android:text="Russia" />
+        android:padding="16dp" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/checkSources"

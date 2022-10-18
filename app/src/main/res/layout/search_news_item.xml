@@ -13,7 +13,6 @@
         android:layout_marginEnd="5dp"
         app:layout_constraintHorizontal_bias="0.05"
         android:ellipsize="end"
-        android:text="asdasdasdasdasdsAAAAdasdaDAAAAAAAAAAAA"
         android:maxLines="3"
         android:textSize="16sp"
         app:layout_constrainedWidth="true"
@@ -27,7 +26,7 @@
         android:layout_height="90dp"
         android:layout_marginBottom="15dp"
         android:scaleType="fitXY"
-        android:src="@drawable/plaecehodler2"
+        android:src="@drawable/chipmunk"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,14 +35,13 @@
         android:id="@+id/viewedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="viewed"
+        android:text="@string/viewed"
         app:layout_constraintEnd_toEndOf="@+id/imageNews"
         app:layout_constraintTop_toBottomOf="@+id/imageNews" />
 
     <TextView
         android:id="@+id/publishedAt"
         style="@style/sources_text"
-        android:text="asdasdasdasdsadsadasdaDAAAAAAAAAAAA"
         android:layout_marginStart="5dp"
         android:textColor="@color/gray2"
         android:textSize="12sp"

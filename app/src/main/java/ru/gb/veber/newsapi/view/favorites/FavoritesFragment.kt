@@ -121,7 +121,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
 
     override fun emptyList() {
         binding.statusTextLike.show()
-        binding.statusTextLike.text = getString(R.string.EmptyList)
+        binding.statusTextLike.text = getString(R.string.empty_list)
     }
 
     override fun updateFavorites(list: List<Article>) {

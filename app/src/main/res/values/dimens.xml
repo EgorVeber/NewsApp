@@ -29,4 +29,5 @@
     <dimen name="weather_icon_margin">110dp</dimen>
     <dimen name="hairline">1dp</dimen>
     <dimen name="fab_location_icon_size">45dp</dimen>
+    <dimen name="cornerRadiusTextInput">10dp</dimen>
 </resources>

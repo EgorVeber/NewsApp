@@ -23,7 +23,7 @@
             android:adjustViewBounds="true"
             android:background="#f6f6fa"
             android:scaleType="fitXY"
-            android:src="@drawable/newsplaceholder"
+            android:src="@drawable/chipmunk"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -23,4 +23,8 @@ class AccountSourcesRepoImpl(private val accountSourcesDao: AccountSourcesDao) :
     override fun deleteSourcesLike(accountId: Int, sourcesId: Int): Completable {
         return accountSourcesDao.deleteSourcesLike(accountId,sourcesId).subscribeDefault()
     }
+
+    override fun deleteSources(accountId: Int): Completable {
+        return accountSourcesDao.deleteSources(accountId).subscribeDefault()
+    }
 }

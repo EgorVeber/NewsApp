@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:text="Empty List"
+        android:text="@string/empty_list"
         android:textColor="@color/black"
         android:textSize="36sp"
         android:visibility="gone" />
@@ -58,7 +58,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/selectedColor"
-        android:text="Фильтр"
         app:layout_behavior=".view.topnews.pageritem.BehaviorActionButton"
         app:srcCompat="@drawable/filter_icon"
         app:tint="@color/white" />
@@ -68,7 +67,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/selectedColor"
-        android:text="Фильтр"
         android:visibility="gone"
         app:layout_behavior=".view.topnews.pageritem.BehaviorActionButtonCancel"
         app:srcCompat="@drawable/close_icon48"

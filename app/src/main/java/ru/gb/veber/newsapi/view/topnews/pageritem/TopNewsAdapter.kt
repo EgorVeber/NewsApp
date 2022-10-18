@@ -10,8 +10,10 @@ import ru.gb.veber.newsapi.databinding.SearchNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.utils.hide
 import ru.gb.veber.newsapi.utils.loadGlide
 import ru.gb.veber.newsapi.utils.loadGlideNot
+import ru.gb.veber.newsapi.utils.show
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS
@@ -37,7 +39,8 @@ class TopNewsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            VIEW_TYPE_TOP_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(parent.context),
+            VIEW_TYPE_TOP_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(
+                parent.context),
                 parent,
                 false), listener)
             VIEW_TYPE_FAVORITES_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(
@@ -74,14 +77,13 @@ class NewsViewHolder(
     var listener: RecyclerListener,
 ) : BaseViewHolder(binding.root) {
 
-    @SuppressLint("SetTextI18n")
     override fun bind(item: Article) = with(binding) {
         imageFavorites.visibility =
             if (itemViewType == VIEW_TYPE_FAVORITES_NEWS) View.VISIBLE else View.GONE
         title.text = item.title
         publishedAt.text = item.publishedAtChange
         imageNews.loadGlide(item.urlToImage)
-        viewedText.text = if (item.isHistory || item.isFavorites) "viewed" else ""
+        if (item.isHistory || item.isFavorites) viewedText.show() else viewedText.hide()
         root.setOnClickListener {
             listener.clickNews(item)
         }
@@ -96,12 +98,11 @@ class SearchNewsViewHolder(
     var listener: RecyclerListener,
 ) : BaseViewHolder(binding.root) {
 
-    @SuppressLint("SetTextI18n")
     override fun bind(item: Article) = with(binding) {
         title.text = item.title
         publishedAt.text = item.publishedAtChange
         imageNews.loadGlide(item.urlToImage)
-        viewedText.text = if (item.isHistory || item.isFavorites) "viewed" else ""
+        if (item.isHistory || item.isFavorites) viewedText.show() else viewedText.hide()
         root.setOnClickListener {
             listener.clickNews(item)
         }
@@ -114,12 +115,11 @@ class NewsHeaderViewHolder(
     var listener: RecyclerListener,
 ) : BaseViewHolder(binding.root) {
 
-    @SuppressLint("SetTextI18n")
     override fun bind(item: Article) = with(binding) {
         title.text = item.title
         publishedAt.text = item.publishedAtChange
         imageNews.loadGlideNot(item.urlToImage)
-        viewedTextHeader.text = if (item.isHistory || item.isFavorites) "viewed" else ""
+        if (item.isHistory || item.isFavorites) viewedTextHeader.show() else viewedTextHeader.hide()
         root.setOnClickListener {
             listener.clickNews(item)
         }

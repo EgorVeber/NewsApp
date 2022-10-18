@@ -53,7 +53,6 @@ class SourcesViewHolder(
 
         name.text = item.name
         description.text = item.description
-        url.text = item.url
         category.text = item.category
         language.text = item.language
         country.text = item.country

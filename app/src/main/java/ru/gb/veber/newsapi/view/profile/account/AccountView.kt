@@ -16,4 +16,5 @@ interface AccountView : MvpView {
     fun showDialog()
     fun clearHistory()
     fun clearFavorites()
+    fun clearSources()
 }

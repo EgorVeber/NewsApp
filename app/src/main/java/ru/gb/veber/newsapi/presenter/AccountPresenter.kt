@@ -9,15 +9,17 @@ import ru.gb.veber.newsapi.core.EditAccountScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.account.AccountView
 
 class AccountPresenter(
     private val router: Router,
-    private val roomRepoImpl: AccountRepoImpl,
+    private val accountRepo: AccountRepoImpl,
     private val sharedPreferenceAccount: SharedPreferenceAccount,
     private val articleRepoImpl: ArticleRepoImpl,
+    private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
 ) :
     MvpPresenter<AccountView>() {
 
@@ -39,7 +41,6 @@ class AccountPresenter(
         router.replaceScreen(AuthorizationScreen)
         sharedPreferenceAccount.setAccountID(ACCOUNT_ID_DEFAULT)
         sharedPreferenceAccount.setAccountLogin(ACCOUNT_LOGIN_DEFAULT)
-        //sharedPreferenceAccount.setAccountCountry(ALL_COUNTRY_VALUE)
     }
 
     fun openScreenEditAccount(accountID: Int) {
@@ -48,7 +49,7 @@ class AccountPresenter(
 
     fun deleteAccount(accountID: Int) {
         if (accountID != ACCOUNT_ID_DEFAULT) {
-            roomRepoImpl.deleteAccount(accountID).subscribe({
+            accountRepo.deleteAccount(accountID).subscribe({
                 logout()
                 viewState.setBottomNavigationIcon()
             }, {
@@ -61,11 +62,14 @@ class AccountPresenter(
         viewState.loading()
         accountID?.let { acc ->
             accountId = accountID
-            Single.zip(roomRepoImpl.getAccountById(acc),
-                articleRepoImpl.getArticleById(accountID)) { account, articles ->
+            Single.zip(accountRepo.getAccountById(acc),
+                articleRepoImpl.getArticleById(accountID),
+                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountID)) { account, articles, listSources ->
+
                 accountMain = account
                 account.totalFavorites = articles.filter { it.isFavorites }.size.toString()
                 account.totalHistory = articles.filter { it.isHistory }.size.toString()
+                account.totalSources = listSources.size.toString()
                 account
             }.subscribeDefault().subscribe({
                 viewState.setAccountInfo(it)
@@ -99,8 +103,16 @@ class AccountPresenter(
         })
     }
 
+    fun clearSources(accountId: Int) {
+        accountSourcesRepoImpl.deleteSources(accountId).subscribe({
+            viewState.clearSources()
+        }, {
+        })
+    }
+
+
     fun updateAccountSaveHistory(checked: Boolean) {
-        roomRepoImpl.updateAccountById(accountId, checked).subscribe({
+        accountRepo.updateAccountById(accountId, checked).subscribe({
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })
@@ -109,7 +121,7 @@ class AccountPresenter(
     fun updateAccountShowListFavorite(b: Boolean) {
         accountMain?.let {
             it.displayOnlySources = b
-            roomRepoImpl.updateAccount(mapToAccountDbEntity(it)).subscribe({
+            accountRepo.updateAccount(mapToAccountDbEntity(it)).subscribe({
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
             })
@@ -118,9 +130,11 @@ class AccountPresenter(
 
     fun updateAccountSaveHistorySelect(checked: Boolean) {
         accountMain.saveSelectHistory = checked
-        roomRepoImpl.updateAccount(mapToAccountDbEntity(accountMain)).subscribe({
+        accountRepo.updateAccount(mapToAccountDbEntity(accountMain)).subscribe({
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })
     }
+
+
 }

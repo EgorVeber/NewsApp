@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_item"
     android:layout_width="match_parent"
-    android:layout_marginEnd="10dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginBottom="10dp"
     android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp"
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="@dimen/radius_card_view"
@@ -19,10 +19,11 @@
         <TextView
             android:id="@+id/viewedTextHeader"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:text="@string/viewed"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageNews"
@@ -49,9 +50,9 @@
             style="@style/sources_text"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
+            android:paddingBottom="10dp"
             android:textColor="@color/selectedColor"
             android:textSize="14sp"
-            android:paddingBottom="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
     </androidx.constraintlayout.widget.ConstraintLayout>

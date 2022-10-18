@@ -57,11 +57,11 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 BUSINESS -> tab.text = getString(R.string.categoryBusiness)
-                ENTERTAINMENT -> tab.text = getString(R.string.categoryEntertaiment)
+                ENTERTAINMENT -> tab.text = getString(R.string.categoryEntertainment)
                 GENERAL -> tab.text = getString(R.string.categoryGeneral)
-                HEALTH -> tab.text = getString(R.string.categoruHealth)
-                SCIENCE -> tab.text = getString(R.string.categoruScience)
-                SPORTS -> tab.text = getString(R.string.categoruSports)
+                HEALTH -> tab.text = getString(R.string.categoryHealth)
+                SCIENCE -> tab.text = getString(R.string.categoryScience)
+                SPORTS -> tab.text = getString(R.string.categorySports)
                 TECHNOLOGY -> tab.text = getString(R.string.categoryTechnology)
             }
         }.attach()

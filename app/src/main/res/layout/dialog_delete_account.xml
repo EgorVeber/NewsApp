@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         app:layout_constraintEnd_toStartOf="@id/negativeDelete"
-        android:text="Delete"
+        android:text="@string/delete"
         app:rippleColor="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
          />
@@ -24,7 +24,7 @@
         android:textSize="16sp"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Сancel"
+        android:text="@string/cancel"
         app:rippleColor="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

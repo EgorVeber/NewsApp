@@ -20,4 +20,7 @@ interface AccountSourcesDao {
 
     @Query("Delete from account_sources where account_id =:accountId and sources_id =:sourcesId ")
     fun deleteSourcesLike(accountId: Int, sourcesId: Int): Completable
+
+    @Query("Delete from account_sources where account_id =:accountId ")
+    fun deleteSources(accountId: Int): Completable
 }

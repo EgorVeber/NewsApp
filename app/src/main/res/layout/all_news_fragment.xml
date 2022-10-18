@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:text="Empty List"
+        android:text="@string/empty_list"
         android:textColor="@color/black"
         android:textSize="36sp"
         android:visibility="gone" />
@@ -137,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:background="?selectableItemBackground"
-                    android:text="Save Sources"
+                    android:text="@string/save_sources"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/authorText" />

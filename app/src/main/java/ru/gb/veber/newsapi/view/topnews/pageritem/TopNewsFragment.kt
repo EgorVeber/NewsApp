@@ -300,7 +300,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     companion object {
         private const val CATEGORY_KEY = "CATEGORY_KEY"
         const val ALFA_FILTER_SHOW = 1F
-        const val ALFA_FILTER_HIDE = 0.5F
+        const val ALFA_FILTER_HIDE = 0F
         const val DURATION_FILTER_HIDE = 500L
         fun getInstance(category: String, accountId: Int) =
             TopNewsFragment().apply {
