@@ -23,7 +23,7 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
 
             val todayStr = App.instance.applicationContext.getString(R.string.today)
             val yesterdayStr = App.instance.applicationContext.getString(R.string.yesterday)
-            val readOnStr = App.instance.applicationContext.getString(R.string.readon)
+            val readOnStr = App.instance.applicationContext.getString(R.string.readOn)
             val anonymousOnStr = App.instance.applicationContext.getString(R.string.anonymousAuthor)
 
             if (simpleFormat.format(publishedDate).equals(simpleFormat.format(Date()))) {

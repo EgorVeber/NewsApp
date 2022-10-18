@@ -41,7 +41,7 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     }
 
     override fun setLogin() {
-        binding.root.showText(getString(R.string.loginAddToFAvorites))
+        binding.root.showText(getString(R.string.loginAddToFavorites))
     }
 
     private val listener = object : SourcesListener {

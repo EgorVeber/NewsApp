@@ -91,6 +91,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
+        binding.recyclerNews.itemAnimator = null
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
 
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {

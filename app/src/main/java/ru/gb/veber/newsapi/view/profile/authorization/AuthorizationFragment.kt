@@ -6,6 +6,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.activity.OpenScreen
+import java.util.*
 
 
 class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
@@ -156,7 +158,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
 
     override fun errorSignIn() {
-        binding.passwordTextInput.error = getString(R.string.InvaligPassword)
+        binding.passwordTextInput.error = getString(R.string.invalidPassword)
     }
 
     override fun errorRegister() {
@@ -316,6 +318,10 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     private fun setSpanRegulationsTv() {
+
+        var current:Locale = resources.configuration.locale
+
+
         SpannableStringBuilder(binding.privacyPolicy.text).apply {
 
             setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),

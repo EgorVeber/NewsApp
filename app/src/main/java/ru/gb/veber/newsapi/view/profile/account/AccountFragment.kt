@@ -97,12 +97,12 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.userName.text = account.userName
         binding.userEmail.text = account.email
         binding.totalFavoritesText.text =
-            getString(R.string.totalFavorites) + " " + account.totalFavorites
+            getString(R.string.total_favorites) +  account.totalFavorites
         binding.totalHistoryText.text =
-            getString(R.string.totalHistory) + " " + account.totalHistory
+            getString(R.string.total_history) +  account.totalHistory
 
         binding.totalSourcesText.text =
-            getString(R.string.totalSources) + " " + account.totalSources
+            getString(R.string.totalSources) + account.totalSources
 
         binding.saveHistorySwitch.isChecked = account.saveHistory
         binding.saveHistorySelectSwitch.isChecked = account.saveSelectHistory
@@ -143,15 +143,17 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun clearHistory() {
-        binding.totalHistoryText.text = getString(R.string.totalHistory) + " 0"
+        binding.totalHistoryText.text = getString(R.string.total_history) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearHistory), "", {})
     }
 
+    @SuppressLint("SetTextI18n")
     override fun clearFavorites() {
-        binding.totalFavoritesText.text = getString(R.string.totalFavorites) + " 0"
+        binding.totalFavoritesText.text = getString(R.string.total_favorites) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearFavorites), "", {})
     }
 
+    @SuppressLint("SetTextI18n")
     override fun clearSources() {
         binding.totalSourcesText.text = getString(R.string.totalSources) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearSources), "", {})

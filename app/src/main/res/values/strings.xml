@@ -3,17 +3,17 @@
     <string name="TermsOfUserRegister">Click Register or LoginYou agree to the User Agreement and Commenting Rules.</string>
     <string name="teamSite"><![CDATA[https://mservices.ria.ru/docs/get/article?project=ria.ru&lang=rus&article_id=1748006692]]></string>
     <string name="errorInputEmail">Wrong format</string>
-    <string name="totalFavorites">Total Favorites</string>
-    <string name="totalHistory">Total History</string>
     <string name="select_country">Select country</string>
     <string name="back">back</string>
     <string name="category">category:</string>
     <string name="language">language:</string>
     <string name="total_history">Total History:\u0020</string>
     <string name="total_favorites">Total Favorites:\u0020</string>
+    <string name="totalSources">Total Sources:\u0020</string>
+
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
-    <string name="readon">Read on</string>
+    <string name="readOn">Read on</string>
     <string name="anonymousAuthor">Anonymous author</string>
     <string name="sourceLoaded">Sources loaded</string>
     <string name="errorSourcesDownload">errorSourcesDownload</string>
@@ -24,7 +24,7 @@
     <string name="checkLogin">Check your login</string>
     <string name="checkEmail">Check your email</string>
     <string name="uniqueEmailUsername">Email and username must be unique</string>
-    <string name="InvaligPassword">Invalid password</string>
+    <string name="invalidPassword">Invalid password</string>
     <string name="deleteAccount">Delete account</string>
     <string name="warningAccount">You will not be able to recover your account</string>
     <string name="clearHistory">Clear history</string>
@@ -32,11 +32,11 @@
     <string name="errorLoadingAccount">Error loading account</string>
     <string name="noChangeAccount">No change Account</string>
     <string name="dataUpdated">Data updated</string>
-    <string name="inputDateЕhrive">No later than 30 days</string>
+    <string name="inputDateThirty">No later than 30 days</string>
     <string name="selectDatePiker">Select Date</string>
     <string name="errorSelectSources">Select Sources</string>
-    <string name="sourcesSaved">\"Source Saved \"</string>
-    <string name="loginAddToFAvorites">Log in to add to favorites</string>
+    <string name="sourcesSaved">Source Saved</string>
+    <string name="loginAddToFavorites">Log in to add to favorites</string>
     <string name="categoryBusiness">Business</string>
     <string name="categoryEntertainment">Entertainment</string>
     <string name="categoryGeneral">General</string>
@@ -72,7 +72,6 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="technical_support">Technical support</string>
     <string name="delete_account">Delete account</string>
-    <string name="totalSources">Total Sources</string>
     <string name="clearSources">Clear Sources</string>
     <string name="empty_list">Empty List</string>
     <string name="save_sources">Save Sources</string>

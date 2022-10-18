@@ -97,6 +97,7 @@ class SearchFragment : MvpAppCompatFragment(),
         }
 
         binding.recyclerHistory.adapter = historySelectAdapter
+        binding.recyclerHistory.itemAnimator = null
         binding.recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
 
         binding.checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
@@ -106,6 +107,7 @@ class SearchFragment : MvpAppCompatFragment(),
         binding.selectDate.setOnClickListener {
             createDatePiker()
         }
+
         binding.searchSourcesButton.setOnClickListener {
             var selectedItem = binding.spinnerSortBySources.selectedItem.toString()
             if (binding.spinnerSortBySources.selectedItemPosition == 0) {
@@ -122,7 +124,7 @@ class SearchFragment : MvpAppCompatFragment(),
     }
 
     private fun createDatePiker() {
-        datePiker.setTitleText(getString(R.string.inputDateЕhrive))
+        datePiker.setTitleText(getString(R.string.inputDateThirty))
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .build().also {
                 it.show(requireActivity().supportFragmentManager, TAG_DATE_PIKER)
