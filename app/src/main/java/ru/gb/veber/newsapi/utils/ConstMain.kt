@@ -30,6 +30,9 @@ const val COUNTER_BADGE =  0
 const val COUNTER_BACKSTACK = 1
 const val DELAY_BACK_STACK = 2000L
 const val DURATION_ERROR_INPUT = 2000L
+const val KEY_THEME = "KEY_THEME"
+const val KEY_THEME_DARK = 0
+const val KEY_THEME_DEFAULT = 1
 
 //FILTER COUNTRY
 const val ALL_COUNTRY = "All Country"

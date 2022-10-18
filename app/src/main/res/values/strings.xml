@@ -93,4 +93,11 @@
     <string name="viewed">viewed</string>
     <string name="news">News</string>
     <string name="website">WebSite</string>
+    <string name="helperFilter">Applies to all tabs</string>
+    <string name="hintSelectCountry">SelectCountry</string>
+    <string name="default_all_sources">Default All Sources</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="textDelete">Dark theme style missing</string>
 </resources>

@@ -9,6 +9,24 @@ import ru.gb.veber.newsapi.utils.*
 
 class SharedPreferenceAccount {
 
+    fun setTheme(key: Int) {
+        App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,
+            Context.MODE_PRIVATE).edit().putInt(KEY_THEME, key).apply()
+    }
+
+    fun getThemePrefs(): Int {
+        return when (App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,
+            AppCompatActivity.MODE_PRIVATE).getInt(KEY_THEME, KEY_THEME_DEFAULT)
+        ) {
+            KEY_THEME_DEFAULT -> R.style.Theme_NewsAPI
+            KEY_THEME_DARK -> R.style.Theme_NewsAPI_Dark
+            else -> {
+                R.style.Theme_NewsAPI
+            }
+        }
+    }
+
+
     fun getCheckFirstStartApp(): Boolean {
         return App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,
             AppCompatActivity.MODE_PRIVATE).getBoolean(FIRST_START_APP, false)

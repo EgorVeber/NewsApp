@@ -45,9 +45,9 @@
     <string name="categoryTechnology">Технологии</string>
     <string name="favoritesLike">Избранное</string>
     <string name="favoritesHistory">История</string>
-    <string name="menuSources">Источник</string>
+    <string name="menuSources">Источники</string>
     <string name="menuSearch">Поиск</string>
-    <string name="menuTop">Топ</string>
+    <string name="menuTop">Категории</string>
     <string name="menuFavorites">Избранное</string>
     <string name="menuProfile">Профиль</string>
     <string name="account">Аккаунт</string>
@@ -63,7 +63,7 @@
     <string name="save_history">Сохранять историю просмотров</string>
     <string name="save_history_select">Сохронять историю запросов</string>
     <string name="customize_category">Настроить категории</string>
-    <string name="show_favorites_sources_in_a_list">Только избранные источники при выборе</string>
+    <string name="show_favorites_sources_in_a_list">Избранные источники при поиске</string>
     <string name="notification">Уведомления</string>
     <string name="get_notification_firebase">Получать уведомления из Firebase</string>
     <string name="additional_information">Дополнительная информация</string>
@@ -83,13 +83,20 @@
     <string name="save">Сохранить</string>
     <string name="search_keyword_in">Искать ключевое слово в</string>
     <string name="sorting">Сортировка</string>
-    <string name="select_sources">Select Sources</string>
+    <string name="select_sources">Выбрать Источника</string>
     <string name="history_request">История запросов</string>
-    <string name="search_news_only_sources">Поиск новостей только по источнику</string>
+    <string name="search_news_only_sources">Только источник</string>
     <string name="select_date">Выбрать дату</string>
     <string name="invalid_date">Недействительная дата</string>
     <string name="search">Поиск</string>
     <string name="viewed">Просмотрено</string>
     <string name="news">Новости</string>
     <string name="website">Сайт</string>
+    <string name="helperFilter">Применятеся ко всем вкладкам</string>
+    <string name="hintSelectCountry">Выберите страну</string>
+    <string name="default_all_sources">По умолчанию все источники</string>
+    <string name="login">Логин</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="textDelete">Стиля для темной темы пока нету</string>
 </resources>

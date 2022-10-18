@@ -34,6 +34,10 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
             AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
     }
 
+    override fun toastDelete() {
+        binding.root.showText(getString(R.string.textDelete))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -88,18 +92,25 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.showFavorites.setOnCheckedChangeListener { compoundButton, b ->
             presenter.updateAccountShowListFavorite(b)
         }
+
+        binding.switchDarkTheme.setOnClickListener {
+            presenter.setTheme(binding.switchDarkTheme.isChecked)
+        }
     }
 
+    override fun recreateTheme() {
+        activity?.recreate()
+    }
 
     @SuppressLint("SetTextI18n")
-    override fun setAccountInfo(account: Account) {
+    override fun setAccountInfo(account: Account, themePrefs: Int) {
 
         binding.userName.text = account.userName
         binding.userEmail.text = account.email
         binding.totalFavoritesText.text =
-            getString(R.string.total_favorites) +  account.totalFavorites
+            getString(R.string.total_favorites) + account.totalFavorites
         binding.totalHistoryText.text =
-            getString(R.string.total_history) +  account.totalHistory
+            getString(R.string.total_history) + account.totalHistory
 
         binding.totalSourcesText.text =
             getString(R.string.totalSources) + account.totalSources
@@ -108,6 +119,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.saveHistorySelectSwitch.isChecked = account.saveSelectHistory
         binding.showFavorites.isChecked = account.displayOnlySources
 
+        binding.switchDarkTheme.isChecked = themePrefs != R.style.Theme_NewsAPI
 
         TransitionManager.beginDelayedTransition(binding.root)
         binding.nestedScrollAccount.show()

@@ -98,6 +98,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
 
     override fun init() {
         binding.likeRecycler.adapter = historyAdapter
+        binding.likeRecycler.itemAnimator = null
         binding.likeRecycler.layoutManager = LinearLayoutManager(requireContext())
         bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer)
 

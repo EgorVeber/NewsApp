@@ -4,8 +4,10 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
+import ru.gb.veber.newsapi.core.AccountScreen
 import ru.gb.veber.newsapi.core.AuthorizationScreen
 import ru.gb.veber.newsapi.core.EditAccountScreen
+import ru.gb.veber.newsapi.core.TopNewsViewPagerScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
@@ -72,7 +74,7 @@ class AccountPresenter(
                 account.totalSources = listSources.size.toString()
                 account
             }.subscribeDefault().subscribe({
-                viewState.setAccountInfo(it)
+                viewState.setAccountInfo(it, sharedPreferenceAccount.getThemePrefs())
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
             })
@@ -136,5 +138,9 @@ class AccountPresenter(
         })
     }
 
-
+    fun setTheme(b: Boolean) {
+        viewState.toastDelete()
+        sharedPreferenceAccount.setTheme(if (b) KEY_THEME_DARK else KEY_THEME_DEFAULT)
+        viewState.recreateTheme()
+    }
 }

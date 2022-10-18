@@ -101,7 +101,7 @@
         android:layout_width="0dp"
         android:layout_margin="10dp"
         android:layout_height="wrap_content"
-        android:hint="Default All Sources"
+        android:hint="@string/default_all_sources"
         android:theme="@style/TextInputLayoutAppearance"
         app:endIconMode="clear_text"
         app:hintTextColor="@color/selectedColor"

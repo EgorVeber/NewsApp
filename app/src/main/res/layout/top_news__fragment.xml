@@ -21,11 +21,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:hint="SelectCountry"
+        android:hint="@string/hintSelectCountry"
         android:theme="@style/TextInputLayoutAppearance"
         android:visibility="gone"
         app:endIconMode="clear_text"
-        app:helperText="Applies to all tabs"
+        app:helperText="@string/helperFilter"
         app:hintTextColor="@color/selectedColor">
 
         <ru.gb.veber.newsapi.utils.CustomAutoCompleteTextView

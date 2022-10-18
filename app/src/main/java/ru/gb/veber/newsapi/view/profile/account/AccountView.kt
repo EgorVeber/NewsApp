@@ -9,7 +9,7 @@ import ru.gb.veber.newsapi.model.Account
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface AccountView : MvpView {
     fun init()
-    fun setAccountInfo(account: Account)
+    fun setAccountInfo(account: Account, themePrefs: Int)
     fun loading()
     fun setBottomNavigationIcon()
     @StateStrategyType(SkipStrategy::class)
@@ -17,4 +17,7 @@ interface AccountView : MvpView {
     fun clearHistory()
     fun clearFavorites()
     fun clearSources()
+    @StateStrategyType(SkipStrategy::class)
+    fun recreateTheme()
+    fun toastDelete()
 }

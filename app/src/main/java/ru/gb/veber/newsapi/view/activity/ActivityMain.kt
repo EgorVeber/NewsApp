@@ -1,7 +1,9 @@
 package ru.gb.veber.newsapi.view.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import io.reactivex.rxjava3.core.Completable
@@ -57,11 +59,15 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.Theme_NewsAPI)
+        setTheme(SharedPreferenceAccount().getThemePrefs())
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         presenter.getAccountSettings()
         presenter.getCheckFirstStartApp()
+
+        if (savedInstanceState != null) {
+            presenter.openScreenProfile()
+        }
     }
 
     override fun onResumeFragments() {
