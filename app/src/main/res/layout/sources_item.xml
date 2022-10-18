@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_item"
-    style="@style/card_style_base"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
-    android:elevation="20dp">
+    style="@style/cardViewDefault"
+    android:layout_marginTop="@dimen/margin_card_view_10"
+    android:layout_marginBottom="@dimen/margin_card_view_10"
+    app:cardElevation="@dimen/card_elevation_sources_item">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,10 +42,10 @@
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_10"
             android:textColor="@color/color_black"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_sources_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.5" />
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:text="@string/total_history"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_help_text_sources"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="@+id/barrier2"
             app:layout_constraintTop_toTopOf="@+id/barrier" />
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_help_text_sources"
             app:layout_constraintStart_toEndOf="@id/helperTextTH"
             app:layout_constraintTop_toTopOf="@+id/barrier" />
 
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:text="@string/total_favorites"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_help_text_sources"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="@+id/barrier2"
             app:layout_constraintTop_toBottomOf="@+id/totalHistory" />
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_help_text_sources"
             app:layout_constraintStart_toEndOf="@id/helperTextTF"
             app:layout_constraintTop_toTopOf="@id/helperTextTF" />
 
@@ -95,9 +95,9 @@
             android:id="@+id/country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/margin_20"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_help_text_sources"
             app:layout_constraintStart_toStartOf="@+id/name"
             app:layout_constraintTop_toBottomOf="@+id/helperTextTF" />
 
@@ -114,18 +114,17 @@
             android:id="@+id/category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/margin_5"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_help_text_sources"
             app:layout_constraintBottom_toBottomOf="@+id/helperTextCategory"
             app:layout_constraintStart_toEndOf="@+id/helperTextCategory" />
-
 
         <TextView
             android:id="@+id/helperTextLanguage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/margin_20"
             android:text="@string/language"
             android:textColor="@color/helper_text_app"
             app:layout_constraintStart_toEndOf="@+id/category"
@@ -135,9 +134,9 @@
             android:id="@+id/language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="@dimen/margin_5"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_help_text_sources"
             app:layout_constraintBottom_toBottomOf="@+id/helperTextCategory"
             app:layout_constraintStart_toEndOf="@+id/helperTextLanguage" />
 
@@ -172,13 +171,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:paddingStart="5dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="5dp"
+            android:paddingStart="@dimen/padding_5"
+            android:paddingTop="@dimen/padding_5"
+            android:paddingEnd="@dimen/padding_5"
             android:textColor="@color/color_black"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_help_text_sources"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/country"
             app:layout_constraintTop_toBottomOf="@+id/helperTextCategory" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

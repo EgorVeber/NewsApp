@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/margin_15_dp"
                 android:gravity="center"
                 android:textColor="@color/color_black"
                 android:textSize="20sp"
@@ -38,22 +38,22 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_20"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_5"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp" />
+                    android:layout_width="@dimen/icon_wight_default"
+                    android:layout_height="@dimen/icon_wight_default"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_10" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="@dimen/margin_5"
                     android:text="@string/account" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -67,25 +67,25 @@
                     android:id="@+id/editInformation"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_10"
                     android:background="?selectableItemBackground"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_person_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/edit_information"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -96,19 +96,19 @@
                     android:id="@+id/totalFavorites"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_10"
                     android:background="?selectableItemBackground"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_favorite" />
 
                     <TextView
@@ -116,7 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:layout_weight="1"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -124,7 +124,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_delete_24" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -133,19 +133,19 @@
                     android:id="@+id/totalHistory"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_10"
                     android:background="?selectableItemBackground"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_history_24" />
 
                     <TextView
@@ -153,7 +153,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:layout_weight="1"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -161,7 +161,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_delete_24" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -170,19 +170,19 @@
                     android:id="@+id/totalSources"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_10"
                     android:background="?selectableItemBackground"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_emoji_people_24" />
 
                     <TextView
@@ -190,7 +190,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:layout_weight="1"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -198,31 +198,31 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_delete_24" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="@dimen/margin_10"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="@dimen/icon_wight_default"
+                        android:layout_height="@dimen/icon_wight_default"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_linear_scale_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:layout_weight="4"
                         android:text="@string/requests_per_day"
                         android:textColor="@color/color_black"
@@ -233,22 +233,22 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="@dimen/margin_10"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="@dimen/icon_wight_default"
+                        android:layout_height="@dimen/icon_wight_default"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp" />
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/progressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:layout_weight="5"
                         android:max="100"
                         android:progress="60"
@@ -266,26 +266,26 @@
                     android:id="@+id/logout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="25dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_25"
                     android:background="?selectableItemBackground"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_logout_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/logout"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -295,21 +295,21 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_15_dp"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp" />
+                    android:layout_width="@dimen/icon_wight_default"
+                    android:layout_height="@dimen/icon_wight_default"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_10" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="@dimen/margin_5"
                     android:text="@string/appearance" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -322,24 +322,24 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_15_dp"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_format_size_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/font_size"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -348,25 +348,25 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_15_dp"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_dark_mode_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/dark_theme"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -375,31 +375,31 @@
                         android:id="@+id/switchDarkTheme"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="10dp" />
+                        android:layout_marginEnd="@dimen/margin_10" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="25dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_25"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_image_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/image_upload"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -407,7 +407,7 @@
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:checked="true" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -416,21 +416,21 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_15_dp"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp" />
+                    android:layout_width="@dimen/icon_wight_default"
+                    android:layout_height="@dimen/icon_wight_default"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_10" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="@dimen/margin_5"
                     android:text="@string/screen_settings" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -443,24 +443,24 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_15_dp"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_history_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/save_history"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -469,7 +469,7 @@
                         android:id="@+id/saveHistorySwitch"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:checked="true" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -477,24 +477,24 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_15_dp"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_history_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/save_history_select"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -503,7 +503,7 @@
                         android:id="@+id/saveHistorySelectSwitch"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:checked="true" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -511,25 +511,25 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_15_dp"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_filter_list_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/customize_category"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -539,25 +539,25 @@
                     android:id="@+id/customizeSources"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="25dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_25"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_emoji_people_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/show_favorites_sources_in_a_list"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -566,7 +566,7 @@
                         android:id="@+id/showFavorites"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:checked="false" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -575,21 +575,21 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_15_dp"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp" />
+                    android:layout_width="@dimen/icon_wight_default"
+                    android:layout_height="@dimen/icon_wight_default"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_10" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="@dimen/margin_5"
                     android:text="@string/notification" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -601,24 +601,24 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="25dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_25"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_notifications_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/get_notification_firebase"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -626,7 +626,7 @@
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:checked="true" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -635,21 +635,21 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:layout_marginBottom="@dimen/margin_15_dp"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp" />
+                    android:layout_width="@dimen/icon_wight_default"
+                    android:layout_height="@dimen/icon_wight_default"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_10" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="@dimen/margin_5"
                     android:text="@string/additional_information" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -662,24 +662,24 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_15_dp"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_mobile_screen_share_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/about_the_application"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -688,25 +688,25 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_15_dp"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_privacy_tip_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/privacy_policy"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -716,25 +716,25 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginBottom="@dimen/margin_10"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp">
+                    android:paddingTop="@dimen/margin_5"
+                    android:paddingBottom="@dimen/margin_5">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="@dimen/margin_10"
+                        android:layout_marginEnd="@dimen/margin_10"
                         android:src="@drawable/ic_baseline_chat_24" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="@dimen/margin_5"
                         android:text="@string/technical_support"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
@@ -745,27 +745,27 @@
                 android:id="@+id/deleteAccount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/margin_10"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="@dimen/margin_10"
                 android:background="?selectableItemBackground"
                 android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
+                android:paddingTop="@dimen/margin_5"
+                android:paddingBottom="@dimen/margin_5">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="@dimen/margin_10"
+                    android:layout_marginEnd="@dimen/margin_10"
                     android:src="@drawable/ic_deleteerror" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="@dimen/margin_5"
                     android:text="@string/delete_account"
                     android:textColor="@color/color_error_like"
                     android:textSize="16sp" />

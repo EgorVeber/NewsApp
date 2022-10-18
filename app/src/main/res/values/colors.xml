@@ -11,4 +11,6 @@
     <color name="helper_text_app">#757575</color>
     <color name="color_black">#FF000000</color>
     <color name="color_white">#FFFFFFFF</color>
+    <color name="color_title_search">#DD000000</color>
+    <color name="color_background_behavior_image">#f6f6fa</color>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="margin_card_view">8dp</dimen>
+    <dimen name="margin_card_view_10">10dp</dimen>
     <dimen name="radius_card_view">10dp</dimen>
     <dimen name="text_size_city">40sp</dimen>
     <dimen name="margin_base">20dp</dimen>
@@ -31,16 +32,50 @@
     <dimen name="fab_location_icon_size">45dp</dimen>
     <dimen name="cornerRadiusTextInput">10dp</dimen>
 
-
-
-
-
-
-
     <dimen name="cornerRadiusMaterialButton">10dp</dimen>
     <dimen name="marginTopMaterialButtonDisable">2dp</dimen>
     <dimen name="cornerSizeMyMediumComponent">20dp</dimen>
     <dimen name="paddingMyMaterialDialog">20dp</dimen>
     <dimen name="myTextSizeBody2">16sp</dimen>
     <dimen name="myCornerSizeMediumComponent">16dp</dimen>
+    <dimen name="floating_web_margin">20dp</dimen>
+    <dimen name="tabLayoutMargin">10dp</dimen>
+    <dimen name="header_news_elevation">5dp</dimen>
+    <dimen name="margin_5">5dp</dimen>
+    <dimen name="header_height_default">220dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
+    <dimen name="text_size_title_top_news">16sp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_title_item_news">16sp</dimen>
+    <dimen name="text_size_date_top_news">12sp</dimen>
+    <dimen name="image_view_size_default">110dp</dimen>
+    <dimen name="margin_2">2dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="text_size_status_text">36sp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+    <dimen name="card_elevation_sources_item">20dp</dimen>
+    <dimen name="text_size_sources_name">20sp</dimen>
+    <dimen name="text_size_help_text_sources">16sp</dimen>
+    <dimen name="auto_compile_padding_country">16dp</dimen>
+    <dimen name="text_size_date_search">12sp</dimen>
+    <dimen name="image_size_search_default">90dp</dimen>
+    <dimen name="text_size_title">16sp</dimen>
+    <dimen name="text_size_title_search_view">18sp</dimen>
+    <dimen name="text_size_status_text_search">36sp</dimen>
+    <dimen name="text_size_helper_text">12sp</dimen>
+    <dimen name="text_size_title_filter">18sp</dimen>
+    <dimen name="recycler_history_height">300dp</dimen>
+    <dimen name="empty_list_history">18sp</dimen>
+    <dimen name="padding_15">15dp</dimen>
+    <dimen name="text_size_title_behavior">22sp</dimen>
+    <dimen name="margin_6">6dp</dimen>
+    <dimen name="text_size_description_behavior">16sp</dimen>
+    <dimen name="text_size_author">16sp</dimen>
+    <dimen name="padding_12">12dp</dimen>
+    <dimen name="height_size_button_default">56dp</dimen>
+    <dimen name="icon_wight_default">24dp</dimen>
+    <dimen name="margin_25">25dp</dimen>
+
+
 </resources>

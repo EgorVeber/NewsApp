@@ -10,7 +10,7 @@
         android:id="@+id/textSourcesName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="@dimen/margin_10"
         android:textAppearance="?attr/textAppearanceSubtitle1" />
 
     <TextView
@@ -21,13 +21,13 @@
         android:background="?selectableItemBackground"
         android:gravity="end"
         android:maxLines="1"
-        android:padding="16dp" />
+        android:padding="@dimen/auto_compile_padding_country" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/checkSources"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:padding="16dp"
+        android:padding="@dimen/auto_compile_padding_country"
         android:src="@drawable/ic_favorite_active" />
 </LinearLayout>

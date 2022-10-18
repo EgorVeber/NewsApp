@@ -5,5 +5,5 @@
     android:ellipsize="end"
     android:background="?selectableItemBackground"
     android:maxLines="1"
-    android:padding="16dp"
+    android:padding="@dimen/auto_compile_padding_country"
     android:textAppearance="?attr/textAppearanceSubtitle1" />

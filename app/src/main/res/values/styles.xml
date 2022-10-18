@@ -93,14 +93,6 @@
     </style>
 
 
-    <style name="card_style_base">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-        <item name="android:layout_margin">@dimen/margin_card_view</item>
-        <item name="cardCornerRadius">@dimen/radius_card_view</item>
-    </style>
 
     <style name="sources_text">
         <item name="android:layout_width">wrap_content</item>
@@ -140,8 +132,11 @@
     <style name="MyFilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
         <item name="boxStrokeWidth">0.8dp</item>
         <item name="boxStrokeColor">@color/color_primary_app</item>
-        <item name="endIconMode">none</item>
+        <item name="endIconMode">clear_text</item>
         <item name="boxBackgroundColor">@color/color_white</item>
+        <item name="theme">@color/color_white</item>
+        <item name="android:theme">@style/TextInputLayoutAppearance</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="MyMaterialTextButton" parent="Widget.MaterialComponents.Button.TextButton">
@@ -156,4 +151,50 @@
         <item name="android:layout_marginTop">@dimen/marginTopMaterialButtonDisable</item>
     </style>
 
+    <style name="progressBarDefault" >
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="floatingActionButtonDefault" >
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@color/color_primary_app</item>
+        <item name="tint">@color/color_white</item>
+    </style>
+
+    <style name="tabLayoutDefault" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/tabLayoutMargin</item>
+        <item name="android:layout_marginEnd">@dimen/tabLayoutMargin</item>
+        <item name="android:layout_marginTop">@dimen/tabLayoutMargin</item>
+        <item name="tabBackground">@drawable/tabs_selector</item>
+        <item name="tabIndicator">@null</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="tabSelectedTextColor">@color/color_white</item>
+        <item name="tabTextColor">@color/color_black</item>
+        <item name="tabMode">scrollable</item>
+    </style>
+
+    <style name="cardViewDefault">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="cardCornerRadius">@dimen/radius_card_view</item>
+    </style>
+
+    <style name="behaviorStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/color_white</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="behavior_hideable">true</item>
+        <item name="behavior_peekHeight">0dp</item>
+        <item name="layout_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior</item>
+    </style>
 </resources>

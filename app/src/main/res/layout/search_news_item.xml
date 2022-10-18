@@ -3,28 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="@dimen/margin_5">
 
     <TextView
         android:id="@+id/title"
         style="@style/sources_text"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        app:layout_constraintHorizontal_bias="0.05"
+        android:layout_marginStart="@dimen/margin_5"
+        android:layout_marginTop="@dimen/margin_5"
+        android:layout_marginEnd="@dimen/margin_5"
         android:ellipsize="end"
         android:maxLines="3"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_title"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/imageNews"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageNews" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageNews"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginBottom="15dp"
+        android:layout_width="@dimen/image_size_search_default"
+        android:layout_height="@dimen/image_size_search_default"
+        android:layout_marginBottom="@dimen/margin_15_dp"
         android:scaleType="fitXY"
         android:src="@drawable/chipmunk"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,16 +42,16 @@
     <TextView
         android:id="@+id/publishedAt"
         style="@style/sources_text"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="@dimen/margin_5"
         android:textColor="@color/color_published_at_search_news"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_size_date_search"
         app:layout_constraintBottom_toBottomOf="@+id/imageNews"
         app:layout_constraintStart_toStartOf="@+id/title" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/margin_20"
         android:background="#eeeeee"
         app:layout_constraintTop_toBottomOf="@+id/imageNews" />
 </androidx.constraintlayout.widget.ConstraintLayout>

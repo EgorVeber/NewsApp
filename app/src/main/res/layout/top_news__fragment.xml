@@ -9,22 +9,20 @@
         android:id="@+id/recyclerNews"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:padding="5dp"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_10"
+        android:padding="@dimen/padding_5"
         android:paddingBottom="?actionBarSize" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/countryTextInput"
         style="@style/MyFilledBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/margin_10"
         android:gravity="center"
         android:hint="@string/hintSelectCountry"
-        android:theme="@style/TextInputLayoutAppearance"
+
         android:visibility="gone"
-        app:endIconMode="clear_text"
         app:helperText="@string/helperFilter"
         app:hintTextColor="@color/color_primary_app">
 
@@ -33,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:paddingStart="5dp" />
+            android:paddingStart="@dimen/padding_5" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -41,36 +39,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/margin_20"
         android:text="@string/empty_list"
         android:textColor="@color/color_black"
-        android:textSize="36sp"
+        android:textSize="@dimen/text_size_status_text"
         android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progressBarTopNews"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        style="@style/progressBarDefault" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/filterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/color_primary_app"
+        style="@style/floatingActionButtonDefault"
         app:layout_behavior=".view.topnews.pageritem.BehaviorActionButton"
-        app:srcCompat="@drawable/filter_icon"
-        app:tint="@color/color_white" />
+        app:srcCompat="@drawable/filter_icon" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/cancelFilter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/color_primary_app"
+        style="@style/floatingActionButtonDefault"
         android:visibility="gone"
         app:layout_behavior=".view.topnews.pageritem.BehaviorActionButtonCancel"
-        app:srcCompat="@drawable/close_icon48"
-        app:tint="@color/color_white" />
+        app:srcCompat="@drawable/close_icon48" />
 
     <include
         android:id="@+id/behaviorInclude"

@@ -6,20 +6,13 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/favoritesHistoryTabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        style="@style/tabLayoutDefault"
+        app:tabGravity="center"
         app:layout_constraintBottom_toTopOf="@+id/favoritesHistoryViewPager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabBackground="@drawable/tabs_selector"
-        app:tabIndicator="@null"
-        app:tabGravity="center"
-        app:tabMode="scrollable"
-        app:tabRippleColor="@null"
-        app:tabSelectedTextColor="@color/color_white"
-        app:tabTextColor="@color/color_black" />
+        />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/favoritesHistoryViewPager"
