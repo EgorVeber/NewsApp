@@ -100,4 +100,5 @@
     <string name="password">Пароль</string>
     <string name="textDelete">Стиля для темной темы пока нету</string>
     <string name="searchNewsKey">Введите ключевое слово</string>
+    <string name="notAvailable">Пока не доступно</string>
 </resources>

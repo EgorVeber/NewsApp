@@ -101,4 +101,5 @@
     <string name="password">Password</string>
     <string name="textDelete">Dark theme style missing</string>
     <string name="searchNewsKey">Search News KeyWord</string>
+    <string name="notAvailable">Not yet available</string>
 </resources>

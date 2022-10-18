@@ -96,6 +96,30 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.switchDarkTheme.setOnClickListener {
             presenter.setTheme(binding.switchDarkTheme.isChecked)
         }
+
+        binding.fontSize.setOnClickListener {
+            it.showText(getString(R.string.notAvailable))
+        }
+
+        binding.imageUpload.setOnClickListener {
+            it.showText(getString(R.string.notAvailable))
+        }
+
+        binding.customizeCategory.setOnClickListener {
+            it.showText(getString(R.string.notAvailable))
+        }
+        binding.notificationFirebase.setOnClickListener {
+            it.showText(getString(R.string.notAvailable))
+        }
+        binding.aboutInformation.setOnClickListener {
+            it.showText(getString(R.string.notAvailable))
+        }
+        binding.privacyPolicy.setOnClickListener {
+            it.showText(getString(R.string.notAvailable))
+        }
+        binding.supportLinear.setOnClickListener {
+            it.showText(getString(R.string.notAvailable))
+        }
     }
 
     override fun recreateTheme() {
