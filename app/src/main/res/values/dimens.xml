@@ -30,4 +30,17 @@
     <dimen name="hairline">1dp</dimen>
     <dimen name="fab_location_icon_size">45dp</dimen>
     <dimen name="cornerRadiusTextInput">10dp</dimen>
+
+
+
+
+
+
+
+    <dimen name="cornerRadiusMaterialButton">10dp</dimen>
+    <dimen name="marginTopMaterialButtonDisable">2dp</dimen>
+    <dimen name="cornerSizeMyMediumComponent">20dp</dimen>
+    <dimen name="paddingMyMaterialDialog">20dp</dimen>
+    <dimen name="myTextSizeBody2">16sp</dimen>
+    <dimen name="myCornerSizeMediumComponent">16dp</dimen>
 </resources>

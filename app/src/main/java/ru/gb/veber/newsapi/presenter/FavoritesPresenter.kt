@@ -72,14 +72,13 @@ class FavoritesPresenter(
     }
 
     fun deleteFavorites(article: Article) {
-        var articleNew = article.copy()
-        article.title?.let {
-        articleRepoImpl.deleteArticleById(it, accountIdS)
-            .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({
-                viewState.updateFavorites(it.map(::articleDbEntityToArticle).reversed().map {
-                    it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
-                    it.viewType = VIEW_TYPE_FAVORITES_NEWS
-                    it
+        article.title?.let {title->
+        articleRepoImpl.deleteArticleById(title, accountIdS)
+            .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({list->
+                viewState.updateFavorites(list.map(::articleDbEntityToArticle).reversed().map {art->
+                    art.publishedAtChange = stringFromData(art.publishedAt).formatDateTime()
+                    art.viewType = VIEW_TYPE_FAVORITES_NEWS
+                    art
                 })
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)

@@ -14,7 +14,7 @@
     <string name="yesterday">Вчера</string>
     <string name="readOn">Читайте на </string>
     <string name="anonymousAuthor">Анонимный автор</string>
-    <string name="sourceLoaded">Новые источники загрузились</string>
+    <string name="sourceLoaded">Зарегестрируйтесь чтобы открыть больше возможностей</string>
     <string name="errorSourcesDownload">Не все источники загрузились</string>
     <string name="pressAgain">Нажмите ещё раз для выхода</string>
     <string name="notAuthorized">Авторизуйтесь</string>
@@ -99,4 +99,5 @@
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
     <string name="textDelete">Стиля для темной темы пока нету</string>
+    <string name="searchNewsKey">Введите ключевое слово</string>
 </resources>

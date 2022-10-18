@@ -18,8 +18,8 @@
         app:tabGravity="center"
         app:tabMode="scrollable"
         app:tabRippleColor="@null"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/black" />
+        app:tabSelectedTextColor="@color/color_white"
+        app:tabTextColor="@color/color_black" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/favoritesHistoryViewPager"

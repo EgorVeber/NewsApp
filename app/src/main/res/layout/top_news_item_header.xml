@@ -51,7 +51,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:paddingBottom="10dp"
-            android:textColor="@color/selectedColor"
+            android:textColor="@color/color_primary_app"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />

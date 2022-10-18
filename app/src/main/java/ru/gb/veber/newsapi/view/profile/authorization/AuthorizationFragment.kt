@@ -6,7 +6,6 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -325,11 +324,11 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         SpannableStringBuilder(binding.privacyPolicy.text).apply {
 
             setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
-                R.color.selectedColor)), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                R.color.color_primary_app)), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
             setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
-                R.color.selectedColor)), SPAN_START_START_POLICY, SPAN_START_END_POLICY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                R.color.color_primary_app)), SPAN_START_START_POLICY, SPAN_START_END_POLICY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
             setSpan(UnderlineSpan(), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

@@ -40,7 +40,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
 
     override fun clickNews(article: Article) {
         bSheetB.expanded()
-        with(binding) {
+        with(binding.behaviorInclude) {
             imageViewAll.loadGlideNot(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
             titleNews.text = article.title
@@ -49,7 +49,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
             setSpanDescription(article)
         }
 
-        binding.descriptionNews.setOnClickListener {
+        binding.behaviorInclude.descriptionNews.setOnClickListener {
             presenter.openScreenWebView(article.url)
         }
     }
@@ -62,7 +62,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
                 span.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
             )
-            binding.descriptionNews.text = span
+            binding.behaviorInclude.descriptionNews.text = span
             span.removeSpan(span)
         }
     }
@@ -100,12 +100,11 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
         binding.likeRecycler.adapter = historyAdapter
         binding.likeRecycler.itemAnimator = null
         binding.likeRecycler.layoutManager = LinearLayoutManager(requireContext())
-        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer)
-
+        bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
+        binding.behaviorInclude.imageFavorites.hide()
     }
 
     override fun setSources(list: List<Article>) {
-        TransitionManager.beginDelayedTransition(binding.root)
         historyAdapter.articles = list
         binding.likeRecycler.show()
     }
@@ -126,6 +125,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
     }
 
     override fun updateFavorites(list: List<Article>) {
+        TransitionManager.beginDelayedTransition(binding.root)
         if (list.isEmpty()) {
             emptyList()
         }

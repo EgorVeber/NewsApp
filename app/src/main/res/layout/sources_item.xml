@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_history"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="@+id/barrier2"
@@ -65,7 +65,7 @@
             android:id="@+id/totalHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/helperTextTH"
             app:layout_constraintTop_toTopOf="@+id/barrier" />
@@ -76,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_favorites"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="@+id/barrier2"
@@ -86,7 +86,7 @@
             android:id="@+id/totalFavorites"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/helperTextTF"
             app:layout_constraintTop_toTopOf="@id/helperTextTF" />
@@ -96,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/name"
             app:layout_constraintTop_toBottomOf="@+id/helperTextTF" />
@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/category"
-            android:textColor="@color/gray2"
+            android:textColor="@color/helper_text_app"
             app:layout_constraintStart_toStartOf="@+id/country"
             app:layout_constraintTop_toBottomOf="@+id/country" />
 
@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/helperTextCategory"
             app:layout_constraintStart_toEndOf="@+id/helperTextCategory" />
@@ -127,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="@string/language"
-            android:textColor="@color/gray2"
+            android:textColor="@color/helper_text_app"
             app:layout_constraintStart_toEndOf="@+id/category"
             app:layout_constraintTop_toBottomOf="@+id/country" />
 
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/helperTextCategory"
             app:layout_constraintStart_toEndOf="@+id/helperTextLanguage" />
@@ -175,7 +175,7 @@
             android:paddingStart="5dp"
             android:paddingTop="5dp"
             android:paddingEnd="5dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/country"

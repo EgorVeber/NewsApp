@@ -33,10 +33,6 @@ class SearchPresenter(
         return true
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     fun getSources() {
         if (accountIdPresenter == ACCOUNT_ID_DEFAULT) {
             viewState.hideSelectHistory()

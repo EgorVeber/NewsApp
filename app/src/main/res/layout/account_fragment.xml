@@ -23,7 +23,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:gravity="center"
-                android:textColor="@color/black"
+                android:textColor="@color/color_black"
                 android:textSize="20sp"
                 tools:text="James" />
 
@@ -87,7 +87,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/edit_information"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -118,7 +118,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -155,7 +155,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -192,7 +192,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:layout_weight="1"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -225,7 +225,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_weight="4"
                         android:text="@string/requests_per_day"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -252,7 +252,7 @@
                         android:layout_weight="5"
                         android:max="100"
                         android:progress="60"
-                        app:indicatorColor="@color/selectedColor" />
+                        app:indicatorColor="@color/color_primary_app" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -287,7 +287,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/logout"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -341,7 +341,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/font_size"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -368,7 +368,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/dark_theme"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -401,7 +401,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/image_upload"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -462,7 +462,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/save_history"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -496,7 +496,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/save_history_select"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -531,7 +531,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/customize_category"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -559,7 +559,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/show_favorites_sources_in_a_list"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -620,7 +620,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/get_notification_firebase"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -681,7 +681,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/about_the_application"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -708,7 +708,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/privacy_policy"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -736,7 +736,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="5dp"
                         android:text="@string/technical_support"
-                        android:textColor="@color/black"
+                        android:textColor="@color/color_black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -767,7 +767,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="5dp"
                     android:text="@string/delete_account"
-                    android:textColor="@color/colorError"
+                    android:textColor="@color/color_error_like"
                     android:textSize="16sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>

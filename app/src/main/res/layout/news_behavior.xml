@@ -4,13 +4,17 @@
     android:id="@+id/bottom_sheet_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/color_white"
     android:clickable="true"
     android:focusable="true"
     android:importantForAccessibility="no"
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,7 +38,7 @@
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:paddingEnd="15dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textColor="@color/gray2"
+            android:textColor="@color/color_published_at_search_news"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleNews" />
 
@@ -57,11 +61,24 @@
             android:layout_marginTop="6dp"
             android:padding="10dp"
             android:paddingEnd="5dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dateNews" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveSources"
+            style="@style/MyMaterialTextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="?selectableItemBackground"
+            android:text="@string/save_sources"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/authorText" />
 
         <TextView
             android:id="@+id/authorText"
@@ -69,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:paddingEnd="15dp"
-            android:textColor="@color/black"
+            android:textColor="@color/color_black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/descriptionNews" />
@@ -87,15 +104,9 @@
 
         <TextView
             android:id="@+id/sourceText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/black2"
-            android:paddingEnd="5dp"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            style="@style/sourceNameBackgroundImage"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewAll"
             app:layout_constraintEnd_toEndOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

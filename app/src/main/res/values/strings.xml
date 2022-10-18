@@ -15,7 +15,7 @@
     <string name="yesterday">Yesterday</string>
     <string name="readOn">Read on</string>
     <string name="anonymousAuthor">Anonymous author</string>
-    <string name="sourceLoaded">Sources loaded</string>
+    <string name="sourceLoaded">Register to discover more features</string>
     <string name="errorSourcesDownload">errorSourcesDownload</string>
     <string name="pressAgain">Press again to exit</string>
     <string name="notAuthorized">Not authorized</string>
@@ -100,4 +100,5 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="textDelete">Dark theme style missing</string>
+    <string name="searchNewsKey">Search News KeyWord</string>
 </resources>

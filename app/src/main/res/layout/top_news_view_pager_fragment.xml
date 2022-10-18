@@ -20,8 +20,8 @@
         app:tabBackground="@drawable/tabs_selector"
         app:tabIndicator="@null"
         app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/black" />
+        app:tabSelectedTextColor="@color/color_white"
+        app:tabTextColor="@color/color_black" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"

@@ -61,7 +61,7 @@
             style="@style/sources_text"
             android:layout_marginTop="5dp"
             android:layout_marginStart="10dp"
-            android:textColor="@color/selectedColor"
+            android:textColor="@color/color_primary_app"
             android:textSize="12sp" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

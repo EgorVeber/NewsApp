@@ -26,7 +26,7 @@
         android:visibility="gone"
         app:endIconMode="clear_text"
         app:helperText="@string/helperFilter"
-        app:hintTextColor="@color/selectedColor">
+        app:hintTextColor="@color/color_primary_app">
 
         <ru.gb.veber.newsapi.utils.CustomAutoCompleteTextView
             android:id="@+id/countryAutoComplete"
@@ -43,7 +43,7 @@
         android:layout_gravity="center"
         android:layout_margin="20dp"
         android:text="@string/empty_list"
-        android:textColor="@color/black"
+        android:textColor="@color/color_black"
         android:textSize="36sp"
         android:visibility="gone" />
 
@@ -57,124 +57,22 @@
         android:id="@+id/filterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/selectedColor"
+        android:backgroundTint="@color/color_primary_app"
         app:layout_behavior=".view.topnews.pageritem.BehaviorActionButton"
         app:srcCompat="@drawable/filter_icon"
-        app:tint="@color/white" />
+        app:tint="@color/color_white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/cancelFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/selectedColor"
+        android:backgroundTint="@color/color_primary_app"
         android:visibility="gone"
         app:layout_behavior=".view.topnews.pageritem.BehaviorActionButtonCancel"
         app:srcCompat="@drawable/close_icon48"
-        app:tint="@color/white" />
+        app:tint="@color/color_white" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_sheet_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:clickable="true"
-        android:focusable="true"
-        android:importantForAccessibility="no"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="0dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/groupArticle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageViewAll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:background="#f6f6fa"
-                    android:scaleType="fitXY"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/titleNews"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:paddingEnd="15dp"
-                    android:textColor="@color/black"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageViewAll" />
-
-                <TextView
-                    android:id="@+id/dateNews"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textColor="@color/gray2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titleNews" />
-
-                <TextView
-                    android:id="@+id/descriptionNews"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:padding="10dp"
-                    android:paddingEnd="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/dateNews" />
-
-                <TextView
-                    android:id="@+id/authorText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:paddingEnd="15dp"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/descriptionNews" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageFavorites"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="15dp"
-                    android:src="@drawable/ic_favorite_36"
-                    app:layout_constraintBottom_toBottomOf="@id/dateNews"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/dateNews" />
-
-                <TextView
-                    android:id="@+id/sourceText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:background="@color/black2"
-                    android:paddingEnd="5dp"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageViewAll"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+        android:id="@+id/behaviorInclude"
+        layout="@layout/news_behavior" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

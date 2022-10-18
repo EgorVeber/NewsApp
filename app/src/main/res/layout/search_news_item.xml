@@ -43,7 +43,7 @@
         android:id="@+id/publishedAt"
         style="@style/sources_text"
         android:layout_marginStart="5dp"
-        android:textColor="@color/gray2"
+        android:textColor="@color/color_published_at_search_news"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageNews"
         app:layout_constraintStart_toStartOf="@+id/title" />

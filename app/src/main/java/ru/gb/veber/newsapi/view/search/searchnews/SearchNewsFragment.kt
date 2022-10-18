@@ -16,7 +16,7 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.AllNewsFragmentBinding
+import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
@@ -37,7 +37,7 @@ import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedListener,
     EventBehaviorToActivity {
 
-    private var _binding: AllNewsFragmentBinding? = null
+    private var _binding: SearchNewsFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
@@ -65,19 +65,13 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     private val newsAdapter = TopNewsAdapter(itemListener)
 
 
-    override fun emptyList() {
-        binding.progressBarAllNews.hide()
-        binding.allNewsRecycler.show()
-        binding.statusTextList.show()
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = AllNewsFragmentBinding.inflate(inflater, container, false)
+        _binding = SearchNewsFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -100,14 +94,14 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
 
 
     private fun initialization() {
-        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer)
+        bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
 
         binding.allNewsRecycler.adapter = newsAdapter
         binding.allNewsRecycler.layoutManager = LinearLayoutManager(requireContext())
 
         binding.backMainScreenImage.setOnClickListener { presenter.exit() }
 
-        binding.saveSources.setOnClickListener { presenter.saveSources() }
+        binding.behaviorInclude.saveSources.setOnClickListener { presenter.saveSources() }
     }
 
     override fun setNews(articles: List<Article>) {
@@ -126,9 +120,16 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         binding.allNewsRecycler.hide()
     }
 
+
+    override fun emptyList() {
+        binding.progressBarAllNews.hide()
+        binding.allNewsRecycler.show()
+        binding.statusTextList.show()
+    }
+
     override fun clickNews(article: Article) {
 
-        with(binding) {
+        with(binding.behaviorInclude) {
             imageViewAll.loadGlideNot(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
             titleNews.text = article.title
@@ -137,21 +138,21 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
             setSpan(article.description.toString())
         }
 
-        binding.descriptionNews.setOnClickListener { view ->
+        binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
             presenter.openScreenWebView(article.url)
         }
 
-        binding.imageFavorites.setOnClickListener {
+        binding.behaviorInclude.imageFavorites.setOnClickListener {
             presenter.setOnClickImageFavorites(article)
         }
     }
 
     override fun showSaveSources() {
-        binding.saveSources.show()
+        binding.behaviorInclude.saveSources.show()
     }
 
     override fun hideSaveSources() {
-        binding.saveSources.hide()
+        binding.behaviorInclude.saveSources.hide()
     }
 
     override fun sheetExpanded() {
@@ -159,11 +160,11 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun setLikeResourcesActive() {
-        binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
     }
 
     override fun setLikeResourcesNegative() {
-        binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
     }
 
     override fun addBadge() {
@@ -175,7 +176,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun successSaveSources() {
-        binding.saveSources.hide()
+        binding.behaviorInclude.saveSources.hide()
         binding.root.showSnackBarError(getString(R.string.sourcesSaved), "", {})
     }
 
@@ -187,7 +188,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
                 span.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
             )
-            binding.descriptionNews.text = span
+            binding.behaviorInclude.descriptionNews.text = span
             span.removeSpan(span)
         }
     }
@@ -216,7 +217,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
     override fun hideFavorites() {
-        binding.imageFavorites.hide()
+        binding.behaviorInclude.imageFavorites.hide()
     }
 
     override fun getStateBehavior(): Int {

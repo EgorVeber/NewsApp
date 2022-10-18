@@ -94,7 +94,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.recyclerNews.itemAnimator = null
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
 
-        bSheetB = BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
+        bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer).apply {
             addBottomSheetCallback(callBackBehavior)
         }
 
@@ -134,7 +134,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun clickNews(article: Article) {
 
-        with(binding) {
+        with(binding.behaviorInclude) {
             imageViewAll.loadGlideNot(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
             titleNews.text = article.title
@@ -143,11 +143,11 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             setSpanDescription(article)
         }
 
-        binding.descriptionNews.setOnClickListener { view ->
+        binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
             presenter.openScreenWebView(article.url)
         }
 
-        binding.imageFavorites.setOnClickListener {
+        binding.behaviorInclude.imageFavorites.setOnClickListener {
             presenter.setOnClickImageFavorites(article)
         }
     }
@@ -161,17 +161,17 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
                 span.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
             )
-            binding.descriptionNews.text = span
+            binding.behaviorInclude.descriptionNews.text = span
             span.removeSpan(span)
         }
     }
 
     override fun setLikeResourcesActive() {
-        binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
     }
 
     override fun setLikeResourcesNegative() {
-        binding.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
     }
 
     override fun addBadge() {
@@ -217,7 +217,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
 
     override fun hideFavorites() {
-        binding.imageFavorites.hide()
+        binding.behaviorInclude.imageFavorites.hide()
     }
 
     override fun hideFilter() {

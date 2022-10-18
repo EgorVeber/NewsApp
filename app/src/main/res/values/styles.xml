@@ -1,6 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="MyTabStyle" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabTextAppearance">@style/MyTextAppearanceTab</item>
+    </style>
+
+    <style name="MyTextAppearanceTab" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="MyTextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="hintTextColor">@color/color_primary_app</item>
+        <item name="boxStrokeWidth">0.8dp</item>
+        <item name="boxStrokeColor">@color/color_primary_app</item>
+        <item name="endIconMode">none</item>
+        <item name="boxBackgroundColor">@color/color_white</item>
+    </style>
+
+    <style name="MyMaterialButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">@dimen/cornerRadiusMaterialButton</item>
+        <item name="android:textAppearance">@style/MyTextAppearanceButton</item>
+    </style>
+
+
+    <style name="MyTextAppearanceButton" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="MySwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/MyOverlay</item>
+    </style>
+
+    <style name="MyOverlay" parent="">
+        <item name="colorSecondary">@color/color_primary_app</item>
+    </style>
+
+    <style name="MyMaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="alertDialogStyle">@style/MyAlertDialogStyle</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MyMaterialAlertDialogTitleTextStyle
+        </item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MyMaterialAlertDialogBodyTextStyle
+        </item>
+    </style>
+
+    <style name="MyAlertDialogStyle" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="shapeAppearance">@style/MyMediumComponentDialog</item>
+    </style>
+
+    <style name="MyMediumComponentDialog" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/cornerSizeMyMediumComponent</item>
+    </style>
+
+    <style name="MyMaterialAlertDialogTitleTextStyle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:padding">@dimen/paddingMyMaterialDialog</item>
+        <item name="android:textAppearance">@style/MyTextAppearance</item>
+    </style>
+
+    <style name="MyTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/myTextSizeBody2</item>
+    </style>
+
+    <style name="MyMaterialAlertDialogBodyTextStyle" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textColor">@color/color_black</item>
+    </style>
+
+    <style name="CustomBadge" parent="@style/Widget.MaterialComponents.Badge">
+        <item name="backgroundColor">@color/color_primary_app</item>
+    </style>
+
+    <style name="ThemeOverlay.App.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/color_primary_app</item>
+        <item name="colorOnPrimary">@color/color_white</item>
+        <item name="shapeAppearanceMediumComponent">@style/MyMediumComponentCalendar</item>
+        <item name="materialCalendarHeaderTitle">@style/MyTitleCalendar</item>
+    </style>
+
+    <style name="MyMediumComponentCalendar" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">@dimen/myCornerSizeMediumComponent</item>
+    </style>
+
+    <style name="MyTitleCalendar" parent="Widget.AppCompat.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceOverline</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:ellipsize">end</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">14sp</item>
+    </style>
+
+
     <style name="card_style_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -13,144 +105,55 @@
     <style name="sources_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/color_black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="sourceNameBackgroundImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:background">@color/color_sources_background_image</item>
+        <item name="android:paddingEnd">5dp</item>
+        <item name="android:textColor">@color/color_white</item>
         <item name="android:textSize">18sp</item>
     </style>
 
 
-    <style name="MyTabStyle" parent="Widget.MaterialComponents.TabLayout">
-        <item name="tabTextAppearance">@style/MyTextAppearanceTab</item>
-    </style>
-
-    <style name="MyTextAppearanceTab" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-
-    <style name="MyTextInputStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <item name="hintTextColor">@color/selectedColor</item>
-        <item name="boxStrokeWidth">0.8dp</item>
-        <item name="boxStrokeColor">@color/selectedColor</item>
-        <item name="endIconMode">none</item>
-        <item name="boxBackgroundColor">@color/white</item>
-    </style>
-
     <style name="TextInputLayoutAppearance" parent="Widget.Design.TextInputLayout">
-        <item name="colorControlNormal">@color/selectedColor</item>
-        <item name="colorControlActivated">@color/selectedColor</item>
-        <item name="colorControlHighlight">@color/selectedColor</item>
+        <item name="colorControlNormal">@color/color_primary_app</item>
+        <item name="colorControlActivated">@color/color_primary_app</item>
+        <item name="colorControlHighlight">@color/color_primary_app</item>
     </style>
-
 
 
     <style name="MyAutoCompleteTextViewStyle" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
-        <item name="android:popupBackground">@color/black</item>
+        <item name="android:popupBackground">@color/color_black</item>
         <item name="android:background">?attr/editTextBackground</item>
         <item name="android:textColor">?attr/editTextColor</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:textCursorDrawable">@drawable/abc_text_cursor_material</item>
-
     </style>
 
 
     <style name="MyFilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
         <item name="boxStrokeWidth">0.8dp</item>
-        <item name="boxStrokeColor">@color/selectedColor</item>
+        <item name="boxStrokeColor">@color/color_primary_app</item>
         <item name="endIconMode">none</item>
-        <item name="boxBackgroundColor">@color/white</item>
-    </style>
-
-    <style name="MyMaterialButtonStyle" parent="Widget.MaterialComponents.Button">
-        <item name="cornerRadius">10dp</item>
-        <item name="android:textAppearance">@style/MyTextAppearanceButton</item>
+        <item name="boxBackgroundColor">@color/color_white</item>
     </style>
 
     <style name="MyMaterialTextButton" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="cornerRadius">10dp</item>
-        <item name="android:textColor">@color/selectedColor2</item>
+        <item name="cornerRadius">@dimen/cornerRadiusMaterialButton</item>
+        <item name="android:textColor">@color/color_primary_app</item>
         <item name="android:textAppearance">@style/MyTextAppearanceButton</item>
     </style>
 
-    <style name="MyTextAppearanceButton" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:textAllCaps">false</item>
+    <style name="MyMaterialTextButtonDisable" parent="MyMaterialTextButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/marginTopMaterialButtonDisable</item>
     </style>
 
-
-
-    <style name="MySwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="materialThemeOverlay">@style/MyOverlay</item>
-    </style>
-
-    <style name="MyOverlay" parent="">
-        <item name="colorSecondary">@color/selectedColor23</item>
-    </style>
-
-
-    <!--    //Dialog-->
-    <style name="MyAlertDialogStyle" parent="MaterialAlertDialog.MaterialComponents">
-        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
-    </style>
-
-    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">20dp</item>
-    </style>
-
-
-    <style name="ShapeAppearance.App.MediumComponent2" parent="ShapeAppearance.MaterialComponents.MediumComponent">
-        <item name="cornerSize">16dp</item>
-    </style>
-
-
-    <style name="MyMaterialAlertDialogTitleTextStyle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:padding">20dp</item>
-        <item name="android:textAppearance">@style/MyTextAppearance</item>
-    </style>
-
-    <style name="MyMaterialAlertDialogBodyTextStyle" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="MyTextAppearance" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-
-    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-
-        <item name="alertDialogStyle">@style/MyAlertDialogStyle</item>
-        <item name="materialAlertDialogTitleTextStyle">@style/MyMaterialAlertDialogTitleTextStyle
-        </item>
-        <item name="materialAlertDialogBodyTextStyle">@style/MyMaterialAlertDialogBodyTextStyle
-        </item>
-
-    </style>
-
-
-    <style name="CustomBadge" parent="@style/Widget.MaterialComponents.Badge">
-        <item name="backgroundColor">@color/selectedColor</item>
-    </style>
-
-    <style name="ThemeOverlay.App.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
-        <item name="colorPrimary">@color/selectedColor</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.MediumComponent2
-        </item>
-        <item name="materialCalendarHeaderTitle">
-            @style/MyWidget.MaterialComponents.MaterialCalendar.HeaderTitle
-        </item>
-    </style>
-
-    <style name="MyWidget.MaterialComponents.MaterialCalendar.HeaderTitle" parent="Widget.AppCompat.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceOverline</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:maxLines">5</item>
-        <item name="android:ellipsize">end</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMinTextSize">12sp</item>
-        <item name="autoSizeMaxTextSize">14sp</item>
-    </style>
 </resources>

@@ -3,6 +3,7 @@ package ru.gb.veber.newsapi.view.search
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,7 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
+import ru.gb.veber.newsapi.databinding.SearchFragmentBinding
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
@@ -35,7 +36,7 @@ import java.util.*
 class SearchFragment : MvpAppCompatFragment(),
     ru.gb.veber.newsapi.view.search.SearchView, BackPressedListener {
 
-    private var _binding: SearchNewsFragmentBinding? = null
+    private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: SourcesAdapterAutoCompile
     private var dateInput: String = NOT_INPUT_DATE
@@ -70,7 +71,7 @@ class SearchFragment : MvpAppCompatFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = SearchNewsFragmentBinding.inflate(inflater, container, false)
+        _binding = SearchFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -97,7 +98,6 @@ class SearchFragment : MvpAppCompatFragment(),
         }
 
         binding.recyclerHistory.adapter = historySelectAdapter
-        binding.recyclerHistory.itemAnimator = null
         binding.recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
 
         binding.checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
