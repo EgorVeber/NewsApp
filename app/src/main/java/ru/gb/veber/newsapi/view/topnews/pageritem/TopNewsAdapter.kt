@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.view.topnews.pageritem
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,8 @@ import ru.gb.veber.newsapi.utils.loadGlide
 import ru.gb.veber.newsapi.utils.loadGlideNot
 import ru.gb.veber.newsapi.utils.show
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_NEWS_TITLE
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_HEADER
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
@@ -22,6 +22,9 @@ import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_
 interface RecyclerListener {
     fun clickNews(article: Article)
     fun deleteFavorites(article: Article)
+    fun deleteHistory(article: Article)
+    fun clickGroupHistory(article: Article)
+    fun deleteGroupHistory(article: Article)
 }
 
 class TopNewsAdapter(
@@ -42,10 +45,6 @@ class TopNewsAdapter(
                 parent.context),
                 parent,
                 false), listener)
-            VIEW_TYPE_FAVORITES_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(
-                parent.context),
-                parent,
-                false), listener)
             VIEW_TYPE_TOP_NEWS_HEADER -> NewsHeaderViewHolder(TopNewsItemHeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -54,7 +53,20 @@ class TopNewsAdapter(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
-            VIEW_TYPE_HISTORY_NEWS_TITLE -> HistoryTitleViewHolder(HistorySelectTitleBinding.inflate(
+
+            VIEW_TYPE_FAVORITES_NEWS -> FavoritesHistoryViewHolder(FavoritesHistoryItemBinding.inflate(
+                LayoutInflater.from(
+                    parent.context),
+                parent,
+                false), listener)
+
+            VIEW_TYPE_HISTORY_NEWS -> FavoritesHistoryViewHolder(FavoritesHistoryItemBinding.inflate(
+                LayoutInflater.from(
+                    parent.context),
+                parent,
+                false), listener)
+
+            VIEW_TYPE_HISTORY_HEADER -> HistoryHeaderViewHolder(HistoryArticleHeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
@@ -81,17 +93,12 @@ class NewsViewHolder(
 ) : BaseViewHolder(binding.root) {
 
     override fun bind(item: Article) = with(binding) {
-        imageFavorites.visibility =
-            if (itemViewType == VIEW_TYPE_FAVORITES_NEWS) View.VISIBLE else View.GONE
         title.text = item.title
         publishedAt.text = item.publishedAtChange
         imageNews.loadGlide(item.urlToImage)
         if (item.isHistory || item.isFavorites) viewedText.show() else viewedText.hide()
         root.setOnClickListener {
             listener.clickNews(item)
-        }
-        imageFavorites.setOnClickListener {
-            listener.deleteFavorites(item)
         }
     }
 }
@@ -129,16 +136,54 @@ class NewsHeaderViewHolder(
     }
 }
 
-class HistoryTitleViewHolder(
-    private val binding: HistorySelectTitleBinding,
+
+class FavoritesHistoryViewHolder(
+    private val binding: FavoritesHistoryItemBinding,
+    var listener: RecyclerListener,
+) : BaseViewHolder(binding.root) {
+
+    override fun bind(item: Article) = with(binding) {
+
+        imageFavorites.visibility =
+            if (itemViewType == VIEW_TYPE_FAVORITES_NEWS) View.VISIBLE else View.GONE
+
+        deleteFavorites.visibility =
+            if (itemViewType == VIEW_TYPE_HISTORY_NEWS) View.VISIBLE else View.GONE
+
+        if (item.isHistory || item.isFavorites) viewedText.show() else viewedText.hide()
+
+        title.text = item.title
+        publishedAt.text = item.publishedAtChange
+        imageNews.loadGlide(item.urlToImage)
+
+        root.setOnClickListener {
+            listener.clickNews(item)
+        }
+
+        imageFavorites.setOnClickListener {
+            listener.deleteFavorites(item)
+        }
+
+        deleteFavorites.setOnClickListener {
+            listener.deleteHistory(item)
+        }
+    }
+}
+
+
+class HistoryHeaderViewHolder(
+    private val binding: HistoryArticleHeaderBinding,
     var listener: RecyclerListener,
 ) : BaseViewHolder(binding.root) {
 
     override fun bind(item: Article) = with(binding) {
         dateAdded.text = item.publishedAt
         sizeNews.text = item.author
-        root.setOnClickListener {
-            //listener.clickNews(item)
+        dateAdded.setOnClickListener {
+            listener.clickGroupHistory(item)
+        }
+        deleteHistoryGroup.setOnClickListener {
+            listener.deleteGroupHistory(item)
         }
     }
 }
@@ -150,9 +195,10 @@ abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     companion object {
         const val VIEW_TYPE_TOP_NEWS = 0
         const val VIEW_TYPE_TOP_NEWS_HEADER = 1
-        const val VIEW_TYPE_FAVORITES_NEWS = 2
-        const val VIEW_TYPE_HISTORY_NEWS_TITLE = 4
-        const val VIEW_TYPE_SEARCH_NEWS = 3
+        const val VIEW_TYPE_SEARCH_NEWS = 2
+        const val VIEW_TYPE_FAVORITES_NEWS = 3
+        const val VIEW_TYPE_HISTORY_NEWS = 4
+        const val VIEW_TYPE_HISTORY_HEADER = 5
     }
 }
 

@@ -18,6 +18,7 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.network.NewsRetrofit
 import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
@@ -50,7 +51,8 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
             AccountRepoImpl(App.instance.newsDb.accountsDao()),
             arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT,
             SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
-            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
+            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()),
+            ChangeRequestHelper())
     }
 
 
@@ -60,10 +62,12 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         }
 
         override fun deleteFavorites(article: Article) {}
+        override fun deleteHistory(article: Article) {}
+        override fun clickGroupHistory(article: Article) {}
+        override fun deleteGroupHistory(article: Article) {}
     }
 
     private val newsAdapter = TopNewsAdapter(itemListener)
-
 
 
     override fun onCreateView(

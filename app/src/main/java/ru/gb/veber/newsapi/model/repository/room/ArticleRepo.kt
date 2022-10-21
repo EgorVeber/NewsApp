@@ -1,5 +1,7 @@
 package ru.gb.veber.newsapi.model.repository.room
 
+import androidx.room.Delete
+import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
@@ -15,5 +17,7 @@ interface ArticleRepo {
     fun getArticleById(accountId: Int): Single<List<ArticleDbEntity>>
     fun deleteArticleIsFavoriteById(accountId: Int): Completable
     fun deleteArticleIsHistoryById(accountId: Int): Completable
-    fun deleteArticleById(title: String, accountId: Int): Completable
+    fun deleteArticleByIdFavorites(title: String, accountId: Int): Completable
+    fun deleteArticleByIdHistory(title: String, accountId: Int): Completable
+    fun deleteArticleByIdHistoryGroup( accountId: Int,dateAdded:String): Completable
 }

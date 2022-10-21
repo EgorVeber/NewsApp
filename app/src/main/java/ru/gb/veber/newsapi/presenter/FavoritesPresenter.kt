@@ -5,19 +5,26 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.ChangeRequestHelper
+import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.favorites.FavoritesView
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_HEADER
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_NEWS
 
 class FavoritesPresenter(
     private val router: Router,
     private val articleRepoImpl: ArticleRepoImpl,
+    private val changeRequestHelper: ChangeRequestHelper,
 ) :
     MvpPresenter<FavoritesView>() {
 
     private var accountIdS: Int = 0
+    private var listSave: MutableList<Article> = mutableListOf()
+    private var clickGroupHistory = true
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -53,19 +60,9 @@ class FavoritesPresenter(
                     if (it.isEmpty()) {
                         viewState.emptyList()
                     } else {
-                        var list = it.map(::articleDbEntityToArticle).reversed().map {
-                            it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
-                            it.dateAdded = stringFromDataTime(it.dateAdded!!).formatDate()
-                            it
-                        }
-                        var group = list.sortedBy { it.dateAdded }.reversed().groupBy { it.dateAdded }
-                        var mutableList: MutableList<Article> = mutableListOf()
-                        group.forEach { group ->
-                            mutableList.add(mapToArticleTitle((group.key.toString()), group.value.size))
-                            group.value.forEach { mutableList.add(it) }
-                        }
-
-                        viewState.setSources(mutableList)
+                        listSave =
+                            changeRequestHelper.changeHistoryList(it.map(::articleDbEntityToArticle))
+                        viewState.setSources(listSave)
                     }
                 }, {
                     Log.d(ERROR_DB, it.localizedMessage)
@@ -82,9 +79,9 @@ class FavoritesPresenter(
 
     fun deleteFavorites(article: Article) {
         article.title?.let { title ->
-            articleRepoImpl.deleteArticleById(title, accountIdS)
+            articleRepoImpl.deleteArticleByIdFavorites(title, accountIdS)
                 .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({ list ->
-                    viewState.updateFavorites(list.map(::articleDbEntityToArticle).reversed()
+                    viewState.setSources(list.map(::articleDbEntityToArticle).reversed()
                         .map { art ->
                             art.publishedAtChange = stringFromData(art.publishedAt).formatDateTime()
                             art.viewType = VIEW_TYPE_FAVORITES_NEWS
@@ -98,5 +95,53 @@ class FavoritesPresenter(
 
     fun openScreenWebView(url: String) {
         router.navigateTo(WebViewScreen(url))
+    }
+
+    fun deleteHistory(article: Article) {
+        article.title?.let { title ->
+            articleRepoImpl.deleteArticleByIdHistory(title, accountIdS)
+                .andThen(articleRepoImpl.getHistoryArticleById(accountIdS)).subscribe({
+                    listSave =
+                        changeRequestHelper.changeHistoryList(it.map(::articleDbEntityToArticle))
+                    viewState.setSources(listSave)
+                }, {
+                    Log.d(ERROR_DB, it.localizedMessage)
+                })
+        }
+    }
+
+    fun clickGroupHistory(article: Article) {
+        if (article.title == SHOW_HISTORY) {
+            listSave.forEach {
+                if (it.dateAdded == article.publishedAt) {
+                    it.showHistory = false
+                }
+            }
+            article.title = HIDE_HISTORY
+            viewState.setSources(listSave.filter { it.showHistory })
+        } else {
+            listSave.forEach {
+                if (it.dateAdded == article.publishedAt) {
+                    it.showHistory = true
+                }
+            }
+            article.title = SHOW_HISTORY
+            viewState.setSources(listSave.filter { it.showHistory })
+        }
+    }
+
+    fun deleteGroupHistory(article: Article) {
+        articleRepoImpl.deleteArticleByIdHistoryGroup(accountIdS, article.publishedAt).subscribe({
+            Log.d(ERROR_DB, "success")
+            articleRepoImpl.getHistoryArticleById(accountIdS).subscribe({
+                listSave =
+                    changeRequestHelper.changeHistoryList(it.map(::articleDbEntityToArticle))
+                viewState.setSources(listSave)
+            }, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            })
+        }, {
+            Log.d(ERROR_DB, it.localizedMessage)
+        })
     }
 }

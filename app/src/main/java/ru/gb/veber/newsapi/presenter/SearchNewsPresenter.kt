@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
@@ -28,6 +29,7 @@ class SearchNewsPresenter(
     private val accountId: Int,
     private val sourcesRepoImpl: SourcesRepoImpl,
     private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
+    private val changeRequestHelper: ChangeRequestHelper,
 ) :
     MvpPresenter<SearchNewsView>() {
 
@@ -93,7 +95,7 @@ class SearchNewsPresenter(
             historySelect?.dateSources
         ).map { articles ->
             articles.articles.map(::mapToArticle).also {
-                newsRepoImpl.changeRequest(it)
+                changeRequestHelper.changeRequest(it)
                 it.map { art ->
                     art.viewType = VIEW_TYPE_SEARCH_NEWS
                 }
@@ -189,7 +191,7 @@ class SearchNewsPresenter(
 
     private fun deleteFavorites(article: Article) {
         article.isFavorites = false
-        articleRepoImpl.deleteArticleById(article.title.toString(), accountId).subscribe({
+        articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountId).subscribe({
             articleListHistory.find { it.title == article.title }?.isFavorites = false
             viewState.changeNews(articleListHistory)
         }, {

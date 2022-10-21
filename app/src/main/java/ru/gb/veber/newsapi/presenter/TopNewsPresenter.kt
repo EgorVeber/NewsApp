@@ -6,10 +6,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
-import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.Country
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.model.*
 import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
@@ -27,6 +24,7 @@ class TopNewsPresenter(
     private val accountIdPresenter: Int,
     private val countryRepoImpl: CountryRepoImpl,
     private val sharedPreferenceAccount: SharedPreferenceAccount,
+    private val changeRequestHelper: ChangeRequestHelper,
 ) :
     MvpPresenter<TopNewsView>() {
 
@@ -63,7 +61,7 @@ class TopNewsPresenter(
         var countryCode = sharedPreferenceAccount.getAccountCountryCode()
         Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, countryCode),
             articleRepoImpl.getArticleById(accountIdPresenter)) { news, articles ->
-            var newsModified = mapToArticleDTO(news).also { newsRepoImpl.changeRequest(it) }
+            var newsModified = mapToArticleDTO(news).also { changeRequestHelper.changeRequest(it) }
             articles.forEach { art ->
                 newsModified.forEach { new ->
                     if (art.title == new.title) {
@@ -133,12 +131,13 @@ class TopNewsPresenter(
 
     private fun deleteFavorites(article: Article) {
         article.isFavorites = false
-        articleRepoImpl.deleteArticleById(article.title.toString(), accountIdPresenter).subscribe({
-            articleListHistory.find { it.title == article.title }?.isFavorites = false
-            viewState.changeNews(articleListHistory)
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        }).disposableBy(bag)
+        articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountIdPresenter)
+            .subscribe({
+                articleListHistory.find { it.title == article.title }?.isFavorites = false
+                viewState.changeNews(articleListHistory)
+            }, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            }).disposableBy(bag)
     }
 
 

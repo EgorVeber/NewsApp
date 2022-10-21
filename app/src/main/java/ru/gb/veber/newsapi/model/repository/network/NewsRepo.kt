@@ -6,8 +6,6 @@ import ru.gb.veber.newsapi.model.ArticlesDTO
 import ru.gb.veber.newsapi.model.SourcesRequestDTO
 
 interface NewsRepo {
-    fun changeRequest(list: List<Article>): List<Article>
-
     //TOP_HEADLINES
     fun getTopicalHeadlinesCountryCategoryKeyword(
         country: String,
