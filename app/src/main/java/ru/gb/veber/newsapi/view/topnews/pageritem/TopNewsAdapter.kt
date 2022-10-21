@@ -6,15 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.databinding.SearchNewsItemBinding
-import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
-import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
+import ru.gb.veber.newsapi.databinding.*
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.utils.hide
 import ru.gb.veber.newsapi.utils.loadGlide
 import ru.gb.veber.newsapi.utils.loadGlideNot
 import ru.gb.veber.newsapi.utils.show
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_NEWS_TITLE
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
@@ -52,6 +51,10 @@ class TopNewsAdapter(
                 parent,
                 false), listener)
             VIEW_TYPE_SEARCH_NEWS -> SearchNewsViewHolder(SearchNewsItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false), listener)
+            VIEW_TYPE_HISTORY_NEWS_TITLE -> HistoryTitleViewHolder(HistorySelectTitleBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
@@ -126,6 +129,20 @@ class NewsHeaderViewHolder(
     }
 }
 
+class HistoryTitleViewHolder(
+    private val binding: HistorySelectTitleBinding,
+    var listener: RecyclerListener,
+) : BaseViewHolder(binding.root) {
+
+    override fun bind(item: Article) = with(binding) {
+        dateAdded.text = item.publishedAt
+        sizeNews.text = item.author
+        root.setOnClickListener {
+            //listener.clickNews(item)
+        }
+    }
+}
+
 
 abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     abstract fun bind(item: Article)
@@ -134,6 +151,7 @@ abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         const val VIEW_TYPE_TOP_NEWS = 0
         const val VIEW_TYPE_TOP_NEWS_HEADER = 1
         const val VIEW_TYPE_FAVORITES_NEWS = 2
+        const val VIEW_TYPE_HISTORY_NEWS_TITLE = 4
         const val VIEW_TYPE_SEARCH_NEWS = 3
     }
 }

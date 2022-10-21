@@ -51,7 +51,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-
     private var itemListener = object : RecyclerListener {
         override fun clickNews(article: Article) {
             presenter.clickNews(article)

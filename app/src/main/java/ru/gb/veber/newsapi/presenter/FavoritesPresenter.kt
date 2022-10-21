@@ -53,10 +53,19 @@ class FavoritesPresenter(
                     if (it.isEmpty()) {
                         viewState.emptyList()
                     } else {
-                        viewState.setSources(it.map(::articleDbEntityToArticle).reversed().map {
+                        var list = it.map(::articleDbEntityToArticle).reversed().map {
                             it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
+                            it.dateAdded = stringFromDataTime(it.dateAdded!!).formatDate()
                             it
-                        })
+                        }
+                        var group = list.sortedBy { it.dateAdded }.reversed().groupBy { it.dateAdded }
+                        var mutableList: MutableList<Article> = mutableListOf()
+                        group.forEach { group ->
+                            mutableList.add(mapToArticleTitle((group.key.toString()), group.value.size))
+                            group.value.forEach { mutableList.add(it) }
+                        }
+
+                        viewState.setSources(mutableList)
                     }
                 }, {
                     Log.d(ERROR_DB, it.localizedMessage)
@@ -72,18 +81,19 @@ class FavoritesPresenter(
     }
 
     fun deleteFavorites(article: Article) {
-        article.title?.let {title->
-        articleRepoImpl.deleteArticleById(title, accountIdS)
-            .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({list->
-                viewState.updateFavorites(list.map(::articleDbEntityToArticle).reversed().map {art->
-                    art.publishedAtChange = stringFromData(art.publishedAt).formatDateTime()
-                    art.viewType = VIEW_TYPE_FAVORITES_NEWS
-                    art
+        article.title?.let { title ->
+            articleRepoImpl.deleteArticleById(title, accountIdS)
+                .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({ list ->
+                    viewState.updateFavorites(list.map(::articleDbEntityToArticle).reversed()
+                        .map { art ->
+                            art.publishedAtChange = stringFromData(art.publishedAt).formatDateTime()
+                            art.viewType = VIEW_TYPE_FAVORITES_NEWS
+                            art
+                        })
+                }, {
+                    Log.d(ERROR_DB, it.localizedMessage)
                 })
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })}
-
+        }
     }
 
     fun openScreenWebView(url: String) {
