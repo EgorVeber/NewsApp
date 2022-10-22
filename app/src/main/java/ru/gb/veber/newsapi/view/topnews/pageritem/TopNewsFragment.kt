@@ -56,6 +56,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         override fun clickNews(article: Article) {
             presenter.clickNews(article)
         }
+
         override fun deleteFavorites(article: Article) {}
         override fun deleteHistory(article: Article) {}
         override fun clickGroupHistory(article: Article) {}
@@ -71,7 +72,9 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             ArticleRepoImpl(App.instance.newsDb.articleDao()),
             AccountRepoImpl(App.instance.newsDb.accountsDao()),
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-            CountryRepoImpl(App.instance.newsDb.countryDao()), SharedPreferenceAccount(),ChangeRequestHelper()
+            CountryRepoImpl(App.instance.newsDb.countryDao()),
+            SharedPreferenceAccount(),
+            ChangeRequestHelper()
         )
     }
 

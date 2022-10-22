@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import io.reactivex.rxjava3.core.Completable
 import moxy.MvpAppCompatActivity
@@ -24,6 +25,7 @@ import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 
 interface OpenScreen {
@@ -45,7 +47,11 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     EventAddingBadges {
 
     private lateinit var binding: ActivityMainBinding
+
+
+   // @Inject lateinit var navigatorHolder: NavigatorHolder
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
+
     private var backStack = COUNTER_BACKSTACK
     private var counterBadge = COUNTER_BADGE
 
@@ -59,6 +65,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //App.instance.appComponent.inject(this)
         setTheme(SharedPreferenceAccount().getThemePrefs())
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -72,12 +79,15 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        App.instance.navigationHolder.setNavigator(navigator)
+            App.instance.navigationHolder.setNavigator(navigator)
+     //   navigatorHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
         super.onPause()
         App.instance.navigationHolder.removeNavigator()
+      //  navigatorHolder.removeNavigator()
+
     }
 
     override fun hideAllBehavior() {
