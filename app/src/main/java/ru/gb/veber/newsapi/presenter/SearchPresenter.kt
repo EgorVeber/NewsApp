@@ -7,30 +7,37 @@ import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.SearchNewsScreen
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.model.repository.room.*
+import ru.gb.veber.newsapi.model.repository.room.AccountRepo
+import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
+import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
+import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.search.SearchView
 import java.util.*
 import javax.inject.Inject
 
 class SearchPresenter(
- //   private val roomRepoImpl: AccountRepoImpl,
-  //  private val historySelectRepoImpl: HistorySelectRepoImpl,
     private val accountIdPresenter: Int,
-  //  private val sourcesRepoImpl: SourcesRepoImpl,
- //   private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
 ) : MvpPresenter<SearchView>() {
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var accountRepoImpl: AccountRepo
+
+    @Inject
+    lateinit var historySelectRepoImpl: HistorySelectRepo
+
+    @Inject
+    lateinit var sourcesRepoImpl: SourcesRepo
+
+    @Inject
+    lateinit var accountSourcesRepoImpl: AccountSourcesRepo
 
     private lateinit var allSources: MutableList<Sources>
     private lateinit var likeSources: List<Sources>
     private var accountHistorySelect: Boolean = false
-
-    @Inject
-    lateinit var router: Router
-    @Inject lateinit var accountRepoImpl: AccountRepo
-    @Inject lateinit var historySelectRepoImpl: HistorySelectRepo
-    @Inject lateinit var sourcesRepoImpl: SourcesRepo
-    @Inject lateinit var accountSourcesRepoImpl: AccountSourcesRepo
 
 
     fun onBackPressedRouter(): Boolean {

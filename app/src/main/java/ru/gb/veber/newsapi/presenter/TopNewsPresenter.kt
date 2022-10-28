@@ -6,21 +6,24 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
-import ru.gb.veber.newsapi.model.*
+import ru.gb.veber.newsapi.model.Account
+import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.model.Country
+import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.repository.network.NewsRepo
-import ru.gb.veber.newsapi.model.repository.room.*
+import ru.gb.veber.newsapi.model.repository.room.AccountRepo
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
+import ru.gb.veber.newsapi.model.repository.room.CountryRepo
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TopNewsPresenter(
-  //  private val articleRepoImpl: ArticleRepoImpl,
-  //  private val roomRepoImpl: AccountRepoImpl,
     private val accountIdPresenter: Int,
- //   private val countryRepoImpl: CountryRepoImpl
 ) :
     MvpPresenter<TopNewsView>() {
 
@@ -33,10 +36,17 @@ class TopNewsPresenter(
     @Inject
     lateinit var sharedPreferenceAccount: SharedPreferenceAccount
 
-    @Inject lateinit var changeRequestHelper: ChangeRequestHelper
-    @Inject lateinit var articleRepoImpl: ArticleRepo
-    @Inject lateinit var accountRepoImpl: AccountRepo
-    @Inject lateinit var countryRepoImpl: CountryRepo
+    @Inject
+    lateinit var changeRequestHelper: ChangeRequestHelper
+
+    @Inject
+    lateinit var articleRepoImpl: ArticleRepo
+
+    @Inject
+    lateinit var accountRepoImpl: AccountRepo
+
+    @Inject
+    lateinit var countryRepoImpl: CountryRepo
 
 
     private lateinit var account: Account

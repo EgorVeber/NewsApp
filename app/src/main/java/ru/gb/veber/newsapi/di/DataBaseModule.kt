@@ -4,7 +4,6 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import ru.gb.veber.newsapi.model.database.NewsDataBase
-import ru.gb.veber.newsapi.model.database.dao.*
 import ru.gb.veber.newsapi.model.repository.room.*
 import javax.inject.Singleton
 

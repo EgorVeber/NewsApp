@@ -10,21 +10,21 @@ import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationView
 import java.util.*
 import javax.inject.Inject
 
-class AuthorizationPresenter(
-  //  private val roomRepoImpl: AccountRepoImpl,
-) :
-    MvpPresenter<AuthorizationView>() {
+class AuthorizationPresenter : MvpPresenter<AuthorizationView>() {
+
     @Inject
     lateinit var router: Router
 
-    @Inject lateinit var sharedPreferenceAccount:SharedPreferenceAccount
-    @Inject lateinit var accountRepoImpl: AccountRepo
+    @Inject
+    lateinit var sharedPreferenceAccount: SharedPreferenceAccount
+
+    @Inject
+    lateinit var accountRepoImpl: AccountRepo
 
     private val bag = CompositeDisposable()
 

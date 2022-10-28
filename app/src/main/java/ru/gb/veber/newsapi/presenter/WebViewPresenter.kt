@@ -18,7 +18,6 @@ class WebViewPresenter() :
         router.exit()
     }
 
-
     fun successLoading() {
         viewState.showPage()
     }

@@ -7,27 +7,26 @@ import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.favorites.FavoritesView
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
 import javax.inject.Inject
 
-class FavoritesPresenter(
-    // private val articleRepoImpl: ArticleRepoImpl,
-) :
+class FavoritesPresenter :
     MvpPresenter<FavoritesView>() {
-
-    private var accountIdS: Int = 0
-    private var listSave: MutableList<Article> = mutableListOf()
 
     @Inject
     lateinit var router: Router
+
     @Inject
     lateinit var changeRequestHelper: ChangeRequestHelper
+
     @Inject
     lateinit var articleRepoImpl: ArticleRepo
+
+    private var accountIdS: Int = 0
+    private var listSave: MutableList<Article> = mutableListOf()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

@@ -4,33 +4,24 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
-import ru.gb.veber.newsapi.core.AccountScreen
 import ru.gb.veber.newsapi.core.AuthorizationScreen
 import ru.gb.veber.newsapi.core.EditAccountScreen
-import ru.gb.veber.newsapi.core.TopNewsViewPagerScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.*
+import ru.gb.veber.newsapi.model.repository.room.AccountRepo
+import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.account.AccountView
 import javax.inject.Inject
 
-class AccountPresenter(
-    //  private val accountRepo: AccountRepoImpl,
-    // private val articleRepoImpl: ArticleRepoImpl,
-    // private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
-) :
-    MvpPresenter<AccountView>() {
-
-    private var accountId = ACCOUNT_ID_DEFAULT
-    private lateinit var accountMain: Account
+class AccountPresenter : MvpPresenter<AccountView>() {
 
     @Inject
     lateinit var router: Router
 
     @Inject
     lateinit var sharedPreferenceAccount: SharedPreferenceAccount
-
 
     @Inject
     lateinit var accountRepo: AccountRepo
@@ -40,6 +31,9 @@ class AccountPresenter(
 
     @Inject
     lateinit var accountSourcesRepoImpl: AccountSourcesRepo
+
+    private var accountId = ACCOUNT_ID_DEFAULT
+    private lateinit var accountMain: Account
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
