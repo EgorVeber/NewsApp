@@ -9,17 +9,22 @@ import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
+import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationView
 import java.util.*
+import javax.inject.Inject
 
 class AuthorizationPresenter(
-    private val router: Router,
-    private val roomRepoImpl: AccountRepoImpl,
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
+  //  private val roomRepoImpl: AccountRepoImpl,
 ) :
     MvpPresenter<AuthorizationView>() {
+    @Inject
+    lateinit var router: Router
+
+    @Inject lateinit var sharedPreferenceAccount:SharedPreferenceAccount
+    @Inject lateinit var accountRepoImpl: AccountRepo
 
     private val bag = CompositeDisposable()
 
@@ -34,7 +39,7 @@ class AuthorizationPresenter(
     }
 
     fun createAccount(username: String, email: String, password: String) {
-        roomRepoImpl.createAccount(AccountDbEntity(0,
+        accountRepoImpl.createAccount(AccountDbEntity(0,
             username,
             password,
             email,
@@ -43,7 +48,7 @@ class AuthorizationPresenter(
             saveSelectHistory = true,
             displayOnlySources = false,
             myCountry = ALL_COUNTRY, countryCode = ALL_COUNTRY_VALUE))
-            .andThen(roomRepoImpl.getAccountByUserName(username)).subscribe({
+            .andThen(accountRepoImpl.getAccountByUserName(username)).subscribe({
                 viewState.successRegister(it.id)
                 saveIdSharedPref(it)
             }, {
@@ -53,7 +58,7 @@ class AuthorizationPresenter(
     }
 
     fun checkSignIn(userLogin: String, userPassword: String) {
-        roomRepoImpl.getAccountByUserName(userLogin).subscribe({
+        accountRepoImpl.getAccountByUserName(userLogin).subscribe({
             if (it.password.contains(userPassword)) {
                 viewState.successSignIn(it.id)
                 saveIdSharedPref(it)

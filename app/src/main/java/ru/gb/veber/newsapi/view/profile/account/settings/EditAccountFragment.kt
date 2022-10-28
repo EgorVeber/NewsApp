@@ -27,9 +27,9 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
     private val binding get() = _binding!!
 
     private val presenter: EditAccountPresenter by moxyPresenter {
-        EditAccountPresenter(App.instance.router,
-            AccountRepoImpl(App.instance.newsDb.accountsDao()),
-            SharedPreferenceAccount())
+        EditAccountPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
 
@@ -148,7 +148,8 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
     override fun successUpdateAccount(userLogin: String) {
         binding.root.showSnackBarError(getString(R.string.dataUpdated), "", {})
         presenter.backAccountScreen()
-        (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetTitleCurrentAccount(userLogin)
+        (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetTitleCurrentAccount(
+            userLogin)
     }
 
     override fun errorUpdateAccount() {

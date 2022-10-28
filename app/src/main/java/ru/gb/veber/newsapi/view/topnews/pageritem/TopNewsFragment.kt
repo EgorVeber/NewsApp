@@ -24,10 +24,7 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.ChangeRequestHelper
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.network.NewsRetrofit
-import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
+import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
@@ -67,15 +64,10 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     private val newsAdapter = TopNewsAdapter(itemListener)
 
     private val presenter: TopNewsPresenter by moxyPresenter {
-        TopNewsPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
-            App.instance.router,
-            ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            AccountRepoImpl(App.instance.newsDb.accountsDao()),
-            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-            CountryRepoImpl(App.instance.newsDb.countryDao()),
-            SharedPreferenceAccount(),
-            ChangeRequestHelper()
-        )
+        TopNewsPresenter(
+            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(

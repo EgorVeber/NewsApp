@@ -29,9 +29,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     private val binding get() = _binding!!
 
     private val presenter: AccountPresenter by moxyPresenter {
-        AccountPresenter(App.instance.router, AccountRepoImpl(App.instance.newsDb.accountsDao()),
-            SharedPreferenceAccount(), ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
+        AccountPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun toastDelete() {

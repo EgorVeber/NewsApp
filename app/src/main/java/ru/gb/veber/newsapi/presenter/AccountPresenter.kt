@@ -10,24 +10,36 @@ import ru.gb.veber.newsapi.core.EditAccountScreen
 import ru.gb.veber.newsapi.core.TopNewsViewPagerScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.*
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.account.AccountView
+import javax.inject.Inject
 
 class AccountPresenter(
-    private val router: Router,
-    private val accountRepo: AccountRepoImpl,
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
-    private val articleRepoImpl: ArticleRepoImpl,
-    private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
+    //  private val accountRepo: AccountRepoImpl,
+    // private val articleRepoImpl: ArticleRepoImpl,
+    // private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
 ) :
     MvpPresenter<AccountView>() {
 
     private var accountId = ACCOUNT_ID_DEFAULT
     private lateinit var accountMain: Account
 
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var sharedPreferenceAccount: SharedPreferenceAccount
+
+
+    @Inject
+    lateinit var accountRepo: AccountRepo
+
+    @Inject
+    lateinit var articleRepoImpl: ArticleRepo
+
+    @Inject
+    lateinit var accountSourcesRepoImpl: AccountSourcesRepo
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -70,7 +82,8 @@ class AccountPresenter(
 
                 accountMain = account
                 account.totalFavorites = articles.filter { it.isFavorites }.size.toString()
-                account.totalHistory = articles.filter { it.isHistory }.size.toString()
+                account.totalHistory =
+                    articles.filter { !it.isFavorites }.filter { it.isHistory }.size.toString()
                 account.totalSources = listSources.size.toString()
                 account
             }.subscribeDefault().subscribe({

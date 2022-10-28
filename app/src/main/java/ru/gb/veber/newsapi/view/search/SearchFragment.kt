@@ -57,13 +57,9 @@ class SearchFragment : MvpAppCompatFragment(),
 
 
     private val presenter: SearchPresenter by moxyPresenter {
-        SearchPresenter(
-            App.instance.router,
-            AccountRepoImpl(App.instance.newsDb.accountsDao()),
-            HistorySelectRepoImpl(App.instance.newsDb.historySelectDao()),
-            arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT,
-            SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
-            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
+        SearchPresenter(arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(
@@ -219,7 +215,9 @@ class SearchFragment : MvpAppCompatFragment(),
     override fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.searchTextInput.error = null
+            if(isAdded){
+                binding.searchTextInput.error = null
+            }
         }, DURATION_ERROR_INPUT)
     }
 

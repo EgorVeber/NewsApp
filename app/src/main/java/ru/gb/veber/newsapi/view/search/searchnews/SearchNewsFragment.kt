@@ -18,10 +18,8 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.ChangeRequestHelper
+import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.HistorySelect
-import ru.gb.veber.newsapi.model.network.NewsRetrofit
-import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
@@ -44,15 +42,10 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
 
 
     private val presenter: SearchNewsPresenter by moxyPresenter {
-        SearchNewsPresenter(
-            NewsRepoImpl(NewsRetrofit.newsTopSingle),
-            App.instance.router,
-            ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            AccountRepoImpl(App.instance.newsDb.accountsDao()),
-            arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT,
-            SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
-            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()),
-            ChangeRequestHelper())
+        SearchNewsPresenter(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            .apply {
+                App.instance.appComponent.inject(this)
+            }
     }
 
 

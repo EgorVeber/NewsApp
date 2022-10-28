@@ -10,7 +10,9 @@ import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 class ProfileFragment : MvpAppCompatFragment(), ProfileView {
 
     private val presenter: ProfilePresenter by moxyPresenter {
-        ProfilePresenter(App.instance.router)
+        ProfilePresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

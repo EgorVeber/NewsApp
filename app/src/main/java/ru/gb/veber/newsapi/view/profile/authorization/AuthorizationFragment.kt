@@ -53,8 +53,9 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     private var userEmail: String = ""
 
     private val presenter: AuthorizationPresenter by moxyPresenter {
-        AuthorizationPresenter(App.instance.router,
-            AccountRepoImpl(App.instance.newsDb.accountsDao()), SharedPreferenceAccount())
+        AuthorizationPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(

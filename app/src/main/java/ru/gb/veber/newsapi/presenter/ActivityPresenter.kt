@@ -4,22 +4,40 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.*
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.model.repository.network.NewsRepo
 import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.CountryRepo
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.mapToCountry
 import ru.gb.veber.newsapi.utils.sourcesDtoToEntity
 import ru.gb.veber.newsapi.view.activity.ViewMain
+import javax.inject.Inject
 
 
 class ActivityPresenter(
-    private val newsRepoImpl: NewsRepoImpl,
-    private val router: Router,
-    private val sourcesRepoImpl: SourcesRepoImpl,
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
-    private val countryRepoImpl: CountryRepoImpl,
+    // private val router: Router,
+    //  private val sharedPreferenceAccount: SharedPreferenceAccount,
+  //  private val sourcesRepoImpl: SourcesRepoImpl,
+  //  private val countryRepoImpl: CountryRepoImpl,
 ) : MvpPresenter<ViewMain>() {
+
+    @Inject
+    lateinit var newsRepoImpl: NewsRepo
+    @Inject
+    lateinit var sharedPreferenceAccount: SharedPreferenceAccount
+    @Inject
+    lateinit var router: Router
+    @Inject
+    lateinit var sourcesRepoImpl: SourcesRepo
+    @Inject
+    lateinit var countryRepoImpl: CountryRepo
+
+
+//    @Inject
+//    lateinit var newsRepoImpl: NewsRepoImpl
 
     override fun onFirstViewAttach() {
         viewState.init()
@@ -87,7 +105,7 @@ class ActivityPresenter(
                 .subscribe({
                     viewState.completableInsertSources()
                 }, {
-                        viewState.errorSourcesDownload()
+                    viewState.errorSourcesDownload()
                 })
         }, {
             viewState.errorSourcesDownload()

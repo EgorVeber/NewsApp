@@ -21,7 +21,9 @@ class WebViewFragment : MvpAppCompatFragment(), WebView, BackPressedListener {
     private val binding get() = _binding!!
 
     private val presenter: WebViewPresenter by moxyPresenter {
-        WebViewPresenter(App.instance.router)
+        WebViewPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(

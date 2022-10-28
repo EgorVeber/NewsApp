@@ -7,29 +7,24 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.ChangeRequestHelper
+import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.network.NewsRepo
+import ru.gb.veber.newsapi.model.repository.room.*
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsView
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import java.util.*
+import javax.inject.Inject
 
 class SearchNewsPresenter(
-    private val newsRepoImpl: NewsRepoImpl,
-    private val router: Router,
-    private val articleRepoImpl: ArticleRepoImpl,
-    private val roomRepoImpl: AccountRepoImpl,
+  //  private val articleRepoImpl: ArticleRepoImpl,
+ //   private val roomRepoImpl: AccountRepoImpl,
     private val accountId: Int,
-    private val sourcesRepoImpl: SourcesRepoImpl,
-    private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
-    private val changeRequestHelper: ChangeRequestHelper,
+ //   private val sourcesRepoImpl: SourcesRepoImpl,
+  //  private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
 ) :
     MvpPresenter<SearchNewsView>() {
 
@@ -38,6 +33,22 @@ class SearchNewsPresenter(
     private var allSources: List<Sources> = listOf()
     private var sourcesID: Int = 0
 
+
+
+    @Inject lateinit var articleRepoImpl: ArticleRepo
+    @Inject lateinit var accountRepoImpl: AccountRepo
+    @Inject lateinit var sourcesRepoImpl: SourcesRepo
+    @Inject lateinit var accountSourcesRepoImpl: AccountSourcesRepo
+
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var newsRepoImpl: NewsRepo
+
+    @Inject
+    lateinit var changeRequestHelper: ChangeRequestHelper
 
     private var articleListHistory: MutableList<Article> = mutableListOf()
     private val bag = CompositeDisposable()
@@ -49,7 +60,7 @@ class SearchNewsPresenter(
     }
 
     fun getAccountSettings() {
-        roomRepoImpl.getAccountById(accountId).subscribe({
+        accountRepoImpl.getAccountById(accountId).subscribe({
             saveHistory = it.saveHistory
         }, {
             Log.d(ERROR_DB, it.localizedMessage)

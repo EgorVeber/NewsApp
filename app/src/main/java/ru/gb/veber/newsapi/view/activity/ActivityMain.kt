@@ -1,9 +1,7 @@
 package ru.gb.veber.newsapi.view.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
@@ -14,8 +12,6 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.network.NewsRetrofit
-import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
@@ -47,26 +43,28 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     EventAddingBadges {
 
     private lateinit var binding: ActivityMainBinding
-
-
-   // @Inject lateinit var navigatorHolder: NavigatorHolder
-    private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
-
     private var backStack = COUNTER_BACKSTACK
     private var counterBadge = COUNTER_BADGE
 
+
+    @Inject
+    lateinit var sharedPreferenceAccount: SharedPreferenceAccount
+
+    @Inject
+    lateinit var navigatorHolder: NavigatorHolder
+    private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
+
     private val presenter: ActivityPresenter by moxyPresenter {
-        ActivityPresenter(NewsRepoImpl(NewsRetrofit.newsTopSingle),
-            App.instance.router,
-            SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
-            SharedPreferenceAccount(),
-            CountryRepoImpl(App.instance.newsDb.countryDao()))
+        ActivityPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //App.instance.appComponent.inject(this)
-        setTheme(SharedPreferenceAccount().getThemePrefs())
+        App.instance.appComponent.inject(this)
+        setTheme(sharedPreferenceAccount.getThemePrefs())
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         presenter.getAccountSettings()
@@ -79,15 +77,14 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-            App.instance.navigationHolder.setNavigator(navigator)
-     //   navigatorHolder.setNavigator(navigator)
+        //App.instance.navigationHolder.setNavigator(navigator)
+        navigatorHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
         super.onPause()
-        App.instance.navigationHolder.removeNavigator()
-      //  navigatorHolder.removeNavigator()
-
+        //App.instance.navigationHolder.removeNavigator()
+        navigatorHolder.removeNavigator()
     }
 
     override fun hideAllBehavior() {
@@ -167,7 +164,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
             backStack = 1
         }, {
         })
-
     }
 
     override fun openMainScreen() {

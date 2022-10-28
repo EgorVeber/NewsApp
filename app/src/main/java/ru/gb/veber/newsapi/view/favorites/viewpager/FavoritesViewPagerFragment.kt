@@ -24,7 +24,9 @@ class FavoritesViewPagerFragment : MvpAppCompatFragment(), FavoritesViewPagerVie
     private val binding get() = _binding!!
 
     private val presenter: FavoritesViewPagerPresenter by moxyPresenter {
-        FavoritesViewPagerPresenter(App.instance.router)
+        FavoritesViewPagerPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(

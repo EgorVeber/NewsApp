@@ -32,12 +32,9 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     private val presenter: SourcesPresenter by moxyPresenter {
         SourcesPresenter(
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-            App.instance.router,
-            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()),
-            SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
-            ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            HistorySelectRepoImpl(App.instance.newsDb.historySelectDao())
-        )
+        ).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun setLogin() {
