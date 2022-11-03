@@ -17,6 +17,7 @@ import javax.inject.Singleton
 @Module
 object NetworkModule {
 
+    @Singleton
     @Provides
     fun provideNewsApi(client: OkHttpClient): NewsApi =
         Retrofit.Builder().baseUrl(BuildConfig.NEWS_BASE_URL)
