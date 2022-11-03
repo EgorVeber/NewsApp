@@ -16,8 +16,14 @@ interface ArticleDao {
     @Delete
     fun deleteArticle(articleDbEntity: ArticleDbEntity): Completable
 
+    @Query("Delete from article where  is_favorites=0 and account_id =:accountId and date_added Like'%' || :dateAdded || '%'")
+    fun deleteArticleByIdHistoryGroup( accountId: Int,dateAdded:String): Completable
+
     @Query("Delete from article where title =:title and is_favorites=1 and account_id =:accountId")
-    fun deleteArticleById(title: String, accountId: Int): Completable
+    fun deleteArticleByIdFavorites(title: String, accountId: Int): Completable
+
+    @Query("Delete from article where title =:title and is_favorites=0 and account_id =:accountId")
+    fun deleteArticleByIdHistory(title: String, accountId: Int): Completable
 
     @Query("Delete from article")
     fun deleteAllArticle(): Completable

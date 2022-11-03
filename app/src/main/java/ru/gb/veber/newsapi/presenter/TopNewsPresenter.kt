@@ -10,30 +10,47 @@ import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.Country
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.network.NewsRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.CountryRepoImpl
+import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
+import ru.gb.veber.newsapi.model.repository.network.NewsRepo
+import ru.gb.veber.newsapi.model.repository.room.AccountRepo
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
+import ru.gb.veber.newsapi.model.repository.room.CountryRepo
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 import java.util.*
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class TopNewsPresenter(
-    private val newsRepoImpl: NewsRepoImpl,
-    private val router: Router,
-    private val articleRepoImpl: ArticleRepoImpl,
-    private val roomRepoImpl: AccountRepoImpl,
     private val accountIdPresenter: Int,
-    private val countryRepoImpl: CountryRepoImpl,
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
 ) :
     MvpPresenter<TopNewsView>() {
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var newsRepoImpl: NewsRepo
+
+    @Inject
+    lateinit var sharedPreferenceAccount: SharedPreferenceAccount
+
+    @Inject
+    lateinit var changeRequestHelper: ChangeRequestHelper
+
+    @Inject
+    lateinit var articleRepoImpl: ArticleRepo
+
+    @Inject
+    lateinit var accountRepoImpl: AccountRepo
+
+    @Inject
+    lateinit var countryRepoImpl: CountryRepo
 
 
     private lateinit var account: Account
     private var saveHistory = false
-
     private var filterFlag = false
 
     private var articleListHistory: MutableList<Article> = mutableListOf()
@@ -48,7 +65,7 @@ class TopNewsPresenter(
 
     fun getAccountSettings() {
         if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
-            roomRepoImpl.getAccountById(accountIdPresenter).subscribe({
+            accountRepoImpl.getAccountById(accountIdPresenter).subscribe({
                 account = it
                 saveHistory = it.saveHistory
             }, {
@@ -63,7 +80,7 @@ class TopNewsPresenter(
         var countryCode = sharedPreferenceAccount.getAccountCountryCode()
         Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, countryCode),
             articleRepoImpl.getArticleById(accountIdPresenter)) { news, articles ->
-            var newsModified = mapToArticleDTO(news).also { newsRepoImpl.changeRequest(it) }
+            var newsModified = mapToArticleDTO(news).also { changeRequestHelper.changeRequest(it) }
             articles.forEach { art ->
                 newsModified.forEach { new ->
                     if (art.title == new.title) {
@@ -133,12 +150,13 @@ class TopNewsPresenter(
 
     private fun deleteFavorites(article: Article) {
         article.isFavorites = false
-        articleRepoImpl.deleteArticleById(article.title.toString(), accountIdPresenter).subscribe({
-            articleListHistory.find { it.title == article.title }?.isFavorites = false
-            viewState.changeNews(articleListHistory)
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
-        }).disposableBy(bag)
+        articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountIdPresenter)
+            .subscribe({
+                articleListHistory.find { it.title == article.title }?.isFavorites = false
+                viewState.changeNews(articleListHistory)
+            }, {
+                Log.d(ERROR_DB, it.localizedMessage)
+            }).disposableBy(bag)
     }
 
 
@@ -189,7 +207,7 @@ class TopNewsPresenter(
                 if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
                     account.myCountry = country
                     account.countryCode = countryCode
-                    roomRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
+                    accountRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
                     }, {
                         Log.d(ERROR_DB, it.localizedMessage)
                     })

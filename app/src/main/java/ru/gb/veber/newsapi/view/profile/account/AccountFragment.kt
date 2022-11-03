@@ -14,10 +14,6 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
 import ru.gb.veber.newsapi.databinding.DialogDeleteAccountBinding
 import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.AccountPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
@@ -29,9 +25,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     private val binding get() = _binding!!
 
     private val presenter: AccountPresenter by moxyPresenter {
-        AccountPresenter(App.instance.router, AccountRepoImpl(App.instance.newsDb.accountsDao()),
-            SharedPreferenceAccount(), ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
+        AccountPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun toastDelete() {

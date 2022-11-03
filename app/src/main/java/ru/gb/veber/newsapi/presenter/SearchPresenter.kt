@@ -7,26 +7,38 @@ import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.SearchNewsScreen
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepo
+import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
+import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
+import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.search.SearchView
 import java.util.*
+import javax.inject.Inject
 
 class SearchPresenter(
-    private val router: Router,
-    private val roomRepoImpl: AccountRepoImpl,
-    private val historySelectRepoImpl: HistorySelectRepoImpl,
     private val accountIdPresenter: Int,
-    private val sourcesRepoImpl: SourcesRepoImpl,
-    private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
 ) : MvpPresenter<SearchView>() {
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var accountRepoImpl: AccountRepo
+
+    @Inject
+    lateinit var historySelectRepoImpl: HistorySelectRepo
+
+    @Inject
+    lateinit var sourcesRepoImpl: SourcesRepo
+
+    @Inject
+    lateinit var accountSourcesRepoImpl: AccountSourcesRepo
 
     private lateinit var allSources: MutableList<Sources>
     private lateinit var likeSources: List<Sources>
     private var accountHistorySelect: Boolean = false
+
 
     fun onBackPressedRouter(): Boolean {
         router.exit()
@@ -47,7 +59,7 @@ class SearchPresenter(
         } else {
             Single.zip(sourcesRepoImpl.getSources(),
                 accountSourcesRepoImpl.getLikeSourcesFromAccount(accountIdPresenter),
-                roomRepoImpl.getAccountById(accountIdPresenter)) { all, like, account ->
+                accountRepoImpl.getAccountById(accountIdPresenter)) { all, like, account ->
 
                 accountHistorySelect = account.saveSelectHistory
                 allSources = all

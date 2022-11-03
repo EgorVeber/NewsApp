@@ -48,7 +48,15 @@ class ArticleRepoImpl(private val articleDao: ArticleDao) : ArticleRepo {
         return articleDao.deleteArticleIsHistoryById(accountId).subscribeDefault()
     }
 
-    override fun deleteArticleById(titile: String, accountId: Int): Completable {
-        return articleDao.deleteArticleById(titile, accountId).subscribeDefault()
+    override fun deleteArticleByIdFavorites(titile: String, accountId: Int): Completable {
+        return articleDao.deleteArticleByIdFavorites(titile, accountId).subscribeDefault()
+    }
+
+    override fun deleteArticleByIdHistory(title: String, accountId: Int): Completable {
+        return articleDao.deleteArticleByIdHistory(title, accountId).subscribeDefault()
+    }
+
+    override fun deleteArticleByIdHistoryGroup(accountId: Int, dateAdded: String): Completable {
+        return articleDao.deleteArticleByIdHistoryGroup(accountId,dateAdded).subscribeDefault()
     }
 }

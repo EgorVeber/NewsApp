@@ -13,10 +13,6 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
@@ -32,12 +28,9 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     private val presenter: SourcesPresenter by moxyPresenter {
         SourcesPresenter(
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-            App.instance.router,
-            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()),
-            SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
-            ArticleRepoImpl(App.instance.newsDb.articleDao()),
-            HistorySelectRepoImpl(App.instance.newsDb.historySelectDao())
-        )
+        ).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun setLogin() {

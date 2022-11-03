@@ -37,7 +37,9 @@ data class Article(
     var isHistory: Boolean = false,
     var isFavorites: Boolean = false,
     var dateAdded: String? = Date().formatDateTime(),
+    var showHistory: Boolean = true,
 )
+
 
 data class Source(
     var id: String?,

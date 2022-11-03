@@ -1,13 +1,10 @@
 package ru.gb.veber.newsapi.model.repository.network
 
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.ArticlesDTO
-import ru.gb.veber.newsapi.model.SourcesRequestDTO
+import ru.gb.veber.newsapi.model.network.ArticlesDTO
+import ru.gb.veber.newsapi.model.network.SourcesRequestDTO
 
 interface NewsRepo {
-    fun changeRequest(list: List<Article>): List<Article>
-
     //TOP_HEADLINES
     fun getTopicalHeadlinesCountryCategoryKeyword(
         country: String,

@@ -41,6 +41,9 @@ fun Date.formatDateDay(): String =
 fun stringFromData(dateString: String) =
     SimpleDateFormat(FORMAT_DATE_REQUEST, Locale.getDefault()).parse(dateString) ?: Date()
 
+fun stringFromDataTime(dateString: String) =
+    SimpleDateFormat(FORMAT_DATE_TIME, Locale.getDefault()).parse(dateString) ?: Date()
+
 fun stringFromDataPiker(dateString: String) =
     SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).parse(dateString) ?: Date()
 

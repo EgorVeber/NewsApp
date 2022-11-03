@@ -3,7 +3,6 @@ package ru.gb.veber.newsapi.view.search
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,10 +21,6 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchFragmentBinding
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
 import ru.gb.veber.newsapi.presenter.SearchPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
@@ -57,13 +52,9 @@ class SearchFragment : MvpAppCompatFragment(),
 
 
     private val presenter: SearchPresenter by moxyPresenter {
-        SearchPresenter(
-            App.instance.router,
-            AccountRepoImpl(App.instance.newsDb.accountsDao()),
-            HistorySelectRepoImpl(App.instance.newsDb.historySelectDao()),
-            arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT,
-            SourcesRepoImpl(App.instance.newsDb.sourcesDao()),
-            AccountSourcesRepoImpl(App.instance.newsDb.accountSourcesDao()))
+        SearchPresenter(arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(
@@ -219,7 +210,9 @@ class SearchFragment : MvpAppCompatFragment(),
     override fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.searchTextInput.error = null
+            if(isAdded){
+                binding.searchTextInput.error = null
+            }
         }, DURATION_ERROR_INPUT)
     }
 

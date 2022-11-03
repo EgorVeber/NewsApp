@@ -21,16 +21,6 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageFavorites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_2"
-            android:src="@drawable/ic_favorite_36_active"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageNews"
             android:layout_width="@dimen/image_view_size_default"
             android:layout_height="@dimen/image_view_size_default"

@@ -3,8 +3,6 @@ package ru.gb.veber.newsapi.model.network
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.gb.veber.newsapi.model.ArticlesDTO
-import ru.gb.veber.newsapi.model.SourcesRequestDTO
 import ru.gb.veber.newsapi.utils.EVERYTHING
 import ru.gb.veber.newsapi.utils.TOP_HEADLINES
 import ru.gb.veber.newsapi.utils.TOP_HEADLINES_SOURCES

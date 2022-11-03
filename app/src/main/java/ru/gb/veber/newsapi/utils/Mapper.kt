@@ -2,11 +2,35 @@ package ru.gb.veber.newsapi.utils
 
 import ru.gb.veber.newsapi.model.*
 import ru.gb.veber.newsapi.model.database.entity.*
+import ru.gb.veber.newsapi.model.network.ArticleDTO
+import ru.gb.veber.newsapi.model.network.ArticlesDTO
+import ru.gb.veber.newsapi.model.network.SourceDTO
+import ru.gb.veber.newsapi.model.network.SourcesDTO
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_HEADER
 
 
 fun mapToArticleDTO(item: ArticlesDTO): List<Article> {
     return item.articles.map(::mapToArticle)
 }
+
+const val SHOW_HISTORY = "SHOW_HISTORY"
+const val HIDE_HISTORY = "HIDE_HISTORY"
+
+fun mapToArticleTitle(key: String, size: Int): Article {
+    return Article(
+        author = size.toString(),
+        description = "",
+        publishedAt = key,
+        publishedAtChange = "",
+        source = Source("0", ""),
+        title = SHOW_HISTORY,
+        url = "",
+        urlToImage = "",
+        dateAdded = "",
+        viewType = VIEW_TYPE_HISTORY_HEADER
+    )
+}
+
 
 fun mapToArticle(item: ArticleDTO): Article {
     return Article(
@@ -123,6 +147,7 @@ fun articleDbEntityToArticle(item: ArticleDbEntity): Article {
         title = item.title,
         url = item.url,
         urlToImage = item.urlToImage,
+        dateAdded = item.dateAdded
     )
 }
 

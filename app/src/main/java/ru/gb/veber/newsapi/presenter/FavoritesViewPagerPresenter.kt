@@ -3,9 +3,13 @@ package ru.gb.veber.newsapi.presenter
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerView
+import javax.inject.Inject
 
-class FavoritesViewPagerPresenter(private val router: Router) :
+class FavoritesViewPagerPresenter() :
     MvpPresenter<FavoritesViewPagerView>() {
+
+    @Inject
+    lateinit var router: Router
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
