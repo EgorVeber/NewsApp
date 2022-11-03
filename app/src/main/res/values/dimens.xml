@@ -42,7 +42,7 @@
     <dimen name="tabLayoutMargin">10dp</dimen>
     <dimen name="header_news_elevation">5dp</dimen>
     <dimen name="margin_5">5dp</dimen>
-    <dimen name="header_height_default">220dp</dimen>
+    <dimen name="header_height_default">200dp</dimen>
     <dimen name="margin_10">10dp</dimen>
     <dimen name="text_size_title_top_news">16sp</dimen>
     <dimen name="padding_10">10dp</dimen>

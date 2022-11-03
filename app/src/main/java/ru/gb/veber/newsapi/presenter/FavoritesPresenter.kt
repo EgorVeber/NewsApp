@@ -5,26 +5,28 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.ChangeRequestHelper
-import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
+import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.favorites.FavoritesView
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_HEADER
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_NEWS
+import javax.inject.Inject
 
-class FavoritesPresenter(
-    private val router: Router,
-    private val articleRepoImpl: ArticleRepoImpl,
-    private val changeRequestHelper: ChangeRequestHelper,
-) :
+class FavoritesPresenter :
     MvpPresenter<FavoritesView>() {
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var changeRequestHelper: ChangeRequestHelper
+
+    @Inject
+    lateinit var articleRepoImpl: ArticleRepo
 
     private var accountIdS: Int = 0
     private var listSave: MutableList<Article> = mutableListOf()
-    private var clickGroupHistory = true
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

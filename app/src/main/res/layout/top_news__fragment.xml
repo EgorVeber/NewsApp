@@ -21,7 +21,6 @@
         android:layout_margin="@dimen/margin_10"
         android:gravity="center"
         android:hint="@string/hintSelectCountry"
-
         android:visibility="gone"
         app:helperText="@string/helperFilter"
         app:hintTextColor="@color/color_primary_app">
@@ -31,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:dropDownHeight="300dp"
             android:paddingStart="@dimen/padding_5" />
     </com.google.android.material.textfield.TextInputLayout>
 

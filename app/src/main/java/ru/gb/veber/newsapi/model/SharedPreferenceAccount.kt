@@ -7,7 +7,7 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.utils.*
 
 
-class SharedPreferenceAccount {
+object SharedPreferenceAccount {
 
     fun setTheme(key: Int) {
         App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,

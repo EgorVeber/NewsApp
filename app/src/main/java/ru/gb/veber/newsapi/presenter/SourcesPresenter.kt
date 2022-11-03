@@ -9,27 +9,40 @@ import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepoImpl
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
+import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
+import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
+import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.mapToHistorySelectDbEntity
 import ru.gb.veber.newsapi.view.sources.FragmentSourcesView
+import javax.inject.Inject
 
 class SourcesPresenter(
     private val accountIdPresenter: Int,
-    private val router: Router,
-    private val accountSourcesRepoImpl: AccountSourcesRepoImpl,
-    private val sourcesRepoImpl: SourcesRepoImpl,
-    private val articleRepoImpl: ArticleRepoImpl,
-    private val historySelectRepoImpl: HistorySelectRepoImpl,
 ) :
     MvpPresenter<FragmentSourcesView>() {
 
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var accountSourcesRepoImpl: AccountSourcesRepo
+
+    @Inject
+    lateinit var sourcesRepoImpl: SourcesRepo
+
+    @Inject
+    lateinit var articleRepoImpl: ArticleRepo
+
+    @Inject
+    lateinit var historySelectRepoImpl: HistorySelectRepo
+
+
     private lateinit var allSources: MutableList<Sources>
     private lateinit var likeSources: List<Sources>
+
 
     fun onBackPressedRouter(): Boolean {
         router.exit()
@@ -103,7 +116,7 @@ class SourcesPresenter(
                         Log.d(ERROR_DB, it.localizedMessage)
                     })
             }
-        }else{
+        } else {
             viewState.setLogin()
         }
     }

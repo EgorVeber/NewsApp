@@ -2,6 +2,10 @@ package ru.gb.veber.newsapi.utils
 
 import ru.gb.veber.newsapi.model.*
 import ru.gb.veber.newsapi.model.database.entity.*
+import ru.gb.veber.newsapi.model.network.ArticleDTO
+import ru.gb.veber.newsapi.model.network.ArticlesDTO
+import ru.gb.veber.newsapi.model.network.SourceDTO
+import ru.gb.veber.newsapi.model.network.SourcesDTO
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_HEADER
 
 

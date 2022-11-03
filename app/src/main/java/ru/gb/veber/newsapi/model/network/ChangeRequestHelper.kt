@@ -1,14 +1,14 @@
-package ru.gb.veber.newsapi.model
+package ru.gb.veber.newsapi.model.network
 
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
+import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_NEWS
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChangeRequestHelper {
+object ChangeRequestHelper {
 
     fun changeRequest(list: List<Article>): List<Article> {
         return list.map {
@@ -56,7 +56,7 @@ class ChangeRequestHelper {
         val mutableList: MutableList<Article> = mutableListOf()
         map.reversed().map {
             it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
-            it.dateAdded = stringFromDataTime(it.dateAdded!!).formatDate()
+            it.dateAdded = stringFromDataTime(it.dateAdded.toString()).formatDate()
             it
         }.sortedBy { it.dateAdded }.reversed().groupBy { it.dateAdded }.forEach { group ->
             mutableList.add(mapToArticleTitle((group.key.toString()),

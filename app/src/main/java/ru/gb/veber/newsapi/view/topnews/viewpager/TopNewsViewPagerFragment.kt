@@ -34,7 +34,9 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
     private val binding get() = _binding!!
 
     private val presenter: TopNewsViewPagerPresenter by moxyPresenter {
-        TopNewsViewPagerPresenter(App.instance.router)
+        TopNewsViewPagerPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(

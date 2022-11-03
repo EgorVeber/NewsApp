@@ -5,16 +5,21 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
+import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountView
+import javax.inject.Inject
 
-class EditAccountPresenter(
-    private val router: Router,
-    private val roomRepoImpl: AccountRepoImpl,
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
-) : MvpPresenter<EditAccountView>() {
+class EditAccountPresenter : MvpPresenter<EditAccountView>() {
+    @Inject
+    lateinit var router: Router
 
+    @Inject
+    lateinit var sharedPreferenceAccount: SharedPreferenceAccount
+
+    @Inject
+    lateinit var roomRepoImpl: AccountRepo
+    
     private lateinit var account: Account
 
     fun onBackPressedRouter(): Boolean {

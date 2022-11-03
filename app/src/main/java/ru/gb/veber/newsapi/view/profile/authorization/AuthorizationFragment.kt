@@ -20,8 +20,6 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepoImpl
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
 import ru.gb.veber.newsapi.utils.EMAIL_STR
 import ru.gb.veber.newsapi.utils.LOGIN_STR
@@ -53,8 +51,9 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     private var userEmail: String = ""
 
     private val presenter: AuthorizationPresenter by moxyPresenter {
-        AuthorizationPresenter(App.instance.router,
-            AccountRepoImpl(App.instance.newsDb.accountsDao()), SharedPreferenceAccount())
+        AuthorizationPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(

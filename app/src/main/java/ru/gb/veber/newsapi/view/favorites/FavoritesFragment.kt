@@ -17,8 +17,6 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.ChangeRequestHelper
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepoImpl
 import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
@@ -35,8 +33,9 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
     private val presenter: FavoritesPresenter by moxyPresenter {
-        FavoritesPresenter(App.instance.router,
-            ArticleRepoImpl(App.instance.newsDb.articleDao()), ChangeRequestHelper())
+        FavoritesPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun clickNews(article: Article) {
