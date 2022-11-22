@@ -19,12 +19,12 @@ import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
 
 
-interface RecyclerListener {
+fun interface RecyclerListener {
     fun clickNews(article: Article)
-    fun deleteFavorites(article: Article)
-    fun deleteHistory(article: Article)
-    fun clickGroupHistory(article: Article)
-    fun deleteGroupHistory(article: Article)
+    fun deleteFavorites(article: Article){}
+    fun deleteHistory(article: Article){}
+    fun clickGroupHistory(article: Article){}
+    fun deleteGroupHistory(article: Article){}
 }
 
 class TopNewsAdapter(

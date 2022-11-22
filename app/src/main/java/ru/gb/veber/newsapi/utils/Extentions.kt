@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.utils
 
+import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern

@@ -3,6 +3,7 @@ package ru.gb.veber.newsapi.view.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import io.reactivex.rxjava3.core.Completable
@@ -60,6 +61,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         App.instance.appComponent.inject(this)
         setTheme(sharedPreferenceAccount.getThemePrefs())
 

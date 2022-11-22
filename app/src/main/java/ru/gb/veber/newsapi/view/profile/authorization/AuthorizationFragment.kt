@@ -17,6 +17,7 @@ import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import org.reactivestreams.Subscription
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
@@ -145,13 +146,15 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             })
 
 
-        RxTextView.textChanges(binding.emailRegisterEditText)
+       var subscription: rx.Subscription? =  RxTextView.textChanges(binding.emailRegisterEditText)
             .filter { it.toString().isNotEmpty() }
             .skip(5)
             .subscribe({
                 presenter.emailRegisterValidation(it)
             }, {
             })
+
+
     }
 
 

@@ -7,6 +7,7 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,16 +46,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private var itemListener = object : RecyclerListener {
-        override fun clickNews(article: Article) {
-            presenter.clickNews(article)
-        }
-
-        override fun deleteFavorites(article: Article) {}
-        override fun deleteHistory(article: Article) {}
-        override fun clickGroupHistory(article: Article) {}
-        override fun deleteGroupHistory(article: Article) {}
-    }
+    private var itemListener = RecyclerListener { article -> presenter.clickNews(article) }
 
 
     private val newsAdapter = TopNewsAdapter(itemListener)
@@ -110,9 +102,12 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
 
-
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
+        articles.map {
+            Log.d("setSources", "hashCode = " + it.hashCode().toString())
+        }
+
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = articles
         binding.progressBarTopNews.hide()

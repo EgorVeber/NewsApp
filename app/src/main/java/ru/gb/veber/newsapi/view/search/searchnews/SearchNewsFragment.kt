@@ -44,16 +44,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
 
-    private var itemListener = object : RecyclerListener {
-        override fun clickNews(article: Article) {
-            presenter.clickNews(article)
-        }
-
-        override fun deleteFavorites(article: Article) {}
-        override fun deleteHistory(article: Article) {}
-        override fun clickGroupHistory(article: Article) {}
-        override fun deleteGroupHistory(article: Article) {}
-    }
+    private var itemListener = RecyclerListener { article -> presenter.clickNews(article) }
 
     private val newsAdapter = TopNewsAdapter(itemListener)
 

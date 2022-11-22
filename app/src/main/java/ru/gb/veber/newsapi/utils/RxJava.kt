@@ -18,3 +18,4 @@ fun Completable.subscribeDefault(): Completable {
 fun Disposable.disposableBy(bag: CompositeDisposable) {
     bag.add(this)
 }
+
