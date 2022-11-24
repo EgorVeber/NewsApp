@@ -1,6 +1,8 @@
 package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -134,7 +136,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
-            presenter.openScreenWebView(article.url)
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(article.url)))
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
