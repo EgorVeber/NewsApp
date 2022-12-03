@@ -9,7 +9,6 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +20,11 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
@@ -50,7 +54,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     private var itemListener = RecyclerListener { article -> presenter.clickNews(article) }
 
-
     private val newsAdapter = TopNewsAdapter(itemListener)
 
     private val presenter: TopNewsPresenter by moxyPresenter {
@@ -66,7 +69,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         savedInstanceState: Bundle?,
     ): View {
         _binding = TopNewsFragmentBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -106,14 +108,21 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
-        articles.map {
-            Log.d("setSources", "hashCode = " + it.hashCode().toString())
+        //   TransitionManager.beginDelayedTransition(binding.root)
+        //  newsAdapter.articles = articles
+         binding.progressBarTopNews.hide()
+           binding.recyclerNews.show()
+        flow {
+            articles.forEach {
+                emit(it)
+                delay(2000)
+            }
+        }.flowOn(Dispatchers.Default).catch {
+            TransitionManager.beginDelayedTransition(binding.root)
+//            it.
+//            var list:List<Article> = listOf(it)
+         //   newsAdapter.articles =
         }
-
-        TransitionManager.beginDelayedTransition(binding.root)
-        newsAdapter.articles = articles
-        binding.progressBarTopNews.hide()
-        binding.recyclerNews.show()
     }
 
     override fun changeNews(articleListHistory: MutableList<Article>) {
