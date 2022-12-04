@@ -9,6 +9,7 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +21,7 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import moxy.MvpAppCompatFragment
@@ -49,6 +48,9 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     private var _binding: TopNewsFragmentBinding? = null
     private val binding get() = _binding!!
+
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
@@ -108,22 +110,30 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
-        //   TransitionManager.beginDelayedTransition(binding.root)
-        //  newsAdapter.articles = articles
-         binding.progressBarTopNews.hide()
-           binding.recyclerNews.show()
-        flow {
-            articles.forEach {
-                emit(it)
-                delay(2000)
+
+
+        binding.progressBarTopNews.hide()
+        binding.recyclerNews.show()
+//        TransitionManager.beginDelayedTransition(binding.root)
+//        newsAdapter.articles = articles
+
+
+
+        coroutineScope.launch {
+            flow {
+                articles.forEach {
+                    delay(3000)
+                    emit(it)
+                }
+            }.collect {
+                if(isAdded){
+                    TransitionManager.beginDelayedTransition(binding.root)
+                    newsAdapter.articles = listOf(it)
+                }
             }
-        }.flowOn(Dispatchers.Default).catch {
-            TransitionManager.beginDelayedTransition(binding.root)
-//            it.
-//            var list:List<Article> = listOf(it)
-         //   newsAdapter.articles =
         }
     }
+
 
     override fun changeNews(articleListHistory: MutableList<Article>) {
         newsAdapter.articles = articleListHistory
@@ -134,7 +144,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     }
 
     override fun clickNews(article: Article) {
-
         with(binding.behaviorInclude) {
             imageViewAll.loadGlideNot(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
@@ -145,7 +154,8 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(article.url)))
+            presenter.openScreenWebView(article.url)
+         //   startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(article.url)))
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {

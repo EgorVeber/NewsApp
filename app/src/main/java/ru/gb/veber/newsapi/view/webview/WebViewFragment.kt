@@ -8,6 +8,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.WebViewFragmentBinding
 import ru.gb.veber.newsapi.presenter.WebViewPresenter
@@ -58,17 +59,17 @@ class WebViewFragment : MvpAppCompatFragment(), WebView, BackPressedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.webNews.webViewClient = webViewClient
-        binding.webNews.loadUrl(arguments?.getString(KEY_URL) ?: DEFAULT_URL)
-        binding.webNews.webChromeClient = WebChromeClient()
-        binding.webNews.settings.builtInZoomControls = true
-        binding.webNews.settings.displayZoomControls = false
-        binding.webNews.clearHistory()
-        binding.webNews.clearCache(true)
-
-        binding.backWebView.setOnClickListener {
-            presenter.back()
-        }
+//        binding.webNews.webViewClient = webViewClient
+//        binding.webNews.loadUrl(arguments?.getString(KEY_URL) ?: DEFAULT_URL)
+//        binding.webNews.webChromeClient = WebChromeClient()
+//        binding.webNews.settings.builtInZoomControls = true
+//        binding.webNews.settings.displayZoomControls = false
+//        binding.webNews.clearHistory()
+//        binding.webNews.clearCache(true)
+//
+//        binding.backWebView.setOnClickListener {
+//            presenter.back()
+//        }
     }
 
     private val webViewClient = object : WebViewClient() {
@@ -79,7 +80,7 @@ class WebViewFragment : MvpAppCompatFragment(), WebView, BackPressedListener {
     }
 
     override fun showPage() {
-        binding.webNews.show()
-        binding.progressBarWebView.hide()
+//        binding.webNews.show()
+//        binding.progressBarWebView.hide()
     }
 }
