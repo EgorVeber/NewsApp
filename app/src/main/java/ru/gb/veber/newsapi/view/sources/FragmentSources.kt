@@ -26,14 +26,13 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
 
     private val presenter: SourcesPresenter by moxyPresenter {
         SourcesPresenter(
-            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-        ).apply {
-            App.instance.appComponent.inject(this)
-        }
+            arguments?.getInt(ACCOUNT_ID)
+                ?: ACCOUNT_ID_DEFAULT,
+        ).apply { App.instance.appComponent.inject(this) }
     }
 
     override fun setLogin() {
-      //  binding.root.showText(getString(R.string.loginAddToFavorites))
+        //  binding.root.showText(getString(R.string.loginAddToFavorites))
     }
 
     private val listener = object : SourcesListener {
@@ -60,11 +59,12 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
         savedInstanceState: Bundle?,
     ): View {
 
-      val view=  LayoutInflater.from(requireActivity()).inflate(R.layout.sources_fragment,container,false)
-        val view2 = inflater.inflate(R.layout.sources_fragment,container,false)
-        val view3= layoutInflater.inflate(R.layout.sources_fragment,container,false)
-      //  _binding = SourcesFragmentBinding.bind(view3)
-        _binding = SourcesFragmentBinding.inflate(inflater,container,false)
+        val view = LayoutInflater.from(requireActivity())
+            .inflate(R.layout.sources_fragment, container, false)
+        val view2 = inflater.inflate(R.layout.sources_fragment, container, false)
+        val view3 = layoutInflater.inflate(R.layout.sources_fragment, container, false)
+        //  _binding = SourcesFragmentBinding.bind(view3)
+        _binding = SourcesFragmentBinding.inflate(inflater, container, false)
         val bindingLayoutInflater = SourcesFragmentBinding.inflate(layoutInflater)
         return bindingLayoutInflater.root
     }
@@ -78,12 +78,12 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     private fun initialization() {
         binding.recyclerSources.adapter = sourcesAdapter
         binding.recyclerSources.itemAnimator = null
-         binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())
     }
 
     @SuppressLint("SetTextI18n")
     override fun setSources(list: List<Sources>) {
-     //   TransitionManager.beginDelayedTransition(binding.root)
+        //   TransitionManager.beginDelayedTransition(binding.root)
         sourcesAdapter.sources = list
     }
 

@@ -22,6 +22,8 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import moxy.MvpAppCompatFragment
@@ -83,7 +85,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
-        binding.recyclerNews.itemAnimator = null
+      //  binding.recyclerNews.itemAnimator = null
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
 
         bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer).apply {
@@ -119,18 +121,29 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
 
 
+
         coroutineScope.launch {
-            flow {
-                articles.forEach {
-                    delay(3000)
-                    emit(it)
-                }
-            }.collect {
-                if(isAdded){
-                    TransitionManager.beginDelayedTransition(binding.root)
-                    newsAdapter.articles = listOf(it)
-                }
+            val listArticle: MutableList<Article> = mutableListOf()
+
+
+          articles.asFlow().collect{
+                delay(2000)
+                listArticle.add(it)
+                newsAdapter.articles = listArticle
             }
+
+//          flow {
+//                articles.forEach {
+//                    emit(it)
+//                    delay(2000)
+//                }
+//            }.collect {
+//                if(isAdded){
+//                    listArticle.add(it)
+//                   // TransitionManager.beginDelayedTransition(binding.root)
+//                    newsAdapter.articles = listArticle
+//                }
+//            }
         }
     }
 
