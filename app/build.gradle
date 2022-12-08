@@ -85,4 +85,10 @@ dependencies {
     //Dagger
     implementation 'com.google.dagger:dagger:2.38.1'
     kapt 'com.google.dagger:dagger-compiler:2.38.1'
+
+
+    //await
+    implementation 'io.reactivex.rxjava2:rxandroid:+'
+    implementation 'io.reactivex.rxjava2:rxjava:+'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:+'
 }

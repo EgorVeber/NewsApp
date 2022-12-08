@@ -3,15 +3,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="54sp"
-        android:text="SourcesScreen"/>
+        android:layout_gravity="center"
+        android:layout_margin="40dp"
+        android:text="SourcesScreen"
+        android:textSize="24sp" />
+
+    <ProgressBar
+        android:id="@+id/bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerSources"
         android:layout_width="match_parent"

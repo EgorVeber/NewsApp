@@ -6,18 +6,24 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.showText
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
 
@@ -29,6 +35,10 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
             arguments?.getInt(ACCOUNT_ID)
                 ?: ACCOUNT_ID_DEFAULT,
         ).apply { App.instance.appComponent.inject(this) }
+    }
+
+    private val viewModel: ViewModelSources by lazy {
+        ViewModelProvider(this)[ViewModelSources::class.java]
     }
 
     override fun setLogin() {
@@ -58,21 +68,49 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-
-        val view = LayoutInflater.from(requireActivity())
-            .inflate(R.layout.sources_fragment, container, false)
-        val view2 = inflater.inflate(R.layout.sources_fragment, container, false)
-        val view3 = layoutInflater.inflate(R.layout.sources_fragment, container, false)
-        //  _binding = SourcesFragmentBinding.bind(view3)
         _binding = SourcesFragmentBinding.inflate(inflater, container, false)
-        val bindingLayoutInflater = SourcesFragmentBinding.inflate(layoutInflater)
-        return bindingLayoutInflater.root
+        return binding.root
+    }
+
+    fun error(mesaage: String) {
+        binding.bar.hide()
+        binding.title.text = mesaage
+    }
+
+    fun success(list: List<Int>) {
+        binding.bar.hide()
+        binding.title.text = list.toString()
+    }
+
+    fun loading() {
+        binding.bar.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.getSources()
+        //presenter.getSources()
         initialization()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.getViewStat().collect {
+                when (it) {
+                    is ViewModelSources.SVState.Loading -> {
+                        loading()
+                    }
+                    is ViewModelSources.SVState.Empty -> {
+
+                    }
+                    is ViewModelSources.SVState.Error -> {
+                        error(it.message)
+                    }
+                    is ViewModelSources.SVState.Success -> {
+                        success(it.list)
+                    }
+                }
+            }
+        }
+
+        viewModel.getSources()
     }
 
     private fun initialization() {
@@ -83,7 +121,7 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
 
     @SuppressLint("SetTextI18n")
     override fun setSources(list: List<Sources>) {
-        //   TransitionManager.beginDelayedTransition(binding.root)
+        TransitionManager.beginDelayedTransition(binding.root)
         sourcesAdapter.sources = list
     }
 
