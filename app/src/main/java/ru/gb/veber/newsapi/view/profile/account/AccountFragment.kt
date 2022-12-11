@@ -154,7 +154,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     }
 
     override fun showDialog() {
-        val dialogBinding = DialogDeleteAccountBinding.inflate(layoutInflater)
+        var dialogBinding = DialogDeleteAccountBinding.inflate(layoutInflater)
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setCancelable(true)
             .setTitle(getString(R.string.deleteAccount))

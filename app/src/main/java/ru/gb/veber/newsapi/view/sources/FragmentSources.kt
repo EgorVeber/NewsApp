@@ -6,35 +6,43 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.showText
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
 
     private var _binding: SourcesFragmentBinding? = null
     private val binding get() = _binding!!
 
-
     private val presenter: SourcesPresenter by moxyPresenter {
         SourcesPresenter(
-            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-        ).apply {
-            App.instance.appComponent.inject(this)
-        }
+            arguments?.getInt(ACCOUNT_ID)
+                ?: ACCOUNT_ID_DEFAULT,
+        ).apply { App.instance.appComponent.inject(this) }
+    }
+
+    private val viewModel: ViewModelSources by lazy {
+        ViewModelProvider(this)[ViewModelSources::class.java]
     }
 
     override fun setLogin() {
-        binding.root.showText(getString(R.string.loginAddToFavorites))
+        //  binding.root.showText(getString(R.string.loginAddToFavorites))
     }
 
     private val listener = object : SourcesListener {
@@ -64,10 +72,45 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
         return binding.root
     }
 
+    fun error(mesaage: String) {
+        binding.bar.hide()
+        binding.title.text = mesaage
+    }
+
+    fun success(list: List<Int>) {
+        binding.bar.hide()
+        binding.title.text = list.toString()
+    }
+
+    fun loading() {
+        binding.bar.show()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.getSources()
+        //presenter.getSources()
         initialization()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.getViewStat().collect {
+                when (it) {
+                    is ViewModelSources.SVState.Loading -> {
+                        loading()
+                    }
+                    is ViewModelSources.SVState.Empty -> {
+
+                    }
+                    is ViewModelSources.SVState.Error -> {
+                        error(it.message)
+                    }
+                    is ViewModelSources.SVState.Success -> {
+                        success(it.list)
+                    }
+                }
+            }
+        }
+
+        viewModel.getSources()
     }
 
     private fun initialization() {
