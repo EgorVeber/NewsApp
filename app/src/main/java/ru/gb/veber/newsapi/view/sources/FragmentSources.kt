@@ -16,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.model.Sources
@@ -31,18 +32,12 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     private val binding get() = _binding!!
 
     private val presenter: SourcesPresenter by moxyPresenter {
-        SourcesPresenter(
-            arguments?.getInt(ACCOUNT_ID)
-                ?: ACCOUNT_ID_DEFAULT,
+        SourcesPresenter(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
         ).apply { App.instance.appComponent.inject(this) }
     }
 
-    private val viewModel: ViewModelSources by lazy {
-        ViewModelProvider(this)[ViewModelSources::class.java]
-    }
-
     override fun setLogin() {
-        //  binding.root.showText(getString(R.string.loginAddToFavorites))
+       binding.root.showText(getString(R.string.loginAddToFavorites))
     }
 
     private val listener = object : SourcesListener {
@@ -72,45 +67,10 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
         return binding.root
     }
 
-    fun error(mesaage: String) {
-        binding.bar.hide()
-        binding.title.text = mesaage
-    }
-
-    fun success(list: List<Int>) {
-        binding.bar.hide()
-        binding.title.text = list.toString()
-    }
-
-    fun loading() {
-        binding.bar.show()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //presenter.getSources()
+        presenter.getSources()
         initialization()
-
-        CoroutineScope(Dispatchers.Main).launch {
-            viewModel.getViewStat().collect {
-                when (it) {
-                    is ViewModelSources.SVState.Loading -> {
-                        loading()
-                    }
-                    is ViewModelSources.SVState.Empty -> {
-
-                    }
-                    is ViewModelSources.SVState.Error -> {
-                        error(it.message)
-                    }
-                    is ViewModelSources.SVState.Success -> {
-                        success(it.list)
-                    }
-                }
-            }
-        }
-
-        viewModel.getSources()
     }
 
     private fun initialization() {
