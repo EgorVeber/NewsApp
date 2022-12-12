@@ -73,6 +73,11 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         if (savedInstanceState != null) {
             presenter.openScreenProfile()
         }
+        //Коммит 1 задача 1
+        //Коммит 2 задача 1
+        //Коммит 3 задача 2
+        //Коммит 4 задача 2
+
     }
 
     override fun onResumeFragments() {
