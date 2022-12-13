@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.view.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -73,6 +74,8 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         if (savedInstanceState != null) {
             presenter.openScreenProfile()
         }
+        Log.d("SourceTree", "commit")
+        Log.d("SourceTree", "commit2")
     }
 
     override fun onResumeFragments() {
