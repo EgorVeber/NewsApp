@@ -1,15 +1,12 @@
 package ru.gb.veber.newsapi.view.topnews.pageritem
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,11 +18,6 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
@@ -39,7 +31,6 @@ import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
 
-
 interface EventBehaviorToActivity {
     fun getStateBehavior(): Int
     fun setStateBehavior()
@@ -50,9 +41,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     private var _binding: TopNewsFragmentBinding? = null
     private val binding get() = _binding!!
-
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
@@ -85,7 +73,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun init() {
         binding.recyclerNews.adapter = newsAdapter
-      //  binding.recyclerNews.itemAnimator = null
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
 
         bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer).apply {
@@ -109,42 +96,12 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
     }
 
-
     @SuppressLint("SetTextI18n")
     override fun setSources(articles: List<Article>) {
-
-
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
-//        TransitionManager.beginDelayedTransition(binding.root)
-//        newsAdapter.articles = articles
-
-
-
-
-        coroutineScope.launch {
-            val listArticle: MutableList<Article> = mutableListOf()
-
-
-          articles.asFlow().collect{
-                delay(2000)
-                listArticle.add(it)
-                newsAdapter.articles = listArticle
-            }
-
-//          flow {
-//                articles.forEach {
-//                    emit(it)
-//                    delay(2000)
-//                }
-//            }.collect {
-//                if(isAdded){
-//                    listArticle.add(it)
-//                   // TransitionManager.beginDelayedTransition(binding.root)
-//                    newsAdapter.articles = listArticle
-//                }
-//            }
-        }
+        TransitionManager.beginDelayedTransition(binding.root)
+        newsAdapter.articles = articles
     }
 
 
@@ -168,7 +125,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
         binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
             presenter.openScreenWebView(article.url)
-         //   startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(article.url)))
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {

@@ -3,11 +3,104 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/AndroidProject/NewsApp/app/src/main/res/layout/sources_fragment.xml" value="0.25" />
-        <entry key="..\:/GeekUniversityAndroid/TopLIbrary/NewsApp/app/src/main/res/layout/sources_fragment.xml" value="0.4126611957796014" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/background_icon.xml" value="0.1135" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/bnv_tab_item_foreground.xml" value="0.2125" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/default_icon.xml" value="0.2105" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/filter_icon.xml" value="0.26" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.261" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_dark_mode_24.xml" value="0.282" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.1925" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_delete_36.xml" value="0.316" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_emoji_people_24.xml" value="0.263" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.26" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_format_size_24.xml" value="0.282" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_heart_broken_24.xml" value="0.237" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_heart_brokenlike.xml" value="0.2375" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.282" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_logout_24.xml" value="0.1985" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_open_in_new_24.xml" value="0.3245" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.2105" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.219" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_baseline_update_24.xml" value="0.225" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_deleteerror.xml" value="0.333" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_favorite.xml" value="0.1555" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_favorite_36.xml" value="0.333" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_favorite_36_active.xml" value="0.2245" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_favorite_active.xml" value="0.2495" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2125" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/ic_sources_history.xml" value="0.263" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/image_shape.xml" value="0.2855" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/search_view_background.xml" value="0.25" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/shadow.xml" value="0.218" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/shadow_effect.xml" value="0.2575" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/splash_background.xml" value="0.226" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/swith_selector.xml" value="0.1925" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/tab_background_selected.xml" value="0.2105" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/tab_background_unselected.xml" value="0.2105" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/tab_layout_bg.xml" value="0.121" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/tabs_radius.xml" value="0.2105" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/tabs_selector.xml" value="0.2105" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/text_input_selector.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/account_fragment.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/activity_main2.xml" value="0.30625" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/all_news_fragment.xml" value="0.1" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/authorization_fragment.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/behavior_news.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/date_dialog.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/deleta_layout.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/delete.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/delete_layout.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/dialog_delete_account.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/edit_account_fragment.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/favorites_history_item.xml" value="0.2790328973444312" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/favorites_view_pager_fragment.xml" value="0.25" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/favotites_fragment.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_bottom_sheet.xml" value="0.36666666666666664" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_frofile.xml" value="0.30625" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_mprofile.xml" value="0.25" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_news.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_news_view_pager_item.xml" value="0.21" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_profile_main.xml" value="0.21918351169242964" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_sign_in.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_sources.xml" value="0.25" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/fragment_web_view.xml" value="0.2053438891637803" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/history_article_header.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/history_fragment.xml" value="0.16" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/history_item.xml" value="0.2790328973444312" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/history_select_item.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/history_select_title.xml" value="0.5" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/like_fragment.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/news_behavior.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/news_item.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/news_item_header.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/sdfsdfsadf.xml" value="0.2790328973444312" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/search_fragment.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/search_news_fragment.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/search_news_item.xml" value="0.22" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/select_country_list.xml" value="0.21425037110341416" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/select_sources_autocompile.xml" value="0.25" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/sources_fragment.xml" value="0.17" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/sources_item.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/test_layout.xml" value="0.21" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/top_news__fragment.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/top_news_item.xml" value="0.18" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/top_news_item_header.xml" value="0.1" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/top_news_view_pager_fragment.xml" value="0.18668252080856124" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/layout/web_view_fragment.xml" value="0.2" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/menu/menu_bottom_navigation.xml" value="0.33" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/menu/menu_main.xml" value="0.365625" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.226" />
+        <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.226" />
       </map>
     </option>
   </component>
-  <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
 </project>
