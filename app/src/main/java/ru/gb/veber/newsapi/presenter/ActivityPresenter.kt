@@ -33,10 +33,9 @@ class ActivityPresenter : MvpPresenter<ViewMain>() {
     @Inject
     lateinit var countryRepoImpl: CountryRepo
 
-
     override fun onFirstViewAttach() {
-        viewState.init()
         super.onFirstViewAttach()
+        viewState.init()
     }
 
     fun openScreenNews() {

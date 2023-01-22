@@ -67,7 +67,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.loadNews(arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL)
-        presenter.getCountry()
         presenter.getAccountSettings()
     }
 
@@ -102,8 +101,8 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.recyclerNews.show()
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = articles
+        presenter.getCountry()
     }
-
 
     override fun changeNews(articleListHistory: MutableList<Article>) {
         newsAdapter.articles = articleListHistory
@@ -131,7 +130,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             presenter.setOnClickImageFavorites(article)
         }
     }
-
 
     private fun setSpanDescription(article: Article) {
         SpannableStringBuilder(article.description).also { span ->
@@ -228,7 +226,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             .toString(), false);
     }
 
-
     override fun emptyList() {
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
@@ -268,7 +265,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }, DURATION_ERROR_INPUT)
     }
 
-
     override fun updateViewPagerEvent() {
         requireActivity().supportFragmentManager.fragments.forEach {
             if (it is EventTopNews) {
@@ -276,7 +272,6 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
             }
         }
     }
-
 
     companion object {
         private const val CATEGORY_KEY = "CATEGORY_KEY"
