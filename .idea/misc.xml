@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidProjects/NewsApp/app/src/main/res/drawable/check_icon.xml" value="0.2495" />
+        <entry key="..\:/AndroidProjects/NewsApp/app/src/main/res/layout/top_news__fragment.xml" value="0.26510416666666664" />
         <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/background_icon.xml" value="0.1135" />
         <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/bnv_tab_item_foreground.xml" value="0.2125" />
         <entry key="..\:/GeekUniversityAndroid/MaterialDesign/NewsAPI/app/src/main/res/drawable/default_icon.xml" value="0.2105" />
