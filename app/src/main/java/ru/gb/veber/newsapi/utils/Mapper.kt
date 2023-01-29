@@ -8,8 +8,8 @@ import ru.gb.veber.newsapi.model.network.SourceDTO
 import ru.gb.veber.newsapi.model.network.SourcesDTO
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_HEADER
 
-
-fun mapToArticleDTO(item: ArticlesDTO): List<Article> {
+// TODO NewsAndroid-6 Переименовать Мапперы и передлать мапперы с листами.
+fun articleDtoModelMapper(item: ArticlesDTO): List<Article> {
     return item.articles.map(::mapToArticle)
 }
 
@@ -38,7 +38,7 @@ fun mapToArticle(item: ArticleDTO): Article {
         description = item.description,
         publishedAt = item.publishedAt,
         publishedAtChange = item.publishedAt,
-        source = mapToSources(item.source),
+        source = sourceDtoModelMapper(item.source),
         title = item.title,
         url = item.url,
         urlToImage = item.urlToImage,
@@ -53,7 +53,7 @@ fun mapToSourcesDbEntity(sourcesId: String, sourcesName: String): Source {
     )
 }
 
-fun mapToSources(item: SourceDTO): Source {
+fun sourceDtoModelMapper(item: SourceDTO): Source {
     return Source(
         id = item.id,
         name = item.name
@@ -176,7 +176,6 @@ fun sourcesDbEntityToSources(sourcesDb: SourcesDbEntity): Sources {
         language = sourcesDb.language,
         country = sourcesDb.country
     )
-
 }
 
 fun mapToCountry(key: String, value: String): CountryDbEntity {
