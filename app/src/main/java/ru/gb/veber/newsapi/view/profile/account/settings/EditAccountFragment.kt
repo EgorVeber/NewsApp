@@ -64,6 +64,7 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
                 presenter.checkSaveAccount(userLogin, userPassword, userEmail)
             }
         }
+        //Тестируем git 
         rxTextChangerValidation()
     }
 
