@@ -236,6 +236,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/height_size_button_default"
         android:layout_marginBottom="@dimen/margin_20"
+        android:alpha="0.5"
         android:backgroundTint="@color/color_primary_app"
         android:text="@string/search"
         app:layout_constraintBottom_toBottomOf="parent"
