@@ -52,7 +52,8 @@ class SearchFragment : MvpAppCompatFragment(),
 
 
     private val presenter: SearchPresenter by moxyPresenter {
-        SearchPresenter(arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT).apply {
+        SearchPresenter(arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+            ?: ACCOUNT_ID_DEFAULT).apply {
             App.instance.appComponent.inject(this)
         }
     }
@@ -210,7 +211,7 @@ class SearchFragment : MvpAppCompatFragment(),
     override fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
-            if(isAdded){
+            if (isAdded) {
                 binding.searchTextInput.error = null
             }
         }, DURATION_ERROR_INPUT)
@@ -219,7 +220,9 @@ class SearchFragment : MvpAppCompatFragment(),
     override fun errorDateInput() {
         binding.errorDateText.show()
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.errorDateText.hide()
+            if (isAdded) {
+                binding.errorDateText.hide()
+            }
         }, DURATION_ERROR_INPUT)
     }
 
