@@ -3,6 +3,8 @@ package ru.gb.veber.newsapi.view.search
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,6 +79,20 @@ class SearchFragment : MvpAppCompatFragment(),
         historySelectAdapter.historySelectList = list
     }
 
+    private val searchSpinnerCountryTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(
+            charSequence: CharSequence?,
+            start: Int,
+            count: Int,
+            after: Int,
+        ) {
+            binding.searchSourcesButton.alpha = 0.5F
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        override fun afterTextChanged(s: Editable?) {}
+    }
+
     private fun initialization() {
         binding.searchView.setOnQueryTextListener(searchViewListener)
 
@@ -86,6 +102,7 @@ class SearchFragment : MvpAppCompatFragment(),
             setOnClickListener {
                 showDropDown()
             }
+            addTextChangedListener(searchSpinnerCountryTextWatcher)
         }
 
         binding.recyclerHistory.adapter = historySelectAdapter
@@ -225,6 +242,7 @@ class SearchFragment : MvpAppCompatFragment(),
 
     private val listenerAdapter = AdapterView.OnItemClickListener { _, _, _, _ ->
         binding.searchSpinnerCountry.hideKeyboard()
+        binding.searchSourcesButton.alpha = 1F
     }
 
     override fun onDestroyView() {
