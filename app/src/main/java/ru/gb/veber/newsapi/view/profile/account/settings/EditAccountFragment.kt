@@ -65,6 +65,8 @@ class EditAccountFragment : MvpAppCompatFragment(), EditAccountView, BackPressed
             }
         }
         rxTextChangerValidation()
+
+        //Тестируем токен
     }
 
     private fun checkNullSignUpData(): Boolean {

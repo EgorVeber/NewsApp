@@ -110,7 +110,6 @@ class TopNewsPresenter(
         }).disposableBy(bag)
     }
 
-
     fun clickNews(article: Article) {
         if (!filterFlag) {
             if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
@@ -150,7 +149,6 @@ class TopNewsPresenter(
         }).disposableBy(bag)
     }
 
-
     private fun deleteFavorites(article: Article) {
         article.isFavorites = false
         articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountIdPresenter)
@@ -161,7 +159,6 @@ class TopNewsPresenter(
                 Log.d(ERROR_DB, it.localizedMessage)
             }).disposableBy(bag)
     }
-
 
     fun setOnClickImageFavorites(article: Article) {
         if (article.isFavorites) {
@@ -193,7 +190,6 @@ class TopNewsPresenter(
         super.onDestroy()
         bag.dispose()
     }
-
 
     fun filterButtonClick(country: String) {
         if (!filterFlag) {
@@ -227,14 +223,12 @@ class TopNewsPresenter(
         viewState.hideCancelButton()
     }
 
-
     fun behaviorCollapsed() {
         viewState.showFilter()
     }
 
     fun getCountry() {
         countryRepoImpl.getCountry().subscribe({ country ->
-
             listCountry = country.map(::mapToDbEntityCountry) as MutableList<Country>
             listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
             var list: MutableList<String> =

@@ -3,6 +3,8 @@ package ru.gb.veber.newsapi.view.search
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +54,8 @@ class SearchFragment : MvpAppCompatFragment(),
 
 
     private val presenter: SearchPresenter by moxyPresenter {
-        SearchPresenter(arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT) ?: ACCOUNT_ID_DEFAULT).apply {
+        SearchPresenter(arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+            ?: ACCOUNT_ID_DEFAULT).apply {
             App.instance.appComponent.inject(this)
         }
     }
@@ -77,6 +80,20 @@ class SearchFragment : MvpAppCompatFragment(),
         historySelectAdapter.historySelectList = list
     }
 
+    private val searchSpinnerCountryTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(
+            charSequence: CharSequence?,
+            start: Int,
+            count: Int,
+            after: Int,
+        ) {
+            binding.searchSourcesButton.alpha = 0.5F
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        override fun afterTextChanged(s: Editable?) {}
+    }
+
     private fun initialization() {
         binding.searchView.setOnQueryTextListener(searchViewListener)
 
@@ -86,6 +103,7 @@ class SearchFragment : MvpAppCompatFragment(),
             setOnClickListener {
                 showDropDown()
             }
+            addTextChangedListener(searchSpinnerCountryTextWatcher)
         }
 
         binding.recyclerHistory.adapter = historySelectAdapter
@@ -210,7 +228,7 @@ class SearchFragment : MvpAppCompatFragment(),
     override fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
-            if(isAdded){
+            if (isAdded) {
                 binding.searchTextInput.error = null
             }
         }, DURATION_ERROR_INPUT)
@@ -219,12 +237,15 @@ class SearchFragment : MvpAppCompatFragment(),
     override fun errorDateInput() {
         binding.errorDateText.show()
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.errorDateText.hide()
+            if (isAdded) {
+                binding.errorDateText.hide()
+            }
         }, DURATION_ERROR_INPUT)
     }
 
     private val listenerAdapter = AdapterView.OnItemClickListener { _, _, _, _ ->
         binding.searchSpinnerCountry.hideKeyboard()
+        binding.searchSourcesButton.alpha = 1F
     }
 
     override fun onDestroyView() {
