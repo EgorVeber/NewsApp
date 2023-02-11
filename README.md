@@ -4,7 +4,8 @@
 Как правильно создавать пулл реквесты.
 https://drive.google.com/file/d/1xPyWrB_aK6YVu23UpicVxTR_XIbBwN5F/view?usp=sharing  
 Старая презентация для участия в конкурсе.
-[Презентация.pptx](https://github.com/EgorVeber/NewsApp/files/10714717/default.pptx)
+[Презентация.pptx](https://github.com/EgorVeber/NewsApp/files/10714717/default.pptx)  
+Чат https://t.me/+Xrp4QbXeKchkN2Zi
 
 Доска
 https://ru.yougile.com/team/e39b49a35ed0/NewsAndroid/Sprint3#chat:028cdd3982f5
