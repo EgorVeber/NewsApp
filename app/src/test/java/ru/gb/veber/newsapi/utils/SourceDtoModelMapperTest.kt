@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi
+package ru.gb.veber.newsapi.utils
 
 import org.junit.Assert.*
 import org.junit.Test

@@ -121,15 +121,11 @@ class SourcesPresenter(
         }
     }
 
+    //TODO NewsAndroid-11 Рефакторинг SourcesPresenter (Убрать нулы)
     fun openAllNews(source: String?, name: String?) {
-        router.navigateTo(SearchNewsScreen(accountIdPresenter,
-            HistorySelect(0, accountIdPresenter, sourcesId = source, sourcesName = name)))
-        var x = HistorySelect(
-            0, accountID = accountIdPresenter,
-            sourcesId = source,
-            sourcesName = name,
-        )
-        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+        val history = HistorySelect(0, accountID = accountIdPresenter, sourcesId = source, sourcesName = name)
+        router.navigateTo(SearchNewsScreen(accountIdPresenter, history))
+        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(history))
             .subscribe({}, {
                 Log.d(ERROR_DB, it.localizedMessage)
             })
