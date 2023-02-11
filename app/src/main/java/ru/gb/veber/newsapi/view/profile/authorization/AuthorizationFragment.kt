@@ -145,7 +145,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
             }, {
             })
 
-
+       //TODO NewsAndroid-4 Почистить проект от хлама
        var subscription: rx.Subscription? =  RxTextView.textChanges(binding.emailRegisterEditText)
             .filter { it.toString().isNotEmpty() }
             .skip(5)
@@ -320,6 +320,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     private fun setSpanRegulationsTv() {
 
+        //TODO NewsAndroid-4 Почистить проект от хлама
         var current:Locale = resources.configuration.locale
 
 

@@ -4,9 +4,6 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
@@ -22,7 +19,6 @@ import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TopNewsPresenter(
@@ -83,7 +79,7 @@ class TopNewsPresenter(
         var countryCode = sharedPreferenceAccount.getAccountCountryCode()
         Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, countryCode),
             articleRepoImpl.getArticleById(accountIdPresenter)) { news, articles ->
-            var newsModified = mapToArticleDTO(news).also { changeRequestHelper.changeRequest(it) }
+            var newsModified = articleDtoModelMapper(news).also { changeRequestHelper.changeRequest(it) }
             articles.forEach { art ->
                 newsModified.forEach { new ->
                     if (art.title == new.title) {
