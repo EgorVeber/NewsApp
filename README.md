@@ -5,10 +5,13 @@
 https://drive.google.com/file/d/1xPyWrB_aK6YVu23UpicVxTR_XIbBwN5F/view?usp=sharing  
 Старая презентация для участия в конкурсе.
 [Презентация.pptx](https://github.com/EgorVeber/NewsApp/files/10714717/default.pptx)  
-Чат https://t.me/+Xrp4QbXeKchkN2Zi
+Чат https://t.me/+Xrp4QbXeKchkN2Zi  
+БД https://drive.google.com/file/d/1HLtiHugUF_ghJKNG3olql7pzkZRHiVC1/view
 
 Доска
-https://ru.yougile.com/team/e39b49a35ed0/NewsAndroid/Sprint3#chat:028cdd3982f5
+https://ru.yougile.com/team/e39b49a35ed0/NewsAndroid/Sprint3#chat:028cdd3982f5  
+Как выглядит доска
+https://drive.google.com/file/d/1B9ooglLouHbVFBjt472S6xpdjql6i0pT/view
 
 ## Приложение новостей 
 Разработка приложения велась с целью применить знания полученные в процессе обучения. Архитекутура MVP. Для получения новостей использовал NewsApi.
