@@ -1,3 +1,16 @@
+Командная разработка началась с 3го спринта.  
+
+## Ознакомится  
+Как правильно создавать пулл реквесты.
+https://drive.google.com/file/d/1xPyWrB_aK6YVu23UpicVxTR_XIbBwN5F/view?usp=sharing  
+Старая презентация для участия в конкурсе.
+[Презентация.pptx](https://github.com/EgorVeber/NewsApp/files/10714717/default.pptx)  
+Чат https://t.me/+Xrp4QbXeKchkN2Zi
+
+Доска
+https://ru.yougile.com/team/e39b49a35ed0/NewsAndroid/Sprint3#chat:028cdd3982f5
+
+
 ## Приложение новостей 
 Разработка приложения велась с целью применить знания полученные в процессе обучения. Архитекутура MVP. Для получения новостей использовал NewsApi.
 
