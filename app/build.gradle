@@ -14,6 +14,7 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
+        archivesBaseName = "${applicationId}-v${versionName}(${versionCode})"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -40,59 +41,60 @@ android {
     }
 }
 
+apply from: "../dependencies.gradle"
 dependencies {
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation "androidx.core:core-ktx:$versions.corektx"
+    implementation "androidx.appcompat:appcompat:$versions.appcompat"
+    implementation "com.google.android.material:material:$versions.material"
+    implementation "androidx.constraintlayout:constraintlayout:$versions.constraintlayout"
+    testImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "androidx.test.ext:$versions.extjunit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
 
 
     //Moxy
-    implementation "com.github.moxy-community:moxy:2.2.2"
-    implementation "com.github.moxy-community:moxy-ktx:2.2.2"
-    implementation "com.github.moxy-community:moxy-androidx:2.2.2"
-    kapt "com.github.moxy-community:moxy-compiler:2.2.2"
+    implementation "com.github.moxy-community:moxy:$versions.moxy"
+    implementation "com.github.moxy-community:moxy-ktx:$versions.moxy"
+    implementation "com.github.moxy-community:moxy-androidx:$versions.moxy"
+    kapt "com.github.moxy-community:moxy-compiler:$versions.moxy"
 
     //cicerone
-    implementation 'com.github.terrakok:cicerone:7.1'
+    implementation "com.github.terrakok:cicerone:$versions.cicerone"
 
     //RxJava
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'io.reactivex.rxjava3:rxjava:3.0.13'
+    implementation "io.reactivex.rxjava3:rxandroid:$versions.rx3android"
+    implementation "io.reactivex.rxjava3:rxjava:$versions.rx3"
     //binging
-    implementation 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    implementation "com.jakewharton.rxbinding:rxbinding:$versions.rxbinding"
 
 
     //Retrofit
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttpLogging"
+    implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit2"
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit2"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$versions.retrofit2"
 
     //Glide Coil
-    implementation 'com.github.bumptech.glide:glide:4.13.2'
-    implementation("io.coil-kt:coil:2.1.0")
+    implementation "com.github.bumptech.glide:glide:$versions.glide"
+    implementation "io.coil-kt:coil:$versions.coil"
 
     //Room
-    implementation 'androidx.room:room-runtime:2.4.3'
-    implementation 'androidx.room:room-rxjava3:2.4.3'
-    kapt 'androidx.room:room-compiler:2.4.3'
+    implementation "androidx.room:room-runtime:$versions.room"
+    implementation "androidx.room:room-rxjava3:$versions.room"
+    kapt "androidx.room:room-compiler:$versions.room"
 
     //Dagger
-    implementation 'com.google.dagger:dagger:2.38.1'
-    kapt 'com.google.dagger:dagger-compiler:2.38.1'
+    implementation "com.google.dagger:dagger:$versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
 
 
     //await
-    implementation 'io.reactivex.rxjava2:rxandroid:+'
-    implementation 'io.reactivex.rxjava2:rxjava:+'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-rx2:+'
+    implementation "io.reactivex.rxjava2:rxandroid:+"
+    implementation "io.reactivex.rxjava2:rxjava:+"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:+"
 
     //Test
-    testImplementation "io.mockk:mockk:1.13.2"
-    testImplementation "io.mockk:mockk-agent-jvm:1.13.2"
+    testImplementation "io.mockk:mockk:$versions.mockk"
+    testImplementation "io.mockk:mockk-agent-jvm:$versions.mockk"
 }
