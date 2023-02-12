@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.di
+package ru.gb.veber.newsapi.di.moduls
 
 
 import dagger.Module
