@@ -11,17 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import org.reactivestreams.Subscription
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
+import ru.gb.veber.newsapi.utils.ColorUtils.getColor
 import ru.gb.veber.newsapi.utils.EMAIL_STR
 import ru.gb.veber.newsapi.utils.LOGIN_STR
 import ru.gb.veber.newsapi.utils.PASSWORD_STR
@@ -72,7 +71,6 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         setSpanRegulationsTv()
         constraintSetLogin.clone(binding.root)
         rxTextChangerValidation()
-
 
         binding.privacyPolicy.setOnClickListener {
             presenter.openScreenWebView(getString(R.string.teamSite))
@@ -320,25 +318,32 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     private fun setSpanRegulationsTv() {
 
-        //TODO NewsAndroid-4 Почистить проект от хлама
-        var current:Locale = resources.configuration.locale
+        SpannableStringBuilder(binding.privacyPolicy.text).also {span->
+            var colorPrimary = this.getColor(R.color.color_primary_app)
 
-
-        SpannableStringBuilder(binding.privacyPolicy.text).apply {
-
-            setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
-                R.color.color_primary_app)), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            span.setSpan(ForegroundColorSpan(colorPrimary),
+                SPAN_START_INDEX_PRIVACY,
+                SPAN_START_END_PRIVACY,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
-                R.color.color_primary_app)), SPAN_START_START_POLICY, SPAN_START_END_POLICY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            span.setSpan(ForegroundColorSpan(colorPrimary),
+                SPAN_START_START_POLICY,
+                SPAN_START_END_POLICY,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            setSpan(UnderlineSpan(), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(UnderlineSpan(), SPAN_START_START_POLICY, SPAN_START_END_POLICY, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            span.setSpan(UnderlineSpan(),
+                SPAN_START_INDEX_PRIVACY,
+                SPAN_START_END_PRIVACY,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            span.setSpan(UnderlineSpan(),
+                SPAN_START_START_POLICY,
+                SPAN_START_END_POLICY,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-            binding.privacyPolicy.text = this
-            removeSpan(this)
+            binding.privacyPolicy.text = span
+            span.removeSpan(this)
         }
     }
 
