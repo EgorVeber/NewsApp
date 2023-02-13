@@ -11,13 +11,13 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.repository.network.NewsRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.mapper.toListArticleUI
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsView
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import java.util.*
@@ -45,9 +45,6 @@ class SearchNewsPresenter(
 
     @Inject
     lateinit var newsRepoImpl: NewsRepo
-
-    @Inject
-    lateinit var changeRequestHelper: ChangeRequestHelper
 
     private var saveHistory = false
 
@@ -110,9 +107,9 @@ class SearchNewsPresenter(
             historySelect?.dateSources,
             historySelect?.dateSources
         ).map { articles ->
-            articles.articles.map(::mapToArticle).also {
-                changeRequestHelper.changeRequest(it)
-                it.map { art ->
+            articles.articles.map(::mapToArticle).also { list->
+                list.toListArticleUI()
+                list.map { art ->
                     art.viewType = VIEW_TYPE_SEARCH_NEWS
                 }
             }
