@@ -31,4 +31,5 @@ interface AppComponent {
     fun inject(sourcesPresenter: SourcesPresenter)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)
     fun inject(webViewPresenter: WebViewPresenter)
+    fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)
 }

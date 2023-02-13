@@ -5,6 +5,7 @@ import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.AuthorizationScreen
+import ru.gb.veber.newsapi.core.CustomizeCategoryScreen
 import ru.gb.veber.newsapi.core.EditAccountScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
@@ -53,6 +54,10 @@ class AccountPresenter : MvpPresenter<AccountView>() {
 
     fun openScreenEditAccount(accountID: Int) {
         router.navigateTo(EditAccountScreen(accountID))
+    }
+
+    fun openScreenCustomizeCategory(accountId: Int) {
+        router.navigateTo(CustomizeCategoryScreen(accountId))
     }
 
     fun deleteAccount(accountID: Int) {
