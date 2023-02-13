@@ -102,7 +102,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         }
 
         binding.customizeCategory.setOnClickListener {
-            it.showText(getString(R.string.notAvailable))
+            presenter.openScreenCustomizeCategory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
         }
         binding.notificationFirebase.setOnClickListener {
             it.showText(getString(R.string.notAvailable))

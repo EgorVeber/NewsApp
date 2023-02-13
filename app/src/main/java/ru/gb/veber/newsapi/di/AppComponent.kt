@@ -22,7 +22,6 @@ import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.presenter.WebViewPresenter
 import ru.gb.veber.newsapi.view.activity.ActivityMain
-import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import javax.inject.Singleton
 
 @Singleton
@@ -34,14 +33,14 @@ import javax.inject.Singleton
         ChangeRequestModule::class,
         NetworkModule::class,
         RepoNetworkModule::class,
-        DataBaseModule::class,
-        ViewModelModule::class]
+        DataBaseModule::class]
 )
 interface AppComponent {
     fun inject(mainActivity: ActivityMain)
     fun inject(mainPresenter: ActivityPresenter)
     fun inject(account: AccountPresenter)
     fun inject(authorizationPresenter: AuthorizationPresenter)
+    fun inject(editAccountPresenter: EditAccountPresenter)
     fun inject(topNewsPresenter: TopNewsPresenter)
     fun inject(favoritesPresenter: FavoritesPresenter)
     fun inject(favoritesViewPagerPresenter: FavoritesViewPagerPresenter)
@@ -51,5 +50,4 @@ interface AppComponent {
     fun inject(sourcesPresenter: SourcesPresenter)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)
     fun inject(webViewPresenter: WebViewPresenter)
-    fun inject(editAccountFragment: EditAccountFragment)
 }
