@@ -35,4 +35,5 @@ interface AppComponent {
     fun inject(webViewPresenter: WebViewPresenter)
     fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)
     fun inject(editAccountFragment: EditAccountFragment)
+
 }
