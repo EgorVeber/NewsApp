@@ -76,6 +76,8 @@
     <dimen name="height_size_button_default">56dp</dimen>
     <dimen name="icon_wight_default">24dp</dimen>
     <dimen name="margin_25">25dp</dimen>
+    <dimen name="margin_12_dp">12dp</dimen>
+    <dimen name="text_size_customize_category_fragment">18sp</dimen>
 
 
 </resources>

@@ -16,10 +16,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="@dimen/margin_12_dp"
         android:text="@string/customize_category"
         android:textColor="@color/color_black"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_size_customize_category_fragment"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/backAccountScreen"
         app:layout_constraintStart_toEndOf="@+id/backAccountScreen"
