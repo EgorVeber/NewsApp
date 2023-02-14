@@ -15,6 +15,7 @@ interface NewsRepo {
     fun getTopicalHeadlinesCategoryCountry(
         category: String,
         country: String? = null,
+        keyyy:String
     ): Single<ArticlesDTO>
 
     fun getTopicalHeadlinesSourcesKeyWord(

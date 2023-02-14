@@ -20,8 +20,9 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
     override fun getTopicalHeadlinesCategoryCountry(
         category: String,
         country: String?,
+        keyyy:String
     ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCategoryCountry(category, country).subscribeDefault()
+        newsApi.getTopicalHeadlinesCategoryCountry(category, country,keyyy).subscribeDefault()
 
 
     override fun getTopicalHeadlinesSourcesKeyWord(

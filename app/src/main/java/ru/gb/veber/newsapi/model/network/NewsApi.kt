@@ -19,6 +19,7 @@ interface NewsApi {
     fun getTopicalHeadlinesCategoryCountry(
         @Query("category") category: String,
         @Query("country") country: String?,
+        @Query("apiKey") keyyy: String,
     ): Single<ArticlesDTO>
 
     @GET(TOP_HEADLINES)
