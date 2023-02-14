@@ -1,14 +1,7 @@
 package ru.gb.veber.newsapi.di
 
 import dagger.Component
-import ru.gb.veber.newsapi.di.moduls.AppModule
-import ru.gb.veber.newsapi.di.moduls.ChangeRequestModule
-import ru.gb.veber.newsapi.di.moduls.DataBaseModule
-import ru.gb.veber.newsapi.di.moduls.NavigationModule
-import ru.gb.veber.newsapi.di.moduls.NetworkModule
-import ru.gb.veber.newsapi.di.moduls.RepoNetworkModule
-import ru.gb.veber.newsapi.di.moduls.SharedPreferenceModule
-import ru.gb.veber.newsapi.di.moduls.ViewModelModule
+import ru.gb.veber.newsapi.di.moduls.*
 import ru.gb.veber.newsapi.presenter.*
 import ru.gb.veber.newsapi.view.activity.ActivityMain
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
@@ -40,6 +33,6 @@ interface AppComponent {
     fun inject(sourcesPresenter: SourcesPresenter)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)
     fun inject(webViewPresenter: WebViewPresenter)
-    fun inject(editAccountFragment: EditAccountFragment)
     fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)
+    fun inject(editAccountFragment: EditAccountFragment)
 }

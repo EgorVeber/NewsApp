@@ -3,6 +3,7 @@ package ru.gb.veber.newsapi.view.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import io.reactivex.rxjava3.core.Completable
@@ -19,6 +20,7 @@ import ru.gb.veber.newsapi.utils.COUNTER_BADGE
 import ru.gb.veber.newsapi.utils.COUNTER_BACKSTACK
 import ru.gb.veber.newsapi.utils.DELAY_BACK_STACK
 import ru.gb.veber.newsapi.utils.showText
+import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
