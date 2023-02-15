@@ -12,12 +12,8 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
-import ru.gb.veber.newsapi.utils.COUNTER_BADGE
-import ru.gb.veber.newsapi.utils.COUNTER_BACKSTACK
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
-import ru.gb.veber.newsapi.utils.DELAY_BACK_STACK
-import ru.gb.veber.newsapi.utils.showText
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity

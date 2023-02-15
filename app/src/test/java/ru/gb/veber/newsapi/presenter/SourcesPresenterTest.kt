@@ -2,14 +2,12 @@ package ru.gb.veber.newsapi.presenter
 
 import com.github.terrakok.cicerone.Router
 import io.mockk.*
-import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.reactivex.rxjava3.core.Completable
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import ru.gb.veber.newsapi.core.SearchNewsScreen
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.database.entity.HistorySelectDbEntity
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo

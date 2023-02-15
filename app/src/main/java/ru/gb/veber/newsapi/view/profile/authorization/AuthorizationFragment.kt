@@ -28,7 +28,6 @@ import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.activity.OpenScreen
-import java.util.*
 
 
 class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,

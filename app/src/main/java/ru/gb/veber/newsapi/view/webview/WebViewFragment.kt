@@ -8,7 +8,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.WebViewFragmentBinding
 import ru.gb.veber.newsapi.presenter.WebViewPresenter
