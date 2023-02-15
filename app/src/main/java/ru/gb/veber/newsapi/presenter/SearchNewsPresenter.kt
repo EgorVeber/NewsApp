@@ -99,7 +99,8 @@ class SearchNewsPresenter(
             historySelect?.keyWord,
             historySelect?.sourcesName,
             if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
-            historySelect?.dateSources)
+            historySelect?.dateSources
+        )
 
 
         Single.zip(newsRepoImpl.getEverythingKeyWordSearchInSources(
@@ -108,7 +109,7 @@ class SearchNewsPresenter(
             historySelect?.searchIn,
             if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
             historySelect?.dateSources,
-            historySelect?.dateSources
+            historySelect?.dateSources, API_KEY_NEWS
         ).map { articles ->
             articles.articles.map(::mapToArticle).also {
                 changeRequestHelper.changeRequest(it)
@@ -116,7 +117,8 @@ class SearchNewsPresenter(
                     art.viewType = VIEW_TYPE_SEARCH_NEWS
                 }
             }
-        }, articleRepoImpl.getArticleById(accountId)) { news, articles ->
+        }, articleRepoImpl.getArticleById(accountId)
+        ) { news, articles ->
 
             articles.forEach { art ->
                 news.forEach { new ->
@@ -207,7 +209,7 @@ class SearchNewsPresenter(
 
     private fun deleteFavorites(article: Article) {
         article.isFavorites = false
-      articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountId).subscribe({
+        articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountId).subscribe({
             articleListHistory.find { it.title == article.title }?.isFavorites = false
             viewState.changeNews(articleListHistory)
         }, {
