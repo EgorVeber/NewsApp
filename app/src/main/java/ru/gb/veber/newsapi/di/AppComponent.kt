@@ -13,7 +13,6 @@ import javax.inject.Singleton
         NavigationModule::class,
         AppModule::class,
         SharedPreferenceModule::class,
-        ChangeRequestModule::class,
         NetworkModule::class,
         RepoNetworkModule::class,
         DataBaseModule::class,
