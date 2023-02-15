@@ -8,6 +8,7 @@ import ru.gb.veber.newsapi.model.repository.network.NewsRepo
 import ru.gb.veber.newsapi.model.repository.room.CountryRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.utils.mapToCountry
 import ru.gb.veber.newsapi.utils.sourcesDtoToEntity
 import ru.gb.veber.newsapi.view.activity.ViewMain
@@ -81,7 +82,7 @@ class ActivityPresenter : MvpPresenter<ViewMain>() {
     }
 
     private fun fillDataBase() {
-        newsRepoImpl.getSources().subscribe({ source ->
+        newsRepoImpl.getSources(API_KEY_NEWS).subscribe({ source ->
             val country = sharedPreferenceAccount.getArrayCountry()
             for (i in source.sources) {
                 country.forEach {
