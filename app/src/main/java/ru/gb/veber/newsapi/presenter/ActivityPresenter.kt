@@ -12,9 +12,7 @@ import ru.gb.veber.newsapi.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.utils.mapToCountry
 import ru.gb.veber.newsapi.utils.sourcesDtoToEntity
 import ru.gb.veber.newsapi.view.activity.ViewMain
-import java.util.*
 import javax.inject.Inject
-import kotlin.reflect.KClass
 
 
 class ActivityPresenter : MvpPresenter<ViewMain>() {

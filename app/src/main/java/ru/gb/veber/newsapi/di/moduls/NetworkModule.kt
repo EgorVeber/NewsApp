@@ -9,7 +9,6 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.gb.veber.newsapi.BuildConfig
 import ru.gb.veber.newsapi.model.network.NewsApi
-import ru.gb.veber.newsapi.utils.API_KEY
 import ru.gb.veber.newsapi.utils.PAGE_SIZE
 import ru.gb.veber.newsapi.utils.PAGE_SIZE_COUNT
 import javax.inject.Singleton
