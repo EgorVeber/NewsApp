@@ -75,7 +75,7 @@ class TopNewsPresenter(
 
     fun loadNews(category: String) {
         var countryCode = sharedPreferenceAccount.getAccountCountryCode()
-        Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category, countryCode, API_KEY_NEWS),
+        Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category = category, country = countryCode, key = API_KEY_NEWS),
             articleRepoImpl.getArticleById(accountIdPresenter)) { news, articles ->
             var newsModified = articleDtoModelMapper(news).also { list ->
                 list.toListArticleUI()

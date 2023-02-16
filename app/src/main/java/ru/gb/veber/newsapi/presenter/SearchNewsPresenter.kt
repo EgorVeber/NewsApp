@@ -92,20 +92,21 @@ class SearchNewsPresenter(
     fun getNews(historySelect: HistorySelect?) {
 
         viewState.setTitle(
-            historySelect?.keyWord,
-            historySelect?.sourcesName,
-            if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
-            historySelect?.dateSources
+            keyWord = historySelect?.keyWord,
+            sourcesId = historySelect?.sourcesName,
+            s = if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            dateSources = historySelect?.dateSources
         )
 
 
         Single.zip(newsRepoImpl.getEverythingKeyWordSearchInSources(
-            historySelect?.sourcesId,
-            historySelect?.keyWord,
-            historySelect?.searchIn,
-            if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
-            historySelect?.dateSources,
-            historySelect?.dateSources, API_KEY_NEWS
+            sources = historySelect?.sourcesId,
+            q = historySelect?.keyWord,
+            searchIn = historySelect?.searchIn,
+            sortBy = if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            from = historySelect?.dateSources,
+            to = historySelect?.dateSources,
+            key = API_KEY_NEWS
         ).map { articles ->
             articles.articles.map(::mapToArticle).also { list->
                 list.toListArticleUI()

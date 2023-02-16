@@ -69,7 +69,7 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         category: String?,
         language: String?,
         country: String?,
-        key: String?
+        key: String
     ): Single<SourcesRequestDTO> =
         newsApi.getSources(category, language, country, key).subscribeDefault()
 }

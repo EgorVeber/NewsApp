@@ -53,6 +53,6 @@ interface NewsRepo {
         category: String? = null,
         language: String? = null,
         country: String? = null,
-        key: String? = null
+        key: String
     ): Single<SourcesRequestDTO>
 }
