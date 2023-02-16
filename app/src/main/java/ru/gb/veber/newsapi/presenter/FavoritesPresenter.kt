@@ -5,9 +5,10 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.mapper.toListArticleUI
+import ru.gb.veber.newsapi.utils.mapper.toNewListArticleGroupByDate
 import ru.gb.veber.newsapi.view.favorites.FavoritesView
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
@@ -19,8 +20,7 @@ class FavoritesPresenter :
     @Inject
     lateinit var router: Router
 
-    @Inject
-    lateinit var changeRequestHelper: ChangeRequestHelper
+
 
     @Inject
     lateinit var articleRepoImpl: ArticleRepo
@@ -58,12 +58,11 @@ class FavoritesPresenter :
                 })
             } else {
                 viewState.loading()
-                articleRepoImpl.getHistoryArticleById(accountID).subscribe({
-                    if (it.isEmpty()) {
+                articleRepoImpl.getHistoryArticleById(accountID).subscribe({listArticle->
+                    if (listArticle.isEmpty()) {
                         viewState.emptyList()
                     } else {
-                        listSave =
-                            changeRequestHelper.changeHistoryList(it.map(::articleDbEntityToArticle))
+                        listSave = listArticle.map(::articleDbEntityToArticle).toNewListArticleGroupByDate()
                         viewState.setSources(listSave)
                     }
                 }, {
@@ -102,9 +101,8 @@ class FavoritesPresenter :
     fun deleteHistory(article: Article) {
         article.title?.let { title ->
             articleRepoImpl.deleteArticleByIdHistory(title, accountIdS)
-                .andThen(articleRepoImpl.getHistoryArticleById(accountIdS)).subscribe({
-                    listSave =
-                        changeRequestHelper.changeHistoryList(it.map(::articleDbEntityToArticle))
+                .andThen(articleRepoImpl.getHistoryArticleById(accountIdS)).subscribe({ list ->
+                    listSave = list.map(::articleDbEntityToArticle).toNewListArticleGroupByDate()
                     viewState.setSources(listSave)
                 }, {
                     Log.d(ERROR_DB, it.localizedMessage)
@@ -135,9 +133,8 @@ class FavoritesPresenter :
     fun deleteGroupHistory(article: Article) {
         articleRepoImpl.deleteArticleByIdHistoryGroup(accountIdS, article.publishedAt).subscribe({
             Log.d(ERROR_DB, "success")
-            articleRepoImpl.getHistoryArticleById(accountIdS).subscribe({
-                listSave =
-                    changeRequestHelper.changeHistoryList(it.map(::articleDbEntityToArticle))
+            articleRepoImpl.getHistoryArticleById(accountIdS).subscribe({ list->
+                listSave = list.map(::articleDbEntityToArticle).toNewListArticleGroupByDate()
                 viewState.setSources(listSave)
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)

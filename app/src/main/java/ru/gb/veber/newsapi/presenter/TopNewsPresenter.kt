@@ -10,12 +10,12 @@ import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.Country
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.repository.network.NewsRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.model.repository.room.CountryRepo
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.mapper.toListArticleUI
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 import java.util.*
@@ -35,8 +35,6 @@ class TopNewsPresenter(
     @Inject
     lateinit var sharedPreferenceAccount: SharedPreferenceAccount
 
-    @Inject
-    lateinit var changeRequestHelper: ChangeRequestHelper
 
     @Inject
     lateinit var articleRepoImpl: ArticleRepo
@@ -79,7 +77,9 @@ class TopNewsPresenter(
         var countryCode = sharedPreferenceAccount.getAccountCountryCode()
         Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category = category, country = countryCode, key = API_KEY_NEWS),
             articleRepoImpl.getArticleById(accountIdPresenter)) { news, articles ->
-            var newsModified = articleDtoModelMapper(news).also { changeRequestHelper.changeRequest(it) }
+            var newsModified = articleDtoModelMapper(news).also { list ->
+                list.toListArticleUI()
+            }
             articles.forEach { art ->
                 newsModified.forEach { new ->
                     if (art.title == new.title) {
