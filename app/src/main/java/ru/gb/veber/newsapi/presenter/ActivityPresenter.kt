@@ -80,7 +80,7 @@ class ActivityPresenter : MvpPresenter<ViewMain>() {
     }
 
     private fun fillDataBase() {
-        newsRepoImpl.getSources(API_KEY_NEWS).subscribe({ source ->
+        newsRepoImpl.getSources(key = API_KEY_NEWS).subscribe({ source ->
             val country = sharedPreferenceAccount.getArrayCountry()
             for (i in source.sources) {
                 country.forEach {
