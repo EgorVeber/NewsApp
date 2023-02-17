@@ -75,9 +75,11 @@ class AccountPresenter : MvpPresenter<AccountView>() {
         viewState.loading()
         accountID?.let { acc ->
             accountId = accountID
-            Single.zip(accountRepo.getAccountById(acc),
+            Single.zip(
+                accountRepo.getAccountById(acc),
                 articleRepoImpl.getArticleById(accountID),
-                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountID)) { account, articles, listSources ->
+                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountID)
+            ) { account, articles, listSources ->
 
                 accountMain = account
                 account.totalFavorites = articles.filter { it.isFavorites }.size.toString()
@@ -97,8 +99,8 @@ class AccountPresenter : MvpPresenter<AccountView>() {
         viewState.setBottomNavigationIcon()
     }
 
-    fun showDialog() {
-        viewState.showDialog()
+    fun showDialog(title: String, message: String, positive: String, onClick: () -> Unit) {
+        viewState.showDialog(title, message, positive, onClick)
     }
 
     fun clearHistory(accountId: Int) {

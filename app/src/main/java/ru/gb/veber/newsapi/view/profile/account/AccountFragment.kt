@@ -12,7 +12,7 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
-import ru.gb.veber.newsapi.databinding.DialogDeleteAccountBinding
+import ru.gb.veber.newsapi.databinding.ConfirmDialogBinding
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.presenter.AccountPresenter
 import ru.gb.veber.newsapi.utils.*
@@ -53,8 +53,14 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     override fun init() {
 
         binding.logout.setOnClickListener {
-            presenter.logout()
-            presenter.setBottomNavigationIcon()
+            presenter.showDialog(
+                getString(R.string.logoutAccount),
+                getString(R.string.warningLogout),
+                getString(R.string.logout)
+            ) {
+                presenter.logout()
+                presenter.setBottomNavigationIcon()
+            }
         }
 
         binding.editInformation.setOnClickListener {
@@ -62,19 +68,43 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         }
 
         binding.deleteAccount.setOnClickListener {
-            presenter.showDialog()
+            presenter.showDialog(
+                getString(R.string.deleteAccount),
+                getString(R.string.warningAccount),
+                getString(R.string.delete)
+            ) {
+                presenter.deleteAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            }
         }
 
         binding.totalHistory.setOnClickListener {
-            presenter.clearHistory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.showDialog(
+                getString(R.string.deleteHistory),
+                getString(R.string.warningHistory),
+                getString(R.string.delete)
+            ) {
+                presenter.clearHistory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            }
         }
 
         binding.totalFavorites.setOnClickListener {
-            presenter.clearFavorites(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.showDialog(
+                getString(R.string.deleteFavorites),
+                getString(R.string.warningFavorites),
+                getString(R.string.delete)
+            ) {
+                presenter.clearFavorites(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            }
         }
 
         binding.totalSources.setOnClickListener {
-            presenter.clearSources(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.showDialog(
+                getString(R.string.deleteSources),
+                getString(R.string.warningSources),
+                getString(R.string.delete)
+            ) {
+                presenter.clearSources(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            }
         }
 
         binding.saveHistorySwitch.setOnCheckedChangeListener { compoundButton, b ->
@@ -102,7 +132,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         }
 
         binding.customizeCategory.setOnClickListener {
-            presenter.openScreenCustomizeCategory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.openScreenCustomizeCategory(
+                arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
+            )
         }
         binding.notificationFirebase.setOnClickListener {
             it.showText(getString(R.string.notAvailable))
@@ -153,22 +185,28 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetDefaultIcon()
     }
 
-    override fun showDialog() {
-        var dialogBinding = DialogDeleteAccountBinding.inflate(layoutInflater)
+    override fun showDialog(
+        title: String,
+        message: String,
+        positive: String,
+        onClick: () -> Unit
+    ) {
+        val dialogBinding = ConfirmDialogBinding.inflate(layoutInflater)
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setCancelable(true)
-            .setTitle(getString(R.string.deleteAccount))
-            .setMessage(getString(R.string.warningAccount))
+            .setTitle(title)
+            .setMessage(message)
             .setView(dialogBinding.root)
             .create()
         dialog.show()
 
-        dialogBinding.negativeDelete.setOnClickListener {
+        dialogBinding.negativeButton.setOnClickListener {
             dialog.dismiss()
         }
 
-        dialogBinding.positiveDelete.setOnClickListener {
-            presenter.deleteAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        dialogBinding.positiveButton.text = positive
+        dialogBinding.positiveButton.setOnClickListener {
+            onClick()
             dialog.dismiss()
         }
     }

@@ -26,7 +26,15 @@
     <string name="uniqueEmailUsername">Email and username must be unique</string>
     <string name="invalidPassword">Invalid password</string>
     <string name="deleteAccount">Delete account</string>
+    <string name="deleteFavorites">Delete favorites</string>
+    <string name="deleteHistory">Delete history</string>
+    <string name="deleteSources">Delete sources</string>
+    <string name="logoutAccount">Confirm logout</string>
     <string name="warningAccount">You will not be able to recover your account</string>
+    <string name="warningFavorites">You will not be able to recover your favorites</string>
+    <string name="warningHistory">You will not be able to recover your history</string>
+    <string name="warningSources">You will not be able to recover your sources</string>
+    <string name="warningLogout">Are you sure you want to logout?</string>
     <string name="clearHistory">Clear history</string>
     <string name="clearFavorites">Clear Favorites</string>
     <string name="errorLoadingAccount">Error loading account</string>

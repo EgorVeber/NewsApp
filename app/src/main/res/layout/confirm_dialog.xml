@@ -5,19 +5,19 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/positiveDelete"
+        android:id="@+id/positiveButton"
         style="@style/MyMaterialTextButton"
         android:layout_width="0dp"
         android:textSize="16sp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_10"
-        app:layout_constraintEnd_toStartOf="@id/negativeDelete"
+        app:layout_constraintEnd_toStartOf="@id/negativeButton"
         android:text="@string/delete"
         app:layout_constraintBottom_toBottomOf="parent"
          />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/negativeDelete"
+        android:id="@+id/negativeButton"
         style="@style/MyMaterialTextButton"
         android:layout_width="0dp"
         android:textSize="16sp"
