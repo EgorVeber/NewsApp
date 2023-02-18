@@ -31,11 +31,6 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
         ViewModelProvider(this, viewModelFactory)[AccountViewModel::class.java]
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        App.instance.appComponent.inject(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,9 +42,11 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        App.instance.appComponent.inject(this)
         arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT).apply {
             accountViewModel.getAccountSettings(this)
         }
+        init()
         observeLiveData()
     }
 
@@ -69,9 +66,6 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
                     positive = state.positive,
                     onClick = state.onClick
                 )
-            }
-            is AccountViewState.Init -> {
-                init()
             }
             is AccountViewState.Loading -> {
                 loading()
@@ -200,11 +194,11 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
         }
     }
 
-    fun toastDelete() {
+    private fun toastDelete() {
         binding.root.showText(getString(R.string.textDelete))
     }
 
-    fun recreateTheme() {
+    private fun recreateTheme() {
         activity?.recreate()
     }
 

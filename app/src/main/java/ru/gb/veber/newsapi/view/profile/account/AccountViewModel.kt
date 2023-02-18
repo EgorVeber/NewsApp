@@ -26,7 +26,7 @@ class AccountViewModel @Inject constructor(
     private val accountSourcesRepoImpl: AccountSourcesRepo,
 ) : ViewModel() {
 
-    private val _uiState: MutableLiveData<AccountViewState> = MutableLiveData(AccountViewState.Init)
+    private val _uiState: MutableLiveData<AccountViewState> = MutableLiveData()
     val uiState: LiveData<AccountViewState> = _uiState
 
     private var accountId = ACCOUNT_ID_DEFAULT
@@ -173,7 +173,6 @@ class AccountViewModel @Inject constructor(
 }
 
 sealed class AccountViewState {
-    object Init : AccountViewState()
     object Loading : AccountViewState()
     data class SetAccountInfo(val account: Account, val theme: Int) : AccountViewState()
     object SetBottomNavigationIcon : AccountViewState()
