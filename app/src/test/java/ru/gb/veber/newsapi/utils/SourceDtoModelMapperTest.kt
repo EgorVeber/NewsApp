@@ -4,6 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import ru.gb.veber.newsapi.model.Source
 import ru.gb.veber.newsapi.model.network.SourceDTO
+import ru.gb.veber.newsapi.utils.mapper.sourceDtoModelMapper
 
 
 class SourceDtoModelMapperTest {

@@ -3,13 +3,22 @@ package ru.gb.veber.newsapi.utils.mapper
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.model.Source
+import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
+import ru.gb.veber.newsapi.model.network.ArticleDTO
+import ru.gb.veber.newsapi.utils.FORMAT_DATE
+import ru.gb.veber.newsapi.utils.formatDateTime
+import ru.gb.veber.newsapi.utils.formatHour
+import ru.gb.veber.newsapi.utils.stringFromData
+import ru.gb.veber.newsapi.utils.takeDate
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
-fun List<Article>.toListArticleUI(): List<Article> {
-    return this.map { article->
+const val HIDE_HISTORY = "HIDE_HISTORY"
+
+fun Article.toArticleUI(): Article {
+    return this.also { article ->
         val publishedDate = stringFromData(article.publishedAt)
         val simpleFormat = SimpleDateFormat(FORMAT_DATE)
 
@@ -45,24 +54,49 @@ fun List<Article>.toListArticleUI(): List<Article> {
         if (article.author == null || article.author.equals("") || article.author.equals(" ")) {
             article.author = anonymousOnStr
         }
-        article
     }
 }
 
-fun List<Article>.toNewListArticleGroupByDate(): MutableList<Article> {
-    val mutableList: MutableList<Article> = mutableListOf()
-    this.reversed().map {
-        it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
-        it.dateAdded = stringFromDataTime(it.dateAdded.toString()).formatDate()
-        it
-    }.sortedBy { it.dateAdded }.reversed().groupBy { it.dateAdded }.forEach { group ->
-        mutableList.add(mapToArticleTitle((group.key.toString()),
-            group.value.size))
-        group.value.reversed().forEach {
-            mutableList.add(it.apply {
-                it.viewType = BaseViewHolder.VIEW_TYPE_HISTORY_NEWS
-            })
-        }
-    }
-    return mutableList
+fun ArticleDTO.toArticle(): Article {
+    return Article(
+        author = this.author,
+        description = this.description,
+        publishedAt = this.publishedAt,
+        publishedAtChange = this.publishedAt,
+        source = this.source.toSource(),
+        title = this.title,
+        url = this.url,
+        urlToImage = this.urlToImage,
+    )
 }
+
+fun ArticleDbEntity.toArticle(): Article {
+    return Article(
+        author = this.author,
+        description = this.description,
+        publishedAt = this.publishedAt,
+        publishedAtChange = this.publishedAt,
+        source = getNewSource(this.sourceId, this.sourceName),
+        title = this.title,
+        url = this.url,
+        urlToImage = this.urlToImage,
+        dateAdded = this.dateAdded
+    )
+}
+
+
+fun getNewArticleHistory(groupTitleDate: String, countArticleDate: Int): Article {
+    return Article(
+        author = countArticleDate.toString(),
+        description = "",
+        publishedAt = groupTitleDate,
+        publishedAtChange = "",
+        source = Source("0", ""),
+        title = SHOW_HISTORY,
+        url = "",
+        urlToImage = "",
+        dateAdded = "",
+        viewType = BaseViewHolder.VIEW_TYPE_HISTORY_HEADER
+    )
+}
+

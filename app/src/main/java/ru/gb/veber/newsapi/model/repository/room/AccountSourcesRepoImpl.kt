@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.dao.AccountSourcesDao
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.utils.sourcesDbEntityToSources
+import ru.gb.veber.newsapi.utils.mapper.toSources
 import ru.gb.veber.newsapi.utils.subscribeDefault
 
 class AccountSourcesRepoImpl(private val accountSourcesDao: AccountSourcesDao) :
@@ -15,8 +15,10 @@ class AccountSourcesRepoImpl(private val accountSourcesDao: AccountSourcesDao) :
     }
 
     override fun getLikeSourcesFromAccount(accountId: Int): Single<List<Sources>> {
-        return accountSourcesDao.getLikeSourcesFromAccount(accountId).subscribeDefault().map {
-            it.map(::sourcesDbEntityToSources)
+        return accountSourcesDao.getLikeSourcesFromAccount(accountId).subscribeDefault().map {list->
+            list.map {sourcesDb->
+                sourcesDb.toSources()
+            }
         }
     }
 
