@@ -8,7 +8,7 @@ import dagger.multibindings.IntoMap
 import ru.gb.veber.newsapi.di.ViewModelFactory
 import ru.gb.veber.newsapi.di.ViewModelKey
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
-
+import ru.gb.veber.newsapi.view.sources.SourcesViewModel
 
 @Module
 abstract class ViewModelModule {
@@ -21,4 +21,8 @@ abstract class ViewModelModule {
     @ViewModelKey(EditAccountViewModel::class)
     internal abstract fun bindEditAccountViewModel(viewModel: EditAccountViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(SourcesViewModel::class)
+    internal abstract fun bindSourcesViewModel(viewModel: SourcesViewModel): ViewModel
 }

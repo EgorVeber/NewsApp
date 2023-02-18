@@ -5,6 +5,7 @@ import ru.gb.veber.newsapi.di.moduls.*
 import ru.gb.veber.newsapi.presenter.*
 import ru.gb.veber.newsapi.view.activity.ActivityMain
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
+import ru.gb.veber.newsapi.view.sources.FragmentSources
 import javax.inject.Singleton
 
 @Singleton
@@ -29,10 +30,9 @@ interface AppComponent {
     fun inject(profilePresenter: ProfilePresenter)
     fun inject(searchPresenter: SearchPresenter)
     fun inject(searchNewsPresenter: SearchNewsPresenter)
-    fun inject(sourcesPresenter: SourcesPresenter)
+    fun inject(fragmentSources: FragmentSources)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)
     fun inject(webViewPresenter: WebViewPresenter)
     fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)
     fun inject(editAccountFragment: EditAccountFragment)
-
 }
