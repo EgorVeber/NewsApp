@@ -7,7 +7,9 @@ import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.utils.mapper.toListArticleUI
+import ru.gb.veber.newsapi.utils.mapper.HIDE_HISTORY
+import ru.gb.veber.newsapi.utils.mapper.SHOW_HISTORY
+import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toNewListArticleGroupByDate
 import ru.gb.veber.newsapi.view.favorites.FavoritesView
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
@@ -19,8 +21,6 @@ class FavoritesPresenter :
 
     @Inject
     lateinit var router: Router
-
-
 
     @Inject
     lateinit var articleRepoImpl: ArticleRepo
@@ -43,14 +43,16 @@ class FavoritesPresenter :
         if (accountID != ACCOUNT_ID_DEFAULT) {
             if (page == FAVORITES) {
                 viewState.loading()
-                articleRepoImpl.getLikeArticleById(accountID).subscribe({
-                    if (it.isEmpty()) {
+                articleRepoImpl.getLikeArticleById(accountID).subscribe({ listArticleDb ->
+                    if (listArticleDb.isEmpty()) {
                         viewState.emptyList()
                     } else {
-                        viewState.setSources(it.map(::articleDbEntityToArticle).reversed().map {
-                            it.publishedAtChange = stringFromData(it.publishedAt).formatDateTime()
-                            it.viewType = VIEW_TYPE_FAVORITES_NEWS
-                            it
+                        viewState.setSources(listArticleDb.map { articleDb ->
+                            articleDb.toArticle()
+                        }.reversed().map { article ->
+                            article.publishedAtChange = stringFromData(article.publishedAt).formatDateTime()
+                            article.viewType = VIEW_TYPE_FAVORITES_NEWS
+                            article
                         })
                     }
                 }, {
@@ -58,11 +60,13 @@ class FavoritesPresenter :
                 })
             } else {
                 viewState.loading()
-                articleRepoImpl.getHistoryArticleById(accountID).subscribe({listArticle->
+                articleRepoImpl.getHistoryArticleById(accountID).subscribe({ listArticle ->
                     if (listArticle.isEmpty()) {
                         viewState.emptyList()
                     } else {
-                        listSave = listArticle.map(::articleDbEntityToArticle).toNewListArticleGroupByDate()
+                        listSave = listArticle.map { articleDb ->
+                            articleDb.toArticle()
+                        }.toNewListArticleGroupByDate()
                         viewState.setSources(listSave)
                     }
                 }, {
@@ -82,7 +86,9 @@ class FavoritesPresenter :
         article.title?.let { title ->
             articleRepoImpl.deleteArticleByIdFavorites(title, accountIdS)
                 .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({ list ->
-                    viewState.setSources(list.map(::articleDbEntityToArticle).reversed()
+                    viewState.setSources(list.map { articleDb ->
+                        articleDb.toArticle()
+                    }.reversed()
                         .map { art ->
                             art.publishedAtChange = stringFromData(art.publishedAt).formatDateTime()
                             art.viewType = VIEW_TYPE_FAVORITES_NEWS
@@ -102,7 +108,9 @@ class FavoritesPresenter :
         article.title?.let { title ->
             articleRepoImpl.deleteArticleByIdHistory(title, accountIdS)
                 .andThen(articleRepoImpl.getHistoryArticleById(accountIdS)).subscribe({ list ->
-                    listSave = list.map(::articleDbEntityToArticle).toNewListArticleGroupByDate()
+                    listSave = list.map { articleDb ->
+                        articleDb.toArticle()
+                    }.toNewListArticleGroupByDate()
                     viewState.setSources(listSave)
                 }, {
                     Log.d(ERROR_DB, it.localizedMessage)
@@ -133,8 +141,10 @@ class FavoritesPresenter :
     fun deleteGroupHistory(article: Article) {
         articleRepoImpl.deleteArticleByIdHistoryGroup(accountIdS, article.publishedAt).subscribe({
             Log.d(ERROR_DB, "success")
-            articleRepoImpl.getHistoryArticleById(accountIdS).subscribe({ list->
-                listSave = list.map(::articleDbEntityToArticle).toNewListArticleGroupByDate()
+            articleRepoImpl.getHistoryArticleById(accountIdS).subscribe({ list ->
+                listSave = list.map { articleDb ->
+                    articleDb.toArticle()
+                }.toNewListArticleGroupByDate()
                 viewState.setSources(listSave)
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)

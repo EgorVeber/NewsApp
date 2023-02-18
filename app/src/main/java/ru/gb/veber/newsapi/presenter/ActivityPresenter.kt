@@ -9,8 +9,8 @@ import ru.gb.veber.newsapi.model.repository.room.CountryRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.utils.mapToCountry
-import ru.gb.veber.newsapi.utils.sourcesDtoToEntity
+import ru.gb.veber.newsapi.utils.mapper.mapToCountry
+import ru.gb.veber.newsapi.utils.mapper.toSourcesDbEntity
 import ru.gb.veber.newsapi.view.activity.ViewMain
 import javax.inject.Inject
 
@@ -93,7 +93,9 @@ class ActivityPresenter : MvpPresenter<ViewMain>() {
                 }
             }
             countryRepoImpl.insertAll(country.map { mapToCountry(it.key, it.value) }).andThen(
-                sourcesRepoImpl.insertAll(source.sources.map(::sourcesDtoToEntity)))
+                sourcesRepoImpl.insertAll(source.sources.map { sourcesDTO ->
+                    sourcesDTO.toSourcesDbEntity()
+                }))
                 .subscribe({
                     viewState.completableInsertSources()
                 }, {

@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.dao.SourcesDao
 import ru.gb.veber.newsapi.model.database.entity.SourcesDbEntity
-import ru.gb.veber.newsapi.utils.sourcesDbEntityToSources
+import ru.gb.veber.newsapi.utils.mapper.toSources
 import ru.gb.veber.newsapi.utils.subscribeDefault
 
 class SourcesRepoImpl(private val sourcesDao: SourcesDao) : SourcesRepo {
@@ -14,8 +14,10 @@ class SourcesRepoImpl(private val sourcesDao: SourcesDao) : SourcesRepo {
     }
 
     override fun getSources(): Single<MutableList<Sources>> {
-        return sourcesDao.getSources().subscribeDefault().map {
-            it.map(::sourcesDbEntityToSources).toMutableList()
+        return sourcesDao.getSources().subscribeDefault().map {list->
+            list.map { sourcesDb->
+                sourcesDb.toSources()
+            }.toMutableList()
         }
     }
 }

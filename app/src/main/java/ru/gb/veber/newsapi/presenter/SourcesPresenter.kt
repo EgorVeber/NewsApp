@@ -15,7 +15,7 @@ import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.mapToHistorySelectDbEntity
+import ru.gb.veber.newsapi.utils.mapper.toHistorySelectDbEntity
 import ru.gb.veber.newsapi.view.sources.FragmentSourcesView
 import javax.inject.Inject
 
@@ -121,11 +121,10 @@ class SourcesPresenter(
         }
     }
 
-    //TODO NewsAndroid-11 Рефакторинг SourcesPresenter (Убрать нулы)
     fun openAllNews(source: String?, name: String?) {
         val history = HistorySelect(0, accountID = accountIdPresenter, sourcesId = source, sourcesName = name)
         router.navigateTo(SearchNewsScreen(accountIdPresenter, history))
-        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(history))
+        historySelectRepoImpl.insertSelect(history.toHistorySelectDbEntity())
             .subscribe({}, {
                 Log.d(ERROR_DB, it.localizedMessage)
             })
