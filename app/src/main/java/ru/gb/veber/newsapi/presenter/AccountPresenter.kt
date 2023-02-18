@@ -14,6 +14,7 @@ import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
 import ru.gb.veber.newsapi.view.profile.account.AccountView
 import javax.inject.Inject
 
@@ -136,9 +137,9 @@ class AccountPresenter : MvpPresenter<AccountView>() {
     }
 
     fun updateAccountShowListFavorite(b: Boolean) {
-        accountMain?.let {
-            it.displayOnlySources = b
-            accountRepo.updateAccount(mapToAccountDbEntity(it)).subscribe({
+        accountMain?.let {account->
+            account.displayOnlySources = b
+            accountRepo.updateAccount(account.toAccountDbEntity()).subscribe({
             }, {
                 Log.d(ERROR_DB, it.localizedMessage)
             })
@@ -147,7 +148,7 @@ class AccountPresenter : MvpPresenter<AccountView>() {
 
     fun updateAccountSaveHistorySelect(checked: Boolean) {
         accountMain.saveSelectHistory = checked
-        accountRepo.updateAccount(mapToAccountDbEntity(accountMain)).subscribe({
+        accountRepo.updateAccount(accountMain.toAccountDbEntity()).subscribe({
         }, {
             Log.d(ERROR_DB, it.localizedMessage)
         })

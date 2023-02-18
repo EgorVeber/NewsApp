@@ -12,6 +12,8 @@ import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.mapper.toHistorySelect
+import ru.gb.veber.newsapi.utils.mapper.toHistorySelectDbEntity
 import ru.gb.veber.newsapi.view.search.SearchView
 import java.util.*
 import javax.inject.Inject
@@ -121,7 +123,7 @@ class SearchPresenter(
                     router.navigateTo(SearchNewsScreen(accountIdPresenter, x))
 
                     if (accountHistorySelect) {
-                        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+                        historySelectRepoImpl.insertSelect(x.toHistorySelectDbEntity())
                             .subscribe({}, {
                                 Log.d(ERROR_DB, it.localizedMessage)
                             })
@@ -137,7 +139,7 @@ class SearchPresenter(
 
                     router.navigateTo(SearchNewsScreen(accountIdPresenter, x))
                     if (accountHistorySelect) {
-                        historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+                        historySelectRepoImpl.insertSelect(x.toHistorySelectDbEntity())
                             .subscribe({}, {
                                 Log.d(ERROR_DB, it.localizedMessage)
                             })
@@ -171,7 +173,7 @@ class SearchPresenter(
             router.navigateTo(SearchNewsScreen(accountIdPresenter, x))
 
             if (accountHistorySelect) {
-                historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x)).subscribe({}, {
+                historySelectRepoImpl.insertSelect(x.toHistorySelectDbEntity()).subscribe({}, {
                     Log.d(ERROR_DB, it.localizedMessage)
                 })
             }
@@ -192,7 +194,7 @@ class SearchPresenter(
                 router.navigateTo(SearchNewsScreen(accountIdPresenter, x))
 
                 if (accountHistorySelect) {
-                    historySelectRepoImpl.insertSelect(mapToHistorySelectDbEntity(x))
+                    historySelectRepoImpl.insertSelect(x.toHistorySelectDbEntity())
                         .subscribe({}, {
                             Log.d(ERROR_DB, it.localizedMessage)
                         })
@@ -211,16 +213,19 @@ class SearchPresenter(
 
     fun getHistorySelect() {
         if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
-            historySelectRepoImpl.getHistoryById(accountIdPresenter).subscribe({
-                if (it.isEmpty()) {
-                    viewState.setHistory(listOf())
-                    viewState.emptyHistory()
-                } else {
-                    viewState.setHistory(it.map(::mapToHistorySelect).reversed())
-                }
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
-            })
+            historySelectRepoImpl.getHistoryById(accountIdPresenter)
+                .subscribe({ listSelectDbEntity ->
+                    if (listSelectDbEntity.isEmpty()) {
+                        viewState.setHistory(listOf())
+                        viewState.emptyHistory()
+                    } else {
+                        viewState.setHistory(listSelectDbEntity.map {historySelectDbEntity ->
+                            historySelectDbEntity.toHistorySelect()
+                        }.reversed())
+                    }
+                }, {
+                    Log.d(ERROR_DB, it.localizedMessage)
+                })
         }
     }
 
@@ -238,7 +243,7 @@ class SearchPresenter(
     }
 
     fun deleteHistory(historySelect: HistorySelect) {
-        historySelectRepoImpl.deleteSelect(mapToHistorySelectDbEntity(historySelect)).subscribe({
+        historySelectRepoImpl.deleteSelect(historySelect.toHistorySelectDbEntity()).subscribe({
             getHistorySelect()
         }, {
             Log.d(ERROR_DB, it.localizedMessage)

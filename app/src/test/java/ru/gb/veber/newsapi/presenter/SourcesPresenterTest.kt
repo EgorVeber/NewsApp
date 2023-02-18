@@ -14,7 +14,7 @@ import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
-import ru.gb.veber.newsapi.utils.mapToHistorySelectDbEntity
+import ru.gb.veber.newsapi.utils.mapper.mapToHistorySelectDbEntity
 
 class SourcesPresenterTest {
 

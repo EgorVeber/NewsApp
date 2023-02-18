@@ -15,8 +15,14 @@ import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
-import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.utils.mapper.toListArticleUI
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.API_KEY_NEWS
+import ru.gb.veber.newsapi.utils.ERROR_DB
+import ru.gb.veber.newsapi.utils.disposableBy
+import ru.gb.veber.newsapi.utils.formatDateTime
+import ru.gb.veber.newsapi.utils.mapper.mapToArticleDbEntity
+import ru.gb.veber.newsapi.utils.mapper.toArticle
+import ru.gb.veber.newsapi.utils.mapper.toArticleUI
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsView
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import java.util.*
@@ -108,8 +114,12 @@ class SearchNewsPresenter(
             to = historySelect?.dateSources,
             key = API_KEY_NEWS
         ).map { articles ->
-            articles.articles.map(::mapToArticle).also { list->
-                list.toListArticleUI()
+            articles.articles.map { articleDto ->
+                articleDto.toArticle()
+            }.also { list ->
+                list.map { article ->
+                    article.toArticleUI()
+                }
                 list.map { art ->
                     art.viewType = VIEW_TYPE_SEARCH_NEWS
                 }
@@ -223,7 +233,6 @@ class SearchNewsPresenter(
         }, {
         }).disposableBy(bag)
     }
-
 
     fun openScreenWebView(url: String) {
         router.navigateTo(WebViewScreen(url))

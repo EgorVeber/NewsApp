@@ -13,7 +13,7 @@ import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.LOGIN_PATTERN
 import ru.gb.veber.newsapi.utils.PASSWORD_PATTERN
 import ru.gb.veber.newsapi.utils.checkLogin
-import ru.gb.veber.newsapi.utils.mapToAccountDbEntity
+import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
 import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(
@@ -39,7 +39,7 @@ class EditAccountViewModel @Inject constructor(
             account.email = userEmail
             account.userName = userLogin
             account.password = userPassword
-            roomRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
+            roomRepoImpl.updateAccount(account.toAccountDbEntity()).subscribe({
                 mutableFlow.value =
                     EditAccountState.SuccessUpdateAccount(account.userName.checkLogin())
                 prefsAccount.setAccountLogin(account.userName.checkLogin())

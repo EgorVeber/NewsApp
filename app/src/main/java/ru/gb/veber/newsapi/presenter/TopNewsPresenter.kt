@@ -14,8 +14,19 @@ import ru.gb.veber.newsapi.model.repository.network.NewsRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.model.repository.room.CountryRepo
-import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.utils.mapper.toListArticleUI
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.ALL_COUNTRY
+import ru.gb.veber.newsapi.utils.ALL_COUNTRY_VALUE
+import ru.gb.veber.newsapi.utils.API_KEY_NEWS
+import ru.gb.veber.newsapi.utils.ERROR_DB
+import ru.gb.veber.newsapi.utils.disposableBy
+import ru.gb.veber.newsapi.utils.formatDateTime
+import ru.gb.veber.newsapi.utils.mapper.mapToArticleDbEntity
+import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.utils.mapper.toArticle
+import ru.gb.veber.newsapi.utils.mapper.toArticleUI
+import ru.gb.veber.newsapi.utils.mapper.toCountry
+import ru.gb.veber.newsapi.utils.subscribeDefault
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_TOP_NEWS_HEADER
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsView
 import java.util.*
@@ -77,8 +88,12 @@ class TopNewsPresenter(
         var countryCode = sharedPreferenceAccount.getAccountCountryCode()
         Single.zip(newsRepoImpl.getTopicalHeadlinesCategoryCountry(category = category, country = countryCode, key = API_KEY_NEWS),
             articleRepoImpl.getArticleById(accountIdPresenter)) { news, articles ->
-            var newsModified = articleDtoModelMapper(news).also { list ->
-                list.toListArticleUI()
+            var newsModified = news.articles.map { articleDto->
+                articleDto.toArticle()
+            }.also { list ->
+                list.map {article->
+                    article.toArticleUI()
+                }
             }
             articles.forEach { art ->
                 newsModified.forEach { new ->
@@ -202,7 +217,7 @@ class TopNewsPresenter(
                 if (accountIdPresenter != ACCOUNT_ID_DEFAULT) {
                     account.myCountry = country
                     account.countryCode = countryCode
-                    accountRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
+                    accountRepoImpl.updateAccount(account.toAccountDbEntity()).subscribe({
                     }, {
                         Log.d(ERROR_DB, it.localizedMessage)
                     })
@@ -225,7 +240,9 @@ class TopNewsPresenter(
 
     fun getCountry() {
         countryRepoImpl.getCountry().subscribe({ country ->
-            listCountry = country.map(::mapToDbEntityCountry) as MutableList<Country>
+            listCountry = country.map { countryDbEntity ->
+                countryDbEntity.toCountry()
+            } as MutableList<Country>
             listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
             var list: MutableList<String> =
                 listCountry.map { country -> country.id }.sortedBy { it } as MutableList<String>
