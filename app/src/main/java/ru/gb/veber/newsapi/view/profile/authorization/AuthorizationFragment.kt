@@ -72,7 +72,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         rxTextChangerValidation()
 
         binding.privacyPolicy.setOnClickListener {
-            presenter.openScreenWebView(getString(R.string.teamSite))
+            presenter.openScreenWebView(getString(R.string.team_site))
         }
 
         binding.backMainScreen.setOnClickListener {
@@ -156,13 +156,13 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
 
     override fun errorSignIn() {
-        binding.passwordTextInput.error = getString(R.string.invalidPassword)
+        binding.passwordTextInput.error = getString(R.string.invalid_password)
     }
 
     override fun errorRegister() {
-        binding.userNameRegisterTextInput.error = getString(R.string.checkLogin)
-        binding.emailRegisterTextInput.error = getString(R.string.checkEmail)
-        binding.root.showSnackBarError(getString(R.string.uniqueEmailUsername), "", {})
+        binding.userNameRegisterTextInput.error = getString(R.string.check_login)
+        binding.emailRegisterTextInput.error = getString(R.string.check_email)
+        binding.root.showSnackBarError(getString(R.string.unique_email_username), "", {})
     }
 
     override fun successSignIn(id: Int) {
@@ -170,7 +170,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun successRegister(id: Int) {
-        binding.root.showSnackBarError(getString(R.string.createAccount), "", {})
+        binding.root.showSnackBarError(getString(R.string.create_account), "", {})
         presenter.openScreenProfile(id)
     }
 
@@ -180,7 +180,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun emptyAccount() {
-        binding.userNameTextInput.error = getString(R.string.userNone)
+        binding.userNameTextInput.error = getString(R.string.user_none)
     }
 
     override fun setBottomNavigationIcon(checkLogin: String) {
@@ -197,7 +197,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun loginNotValidate() {
-        binding.userNameTextInput.error = getString(R.string.errorInputEmail) + "($LOGIN_STR)"
+        binding.userNameTextInput.error = getString(R.string.error_input_email) + "($LOGIN_STR)"
         userLogin = ""
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -213,7 +213,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     override fun passwordNotValidate(it: CharSequence?) {
         userPassword = ""
         binding.passwordTextInput.error =
-            getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
+            getString(R.string.error_input_email) + "($PASSWORD_STR)"
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -227,7 +227,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     override fun loginRegisterNotValidate() {
         binding.userNameRegisterTextInput.error =
-            getString(R.string.errorInputEmail) + "($LOGIN_STR)"
+            getString(R.string.error_input_email) + "($LOGIN_STR)"
         userRegisterLogin = ""
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -243,7 +243,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     override fun passwordRegisterNotValidate(it: CharSequence?) {
         userRegisterPassword = ""
         binding.passwordRegisterTextInput.error =
-            getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
+            getString(R.string.error_input_email) + "($PASSWORD_STR)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -258,7 +258,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     override fun emailRegisterNotValidate() {
         userEmail = ""
         binding.emailRegisterTextInput.error =
-            getString(R.string.errorInputEmail) + "($EMAIL_STR)"
+            getString(R.string.error_input_email) + "($EMAIL_STR)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 

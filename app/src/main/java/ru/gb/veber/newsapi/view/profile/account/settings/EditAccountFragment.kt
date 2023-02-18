@@ -12,14 +12,7 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
 import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.EMAIL_STR
-import ru.gb.veber.newsapi.utils.LOGIN_STR
-import ru.gb.veber.newsapi.utils.PASSWORD_STR
-import ru.gb.veber.newsapi.utils.hide
-import ru.gb.veber.newsapi.utils.show
-import ru.gb.veber.newsapi.utils.showSnackBarError
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
@@ -190,7 +183,7 @@ class EditAccountFragment : MvpAppCompatFragment(), BackPressedListener {
 
     private fun passwordNotValidate() {
         userPassword = ""
-        binding.passwordChange.error = getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
+        binding.passwordChange.error = getString(R.string.error_input_email) + "($PASSWORD_STR)"
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -203,7 +196,7 @@ class EditAccountFragment : MvpAppCompatFragment(), BackPressedListener {
     }
 
     private fun loginNotValidate() {
-        binding.userNameChange.error = getString(R.string.errorInputEmail) + "($LOGIN_STR)"
+        binding.userNameChange.error = getString(R.string.error_input_email) + "($LOGIN_STR)"
         userLogin = ""
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -218,7 +211,7 @@ class EditAccountFragment : MvpAppCompatFragment(), BackPressedListener {
 
     private fun emailRegisterNotValidate() {
         userEmail = ""
-        binding.emailChange.error = getString(R.string.errorInputEmail) + "($EMAIL_STR)"
+        binding.emailChange.error = getString(R.string.error_input_email) + "($EMAIL_STR)"
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -230,7 +223,7 @@ class EditAccountFragment : MvpAppCompatFragment(), BackPressedListener {
     }
 
     private fun errorUpdateAccount() {
-        binding.root.showSnackBarError(getString(R.string.uniqueEmailUsername), "", {})
+        binding.root.showSnackBarError(getString(R.string.unique_email_username), "", {})
     }
 
     private fun noChangeAccount() {

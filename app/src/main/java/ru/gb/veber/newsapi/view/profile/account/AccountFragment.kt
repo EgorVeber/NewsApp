@@ -54,9 +54,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
         binding.logout.setOnClickListener {
             presenter.showDialog(
-                getString(R.string.logoutAccount),
-                getString(R.string.warningLogout),
-                getString(R.string.logout)
+                title = getString(R.string.confirm_logout),
+                message = getString(R.string.warning_logout),
+                positive = getString(R.string.logout)
             ) {
                 presenter.logout()
                 presenter.setBottomNavigationIcon()
@@ -69,9 +69,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
         binding.deleteAccount.setOnClickListener {
             presenter.showDialog(
-                getString(R.string.deleteAccount),
-                getString(R.string.warningAccount),
-                getString(R.string.delete)
+                title = getString(R.string.deleteAccount),
+                message = getString(R.string.warning_account),
+                positive = getString(R.string.delete)
             ) {
                 presenter.deleteAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
             }
@@ -79,9 +79,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
         binding.totalHistory.setOnClickListener {
             presenter.showDialog(
-                getString(R.string.deleteHistory),
-                getString(R.string.warningHistory),
-                getString(R.string.delete)
+                title = getString(R.string.delete_history),
+                message = getString(R.string.warning_history),
+                positive = getString(R.string.delete)
             ) {
                 presenter.clearHistory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
             }
@@ -89,9 +89,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
         binding.totalFavorites.setOnClickListener {
             presenter.showDialog(
-                getString(R.string.deleteFavorites),
-                getString(R.string.warningFavorites),
-                getString(R.string.delete)
+                title = getString(R.string.delete_favorites),
+                message = getString(R.string.warning_favorites),
+                positive = getString(R.string.delete)
             ) {
                 presenter.clearFavorites(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
             }
@@ -99,9 +99,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
         binding.totalSources.setOnClickListener {
             presenter.showDialog(
-                getString(R.string.deleteSources),
-                getString(R.string.warningSources),
-                getString(R.string.delete)
+                title = getString(R.string.delete_sources),
+                message = getString(R.string.warning_sources),
+                positive = getString(R.string.delete)
             ) {
                 presenter.clearSources(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
             }
@@ -165,7 +165,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
             getString(R.string.total_history) + account.totalHistory
 
         binding.totalSourcesText.text =
-            getString(R.string.totalSources) + account.totalSources
+            getString(R.string.total_sources) + account.totalSources
 
         binding.saveHistorySwitch.isChecked = account.saveHistory
         binding.saveHistorySelectSwitch.isChecked = account.saveSelectHistory
@@ -225,7 +225,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun clearSources() {
-        binding.totalSourcesText.text = getString(R.string.totalSources) + " 0"
+        binding.totalSourcesText.text = getString(R.string.total_sources) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearSources), "", {})
     }
 
