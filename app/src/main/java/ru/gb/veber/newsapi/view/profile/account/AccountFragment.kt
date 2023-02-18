@@ -51,20 +51,10 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     }
 
     override fun init() {
-
-        binding.logout.setOnClickListener {
-            presenter.showDialog(
-                title = getString(R.string.confirm_logout),
-                message = getString(R.string.warning_logout),
-                positive = getString(R.string.logout)
-            ) {
-                presenter.logout()
-                presenter.setBottomNavigationIcon()
-            }
-        }
+        val accountID = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
 
         binding.editInformation.setOnClickListener {
-            presenter.openScreenEditAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.openScreenEditAccount(accountID)
         }
 
         binding.deleteAccount.setOnClickListener {
@@ -73,7 +63,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
                 message = getString(R.string.warning_account),
                 positive = getString(R.string.delete)
             ) {
-                presenter.deleteAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+                presenter.deleteAccount(accountID)
             }
         }
 
@@ -83,7 +73,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
                 message = getString(R.string.warning_history),
                 positive = getString(R.string.delete)
             ) {
-                presenter.clearHistory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+                presenter.clearHistory(accountID)
             }
         }
 
@@ -93,7 +83,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
                 message = getString(R.string.warning_favorites),
                 positive = getString(R.string.delete)
             ) {
-                presenter.clearFavorites(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+                presenter.clearFavorites(accountID)
             }
         }
 
@@ -103,7 +93,18 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
                 message = getString(R.string.warning_sources),
                 positive = getString(R.string.delete)
             ) {
-                presenter.clearSources(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+                presenter.clearSources(accountID)
+            }
+        }
+
+        binding.logout.setOnClickListener {
+            presenter.showDialog(
+                title = getString(R.string.confirm_logout),
+                message = getString(R.string.warning_logout),
+                positive = getString(R.string.logout)
+            ) {
+                presenter.logout()
+                presenter.setBottomNavigationIcon()
             }
         }
 
