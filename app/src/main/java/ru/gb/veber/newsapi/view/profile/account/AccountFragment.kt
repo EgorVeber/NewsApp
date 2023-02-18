@@ -110,9 +110,11 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.aboutInformation.setOnClickListener {
             it.showText(getString(R.string.notAvailable))
         }
+
         binding.privacyPolicy.setOnClickListener {
-            it.showText(getString(R.string.notAvailable))
+            presenter.openScreenWebView(getString(R.string.teamSite))
         }
+
         binding.supportLinear.setOnClickListener {
             it.showText(getString(R.string.notAvailable))
         }

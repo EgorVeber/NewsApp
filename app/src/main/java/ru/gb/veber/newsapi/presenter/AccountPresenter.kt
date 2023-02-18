@@ -7,6 +7,7 @@ import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.AuthorizationScreen
 import ru.gb.veber.newsapi.core.CustomizeCategoryScreen
 import ru.gb.veber.newsapi.core.EditAccountScreen
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
@@ -154,5 +155,9 @@ class AccountPresenter : MvpPresenter<AccountView>() {
         viewState.toastDelete()
         sharedPreferenceAccount.setTheme(if (b) KEY_THEME_DARK else KEY_THEME_DEFAULT)
         viewState.recreateTheme()
+    }
+
+    fun openScreenWebView(string: String) {
+        router.navigateTo(WebViewScreen(string))
     }
 }
