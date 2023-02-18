@@ -4,20 +4,19 @@ import android.util.Log
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.model.network.ChangeRequestHelper
 import ru.gb.veber.newsapi.model.repository.network.NewsRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.mapper.toListArticleUI
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsView
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import java.util.*
@@ -45,9 +44,6 @@ class SearchNewsPresenter(
 
     @Inject
     lateinit var newsRepoImpl: NewsRepo
-
-    @Inject
-    lateinit var changeRequestHelper: ChangeRequestHelper
 
     private var saveHistory = false
 
@@ -96,27 +92,30 @@ class SearchNewsPresenter(
     fun getNews(historySelect: HistorySelect?) {
 
         viewState.setTitle(
-            historySelect?.keyWord,
-            historySelect?.sourcesName,
-            if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
-            historySelect?.dateSources)
+            keyWord = historySelect?.keyWord,
+            sourcesId = historySelect?.sourcesName,
+            s = if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            dateSources = historySelect?.dateSources
+        )
 
 
         Single.zip(newsRepoImpl.getEverythingKeyWordSearchInSources(
-            historySelect?.sourcesId,
-            historySelect?.keyWord,
-            historySelect?.searchIn,
-            if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
-            historySelect?.dateSources,
-            historySelect?.dateSources
+            sources = historySelect?.sourcesId,
+            q = historySelect?.keyWord,
+            searchIn = historySelect?.searchIn,
+            sortBy = if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            from = historySelect?.dateSources,
+            to = historySelect?.dateSources,
+            key = API_KEY_NEWS
         ).map { articles ->
-            articles.articles.map(::mapToArticle).also {
-                changeRequestHelper.changeRequest(it)
-                it.map { art ->
+            articles.articles.map(::mapToArticle).also { list->
+                list.toListArticleUI()
+                list.map { art ->
                     art.viewType = VIEW_TYPE_SEARCH_NEWS
                 }
             }
-        }, articleRepoImpl.getArticleById(accountId)) { news, articles ->
+        }, articleRepoImpl.getArticleById(accountId)
+        ) { news, articles ->
 
             articles.forEach { art ->
                 news.forEach { new ->
@@ -207,7 +206,7 @@ class SearchNewsPresenter(
 
     private fun deleteFavorites(article: Article) {
         article.isFavorites = false
-      articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountId).subscribe({
+        articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountId).subscribe({
             articleListHistory.find { it.title == article.title }?.isFavorites = false
             viewState.changeNews(articleListHistory)
         }, {

@@ -2,8 +2,6 @@ package ru.gb.veber.newsapi.view.activity
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import io.reactivex.rxjava3.core.Completable
@@ -15,6 +13,8 @@ import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
+import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
@@ -142,13 +142,13 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         }
 
         if (supportFragmentManager.fragments.last() !is SearchNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
-            supportFragmentManager.fragments.last() !is EditAccountFragment
+            supportFragmentManager.fragments.last() !is EditAccountFragment && supportFragmentManager.fragments.last() !is CustomizeCategoryFragment
         ) {
             binding.bottomNavigationView.selectedItemId = R.id.topNews
         }
 
         if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
-            Toast.makeText(this, getString(R.string.pressAgain), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.press_again), Toast.LENGTH_SHORT).show()
         } else {
             supportFragmentManager.fragments.forEach { fragment ->
                 if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
@@ -173,23 +173,23 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     override fun bottomNavigationSetDefaultIcon() {
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = ACCOUNT_LOGIN_DEFAULT
-        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_person_add_alt_1_24)
+        item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_add_alt_1_24)
     }
 
     override fun onCreateSetIconTitleAccount(accountLogin: String) {
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = accountLogin
-        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_person_24)
+        item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_24)
     }
 
     override fun completableInsertSources() {
-        Toast.makeText(this, getString(R.string.sourceLoaded), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.source_loaded), Toast.LENGTH_SHORT).show()
     }
 
     override fun bottomNavigationSetCurrentAccount(checkLogin: String) {
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = checkLogin
-        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_baseline_person_24)
+        item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_24)
     }
 
     override fun bottomNavigationSetTitleCurrentAccount(checkLogin: String) {
@@ -220,6 +220,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun errorSourcesDownload() {
-        binding.root.showText(getString(R.string.errorSourcesDownload))
+        binding.root.showText(getString(R.string.error_sources_download))
     }
 }

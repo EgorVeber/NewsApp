@@ -1,16 +1,14 @@
-package ru.gb.veber.newsapi.di
+package ru.gb.veber.newsapi.di.moduls
 
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.gb.veber.newsapi.BuildConfig
 import ru.gb.veber.newsapi.model.network.NewsApi
-import ru.gb.veber.newsapi.utils.API_KEY
 import ru.gb.veber.newsapi.utils.PAGE_SIZE
 import ru.gb.veber.newsapi.utils.PAGE_SIZE_COUNT
 import javax.inject.Singleton
@@ -33,7 +31,7 @@ object NetworkModule {
 //        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .addInterceptor { chain ->
         val request = chain.request()
-        val url = request.url.newBuilder().addQueryParameter(API_KEY, BuildConfig.KEY_NEWS).addQueryParameter(PAGE_SIZE, PAGE_SIZE_COUNT).build()
+        val url = request.url.newBuilder().addQueryParameter(PAGE_SIZE, PAGE_SIZE_COUNT).build()
         chain.proceed(request.newBuilder().url(url).build())
     }.build()
 }

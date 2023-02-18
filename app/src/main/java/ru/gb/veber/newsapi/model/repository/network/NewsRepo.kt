@@ -10,19 +10,22 @@ interface NewsRepo {
         country: String,
         category: String,
         keyWord: String,
+        key: String
     ): Single<ArticlesDTO>    //Не эффективно
 
     fun getTopicalHeadlinesCategoryCountry(
         category: String,
         country: String? = null,
+        key: String
     ): Single<ArticlesDTO>
 
     fun getTopicalHeadlinesSourcesKeyWord(
         keyWord: String,
         sources: String,
+        key: String
     ): Single<ArticlesDTO> //Не эффективно
 
-    fun getTopicalHeadlinesSources(sources: String): Single<ArticlesDTO>
+    fun getTopicalHeadlinesSources(sources: String, key: String): Single<ArticlesDTO>
 
     //EVERYTHING
     fun getEverythingKeyWordSearchInSources(
@@ -32,6 +35,7 @@ interface NewsRepo {
         sortBy: String? = null,
         from: String? = null,
         to: String? = null,
+        key: String
     ): Single<ArticlesDTO>
 
     fun getEverythingKeyWordSearchIn(
@@ -41,6 +45,7 @@ interface NewsRepo {
         sortBy: String? = null,
         from: String? = null,
         to: String? = null,
+        key: String
     ): Single<ArticlesDTO>
 
     //TOP_HEADLINES_SOURCES
@@ -48,5 +53,6 @@ interface NewsRepo {
         category: String? = null,
         language: String? = null,
         country: String? = null,
+        key: String
     ): Single<SourcesRequestDTO>
 }

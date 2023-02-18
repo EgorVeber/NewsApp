@@ -6,14 +6,7 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
@@ -23,8 +16,6 @@ import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
 

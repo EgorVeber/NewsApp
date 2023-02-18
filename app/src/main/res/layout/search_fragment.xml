@@ -227,8 +227,10 @@
         android:textColor="@color/color_error_like"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/margin_10"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toStartOf="@+id/selectDate"
+        app:layout_constrainedWidth="true"
+        android:singleLine="true"
         app:layout_constraintTop_toBottomOf="@+id/selectDate" />
 
     <com.google.android.material.button.MaterialButton

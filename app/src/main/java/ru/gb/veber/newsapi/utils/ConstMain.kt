@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.utils
 
 //API NEWS
+const val API_KEY_NEWS = "33804c62820c4b94864ee739f17a8d08"
 const val API_KEY = "apiKey"
 const val PAGE_SIZE = "pageSize"
 const val PAGE_SIZE_COUNT = "100"

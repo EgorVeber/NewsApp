@@ -11,17 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import org.reactivestreams.Subscription
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
+import ru.gb.veber.newsapi.utils.ColorUtils.getColor
 import ru.gb.veber.newsapi.utils.EMAIL_STR
 import ru.gb.veber.newsapi.utils.LOGIN_STR
 import ru.gb.veber.newsapi.utils.PASSWORD_STR
@@ -29,7 +28,6 @@ import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.activity.OpenScreen
-import java.util.*
 
 
 class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
@@ -73,9 +71,8 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         constraintSetLogin.clone(binding.root)
         rxTextChangerValidation()
 
-
         binding.privacyPolicy.setOnClickListener {
-            presenter.openScreenWebView(getString(R.string.teamSite))
+            presenter.openScreenWebView(getString(R.string.team_site))
         }
 
         binding.backMainScreen.setOnClickListener {
@@ -159,13 +156,13 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
 
     override fun errorSignIn() {
-        binding.passwordTextInput.error = getString(R.string.invalidPassword)
+        binding.passwordTextInput.error = getString(R.string.invalid_password)
     }
 
     override fun errorRegister() {
-        binding.userNameRegisterTextInput.error = getString(R.string.checkLogin)
-        binding.emailRegisterTextInput.error = getString(R.string.checkEmail)
-        binding.root.showSnackBarError(getString(R.string.uniqueEmailUsername), "", {})
+        binding.userNameRegisterTextInput.error = getString(R.string.check_login)
+        binding.emailRegisterTextInput.error = getString(R.string.check_email)
+        binding.root.showSnackBarError(getString(R.string.unique_email_username), "", {})
     }
 
     override fun successSignIn(id: Int) {
@@ -173,7 +170,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun successRegister(id: Int) {
-        binding.root.showSnackBarError(getString(R.string.createAccount), "", {})
+        binding.root.showSnackBarError(getString(R.string.create_account), "", {})
         presenter.openScreenProfile(id)
     }
 
@@ -183,7 +180,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun emptyAccount() {
-        binding.userNameTextInput.error = getString(R.string.userNone)
+        binding.userNameTextInput.error = getString(R.string.user_none)
     }
 
     override fun setBottomNavigationIcon(checkLogin: String) {
@@ -200,7 +197,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     }
 
     override fun loginNotValidate() {
-        binding.userNameTextInput.error = getString(R.string.errorInputEmail) + "($LOGIN_STR)"
+        binding.userNameTextInput.error = getString(R.string.error_input_email) + "($LOGIN_STR)"
         userLogin = ""
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -216,7 +213,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     override fun passwordNotValidate(it: CharSequence?) {
         userPassword = ""
         binding.passwordTextInput.error =
-            getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
+            getString(R.string.error_input_email) + "($PASSWORD_STR)"
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -230,7 +227,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     override fun loginRegisterNotValidate() {
         binding.userNameRegisterTextInput.error =
-            getString(R.string.errorInputEmail) + "($LOGIN_STR)"
+            getString(R.string.error_input_email) + "($LOGIN_STR)"
         userRegisterLogin = ""
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -246,7 +243,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     override fun passwordRegisterNotValidate(it: CharSequence?) {
         userRegisterPassword = ""
         binding.passwordRegisterTextInput.error =
-            getString(R.string.errorInputEmail) + "($PASSWORD_STR)"
+            getString(R.string.error_input_email) + "($PASSWORD_STR)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -261,7 +258,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     override fun emailRegisterNotValidate() {
         userEmail = ""
         binding.emailRegisterTextInput.error =
-            getString(R.string.errorInputEmail) + "($EMAIL_STR)"
+            getString(R.string.error_input_email) + "($EMAIL_STR)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -320,25 +317,32 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
     private fun setSpanRegulationsTv() {
 
-        //TODO NewsAndroid-4 Почистить проект от хлама
-        var current:Locale = resources.configuration.locale
+        SpannableStringBuilder(binding.privacyPolicy.text).also {span->
+            var colorPrimary = this.getColor(R.color.color_primary_app)
 
-
-        SpannableStringBuilder(binding.privacyPolicy.text).apply {
-
-            setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
-                R.color.color_primary_app)), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            span.setSpan(ForegroundColorSpan(colorPrimary),
+                SPAN_START_INDEX_PRIVACY,
+                SPAN_START_END_PRIVACY,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(),
-                R.color.color_primary_app)), SPAN_START_START_POLICY, SPAN_START_END_POLICY, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            span.setSpan(ForegroundColorSpan(colorPrimary),
+                SPAN_START_START_POLICY,
+                SPAN_START_END_POLICY,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            setSpan(UnderlineSpan(), SPAN_START_INDEX_PRIVACY, SPAN_START_END_PRIVACY, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(UnderlineSpan(), SPAN_START_START_POLICY, SPAN_START_END_POLICY, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            span.setSpan(UnderlineSpan(),
+                SPAN_START_INDEX_PRIVACY,
+                SPAN_START_END_PRIVACY,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            span.setSpan(UnderlineSpan(),
+                SPAN_START_START_POLICY,
+                SPAN_START_END_POLICY,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-            binding.privacyPolicy.text = this
-            removeSpan(this)
+            binding.privacyPolicy.text = span
+            span.removeSpan(this)
         }
     }
 

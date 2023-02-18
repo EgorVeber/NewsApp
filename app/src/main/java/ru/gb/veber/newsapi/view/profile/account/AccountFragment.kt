@@ -12,7 +12,7 @@ import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
-import ru.gb.veber.newsapi.databinding.DialogDeleteAccountBinding
+import ru.gb.veber.newsapi.databinding.ConfirmDialogBinding
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.presenter.AccountPresenter
 import ru.gb.veber.newsapi.utils.*
@@ -51,30 +51,61 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     }
 
     override fun init() {
-
-        binding.logout.setOnClickListener {
-            presenter.logout()
-            presenter.setBottomNavigationIcon()
-        }
+        val accountID = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
 
         binding.editInformation.setOnClickListener {
-            presenter.openScreenEditAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.openScreenEditAccount(accountID)
         }
 
         binding.deleteAccount.setOnClickListener {
-            presenter.showDialog()
+            presenter.showDialog(
+                title = getString(R.string.deleteAccount),
+                message = getString(R.string.warning_account),
+                positive = getString(R.string.delete)
+            ) {
+                presenter.deleteAccount(accountID)
+            }
         }
 
         binding.totalHistory.setOnClickListener {
-            presenter.clearHistory(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.showDialog(
+                title = getString(R.string.delete_history),
+                message = getString(R.string.warning_history),
+                positive = getString(R.string.delete)
+            ) {
+                presenter.clearHistory(accountID)
+            }
         }
 
         binding.totalFavorites.setOnClickListener {
-            presenter.clearFavorites(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.showDialog(
+                title = getString(R.string.delete_favorites),
+                message = getString(R.string.warning_favorites),
+                positive = getString(R.string.delete)
+            ) {
+                presenter.clearFavorites(accountID)
+            }
         }
 
         binding.totalSources.setOnClickListener {
-            presenter.clearSources(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            presenter.showDialog(
+                title = getString(R.string.delete_sources),
+                message = getString(R.string.warning_sources),
+                positive = getString(R.string.delete)
+            ) {
+                presenter.clearSources(accountID)
+            }
+        }
+
+        binding.logout.setOnClickListener {
+            presenter.showDialog(
+                title = getString(R.string.confirm_logout),
+                message = getString(R.string.warning_logout),
+                positive = getString(R.string.logout)
+            ) {
+                presenter.logout()
+                presenter.setBottomNavigationIcon()
+            }
         }
 
         binding.saveHistorySwitch.setOnCheckedChangeListener { compoundButton, b ->
@@ -102,7 +133,9 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         }
 
         binding.customizeCategory.setOnClickListener {
-            it.showText(getString(R.string.notAvailable))
+            presenter.openScreenCustomizeCategory(
+                arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
+            )
         }
         binding.notificationFirebase.setOnClickListener {
             it.showText(getString(R.string.notAvailable))
@@ -110,9 +143,11 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.aboutInformation.setOnClickListener {
             it.showText(getString(R.string.notAvailable))
         }
+
         binding.privacyPolicy.setOnClickListener {
-            it.showText(getString(R.string.notAvailable))
+            presenter.openScreenWebView(getString(R.string.teamSite))
         }
+
         binding.supportLinear.setOnClickListener {
             it.showText(getString(R.string.notAvailable))
         }
@@ -133,7 +168,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
             getString(R.string.total_history) + account.totalHistory
 
         binding.totalSourcesText.text =
-            getString(R.string.totalSources) + account.totalSources
+            getString(R.string.total_sources) + account.totalSources
 
         binding.saveHistorySwitch.isChecked = account.saveHistory
         binding.saveHistorySelectSwitch.isChecked = account.saveSelectHistory
@@ -153,22 +188,28 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetDefaultIcon()
     }
 
-    override fun showDialog() {
-        var dialogBinding = DialogDeleteAccountBinding.inflate(layoutInflater)
+    override fun showDialog(
+        title: String,
+        message: String,
+        positive: String,
+        onClick: () -> Unit
+    ) {
+        val dialogBinding = ConfirmDialogBinding.inflate(layoutInflater)
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setCancelable(true)
-            .setTitle(getString(R.string.deleteAccount))
-            .setMessage(getString(R.string.warningAccount))
+            .setTitle(title)
+            .setMessage(message)
             .setView(dialogBinding.root)
             .create()
         dialog.show()
 
-        dialogBinding.negativeDelete.setOnClickListener {
+        dialogBinding.negativeButton.setOnClickListener {
             dialog.dismiss()
         }
 
-        dialogBinding.positiveDelete.setOnClickListener {
-            presenter.deleteAccount(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        dialogBinding.positiveButton.text = positive
+        dialogBinding.positiveButton.setOnClickListener {
+            onClick()
             dialog.dismiss()
         }
     }
@@ -187,7 +228,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     @SuppressLint("SetTextI18n")
     override fun clearSources() {
-        binding.totalSourcesText.text = getString(R.string.totalSources) + " 0"
+        binding.totalSourcesText.text = getString(R.string.total_sources) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearSources), "", {})
     }
 

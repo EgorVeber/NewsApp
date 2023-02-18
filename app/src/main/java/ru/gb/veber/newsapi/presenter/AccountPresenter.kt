@@ -5,7 +5,9 @@ import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.AuthorizationScreen
+import ru.gb.veber.newsapi.core.CustomizeCategoryScreen
 import ru.gb.veber.newsapi.core.EditAccountScreen
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
@@ -55,6 +57,10 @@ class AccountPresenter : MvpPresenter<AccountView>() {
         router.navigateTo(EditAccountScreen(accountID))
     }
 
+    fun openScreenCustomizeCategory(accountId: Int) {
+        router.navigateTo(CustomizeCategoryScreen(accountId))
+    }
+
     fun deleteAccount(accountID: Int) {
         if (accountID != ACCOUNT_ID_DEFAULT) {
             accountRepo.deleteAccount(accountID).subscribe({
@@ -70,9 +76,11 @@ class AccountPresenter : MvpPresenter<AccountView>() {
         viewState.loading()
         accountID?.let { acc ->
             accountId = accountID
-            Single.zip(accountRepo.getAccountById(acc),
+            Single.zip(
+                accountRepo.getAccountById(acc),
                 articleRepoImpl.getArticleById(accountID),
-                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountID)) { account, articles, listSources ->
+                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountID)
+            ) { account, articles, listSources ->
 
                 accountMain = account
                 account.totalFavorites = articles.filter { it.isFavorites }.size.toString()
@@ -92,8 +100,8 @@ class AccountPresenter : MvpPresenter<AccountView>() {
         viewState.setBottomNavigationIcon()
     }
 
-    fun showDialog() {
-        viewState.showDialog()
+    fun showDialog(title: String, message: String, positive: String, onClick: () -> Unit) {
+        viewState.showDialog(title, message, positive, onClick)
     }
 
     fun clearHistory(accountId: Int) {
@@ -149,5 +157,9 @@ class AccountPresenter : MvpPresenter<AccountView>() {
         viewState.toastDelete()
         sharedPreferenceAccount.setTheme(if (b) KEY_THEME_DARK else KEY_THEME_DEFAULT)
         viewState.recreateTheme()
+    }
+
+    fun openScreenWebView(string: String) {
+        router.navigateTo(WebViewScreen(string))
     }
 }

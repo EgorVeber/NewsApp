@@ -13,26 +13,29 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         country: String,
         category: String,
         keyWord: String,
+        key: String
     ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCountryCategoryKeyword(country, category, keyWord)
+        newsApi.getTopicalHeadlinesCountryCategoryKeyword(country, category, keyWord, key)
             .subscribeDefault()
 
     override fun getTopicalHeadlinesCategoryCountry(
         category: String,
         country: String?,
+        key: String
     ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCategoryCountry(category, country).subscribeDefault()
+        newsApi.getTopicalHeadlinesCategoryCountry(category, country, key).subscribeDefault()
 
 
     override fun getTopicalHeadlinesSourcesKeyWord(
         keyWord: String,
         sources: String,
+        key: String
     ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesSourcesKeyWord(keyWord, sources).subscribeDefault()
+        newsApi.getTopicalHeadlinesSourcesKeyWord(keyWord, sources, key).subscribeDefault()
 
 
-    override fun getTopicalHeadlinesSources(sources: String): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesSources(sources).subscribeDefault()
+    override fun getTopicalHeadlinesSources(sources: String, key: String): Single<ArticlesDTO> =
+        newsApi.getTopicalHeadlinesSources(sources, key).subscribeDefault()
 
 
     //Everything
@@ -43,8 +46,9 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         sortBy: String?,
         from: String?,
         to: String?,
+        key: String
     ): Single<ArticlesDTO> =
-        newsApi.getEverythingKeyWordSearchIn(q, searchIn, language, sortBy, from, to)
+        newsApi.getEverythingKeyWordSearchIn(q, searchIn, language, sortBy, from, to, key)
             .subscribeDefault()
 
 
@@ -55,8 +59,9 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         sortBy: String?,
         from: String?,
         to: String?,
+        key: String
     ): Single<ArticlesDTO> =
-        newsApi.getEverythingKeyWordSearchInSources(sources, q, searchIn, sortBy, from, to)
+        newsApi.getEverythingKeyWordSearchInSources(sources, q, searchIn, sortBy, from, to, key)
             .subscribeDefault()
 
     //TOP_HEADLINES_SOURCES
@@ -64,6 +69,7 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         category: String?,
         language: String?,
         country: String?,
+        key: String
     ): Single<SourcesRequestDTO> =
-        newsApi.getSources(category, language, country).subscribeDefault()
+        newsApi.getSources(category, language, country, key).subscribeDefault()
 }
