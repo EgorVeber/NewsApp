@@ -6,20 +6,25 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import moxy.MvpAppCompatFragment
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
 import ru.gb.veber.newsapi.databinding.ConfirmDialogBinding
 import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.showText
+import ru.gb.veber.newsapi.utils.hide
+import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import javax.inject.Inject
 
-class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
+class AccountFragment : Fragment(), BackPressedListener {
 
     private var _binding: AccountFragmentBinding? = null
     private val binding get() = _binding!!
@@ -51,7 +56,7 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
     }
 
     private fun observeLiveData() {
-        accountViewModel.uiState.observe(viewLifecycleOwner, ::handleState)
+        accountViewModel.getLiveData().observe(viewLifecycleOwner, ::handleState)
     }
 
     private fun handleState(state: AccountViewState) {
@@ -59,7 +64,7 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
             is AccountViewState.SetAccountInfo -> {
                 setAccountInfo(account = state.account, themePrefs = state.theme)
             }
-            is AccountViewState.ShowDialog -> {
+            is AccountViewState.AccountDialog -> {
                 showDialog(
                     title = state.title,
                     message = state.message,
@@ -67,25 +72,25 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
                     onClick = state.onClick
                 )
             }
-            is AccountViewState.Loading -> {
+            AccountViewState.Loading -> {
                 loading()
             }
-            is AccountViewState.SetBottomNavigationIcon -> {
+            AccountViewState.SetBottomNavigationIcon -> {
                 setBottomNavigationIcon()
             }
-            is AccountViewState.ClearHistory -> {
+            AccountViewState.ClearHistory -> {
                 clearHistory()
             }
-            is AccountViewState.ClearFavorites -> {
+            AccountViewState.ClearFavorites -> {
                 clearFavorites()
             }
-            is AccountViewState.ClearSources -> {
+            AccountViewState.ClearSources -> {
                 clearSources()
             }
-            is AccountViewState.ToastDelete -> {
+            AccountViewState.ToastDelete -> {
                 toastDelete()
             }
-            is AccountViewState.RecreateTheme -> {
+            AccountViewState.RecreateTheme -> {
                 recreateTheme()
             }
         }
@@ -99,7 +104,7 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
         }
 
         binding.deleteAccount.setOnClickListener {
-            accountViewModel.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.deleteAccount),
                 message = getString(R.string.warning_account),
                 positive = getString(R.string.delete)
@@ -109,7 +114,7 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
         }
 
         binding.totalHistory.setOnClickListener {
-            accountViewModel.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.delete_history),
                 message = getString(R.string.warning_history),
                 positive = getString(R.string.delete)
@@ -119,7 +124,7 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
         }
 
         binding.totalFavorites.setOnClickListener {
-            accountViewModel.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.delete_favorites),
                 message = getString(R.string.warning_favorites),
                 positive = getString(R.string.delete)
@@ -129,7 +134,7 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
         }
 
         binding.totalSources.setOnClickListener {
-            accountViewModel.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.delete_sources),
                 message = getString(R.string.warning_sources),
                 positive = getString(R.string.delete)
@@ -139,13 +144,13 @@ class AccountFragment : MvpAppCompatFragment(), BackPressedListener {
         }
 
         binding.logout.setOnClickListener {
-            accountViewModel.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.confirm_logout),
                 message = getString(R.string.warning_logout),
                 positive = getString(R.string.logout)
             ) {
                 accountViewModel.logout()
-                accountViewModel.setBottomNavigationIcon()
+                accountViewModel.setStateSetBottomNavigationIcon()
             }
         }
 

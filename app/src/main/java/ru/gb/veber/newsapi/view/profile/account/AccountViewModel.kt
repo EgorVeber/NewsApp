@@ -16,6 +16,7 @@ import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
@@ -27,7 +28,11 @@ class AccountViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState: MutableLiveData<AccountViewState> = MutableLiveData()
-    val uiState: LiveData<AccountViewState> = _uiState
+    private val uiState: LiveData<AccountViewState> = _uiState
+
+    fun getLiveData(): LiveData<AccountViewState> {
+        return uiState
+    }
 
     private var accountId = ACCOUNT_ID_DEFAULT
     private lateinit var accountMain: Account
@@ -97,13 +102,13 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun setBottomNavigationIcon() {
+    fun setStateSetBottomNavigationIcon() {
         _uiState.postValue(AccountViewState.SetBottomNavigationIcon)
     }
 
-    fun showDialog(title: String, message: String, positive: String, onClick: () -> Unit) {
+    fun setStateShowDialog(title: String, message: String, positive: String, onClick: () -> Unit) {
         _uiState.postValue(
-            AccountViewState.ShowDialog(
+            AccountViewState.AccountDialog(
                 title = title,
                 message = message,
                 positive = positive,
@@ -146,7 +151,7 @@ class AccountViewModel @Inject constructor(
     fun updateAccountShowListFavorite(b: Boolean) {
         accountMain?.let { account ->
             account.displayOnlySources = b
-            accountRepo.updateAccount(mapToAccountDbEntity(account)).subscribe({
+            accountRepo.updateAccount(account.toAccountDbEntity()).subscribe({
             }, { throwable ->
                 Log.d(ERROR_DB, throwable.localizedMessage)
             })
@@ -155,7 +160,7 @@ class AccountViewModel @Inject constructor(
 
     fun updateAccountSaveHistorySelect(checked: Boolean) {
         accountMain.saveSelectHistory = checked
-        accountRepo.updateAccount(mapToAccountDbEntity(accountMain)).subscribe({
+        accountRepo.updateAccount(accountMain.toAccountDbEntity()).subscribe({
         }, { throwable ->
             Log.d(ERROR_DB, throwable.localizedMessage)
         })
@@ -176,7 +181,7 @@ sealed class AccountViewState {
     object Loading : AccountViewState()
     data class SetAccountInfo(val account: Account, val theme: Int) : AccountViewState()
     object SetBottomNavigationIcon : AccountViewState()
-    data class ShowDialog(
+    data class AccountDialog(
         val title: String,
         val message: String,
         val positive: String,
