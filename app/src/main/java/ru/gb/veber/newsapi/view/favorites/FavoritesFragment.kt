@@ -20,9 +20,9 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
-import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
+import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
 
 class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedListener,
     EventBehaviorToActivity {
@@ -67,7 +67,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
         }
     }
 
-    private var itemListener = object : RecyclerListener {
+    private var itemListener = object : TopNewsListener {
 
         override fun clickNews(article: Article) {
             presenter.clickNews(article)

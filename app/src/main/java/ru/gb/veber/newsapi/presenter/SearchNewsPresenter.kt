@@ -24,7 +24,7 @@ import ru.gb.veber.newsapi.utils.mapper.mapToArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toArticleUI
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsView
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
 import java.util.*
 import javax.inject.Inject
 

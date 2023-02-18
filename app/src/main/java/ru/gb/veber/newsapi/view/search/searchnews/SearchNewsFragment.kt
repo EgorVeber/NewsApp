@@ -23,9 +23,9 @@ import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
-import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
-import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
+import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
 
 
 class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedListener,
@@ -44,7 +44,7 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
     }
 
 
-    private var itemListener = RecyclerListener { article -> presenter.clickNews(article) }
+    private var itemListener = TopNewsListener { article -> presenter.clickNews(article) }
 
     private val newsAdapter = TopNewsAdapter(itemListener)
 

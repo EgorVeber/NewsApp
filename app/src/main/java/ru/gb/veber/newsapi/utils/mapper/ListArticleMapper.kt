@@ -1,11 +1,10 @@
 package ru.gb.veber.newsapi.utils.mapper
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.Source
 import ru.gb.veber.newsapi.utils.formatDate
 import ru.gb.veber.newsapi.utils.formatDateTime
 import ru.gb.veber.newsapi.utils.stringFromData
 import ru.gb.veber.newsapi.utils.stringFromDataTime
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
 
 const val SHOW_HISTORY = "SHOW_HISTORY"
 

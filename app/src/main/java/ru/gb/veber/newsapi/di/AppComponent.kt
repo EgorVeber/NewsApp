@@ -5,6 +5,7 @@ import ru.gb.veber.newsapi.di.moduls.*
 import ru.gb.veber.newsapi.presenter.*
 import ru.gb.veber.newsapi.view.activity.ActivityMain
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
+import ru.gb.veber.newsapi.view.topnews.fragment.TopNewsFragment
 import javax.inject.Singleton
 
 @Singleton
@@ -23,7 +24,7 @@ interface AppComponent {
     fun inject(mainPresenter: ActivityPresenter)
     fun inject(account: AccountPresenter)
     fun inject(authorizationPresenter: AuthorizationPresenter)
-    fun inject(topNewsPresenter: TopNewsPresenter)
+    fun inject(topNewsFragment: TopNewsFragment)
     fun inject(favoritesPresenter: FavoritesPresenter)
     fun inject(favoritesViewPagerPresenter: FavoritesViewPagerPresenter)
     fun inject(profilePresenter: ProfilePresenter)

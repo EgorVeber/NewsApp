@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.topnews.pageritem
+package ru.gb.veber.newsapi.view.topnews.fragment.filteranimation
 
 import android.content.Context
 import android.util.AttributeSet
@@ -26,7 +26,8 @@ class BehaviorActionButtonCancel(context: Context, attr: AttributeSet? = null) :
         child.x = MARGIN_START
         return super.onDependentViewChanged(parent, child, dependency)
     }
-    companion object{
+
+    companion object {
         const val MARGIN_START = 50F
     }
 }

@@ -1,6 +1,5 @@
-package ru.gb.veber.newsapi.view.topnews.pageritem
+package ru.gb.veber.newsapi.view.topnews.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,46 +12,51 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.presenter.TopNewsPresenter
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.DURATION_ERROR_INPUT
+import ru.gb.veber.newsapi.utils.collapsed
+import ru.gb.veber.newsapi.utils.expanded
+import ru.gb.veber.newsapi.utils.formatDateDay
+import ru.gb.veber.newsapi.utils.hide
+import ru.gb.veber.newsapi.utils.hideKeyboard
+import ru.gb.veber.newsapi.utils.loadGlideNot
+import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.stringFromData
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.view.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
+import javax.inject.Inject
 
-interface EventBehaviorToActivity {
-    fun getStateBehavior(): Int
-    fun setStateBehavior()
-}
-
-class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener,
-    EventBehaviorToActivity {
+class TopNewsFragment : MvpAppCompatFragment(), BackPressedListener, EventBehaviorToActivity {
 
     private var _binding: TopNewsFragmentBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private var itemListener = RecyclerListener { article -> presenter.clickNews(article) }
-
+    private var itemListener = TopNewsListener { article -> topNewsViewModel.clickNews(article) }
     private val newsAdapter = TopNewsAdapter(itemListener)
 
-    private val presenter: TopNewsPresenter by moxyPresenter {
-        TopNewsPresenter(
-            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT).apply {
-            App.instance.appComponent.inject(this)
-        }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val topNewsViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[TopNewsViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -66,11 +70,95 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.loadNews(arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL)
-        presenter.getAccountSettings()
+        App.instance.appComponent.inject(this)
+        initialization()
     }
 
-    override fun init() {
+    private fun initialization() {
+        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
+        val categoryKey = arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL
+        initViewModel(accountId, categoryKey)
+        initView()
+    }
+
+    private fun initViewModel(accountId: Int, categoryKey: String) {
+        topNewsViewModel.subscribe(accountId, categoryKey).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is TopNewsViewModel.TopNewsState.UpdateListNews -> {
+                    updateListNews(state.articleListHistory)
+                }
+                is TopNewsViewModel.TopNewsState.ClickNews -> {
+                    clickNews(state.article)
+                }
+                is TopNewsViewModel.TopNewsState.SetNews -> {
+                    setNews(state.articles)
+                }
+                is TopNewsViewModel.TopNewsState.SetCountry -> {
+                    setCountry(state.listCountry, state.index)
+                }
+                TopNewsViewModel.TopNewsState.EmptyList -> {
+                    emptyList()
+                }
+                TopNewsViewModel.TopNewsState.ErrorCountry -> {
+                    errorCountry()
+                }
+                TopNewsViewModel.TopNewsState.FadeRecyclerShowCountry -> {
+                    fadeRecyclerShowCountry()
+                }
+                TopNewsViewModel.TopNewsState.HideCancelButton -> {
+                    hideCancelButton()
+                }
+                TopNewsViewModel.TopNewsState.HideCountryList -> {
+                    hideCountryList()
+                }
+                TopNewsViewModel.TopNewsState.HideFavoritesImageView -> {
+                    hideFavoritesImageView()
+                }
+                TopNewsViewModel.TopNewsState.NavigationBarRemoveBadgeFavorites -> {
+                    navigationBarRemoveBadgeFavorites()
+                }
+                TopNewsViewModel.TopNewsState.NavigationBarAddBadgeFavorites -> {
+                    navigationBarAddBadgeFavorites()
+                }
+                TopNewsViewModel.TopNewsState.SetAlfaCancel -> {
+                    setAlfaCancel()
+                }
+                TopNewsViewModel.TopNewsState.SetImageFilterButtonCancel -> {
+                    setImageFilterButtonCancel()
+                }
+                TopNewsViewModel.TopNewsState.FavoritesIvSetLike -> {
+                    favoritesIvSetLike()
+                }
+                TopNewsViewModel.TopNewsState.FavoritesIvSetDislike -> {
+                    favoritesIvSetDislike()
+                }
+                TopNewsViewModel.TopNewsState.BottomSheetExpanded -> {
+                    bottomSheetExpanded()
+                }
+                TopNewsViewModel.TopNewsState.ShowFilterCountry -> {
+                    showFilterCountry()
+                }
+                TopNewsViewModel.TopNewsState.HideFilterCountry -> {
+                    hideFilterCountry()
+                }
+                TopNewsViewModel.TopNewsState.UpdateViewPagerEvent -> {
+                    updateViewPagerEvent()
+                }
+                TopNewsViewModel.TopNewsState.ErrorLoadNews -> {
+                    errorLoadNews()
+                }
+            }
+        }
+    }
+
+    private fun errorLoadNews() {
+        binding.progressBarTopNews.hide()
+        binding.recyclerNews.show()
+        binding.statusTextList.show()
+        binding.statusTextList.text = getString(R.string.error_load_news)
+    }
+
+    private fun initView() {
         binding.recyclerNews.adapter = newsAdapter
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
 
@@ -87,32 +175,31 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
 
         binding.filterButton.setOnClickListener {
-            presenter.filterButtonClick(binding.countryAutoComplete.text.toString())
+            topNewsViewModel.filterButtonClick(binding.countryAutoComplete.text.toString())
         }
 
         binding.cancelFilter.setOnClickListener {
-            presenter.cancelButtonClick()
+            topNewsViewModel.cancelFilter()
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun setSources(articles: List<Article>) {
+    private fun setNews(articles: List<Article>) {
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = articles
-        presenter.getCountry()
+        topNewsViewModel.getCountry()
     }
 
-    override fun changeNews(articleListHistory: MutableList<Article>) {
+    private fun updateListNews(articleListHistory: MutableList<Article>) {
         newsAdapter.articles = articleListHistory
     }
 
-    override fun sheetExpanded() {
+    private fun bottomSheetExpanded() {
         bSheetB.expanded()
     }
 
-    override fun clickNews(article: Article) {
+    private fun clickNews(article: Article) {
         with(binding.behaviorInclude) {
             imageViewAll.loadGlideNot(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
@@ -123,11 +210,11 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
-            presenter.openScreenWebView(article.url)
+            topNewsViewModel.openScreenWebView(article.url)
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
-            presenter.setOnClickImageFavorites(article)
+            topNewsViewModel.setOnClickImageFavorites(article)
         }
     }
 
@@ -144,61 +231,58 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
     }
 
-    override fun setLikeResourcesActive() {
+    private fun favoritesIvSetLike() {
         binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
     }
 
-    override fun setLikeResourcesNegative() {
+    private fun favoritesIvSetDislike() {
         binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
     }
 
-    override fun addBadge() {
+    private fun navigationBarAddBadgeFavorites() {
         (requireActivity() as EventAddingBadges).addBadge()
     }
 
-    override fun removeBadge() {
+    private fun navigationBarRemoveBadgeFavorites() {
         (requireActivity() as EventAddingBadges).removeBadge()
     }
 
-    override fun showFilter() {
+    private fun showFilterCountry() {
         binding.filterButton.show()
     }
 
-    override fun hideCancelButton() {
+    private fun hideCancelButton() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.cancelFilter.hide()
     }
 
-    override fun setAlfaCancel() {
+    private fun setAlfaCancel() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.recyclerNews.alpha = ALFA_FILTER_SHOW
     }
 
-    override fun hideCountryList() {
+    private fun hideCountryList() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.countryTextInput.hide()
     }
 
-    override fun setImageFilterButtonCancel() {
+    private fun setImageFilterButtonCancel() {
         binding.filterButton.setImageResource(R.drawable.filter_icon)
     }
 
-
-    override fun behaviorHide() {
+    private fun behaviorHide() {
         bSheetB.collapsed()
     }
 
-
-    override fun visibilityFilterButton() {
+    private fun visibilityFilterButton() {
         binding.filterButton.visibility = View.VISIBLE
     }
 
-
-    override fun hideFavorites() {
+    private fun hideFavoritesImageView() {
         binding.behaviorInclude.imageFavorites.hide()
     }
 
-    override fun hideFilter() {
+    private fun hideFilterCountry() {
         binding.filterButton.hide()
     }
 
@@ -206,7 +290,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             when (newState) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
-                    presenter.behaviorCollapsed()
+                    topNewsViewModel.behaviorCollapsed()
                 }
             }
         }
@@ -219,21 +303,21 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         binding.countryAutoComplete.hideKeyboard()
     }
 
-    override fun setCountry(country: List<String>, index: Int) {
+    private fun setCountry(country: List<String>, index: Int) {
         binding.countryAutoComplete.setAdapter(ArrayAdapter(requireContext(),
             android.R.layout.simple_list_item_1, country))
         binding.countryAutoComplete.setText(binding.countryAutoComplete.adapter.getItem(index)
-            .toString(), false);
+            .toString(), false)
     }
 
-    override fun emptyList() {
+    private fun emptyList() {
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
         binding.statusTextList.show()
     }
 
     override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+        return topNewsViewModel.onBackPressedRouter()
     }
 
     override fun getStateBehavior(): Int {
@@ -244,7 +328,7 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         bSheetB.collapsed()
     }
 
-    override fun fadeRecyclerShowCountry() {
+    private fun fadeRecyclerShowCountry() {
         TransitionSet().also { transition ->
             transition.duration = DURATION_FILTER_HIDE
             transition.addTransition(Fade(Fade.IN))
@@ -258,14 +342,14 @@ class TopNewsFragment : MvpAppCompatFragment(), TopNewsView, BackPressedListener
         }
     }
 
-    override fun errorCountry() {
+    private fun errorCountry() {
         binding.countryTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.countryTextInput.error = null
         }, DURATION_ERROR_INPUT)
     }
 
-    override fun updateViewPagerEvent() {
+    private fun updateViewPagerEvent() {
         requireActivity().supportFragmentManager.fragments.forEach {
             if (it is EventTopNews) {
                 (it as EventTopNews).updateViewPager()

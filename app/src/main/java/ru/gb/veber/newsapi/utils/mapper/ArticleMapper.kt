@@ -11,7 +11,7 @@ import ru.gb.veber.newsapi.utils.formatDateTime
 import ru.gb.veber.newsapi.utils.formatHour
 import ru.gb.veber.newsapi.utils.stringFromData
 import ru.gb.veber.newsapi.utils.takeDate
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
 import java.text.SimpleDateFormat
 import java.util.Date
 
