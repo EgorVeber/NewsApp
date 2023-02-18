@@ -145,7 +145,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         }
 
         binding.privacyPolicy.setOnClickListener {
-            presenter.openScreenWebView(getString(R.string.teamSite))
+            presenter.openScreenWebView(getString(R.string.team_site))
         }
 
         binding.supportLinear.setOnClickListener {
