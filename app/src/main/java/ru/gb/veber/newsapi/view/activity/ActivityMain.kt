@@ -12,11 +12,7 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.COUNTER_BACKSTACK
-import ru.gb.veber.newsapi.utils.COUNTER_BADGE
-import ru.gb.veber.newsapi.utils.DELAY_BACK_STACK
-import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
-import ru.gb.veber.newsapi.utils.showText
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
@@ -152,7 +148,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         }
 
         if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
-            Toast.makeText(this, getString(R.string.pressAgain), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.press_again), Toast.LENGTH_SHORT).show()
         } else {
             supportFragmentManager.fragments.forEach { fragment ->
                 if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
@@ -187,7 +183,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun completableInsertSources() {
-        Toast.makeText(this, getString(R.string.sourceLoaded), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.source_loaded), Toast.LENGTH_SHORT).show()
     }
 
     override fun bottomNavigationSetCurrentAccount(checkLogin: String) {
@@ -224,6 +220,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     }
 
     override fun errorSourcesDownload() {
-        binding.root.showText(getString(R.string.errorSourcesDownload))
+        binding.root.showText(getString(R.string.error_sources_download))
     }
 }

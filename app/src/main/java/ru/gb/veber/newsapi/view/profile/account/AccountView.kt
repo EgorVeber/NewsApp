@@ -12,11 +12,13 @@ interface AccountView : MvpView {
     fun setAccountInfo(account: Account, themePrefs: Int)
     fun loading()
     fun setBottomNavigationIcon()
+
     @StateStrategyType(SkipStrategy::class)
-    fun showDialog()
+    fun showDialog(title: String, message: String, positive: String, onClick: () -> Unit)
     fun clearHistory()
     fun clearFavorites()
     fun clearSources()
+
     @StateStrategyType(SkipStrategy::class)
     fun recreateTheme()
     fun toastDelete()

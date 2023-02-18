@@ -1,32 +1,40 @@
 <resources>
     <string name="app_name">NewsAPI</string>
-    <string name="TermsOfUserRegister">Click Register or LoginYou agree to the User Agreement and Commenting Rules.</string>
-    <string name="teamSite"><![CDATA[https://mservices.ria.ru/docs/get/article?project=ria.ru&lang=rus&article_id=1748006692]]></string>
-    <string name="errorInputEmail">Wrong format</string>
+    <string name="terms_of_user_register">Click Register or LoginYou agree to the User Agreement and Commenting Rules.</string>
+    <string name="team_site"><![CDATA[https://mservices.ria.ru/docs/get/article?project=ria.ru&lang=rus&article_id=1748006692]]></string>
+    <string name="error_input_email">Wrong format</string>
     <string name="select_country">Select country</string>
     <string name="back">back</string>
     <string name="category">category:</string>
     <string name="language">language:</string>
     <string name="total_history">Total History:\u0020</string>
     <string name="total_favorites">Total Favorites:\u0020</string>
-    <string name="totalSources">Total Sources:\u0020</string>
+    <string name="total_sources">Total Sources:\u0020</string>
 
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="readOn">Read on</string>
-    <string name="anonymousAuthor">Anonymous author</string>
-    <string name="sourceLoaded">Register to discover more features</string>
-    <string name="errorSourcesDownload">errorSourcesDownload</string>
-    <string name="pressAgain">Press again to exit</string>
-    <string name="notAuthorized">Not authorized</string>
-    <string name="userNone">This user does not exist</string>
-    <string name="createAccount">Account created successfully</string>
-    <string name="checkLogin">Check your login</string>
-    <string name="checkEmail">Check your email</string>
-    <string name="uniqueEmailUsername">Email and username must be unique</string>
-    <string name="invalidPassword">Invalid password</string>
+    <string name="anonymous_author">Anonymous author</string>
+    <string name="source_loaded">Register to discover more features</string>
+    <string name="error_sources_download">errorSourcesDownload</string>
+    <string name="press_again">Press again to exit</string>
+    <string name="not_authorized">Not authorized</string>
+    <string name="user_none">This user does not exist</string>
+    <string name="create_account">Account created successfully</string>
+    <string name="check_login">Check your login</string>
+    <string name="check_email">Check your email</string>
+    <string name="unique_email_username">Email and username must be unique</string>
+    <string name="invalid_password">Invalid password</string>
     <string name="deleteAccount">Delete account</string>
-    <string name="warningAccount">You will not be able to recover your account</string>
+    <string name="delete_favorites">Delete favorites</string>
+    <string name="delete_history">Delete history</string>
+    <string name="delete_sources">Delete sources</string>
+    <string name="confirm_logout">Confirm logout</string>
+    <string name="warning_account">You will not be able to recover your account</string>
+    <string name="warning_favorites">You will not be able to recover your favorites</string>
+    <string name="warning_history">You will not be able to recover your history</string>
+    <string name="warning_sources">You will not be able to recover your sources</string>
+    <string name="warning_logout">Are you sure you want to logout?</string>
     <string name="clearHistory">Clear history</string>
     <string name="clearFavorites">Clear Favorites</string>
     <string name="errorLoadingAccount">Error loading account</string>

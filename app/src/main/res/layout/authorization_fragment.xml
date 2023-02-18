@@ -115,7 +115,7 @@
         android:gravity="center"
         android:textSize="12sp"
         android:linksClickable="true"
-        android:text="@string/TermsOfUserRegister"
+        android:text="@string/terms_of_user_register"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

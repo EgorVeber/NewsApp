@@ -132,7 +132,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
     override fun notAuthorized() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.statusTextLike.show()
-        binding.statusTextLike.text = getString(R.string.notAuthorized)
+        binding.statusTextLike.text = getString(R.string.not_authorized)
     }
 
     override fun emptyList() {
