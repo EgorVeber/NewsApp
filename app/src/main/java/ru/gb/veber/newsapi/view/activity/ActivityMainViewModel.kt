@@ -15,7 +15,7 @@ import ru.gb.veber.newsapi.model.repository.room.CountryRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.utils.mapper.mapToCountry
+import ru.gb.veber.newsapi.utils.mapper.newCountryDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toSourcesDbEntity
 import javax.inject.Inject
 
@@ -67,7 +67,8 @@ class ActivityMainViewModel @Inject constructor(
     fun getAccountSettings() {
         if (sharedPreferenceAccount.getAccountID() != ACCOUNT_ID_DEFAULT) {
             mutableFlow.value = ViewMainState.OnCreateSetIconTitleAccount(
-                sharedPreferenceAccount.getAccountLogin())
+                sharedPreferenceAccount.getAccountLogin()
+            )
         }
     }
 
@@ -82,16 +83,21 @@ class ActivityMainViewModel @Inject constructor(
         newsRepoImpl.getSources(key = API_KEY_NEWS).subscribe({ source ->
             val country = sharedPreferenceAccount.getArrayCountry()
             for (i in source.sources) {
-                country.forEach {
-                    if (i.country == it.value) {
-                        i.country = it.key
+                country.forEach { countryMap ->
+                    if (i.country == countryMap.value) {
+                        i.country = countryMap.key
                     }
-                    if (i.language == it.value) {
-                        i.language = it.key
+                    if (i.language == countryMap.value) {
+                        i.language = countryMap.key
                     }
                 }
             }
-            countryRepoImpl.insertAll(country.map { mapToCountry(it.key, it.value) }).andThen(
+            countryRepoImpl.insertAll(country.map { newCountry ->
+                newCountryDbEntity(
+                    newCountry.key,
+                    newCountry.value
+                )
+            }).andThen(
                 sourcesRepoImpl.insertAll(source.sources.map { sourcesDTO ->
                     sourcesDTO.toSourcesDbEntity()
                 })
