@@ -4,6 +4,7 @@ import dagger.Component
 import ru.gb.veber.newsapi.di.moduls.*
 import ru.gb.veber.newsapi.presenter.*
 import ru.gb.veber.newsapi.view.activity.ActivityMain
+import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.search.SearchFragment
@@ -28,8 +29,8 @@ interface AppComponent {
     fun inject(topNewsPresenter: TopNewsPresenter)
     fun inject(favoritesPresenter: FavoritesPresenter)
     fun inject(favoritesViewPagerPresenter: FavoritesViewPagerPresenter)
-    fun inject(profilePresenter: ProfilePresenter)
     fun inject(searchFragment: SearchFragment)
+    fun inject(profileFragment: ProfileFragment)
     fun inject(searchNewsPresenter: SearchNewsPresenter)
     fun inject(sourcesPresenter: SourcesPresenter)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)
