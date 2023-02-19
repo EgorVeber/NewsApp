@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.sources
+package ru.gb.veber.newsapi.view.sources.recycler
 
 import androidx.recyclerview.widget.DiffUtil
 import ru.gb.veber.newsapi.model.Sources
@@ -16,7 +16,7 @@ class SourcesDiffUtil(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldItems[oldItemPosition].isLike != newItems[newItemPosition].isLike
+        return oldItems[oldItemPosition].liked != newItems[newItemPosition].liked
     }
 }
 
