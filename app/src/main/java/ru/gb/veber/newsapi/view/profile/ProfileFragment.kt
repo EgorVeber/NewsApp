@@ -1,29 +1,31 @@
 package ru.gb.veber.newsapi.view.profile
 
 import android.os.Bundle
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.presenter.ProfilePresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import javax.inject.Inject
 
-class ProfileFragment : MvpAppCompatFragment(), ProfileView {
+class ProfileFragment : Fragment() {
 
-    private val presenter: ProfilePresenter by moxyPresenter {
-        ProfilePresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val profileViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ProfileViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        App.instance.appComponent.inject(this)
         var accountId = arguments?.getInt(ACCOUNT_ID) ?: 0
 
         if (accountId != 0) {
-            presenter.openScreenProfile(accountId)
+            profileViewModel.openScreenProfile(accountId)
         } else {
-            presenter.openScreenAuthorization()
+            profileViewModel.openScreenAuthorization()
         }
     }
 
