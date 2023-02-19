@@ -46,12 +46,10 @@ abstract class ViewModelModule {
     @ViewModelKey(ProfileViewModel::class)
     internal abstract fun bindProfileViewModel(viewModel: ProfileViewModel): ViewModel
 
-
     @Binds
     @IntoMap
     @ViewModelKey(AccountViewModel::class)
     internal abstract fun bindAccountViewModel(viewModel: AccountViewModel): ViewModel
-
 
     @Binds
     @IntoMap
