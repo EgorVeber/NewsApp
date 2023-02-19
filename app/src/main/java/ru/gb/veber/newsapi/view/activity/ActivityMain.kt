@@ -2,17 +2,20 @@ package ru.gb.veber.newsapi.view.activity
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import io.reactivex.rxjava3.core.Completable
 import moxy.MvpAppCompatActivity
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.COUNTER_BACKSTACK
+import ru.gb.veber.newsapi.utils.COUNTER_BADGE
+import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.utils.DELAY_BACK_STACK
+import ru.gb.veber.newsapi.utils.showText
 import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
@@ -38,13 +41,12 @@ interface EventAddingBadges {
     fun removeBadge()
 }
 
-class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAccountScreen,
+class ActivityMain : MvpAppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
     EventAddingBadges {
 
     private lateinit var binding: ActivityMainBinding
     private var backStack = COUNTER_BACKSTACK
     private var counterBadge = COUNTER_BADGE
-
 
     @Inject
     lateinit var sharedPreferenceAccount: SharedPreferenceAccount
@@ -53,10 +55,11 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     lateinit var navigatorHolder: NavigatorHolder
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
 
-    private val presenter: ActivityPresenter by moxyPresenter {
-        ActivityPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val activityMainViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ActivityMainViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,11 +70,34 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter.getAccountSettings()
-        presenter.getCheckFirstStartApp()
+        activityMainViewModel.getAccountSettings()
+        activityMainViewModel.getCheckFirstStartApp()
 
         if (savedInstanceState != null) {
-            presenter.openScreenProfile()
+            activityMainViewModel.openScreenProfile()
+        }
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        activityMainViewModel.subscribe().observe(this) { state ->
+            when (state) {
+                ActivityMainViewModel.ViewMainState.Init -> {
+                    init()
+                }
+                ActivityMainViewModel.ViewMainState.CompletableInsertSources -> {
+                    completableInsertSources()
+                }
+                ActivityMainViewModel.ViewMainState.ErrorSourcesDownload -> {
+                    errorSourcesDownload()
+                }
+                ActivityMainViewModel.ViewMainState.HideAllBehavior -> {
+                    hideAllBehavior()
+                }
+                is ActivityMainViewModel.ViewMainState.OnCreateSetIconTitleAccount -> {
+                    onCreateSetIconTitleAccount(ACCOUNT_LOGIN_DEFAULT)
+                }
+            }
         }
     }
 
@@ -87,7 +113,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         navigatorHolder.removeNavigator()
     }
 
-    override fun hideAllBehavior() {
+    private fun hideAllBehavior() {
         supportFragmentManager.fragments.forEach { fm ->
             if (fm is EventBehaviorToActivity) {
                 (fm as EventBehaviorToActivity).setStateBehavior()
@@ -95,20 +121,20 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         }
     }
 
-    override fun init() {
+    private fun init() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.topNews -> {
-                    presenter.openScreenNews()
+                    activityMainViewModel.openScreenNews()
                 }
                 R.id.searchNews -> {
-                    presenter.openScreenSearchNews()
+                    activityMainViewModel.openScreenSearchNews()
                 }
                 R.id.actionSources -> {
-                    presenter.openScreenSources()
+                    activityMainViewModel.openScreenSources()
                 }
                 R.id.favoritesNews -> {
-                    presenter.openFavoritesScreen()
+                    activityMainViewModel.openFavoritesScreen()
                     val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
                     if (badgeDrawable != null) {
                         badgeDrawable.number = 0
@@ -117,7 +143,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
                     }
                 }
                 R.id.actionProfile -> {
-                    presenter.openScreenProfile()
+                    activityMainViewModel.openScreenProfile()
                 }
             }
             true
@@ -176,13 +202,13 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_add_alt_1_24)
     }
 
-    override fun onCreateSetIconTitleAccount(accountLogin: String) {
+    private fun onCreateSetIconTitleAccount(accountLogin: String) {
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = accountLogin
         item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_24)
     }
 
-    override fun completableInsertSources() {
+    private fun completableInsertSources() {
         Toast.makeText(this, getString(R.string.source_loaded), Toast.LENGTH_SHORT).show()
     }
 
@@ -219,7 +245,7 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         }
     }
 
-    override fun errorSourcesDownload() {
+    private fun errorSourcesDownload() {
         binding.root.showText(getString(R.string.error_sources_download))
     }
 }

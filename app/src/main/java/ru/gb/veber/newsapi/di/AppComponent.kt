@@ -20,7 +20,6 @@ import javax.inject.Singleton
 )
 interface AppComponent {
     fun inject(mainActivity: ActivityMain)
-    fun inject(mainPresenter: ActivityPresenter)
     fun inject(account: AccountPresenter)
     fun inject(authorizationPresenter: AuthorizationPresenter)
     fun inject(topNewsPresenter: TopNewsPresenter)
