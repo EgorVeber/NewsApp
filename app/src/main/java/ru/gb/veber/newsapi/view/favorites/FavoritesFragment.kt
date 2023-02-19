@@ -9,84 +9,56 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
 import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
+import javax.inject.Inject
 
-class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedListener,
+class FavoritesFragment : Fragment(), BackPressedListener,
     EventBehaviorToActivity {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val favoritesViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[FavoritesViewModel::class.java]
+    }
 
     private var _binding: FavotitesFragmentBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private val presenter: FavoritesPresenter by moxyPresenter {
-        FavoritesPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
-    }
-
-    override fun clickNews(article: Article) {
-        bSheetB.expanded()
-        with(binding.behaviorInclude) {
-            imageViewAll.loadGlideNot(article.urlToImage)
-            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
-            titleNews.text = article.title
-            authorText.text = article.author
-            sourceText.text = article.source.name
-            setSpanDescription(article)
-        }
-
-        binding.behaviorInclude.descriptionNews.setOnClickListener {
-            presenter.openScreenWebView(article.url)
-        }
-    }
-
-    private fun setSpanDescription(article: Article) {
-        SpannableStringBuilder(article.description).also { span ->
-            span.setSpan(
-                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
-                span.length - 1,
-                span.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE
-            )
-            binding.behaviorInclude.descriptionNews.text = span
-            span.removeSpan(span)
-        }
-    }
-
     private var itemListener = object : RecyclerListener {
 
         override fun clickNews(article: Article) {
-            presenter.clickNews(article)
+            favoritesViewModel.clickNews(article)
         }
 
         override fun deleteFavorites(article: Article) {
-            presenter.deleteFavorites(article)
+            favoritesViewModel.deleteFavorites(article)
         }
 
         override fun deleteHistory(article: Article) {
-            presenter.deleteHistory(article)
+            favoritesViewModel.deleteHistory(article)
         }
 
         override fun clickGroupHistory(article: Article) {
-            presenter.clickGroupHistory(article)
+            favoritesViewModel.clickGroupHistory(article)
         }
 
         override fun deleteGroupHistory(article: Article) {
-            presenter.deleteGroupHistory(article)
+            favoritesViewModel.deleteGroupHistory(article)
         }
     }
 
@@ -103,12 +75,86 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.getAccountArticle(
+        App.instance.appComponent.inject(this)
+        init()
+        observeLiveData()
+        favoritesViewModel.getAccountArticle(
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-            arguments?.getString(PAGE) ?: PAGE)
+            arguments?.getString(PAGE) ?: PAGE
+        )
     }
 
-    override fun init() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+        return favoritesViewModel.onBackPressedRouter()
+    }
+
+    override fun getStateBehavior(): Int {
+        return bSheetB.state
+    }
+
+    override fun setStateBehavior() {
+        bSheetB.collapsed()
+    }
+
+    private fun clickNews(article: Article) {
+        bSheetB.expanded()
+        with(binding.behaviorInclude) {
+            imageViewAll.loadGlideNot(article.urlToImage)
+            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
+            titleNews.text = article.title
+            authorText.text = article.author
+            sourceText.text = article.source.name
+            setSpanDescription(article)
+        }
+
+        binding.behaviorInclude.descriptionNews.setOnClickListener {
+            favoritesViewModel.openScreenWebView(article.url)
+        }
+    }
+
+    private fun setSpanDescription(article: Article) {
+        SpannableStringBuilder(article.description).also { span ->
+            span.setSpan(
+                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+                span.length - 1,
+                span.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            binding.behaviorInclude.descriptionNews.text = span
+            span.removeSpan(span)
+        }
+    }
+
+    private fun observeLiveData() {
+        favoritesViewModel.uiState.observe(viewLifecycleOwner, ::handleState)
+    }
+
+    private fun handleState(state: FavoritesViewModel.FavoritesState) {
+        when (state) {
+            is FavoritesViewModel.FavoritesState.ClickNews -> {
+                clickNews(state.article)
+            }
+            is FavoritesViewModel.FavoritesState.SetSources -> {
+                setSources(state.articles)
+            }
+            FavoritesViewModel.FavoritesState.Loading -> {
+                loading()
+            }
+            FavoritesViewModel.FavoritesState.EmptyList -> {
+                emptyList()
+            }
+            FavoritesViewModel.FavoritesState.NotAuthorized -> {
+                notAuthorized()
+            }
+        }
+    }
+
+    private fun init() {
         binding.likeRecycler.adapter = historyAdapter
         binding.likeRecycler.itemAnimator = null
         binding.likeRecycler.layoutManager = LinearLayoutManager(requireContext())
@@ -116,7 +162,7 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
         binding.behaviorInclude.imageFavorites.hide()
     }
 
-    override fun setSources(list: List<Article>) {
+    private fun setSources(list: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
         if (list.isEmpty()) {
             emptyList()
@@ -125,29 +171,19 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
         binding.likeRecycler.show()
     }
 
-    override fun loading() {
+    private fun loading() {
         binding.statusTextLike.hide()
     }
 
-    override fun notAuthorized() {
+    private fun notAuthorized() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.statusTextLike.show()
         binding.statusTextLike.text = getString(R.string.not_authorized)
     }
 
-    override fun emptyList() {
+    private fun emptyList() {
         binding.statusTextLike.show()
         binding.statusTextLike.text = getString(R.string.empty_list)
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
     }
 
     companion object {
@@ -157,13 +193,5 @@ class FavoritesFragment : MvpAppCompatFragment(), FavoritesView, BackPressedList
                 putString(PAGE, page)
             }
         }
-    }
-
-    override fun getStateBehavior(): Int {
-        return bSheetB.state
-    }
-
-    override fun setStateBehavior() {
-        bSheetB.collapsed()
     }
 }
