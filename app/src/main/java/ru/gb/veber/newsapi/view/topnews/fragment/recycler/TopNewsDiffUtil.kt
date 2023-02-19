@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.topnews.pageritem
+package ru.gb.veber.newsapi.view.topnews.fragment.recycler
 
 import androidx.recyclerview.widget.DiffUtil
 import ru.gb.veber.newsapi.model.Article

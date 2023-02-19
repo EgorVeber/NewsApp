@@ -18,7 +18,7 @@ import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toNewListArticleGroupByDate
 import ru.gb.veber.newsapi.utils.stringFromData
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
 import javax.inject.Inject
 
 class FavoritesViewModel @Inject constructor(

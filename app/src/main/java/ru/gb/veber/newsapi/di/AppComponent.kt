@@ -10,7 +10,6 @@ import ru.gb.veber.newsapi.di.moduls.RepoNetworkModule
 import ru.gb.veber.newsapi.di.moduls.DataBaseModule
 import ru.gb.veber.newsapi.di.moduls.ViewModelModule
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
-import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.presenter.WebViewPresenter
@@ -20,6 +19,7 @@ import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
+import ru.gb.veber.newsapi.view.topnews.fragment.TopNewsFragment
 import ru.gb.veber.newsapi.view.search.SearchFragment
 import ru.gb.veber.newsapi.view.sources.FragmentSources
 import javax.inject.Singleton
@@ -39,10 +39,10 @@ interface AppComponent {
     fun inject(mainActivity: ActivityMain)
     fun inject(accountFragment: AccountFragment)
     fun inject(authorizationPresenter: AuthorizationPresenter)
-    fun inject(topNewsPresenter: TopNewsPresenter)
     fun inject(searchFragment: SearchFragment)
     fun inject(favoritesFragment: FavoritesFragment)
     fun inject(profileFragment: ProfileFragment)
+    fun inject(topNewsFragment: TopNewsFragment)
     fun inject(searchNewsPresenter: SearchNewsPresenter)
     fun inject(fragmentSources: FragmentSources)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)

@@ -19,10 +19,10 @@ import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.pageritem.RecyclerListener
-import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsAdapter
 import javax.inject.Inject
+import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
 
 class FavoritesFragment : Fragment(), BackPressedListener,
     EventBehaviorToActivity {
@@ -39,7 +39,7 @@ class FavoritesFragment : Fragment(), BackPressedListener,
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private var itemListener = object : RecyclerListener {
+    private var itemListener = object : TopNewsListener {
 
         override fun clickNews(article: Article) {
             favoritesViewModel.clickNews(article)

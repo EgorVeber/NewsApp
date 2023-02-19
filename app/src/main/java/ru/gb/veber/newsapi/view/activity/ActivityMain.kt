@@ -20,7 +20,7 @@ import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
-import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
+import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

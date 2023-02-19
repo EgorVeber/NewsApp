@@ -15,6 +15,8 @@ import ru.gb.veber.newsapi.view.profile.account.AccountViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
 import ru.gb.veber.newsapi.view.search.SearchViewModel
 import ru.gb.veber.newsapi.view.sources.SourcesViewModel
+import ru.gb.veber.newsapi.view.topnews.fragment.TopNewsViewModel
+
 
 @Module
 abstract class ViewModelModule {
@@ -62,5 +64,9 @@ abstract class ViewModelModule {
     @ViewModelKey(FavoritesViewPagerViewModel::class)
     internal abstract fun bindFavoritesViewPagerViewModel(viewModel: FavoritesViewPagerViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(TopNewsViewModel::class)
+    internal abstract fun bindTopNewsViewModel(viewModel: TopNewsViewModel): ViewModel
 }
 

@@ -110,4 +110,6 @@
     <string name="textDelete">Dark theme style missing</string>
     <string name="searchNewsKey">Search News KeyWord</string>
     <string name="notAvailable">Not yet available</string>
+    <string name="error_load_news">Data loading error</string>
+    <string name="error_load_default">Something went wrong, please try again later.</string>
 </resources>
