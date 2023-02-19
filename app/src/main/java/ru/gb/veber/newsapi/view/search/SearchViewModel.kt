@@ -157,7 +157,8 @@ class SearchViewModel @Inject constructor(
     ) {
         if (sourcesName.isEmpty()) {
             val x = HistorySelect(
-                id = 0, accountID = accountId,
+                id = 0,
+                accountID = accountId,
                 keyWord = keyWord,
                 searchIn = searchIn,
                 sortByKeyWord = sortBy
@@ -176,7 +177,8 @@ class SearchViewModel @Inject constructor(
                 val sourcesId = allSources.find { it.name == sourcesName }?.idSources
 
                 val x = HistorySelect(
-                    0, accountID = accountId,
+                    id = 0,
+                    accountID = accountId,
                     keyWord = keyWord,
                     searchIn = searchIn,
                     sortByKeyWord = sortBy,
@@ -195,8 +197,8 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun pikerPositive(l: Long) {
-        mutableFlow.value = SearchState.PikerPositive(l)
+    fun pikerPositive(timeMillis: Long) {
+        mutableFlow.value = SearchState.PikerPositive(timeMillis)
     }
 
     fun pikerNegative() {

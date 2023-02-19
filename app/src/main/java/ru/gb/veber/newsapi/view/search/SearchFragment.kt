@@ -191,8 +191,8 @@ class SearchFragment : Fragment(), BackPressedListener {
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .build().also {
                 it.show(requireActivity().supportFragmentManager, TAG_DATE_PIKER)
-                it.addOnPositiveButtonClickListener {
-                    searchViewModel.pikerPositive(it)
+                it.addOnPositiveButtonClickListener { timeMillis ->
+                    searchViewModel.pikerPositive(timeMillis)
                 }
                 it.addOnNegativeButtonClickListener {
                     searchViewModel.pikerNegative()
