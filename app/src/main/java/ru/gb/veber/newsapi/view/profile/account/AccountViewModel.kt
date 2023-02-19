@@ -60,7 +60,7 @@ class AccountViewModel @Inject constructor(
         if (accountID != ACCOUNT_ID_DEFAULT) {
             accountRepo.deleteAccount(accountID).subscribe({
                 logout()
-                _uiState.postValue(AccountViewState.SetBottomNavigationIcon)
+                _uiState.value = AccountViewState.SetBottomNavigationIcon
             }, { throwable ->
                 Log.d(ERROR_DB, throwable.localizedMessage)
             })
@@ -68,7 +68,7 @@ class AccountViewModel @Inject constructor(
     }
 
     fun getAccountSettings(accountID: Int?) {
-        _uiState.postValue(AccountViewState.Loading)
+        _uiState.value = AccountViewState.Loading
         accountID?.let { acc ->
             accountId = accountID
             Single.zip(
@@ -90,12 +90,11 @@ class AccountViewModel @Inject constructor(
                 account.totalSources = listSources.size.toString()
                 account
             }.subscribeDefault().subscribe({ account ->
-                _uiState.postValue(
+                _uiState.value =
                     AccountViewState.SetAccountInfo(
                         account,
                         sharedPreferenceAccount.getThemePrefs()
                     )
-                )
             }, { throwable ->
                 Log.d(ERROR_DB, throwable.localizedMessage)
             })
@@ -103,23 +102,22 @@ class AccountViewModel @Inject constructor(
     }
 
     fun setStateSetBottomNavigationIcon() {
-        _uiState.postValue(AccountViewState.SetBottomNavigationIcon)
+        _uiState.value = AccountViewState.SetBottomNavigationIcon
     }
 
     fun setStateShowDialog(title: String, message: String, positive: String, onClick: () -> Unit) {
-        _uiState.postValue(
+        _uiState.value =
             AccountViewState.AccountDialog(
                 title = title,
                 message = message,
                 positive = positive,
                 onClick = onClick
             )
-        )
     }
 
     fun clearHistory(accountId: Int) {
         articleRepoImpl.deleteArticleIsHistoryById(accountId).subscribe({
-            _uiState.postValue(AccountViewState.ClearHistory)
+            _uiState.value = AccountViewState.ClearHistory
         }, { throwable ->
             Log.d(ERROR_DB, throwable.localizedMessage)
         })
@@ -127,7 +125,7 @@ class AccountViewModel @Inject constructor(
 
     fun clearFavorites(accountId: Int) {
         articleRepoImpl.deleteArticleIsFavoriteById(accountId).subscribe({
-            _uiState.postValue(AccountViewState.ClearFavorites)
+            _uiState.value = AccountViewState.ClearFavorites
         }, { throwable ->
             Log.d(ERROR_DB, throwable.localizedMessage)
         })
@@ -135,7 +133,7 @@ class AccountViewModel @Inject constructor(
 
     fun clearSources(accountId: Int) {
         accountSourcesRepoImpl.deleteSources(accountId).subscribe({
-            _uiState.postValue(AccountViewState.ClearSources)
+            _uiState.value = AccountViewState.ClearSources
         }, {
         })
     }
@@ -167,9 +165,9 @@ class AccountViewModel @Inject constructor(
     }
 
     fun setTheme(b: Boolean) {
-        _uiState.postValue(AccountViewState.ToastDelete)
+        _uiState.value = AccountViewState.ToastDelete
         sharedPreferenceAccount.setTheme(if (b) KEY_THEME_DARK else KEY_THEME_DEFAULT)
-        _uiState.postValue(AccountViewState.RecreateTheme)
+        _uiState.value = AccountViewState.RecreateTheme
     }
 
     fun openScreenWebView(string: String) {
