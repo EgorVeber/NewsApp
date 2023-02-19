@@ -1,37 +1,36 @@
-package ru.gb.veber.newsapi.presenter
+package ru.gb.veber.newsapi.view.favorites
+
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.github.terrakok.cicerone.Router
-import moxy.MvpPresenter
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.ERROR_DB
+import ru.gb.veber.newsapi.utils.formatDateTime
 import ru.gb.veber.newsapi.utils.mapper.HIDE_HISTORY
 import ru.gb.veber.newsapi.utils.mapper.SHOW_HISTORY
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toNewListArticleGroupByDate
-import ru.gb.veber.newsapi.view.favorites.FavoritesView
-import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
-import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
+import ru.gb.veber.newsapi.utils.stringFromData
+import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
 import javax.inject.Inject
 
-class FavoritesPresenter :
-    MvpPresenter<FavoritesView>() {
+class FavoritesViewModel @Inject constructor(
+    private val router: Router,
+    private val articleRepoImpl: ArticleRepo,
+) : ViewModel() {
 
-    @Inject
-    lateinit var router: Router
-
-    @Inject
-    lateinit var articleRepoImpl: ArticleRepo
+    private val _uiState: MutableLiveData<FavoritesState> = MutableLiveData()
+    val uiState: LiveData<FavoritesState> = _uiState
 
     private var accountIdS: Int = 0
     private var listSave: MutableList<Article> = mutableListOf()
-
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        viewState.init()
-    }
 
     fun onBackPressedRouter(): Boolean {
         router.exit()
@@ -41,61 +40,62 @@ class FavoritesPresenter :
     fun getAccountArticle(accountID: Int, page: String) {
         accountIdS = accountID
         if (accountID != ACCOUNT_ID_DEFAULT) {
-            if (page == FAVORITES) {
-                viewState.loading()
+            if (page == FavoritesViewPagerAdapter.FAVORITES) {
+                _uiState.value = FavoritesState.Loading
                 articleRepoImpl.getLikeArticleById(accountID).subscribe({ listArticleDb ->
                     if (listArticleDb.isEmpty()) {
-                        viewState.emptyList()
+                        _uiState.value = FavoritesState.EmptyList
                     } else {
-                        viewState.setSources(listArticleDb.map { articleDb ->
+                        _uiState.value = FavoritesState.SetSources(listArticleDb.map { articleDb ->
                             articleDb.toArticle()
                         }.reversed().map { article ->
-                            article.publishedAtChange = stringFromData(article.publishedAt).formatDateTime()
-                            article.viewType = VIEW_TYPE_FAVORITES_NEWS
+                            article.publishedAtChange =
+                                stringFromData(article.publishedAt).formatDateTime()
+                            article.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
                             article
                         })
                     }
-                }, {
-                    Log.d(ERROR_DB, it.localizedMessage)
+                }, { error ->
+                    error.localizedMessage?.let { Log.d(ERROR_DB, it) }
                 })
             } else {
-                viewState.loading()
+                _uiState.value = FavoritesState.Loading
                 articleRepoImpl.getHistoryArticleById(accountID).subscribe({ listArticle ->
                     if (listArticle.isEmpty()) {
-                        viewState.emptyList()
+                        _uiState.value = FavoritesState.EmptyList
                     } else {
                         listSave = listArticle.map { articleDb ->
                             articleDb.toArticle()
                         }.toNewListArticleGroupByDate()
-                        viewState.setSources(listSave)
+                        _uiState.value = FavoritesState.SetSources(listSave)
                     }
-                }, {
-                    Log.d(ERROR_DB, it.localizedMessage)
+                }, { error ->
+                    error.localizedMessage?.let { Log.d(ERROR_DB, it) }
                 })
             }
         } else {
-            viewState.notAuthorized()
+            _uiState.value = FavoritesState.NotAuthorized
         }
     }
 
-    fun clickNews(it: Article) {
-        viewState.clickNews(it)
+    fun clickNews(article: Article) {
+        _uiState.value = FavoritesState.ClickNews(article)
     }
 
     fun deleteFavorites(article: Article) {
         article.title?.let { title ->
             articleRepoImpl.deleteArticleByIdFavorites(title, accountIdS)
                 .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({ list ->
-                    viewState.setSources(list.map { articleDb ->
+                    _uiState.value = FavoritesState.SetSources(list.map { articleDb ->
                         articleDb.toArticle()
                     }.reversed()
                         .map { art ->
                             art.publishedAtChange = stringFromData(art.publishedAt).formatDateTime()
-                            art.viewType = VIEW_TYPE_FAVORITES_NEWS
+                            art.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
                             art
                         })
-                }, {
-                    Log.d(ERROR_DB, it.localizedMessage)
+                }, { error ->
+                    error.localizedMessage?.let { Log.d(ERROR_DB, it) }
                 })
         }
     }
@@ -111,9 +111,9 @@ class FavoritesPresenter :
                     listSave = list.map { articleDb ->
                         articleDb.toArticle()
                     }.toNewListArticleGroupByDate()
-                    viewState.setSources(listSave)
-                }, {
-                    Log.d(ERROR_DB, it.localizedMessage)
+                    _uiState.value = FavoritesState.SetSources(listSave)
+                }, { error ->
+                    error.localizedMessage?.let { Log.d(ERROR_DB, it) }
                 })
         }
     }
@@ -126,7 +126,7 @@ class FavoritesPresenter :
                 }
             }
             article.title = HIDE_HISTORY
-            viewState.setSources(listSave.filter { it.showHistory })
+            _uiState.value = FavoritesState.SetSources(listSave.filter { it.showHistory })
         } else {
             listSave.forEach {
                 if (it.dateAdded == article.publishedAt) {
@@ -134,7 +134,7 @@ class FavoritesPresenter :
                 }
             }
             article.title = SHOW_HISTORY
-            viewState.setSources(listSave.filter { it.showHistory })
+            _uiState.value = FavoritesState.SetSources(listSave.filter { it.showHistory })
         }
     }
 
@@ -145,12 +145,20 @@ class FavoritesPresenter :
                 listSave = list.map { articleDb ->
                     articleDb.toArticle()
                 }.toNewListArticleGroupByDate()
-                viewState.setSources(listSave)
-            }, {
-                Log.d(ERROR_DB, it.localizedMessage)
+                _uiState.value = FavoritesState.SetSources(listSave)
+            }, { error ->
+                error.localizedMessage?.let { Log.d(ERROR_DB, it) }
             })
-        }, {
-            Log.d(ERROR_DB, it.localizedMessage)
+        }, { error ->
+            error.localizedMessage?.let { Log.d(ERROR_DB, it) }
         })
+    }
+
+    sealed class FavoritesState {
+        object EmptyList : FavoritesState()
+        object Loading : FavoritesState()
+        object NotAuthorized : FavoritesState()
+        data class ClickNews(val article: Article) : FavoritesState()
+        data class SetSources(val articles: List<Article>) : FavoritesState()
     }
 }
