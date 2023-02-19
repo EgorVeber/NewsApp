@@ -26,6 +26,7 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SourcesViewModel::class)
     internal abstract fun bindSourcesViewModel(viewModel: SourcesViewModel): ViewModel
+
     @Binds
     @IntoMap
     @ViewModelKey(AccountViewModel::class)

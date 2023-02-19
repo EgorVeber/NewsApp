@@ -57,7 +57,7 @@ class SourcesViewModel @Inject constructor(
             ) { all, like, article ->
                 allSources = all
                 like.map { sources ->
-                    sources.isLike = true
+                    sources.liked = true
                 }
                 likeSources = like
 
@@ -65,7 +65,7 @@ class SourcesViewModel @Inject constructor(
                     for (i in all.indices) {
                         if (like[j].idSources == all[i].idSources) {
                             all.removeAt(i)
-                            all.add(0, like[j].also { sources -> sources.isLike = true })
+                            all.add(0, like[j].also { sources -> sources.liked = true })
                         }
                     }
                 }
@@ -93,8 +93,8 @@ class SourcesViewModel @Inject constructor(
 
     fun imageClick(source: Sources) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
-            if (source.isLike) {
-                source.isLike = false
+            if (source.liked) {
+                source.liked = false
                 accountSourcesRepoImpl.deleteSourcesLike(accountId = accountId,
                     sourcesId = source.id).subscribe({
                     getSources(accountId)
@@ -102,7 +102,7 @@ class SourcesViewModel @Inject constructor(
                     Log.d(ERROR_DB, error.localizedMessage)
                 })
             } else {
-                source.isLike = true
+                source.liked = true
                 accountSourcesRepoImpl.insert(accountSourcesDbEntity = AccountSourcesDbEntity(
                     accountId, source.id)
                 ).subscribe({

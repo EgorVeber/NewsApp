@@ -12,7 +12,7 @@ class SourcesViewHolder(
 
     fun bind(item: Sources) = with(binding) {
 
-        if (item.isLike) imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+        if (item.liked) imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
         else imageFavorites.setImageResource(R.drawable.ic_favorite_36)
 
         name.text = item.name
