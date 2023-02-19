@@ -95,16 +95,20 @@ class SourcesViewModel @Inject constructor(
         if (accountId != ACCOUNT_ID_DEFAULT) {
             if (source.liked) {
                 source.liked = false
-                accountSourcesRepoImpl.deleteSourcesLike(accountId = accountId,
-                    sourcesId = source.id).subscribe({
+                accountSourcesRepoImpl.deleteSourcesLike(
+                    accountId = accountId,
+                    sourcesId = source.id
+                ).subscribe({
                     getSources(accountId)
                 }, { error ->
                     Log.d(ERROR_DB, error.localizedMessage)
                 })
             } else {
                 source.liked = true
-                accountSourcesRepoImpl.insert(accountSourcesDbEntity = AccountSourcesDbEntity(
-                    accountId, source.id)
+                accountSourcesRepoImpl.insert(
+                    accountSourcesDbEntity = AccountSourcesDbEntity(
+                        accountId, source.id
+                    )
                 ).subscribe({
                     getSources(accountId)
                 }, { error ->

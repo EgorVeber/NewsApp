@@ -29,7 +29,7 @@ class SourceDtoModelMapperTest {
         val id = "id"
         val name = "sources"
         val value = SourceDTO(id, name)
-        assertNotSame((Source(id, name)),value.toSource())
+        assertNotSame((Source(id, name)), value.toSource())
     }
 
     @Test(expected = AssertionError::class)
