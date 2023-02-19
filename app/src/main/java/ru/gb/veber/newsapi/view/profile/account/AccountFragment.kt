@@ -6,32 +6,34 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
 import ru.gb.veber.newsapi.databinding.ConfirmDialogBinding
 import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.presenter.AccountPresenter
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.showText
+import ru.gb.veber.newsapi.utils.hide
+import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
+import javax.inject.Inject
 
-class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener {
+class AccountFragment : Fragment(), BackPressedListener {
 
     private var _binding: AccountFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter: AccountPresenter by moxyPresenter {
-        AccountPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun toastDelete() {
-        binding.root.showText(getString(R.string.textDelete))
+    private val accountViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[AccountViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -45,83 +47,127 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        App.instance.appComponent.inject(this)
         arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT).apply {
-            presenter.getAccountSettings(this)
+            accountViewModel.getAccountSettings(this)
+        }
+        init()
+        observeLiveData()
+    }
+
+    private fun observeLiveData() {
+        accountViewModel.getLiveData().observe(viewLifecycleOwner, ::handleState)
+    }
+
+    private fun handleState(state: AccountViewState) {
+        when (state) {
+            is AccountViewState.SetAccountInfo -> {
+                setAccountInfo(account = state.account, themePrefs = state.theme)
+            }
+            is AccountViewState.AccountDialog -> {
+                showDialog(
+                    title = state.title,
+                    message = state.message,
+                    positive = state.positive,
+                    onClick = state.onClick
+                )
+            }
+            AccountViewState.Loading -> {
+                loading()
+            }
+            AccountViewState.SetBottomNavigationIcon -> {
+                setBottomNavigationIcon()
+            }
+            AccountViewState.ClearHistory -> {
+                clearHistory()
+            }
+            AccountViewState.ClearFavorites -> {
+                clearFavorites()
+            }
+            AccountViewState.ClearSources -> {
+                clearSources()
+            }
+            AccountViewState.ToastDelete -> {
+                toastDelete()
+            }
+            AccountViewState.RecreateTheme -> {
+                recreateTheme()
+            }
         }
     }
 
-    override fun init() {
+    fun init() {
         val accountID = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
 
         binding.editInformation.setOnClickListener {
-            presenter.openScreenEditAccount(accountID)
+            accountViewModel.openScreenEditAccount(accountID)
         }
 
         binding.deleteAccount.setOnClickListener {
-            presenter.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.deleteAccount),
                 message = getString(R.string.warning_account),
                 positive = getString(R.string.delete)
             ) {
-                presenter.deleteAccount(accountID)
+                accountViewModel.deleteAccount(accountID)
             }
         }
 
         binding.totalHistory.setOnClickListener {
-            presenter.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.delete_history),
                 message = getString(R.string.warning_history),
                 positive = getString(R.string.delete)
             ) {
-                presenter.clearHistory(accountID)
+                accountViewModel.clearHistory(accountID)
             }
         }
 
         binding.totalFavorites.setOnClickListener {
-            presenter.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.delete_favorites),
                 message = getString(R.string.warning_favorites),
                 positive = getString(R.string.delete)
             ) {
-                presenter.clearFavorites(accountID)
+                accountViewModel.clearFavorites(accountID)
             }
         }
 
         binding.totalSources.setOnClickListener {
-            presenter.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.delete_sources),
                 message = getString(R.string.warning_sources),
                 positive = getString(R.string.delete)
             ) {
-                presenter.clearSources(accountID)
+                accountViewModel.clearSources(accountID)
             }
         }
 
         binding.logout.setOnClickListener {
-            presenter.showDialog(
+            accountViewModel.setStateShowDialog(
                 title = getString(R.string.confirm_logout),
                 message = getString(R.string.warning_logout),
                 positive = getString(R.string.logout)
             ) {
-                presenter.logout()
-                presenter.setBottomNavigationIcon()
+                accountViewModel.logout()
+                accountViewModel.setStateSetBottomNavigationIcon()
             }
         }
 
         binding.saveHistorySwitch.setOnCheckedChangeListener { compoundButton, b ->
-            presenter.updateAccountSaveHistory(b)
+            accountViewModel.updateAccountSaveHistory(b)
         }
 
         binding.saveHistorySelectSwitch.setOnCheckedChangeListener { compoundButton, b ->
-            presenter.updateAccountSaveHistorySelect(b)
+            accountViewModel.updateAccountSaveHistorySelect(b)
         }
 
         binding.showFavorites.setOnCheckedChangeListener { compoundButton, b ->
-            presenter.updateAccountShowListFavorite(b)
+            accountViewModel.updateAccountShowListFavorite(b)
         }
 
         binding.switchDarkTheme.setOnClickListener {
-            presenter.setTheme(binding.switchDarkTheme.isChecked)
+            accountViewModel.setTheme(binding.switchDarkTheme.isChecked)
         }
 
         binding.fontSize.setOnClickListener {
@@ -133,7 +179,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         }
 
         binding.customizeCategory.setOnClickListener {
-            presenter.openScreenCustomizeCategory(
+            accountViewModel.openScreenCustomizeCategory(
                 arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
             )
         }
@@ -145,7 +191,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         }
 
         binding.privacyPolicy.setOnClickListener {
-            presenter.openScreenWebView(getString(R.string.team_site))
+            accountViewModel.openScreenWebView(getString(R.string.team_site))
         }
 
         binding.supportLinear.setOnClickListener {
@@ -153,12 +199,16 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         }
     }
 
-    override fun recreateTheme() {
+    private fun toastDelete() {
+        binding.root.showText(getString(R.string.textDelete))
+    }
+
+    private fun recreateTheme() {
         activity?.recreate()
     }
 
     @SuppressLint("SetTextI18n")
-    override fun setAccountInfo(account: Account, themePrefs: Int) {
+    fun setAccountInfo(account: Account, themePrefs: Int) {
 
         binding.userName.text = account.userName
         binding.userEmail.text = account.email
@@ -180,15 +230,15 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
         binding.nestedScrollAccount.show()
     }
 
-    override fun loading() {
+    fun loading() {
         binding.nestedScrollAccount.hide()
     }
 
-    override fun setBottomNavigationIcon() {
+    fun setBottomNavigationIcon() {
         (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetDefaultIcon()
     }
 
-    override fun showDialog(
+    fun showDialog(
         title: String,
         message: String,
         positive: String,
@@ -215,19 +265,19 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     }
 
     @SuppressLint("SetTextI18n")
-    override fun clearHistory() {
+    fun clearHistory() {
         binding.totalHistoryText.text = getString(R.string.total_history) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearHistory), "", {})
     }
 
     @SuppressLint("SetTextI18n")
-    override fun clearFavorites() {
+    fun clearFavorites() {
         binding.totalFavoritesText.text = getString(R.string.total_favorites) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearFavorites), "", {})
     }
 
     @SuppressLint("SetTextI18n")
-    override fun clearSources() {
+    fun clearSources() {
         binding.totalSourcesText.text = getString(R.string.total_sources) + " 0"
         binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearSources), "", {})
     }
@@ -238,7 +288,7 @@ class AccountFragment : MvpAppCompatFragment(), AccountView, BackPressedListener
     }
 
     override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+        return accountViewModel.onBackPressedRouter()
     }
 
     companion object {

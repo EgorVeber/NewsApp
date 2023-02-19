@@ -4,8 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import ru.gb.veber.newsapi.model.Source
 import ru.gb.veber.newsapi.model.network.SourceDTO
-import ru.gb.veber.newsapi.utils.mapper.sourceDtoModelMapper
-
+import ru.gb.veber.newsapi.utils.mapper.toSource
 
 class SourceDtoModelMapperTest {
 
@@ -14,7 +13,7 @@ class SourceDtoModelMapperTest {
         val id = "id"
         val name = "sources"
         val value = SourceDTO(id, name)
-        assertEquals(Source(id, name), sourceDtoModelMapper(value))
+        assertEquals(Source(id, name), value.toSource())
     }
 
     @Test
@@ -22,7 +21,7 @@ class SourceDtoModelMapperTest {
         val id = "id"
         val name = "sources"
         val value = SourceDTO(id, name)
-        assertNotEquals((Source(id, name + "notEquals")), sourceDtoModelMapper(value))
+        assertNotEquals((Source(id, name + "notEquals")), value.toSource())
     }
 
     @Test
@@ -30,7 +29,7 @@ class SourceDtoModelMapperTest {
         val id = "id"
         val name = "sources"
         val value = SourceDTO(id, name)
-        assertNotSame((Source(id, name)), sourceDtoModelMapper(value))
+        assertNotSame((Source(id, name)), value.toSource())
     }
 
     @Test(expected = AssertionError::class)
@@ -38,6 +37,6 @@ class SourceDtoModelMapperTest {
         val id = "id"
         val name = "sources"
         val value = SourceDTO(id, name)
-        assertSame((Source(id, name)), sourceDtoModelMapper(value))
+        assertSame((Source(id, name)), value.toSource())
     }
 }

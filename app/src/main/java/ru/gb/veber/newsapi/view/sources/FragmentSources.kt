@@ -1,49 +1,49 @@
 package ru.gb.veber.newsapi.view.sources
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.presenter.SourcesPresenter
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.showText
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.sources.recycler.SourcesListener
+import javax.inject.Inject
 
-class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressedListener {
+class FragmentSources : Fragment(), BackPressedListener {
 
     private var _binding: SourcesFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter: SourcesPresenter by moxyPresenter {
-        SourcesPresenter(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-        ).apply { App.instance.appComponent.inject(this) }
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    override fun setLogin() {
-       binding.root.showText(getString(R.string.loginAddToFavorites))
+    private val sourcesViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[SourcesViewModel::class.java]
     }
 
     private val listener = object : SourcesListener {
         override fun openUrl(url: String?) {
-            url?.let {
-                presenter.openWebView(url)
+            url?.let { urlString ->
+                sourcesViewModel.openWebView(urlString)
             }
         }
 
         override fun imageClick(source: Sources) {
-            presenter.imageClick(source)
+            sourcesViewModel.imageClick(source)
         }
 
         override fun newsClick(source: String?, name: String?) {
-            presenter.openAllNews(source, name)
+            sourcesViewModel.openAllNews(source, name)
         }
     }
 
@@ -60,20 +60,8 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.getSources()
+        App.instance.appComponent.inject(this)
         initialization()
-    }
-
-    private fun initialization() {
-        binding.recyclerSources.adapter = sourcesAdapter
-        binding.recyclerSources.itemAnimator = null
-        binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun setSources(list: List<Sources>) {
-        TransitionManager.beginDelayedTransition(binding.root)
-        sourcesAdapter.sources = list
     }
 
     override fun onDestroyView() {
@@ -82,11 +70,44 @@ class FragmentSources : MvpAppCompatFragment(), FragmentSourcesView, BackPressed
     }
 
     override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+        return sourcesViewModel.onBackPressedRouter()
+    }
+
+    private fun initialization() {
+        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
+        initViewModel(accountId)
+        initView()
+    }
+
+    private fun initViewModel(accountId: Int) {
+        sourcesViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is SourcesViewModel.SourcesState.SetSources -> {
+                    setSources(state.list)
+                }
+                SourcesViewModel.SourcesState.ShowToastLogIn -> {
+                    setLogin()
+                }
+            }
+        }
+    }
+
+    private fun initView() {
+        binding.recyclerSources.adapter = sourcesAdapter
+        binding.recyclerSources.itemAnimator = null
+        binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    private fun setSources(list: List<Sources>) {
+        TransitionManager.beginDelayedTransition(binding.root)
+        sourcesAdapter.sources = list
+    }
+
+    private fun setLogin() {
+        binding.root.showText(getString(R.string.loginAddToFavorites))
     }
 
     companion object {
-
         fun getInstance(accountID: Int): FragmentSources {
             return FragmentSources().apply {
                 arguments = Bundle().apply {
