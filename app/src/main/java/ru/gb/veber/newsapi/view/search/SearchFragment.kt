@@ -10,55 +10,54 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.datepicker.MaterialDatePicker
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchFragmentBinding
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.presenter.SearchPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 
-class SearchFragment : MvpAppCompatFragment(),
-    ru.gb.veber.newsapi.view.search.SearchView, BackPressedListener {
+class SearchFragment : Fragment(), BackPressedListener {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val searchViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
+    }
 
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: SourcesAdapterAutoCompile
-    private var dateInput: String = NOT_INPUT_DATE
 
+    private lateinit var adapter: SourcesAdapterAutoCompile
+
+    private var dateInput: String = NOT_INPUT_DATE
     private var datePiker = MaterialDatePicker.Builder.datePicker()
 
     private var itemListener = object : RecyclerListenerHistorySelect {
         override fun clickHistoryItem(historySelect: HistorySelect) {
-            presenter.openScreenNewsHistory(historySelect)
+            searchViewModel.openScreenNewsHistory(historySelect)
         }
 
         override fun deleteHistoryItem(historySelect: HistorySelect) {
-            presenter.deleteHistory(historySelect)
+            searchViewModel.deleteHistory(historySelect)
         }
     }
 
     private val historySelectAdapter = HistorySelectAdapter(itemListener)
-
-
-    private val presenter: SearchPresenter by moxyPresenter {
-        SearchPresenter(arguments?.getInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
-            ?: ACCOUNT_ID_DEFAULT).apply {
-            App.instance.appComponent.inject(this)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,12 +70,63 @@ class SearchFragment : MvpAppCompatFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.getSources()
-        presenter.getHistorySelect()
+        App.instance.appComponent.inject(this)
         initialization()
+        searchViewModel.getSources()
+        searchViewModel.getHistorySelect()
     }
 
-    override fun setHistory(list: List<HistorySelect>) {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+        return searchViewModel.onBackPressedRouter()
+    }
+
+    private fun initViewModel(accountId: Int) {
+        searchViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is SearchViewModel.SearchState.PikerPositive -> {
+                    pikerPositive(state.l)
+                }
+                is SearchViewModel.SearchState.SetHistory -> {
+                    setHistory(state.list)
+                }
+                is SearchViewModel.SearchState.SetSources -> {
+                    setSources(state.list)
+                }
+                SearchViewModel.SearchState.SearchInShow -> {
+                    searchInShow()
+                }
+                SearchViewModel.SearchState.EmptyHistory -> {
+                    emptyHistory()
+                }
+                SearchViewModel.SearchState.ErrorDateInput -> {
+                    errorDateInput()
+                }
+                SearchViewModel.SearchState.HideEmptyList -> {
+                    hideEmptyList()
+                }
+                SearchViewModel.SearchState.HideSelectHistory -> {
+                    hideSelectHistory()
+                }
+                SearchViewModel.SearchState.PikerNegative -> {
+                    pikerNegative()
+                }
+                SearchViewModel.SearchState.SelectSources -> {
+                    selectSources()
+                }
+                SearchViewModel.SearchState.SourcesInShow -> {
+                    sourcesInShow()
+                }
+            }
+        }
+    }
+
+
+    private fun setHistory(list: List<HistorySelect>) {
         historySelectAdapter.historySelectList = list
     }
 
@@ -94,10 +144,15 @@ class SearchFragment : MvpAppCompatFragment(),
         override fun afterTextChanged(s: Editable?) {}
     }
 
-    private fun initialization() {
-        binding.searchView.setOnQueryTextListener(searchViewListener)
 
-        with(binding.searchSpinnerCountry) {
+    private fun initialization() {
+        initViewModel(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        initView()
+    }
+
+    private fun initView() = with(binding) {
+        searchView.setOnQueryTextListener(searchViewListener)
+        with(searchSpinnerCountry) {
             threshold = 1
             onItemClickListener = listenerAdapter
             setOnClickListener {
@@ -105,32 +160,31 @@ class SearchFragment : MvpAppCompatFragment(),
             }
             addTextChangedListener(searchSpinnerCountryTextWatcher)
         }
+        recyclerHistory.adapter = historySelectAdapter
+        recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.recyclerHistory.adapter = historySelectAdapter
-        binding.recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
-
-        binding.checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
-            presenter.changeSearchCriteria(b)
+        checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
+            searchViewModel.changeSearchCriteria(b)
         }
-
-        binding.selectDate.setOnClickListener {
+        selectDate.setOnClickListener {
             createDatePiker()
         }
-
-        binding.searchSourcesButton.setOnClickListener {
-            var selectedItem = binding.spinnerSortBySources.selectedItem.toString()
-            if (binding.spinnerSortBySources.selectedItemPosition == 0) {
+        searchSourcesButton.setOnClickListener {
+            var selectedItem = spinnerSortBySources.selectedItem.toString()
+            if (spinnerSortBySources.selectedItemPosition == 0) {
                 selectedItem = ""
             }
-            presenter.openScreenAllNewsSources(dateInput,
-                binding.searchSpinnerCountry.text.toString(),
-                selectedItem)
+            searchViewModel.openScreenAllNewsSources(
+                dateInput,
+                searchSpinnerCountry.text.toString(),
+                selectedItem
+            )
         }
-
-        binding.deleteHistoryAll.setOnClickListener {
-            presenter.clearHistory()
+        deleteHistoryAll.setOnClickListener {
+            searchViewModel.clearHistory()
         }
     }
+
 
     private fun createDatePiker() {
         datePiker.setTitleText(getString(R.string.inputDateThirty))
@@ -138,25 +192,25 @@ class SearchFragment : MvpAppCompatFragment(),
             .build().also {
                 it.show(requireActivity().supportFragmentManager, TAG_DATE_PIKER)
                 it.addOnPositiveButtonClickListener {
-                    presenter.pikerPositive(it)
+                    searchViewModel.pikerPositive(it)
                 }
                 it.addOnNegativeButtonClickListener {
-                    presenter.pikerNegative()
+                    searchViewModel.pikerNegative()
 
                 }
             }
     }
 
 
-    override fun pikerPositive(l: Long) {
-        var outputDateFormat = SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).apply {
+    private fun pikerPositive(l: Long) {
+        val outputDateFormat = SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).apply {
             timeZone = TimeZone.getTimeZone(TIME_ZONE)
         }
         dateInput = outputDateFormat.format(l)
         binding.selectDate.text = dateInput
     }
 
-    override fun pikerNegative() {
+    private fun pikerNegative() {
         dateInput = NOT_INPUT_DATE
         binding.selectDate.text = getString(R.string.selectDatePiker)
     }
@@ -175,10 +229,12 @@ class SearchFragment : MvpAppCompatFragment(),
                 if (binding.spinnerSearchIn.selectedItemPosition != 0) {
                     searchIn = binding.spinnerSearchIn.selectedItem.toString()
                 }
-                presenter.openScreenAllNews(keyWord, searchIn, sortBy,
-                    binding.searchSpinnerCountry.text.toString())
+                searchViewModel.openScreenAllNews(
+                    keyWord, searchIn, sortBy,
+                    binding.searchSpinnerCountry.text.toString()
+                )
             }
-            binding.searchView.clearFocus();
+            binding.searchView.clearFocus()
             return true
         }
 
@@ -187,23 +243,16 @@ class SearchFragment : MvpAppCompatFragment(),
         }
     }
 
-    override fun setSources(sources: List<Sources>) = with(binding) {
+    private fun setSources(sources: List<Sources>) = with(binding) {
         adapter = SourcesAdapterAutoCompile(requireContext(), sources)
         searchSpinnerCountry.setAdapter(adapter)
     }
 
-    override fun hideSelectHistory() {
+    private fun hideSelectHistory() {
         binding.groupHistory.hide()
     }
 
-    override fun updateAdapter(likeSources: List<Sources>) {
-        binding.searchTextInput.editText?.setText("")
-        adapter = SourcesAdapterAutoCompile(requireContext(), likeSources)
-        binding.searchSpinnerCountry.setAdapter(adapter)
-        binding.searchSpinnerCountry.showDropDown()
-    }
-
-    override fun searchInShow() {
+    private fun searchInShow() {
         TransitionSet().also { transition ->
             transition.duration = DURATION_CHANGE_FILTER
             transition.addTransition(Fade())
@@ -214,7 +263,7 @@ class SearchFragment : MvpAppCompatFragment(),
         }
     }
 
-    override fun sourcesInShow() {
+    private fun sourcesInShow() {
         TransitionSet().also { transition ->
             transition.duration = DURATION_CHANGE_FILTER
             transition.addTransition(Fade())
@@ -225,7 +274,7 @@ class SearchFragment : MvpAppCompatFragment(),
         }
     }
 
-    override fun selectSources() {
+    private fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
             if (isAdded) {
@@ -234,7 +283,7 @@ class SearchFragment : MvpAppCompatFragment(),
         }, DURATION_ERROR_INPUT)
     }
 
-    override fun errorDateInput() {
+    private fun errorDateInput() {
         binding.errorDateText.show()
         Handler(Looper.getMainLooper()).postDelayed({
             if (isAdded) {
@@ -248,20 +297,11 @@ class SearchFragment : MvpAppCompatFragment(),
         binding.searchSourcesButton.alpha = 1F
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
-    }
-
-    override fun emptyHistory() {
+    private fun emptyHistory() {
         binding.emptyHistory.show()
     }
 
-    override fun hideEmptyList() {
+    private fun hideEmptyList() {
         binding.emptyHistory.hide()
     }
 

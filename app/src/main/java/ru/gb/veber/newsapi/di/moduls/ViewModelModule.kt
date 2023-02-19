@@ -9,6 +9,7 @@ import ru.gb.veber.newsapi.di.ViewModelFactory
 import ru.gb.veber.newsapi.di.ViewModelKey
 import ru.gb.veber.newsapi.view.profile.account.AccountViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
+import ru.gb.veber.newsapi.view.search.SearchViewModel
 
 
 @Module
@@ -27,4 +28,8 @@ abstract class ViewModelModule {
     @ViewModelKey(AccountViewModel::class)
     internal abstract fun bindAccountViewModel(viewModel: AccountViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchViewModel::class)
+    internal abstract fun bindSearchViewModel(viewModel: SearchViewModel): ViewModel
 }
