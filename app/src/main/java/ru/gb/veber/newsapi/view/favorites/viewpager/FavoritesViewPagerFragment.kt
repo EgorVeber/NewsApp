@@ -4,29 +4,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavoritesViewPagerFragmentBinding
-import ru.gb.veber.newsapi.presenter.FavoritesViewPagerPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES_POSITION
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.HISTORY_POSITION
+import javax.inject.Inject
 
-class FavoritesViewPagerFragment : MvpAppCompatFragment(), FavoritesViewPagerView,
+class FavoritesViewPagerFragment : MvpAppCompatFragment(),
     BackPressedListener {
 
     private var _binding: FavoritesViewPagerFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter: FavoritesViewPagerPresenter by moxyPresenter {
-        FavoritesViewPagerPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val favoritesViewPagerViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[FavoritesViewPagerViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -40,7 +41,9 @@ class FavoritesViewPagerFragment : MvpAppCompatFragment(), FavoritesViewPagerVie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        App.instance.appComponent.inject(this)
         initialization(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        initViewModel()
     }
 
     private fun initialization(accountID: Int) {
@@ -57,8 +60,14 @@ class FavoritesViewPagerFragment : MvpAppCompatFragment(), FavoritesViewPagerVie
         }.attach()
     }
 
-    override fun init() {
-
+    private fun initViewModel() {
+        favoritesViewPagerViewModel.subscribe().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                FavoritesViewPagerViewModel.FavoritesViewPagerState.InitView -> {
+                    favoritesViewPagerViewModel.init()
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -67,7 +76,7 @@ class FavoritesViewPagerFragment : MvpAppCompatFragment(), FavoritesViewPagerVie
     }
 
     override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+        return favoritesViewPagerViewModel.onBackPressedRouter()
     }
 
     companion object {

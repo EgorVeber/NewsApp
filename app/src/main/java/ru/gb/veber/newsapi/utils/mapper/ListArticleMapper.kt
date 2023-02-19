@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.utils.mapper
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.Source
 import ru.gb.veber.newsapi.utils.formatDate
 import ru.gb.veber.newsapi.utils.formatDateTime
 import ru.gb.veber.newsapi.utils.stringFromData
