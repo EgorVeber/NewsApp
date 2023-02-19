@@ -65,7 +65,7 @@ class SearchPresenter(
 
                 accountHistorySelect = account.saveSelectHistory
                 allSources = all
-                like.map { it.isLike = true }
+                like.map { it.liked = true }
                 likeSources = like
 
                 if (account.displayOnlySources && like.isNotEmpty()) {
@@ -79,7 +79,7 @@ class SearchPresenter(
                         for (i in all.indices) {
                             if (like[j].idSources == all[i].idSources) {
                                 all.removeAt(i)
-                                all.add(0, like[j].also { it.isLike = true })
+                                all.add(0, like[j].also { it.liked = true })
                             }
                         }
                     }

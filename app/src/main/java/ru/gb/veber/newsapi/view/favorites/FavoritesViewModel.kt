@@ -17,8 +17,14 @@ import ru.gb.veber.newsapi.utils.mapper.SHOW_HISTORY
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toNewListArticleGroupByDate
 import ru.gb.veber.newsapi.utils.stringFromData
+<<<<<<< HEAD:app/src/main/java/ru/gb/veber/newsapi/view/favorites/FavoritesViewModel.kt
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
+=======
+import ru.gb.veber.newsapi.view.favorites.FavoritesView
+import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
+import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
+>>>>>>> sprint4:app/src/main/java/ru/gb/veber/newsapi/presenter/FavoritesPresenter.kt
 import javax.inject.Inject
 
 class FavoritesViewModel @Inject constructor(
