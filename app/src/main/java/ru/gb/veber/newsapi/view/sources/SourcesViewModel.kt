@@ -31,8 +31,8 @@ class SourcesViewModel @Inject constructor(
     private val mutableFlow: MutableLiveData<SourcesState> = MutableLiveData()
     private val flow: LiveData<SourcesState> = mutableFlow
 
-    private lateinit var allSources: MutableList<Sources>
-    private lateinit var likeSources: List<Sources>
+    private var allSources: MutableList<Sources> = mutableListOf()
+    private var likeSources: List<Sources> = mutableListOf()
     private var accountId: Int = 0
 
     fun subscribe(accountId: Int): LiveData<SourcesState> {
