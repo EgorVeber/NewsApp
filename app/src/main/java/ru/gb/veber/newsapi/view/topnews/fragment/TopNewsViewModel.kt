@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import retrofit2.HttpException
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Article
@@ -25,14 +24,14 @@ import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.ERROR_LOAD_NEWS
 import ru.gb.veber.newsapi.utils.disposableBy
 import ru.gb.veber.newsapi.utils.formatDateTime
-import ru.gb.veber.newsapi.utils.mapper.mapToArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticle
+import ru.gb.veber.newsapi.utils.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticleUI
 import ru.gb.veber.newsapi.utils.mapper.toCountry
 import ru.gb.veber.newsapi.utils.subscribeDefault
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 class TopNewsViewModel @Inject constructor(
@@ -70,80 +69,95 @@ class TopNewsViewModel @Inject constructor(
         return flow
     }
 
-    private fun getAccountSettings() {
-        if (accountId != ACCOUNT_ID_DEFAULT) {
-            accountRepoImpl.getAccountById(accountId).subscribe({ accountDb ->
-                account = accountDb
-                saveHistory = accountDb.saveHistory
-            }, { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
-            }).disposableBy(bag)
-        } else {
-            mutableFlow.value = TopNewsState.HideFavoritesImageView
-        }
-    }
-
-    private fun loadNews(category: String) {
-        val countryCode = sharedPreferenceAccount.getAccountCountryCode()
-        Single.zip(
-            newsRepoImpl.getTopicalHeadlinesCategoryCountry(
-                category = category,
-                country = countryCode,
-                key = API_KEY_NEWS),
-            articleRepoImpl.getArticleById(accountId)) { news, articles ->
-            val newsModified = news.articles.map { articleDto ->
-                articleDto.toArticle()
-            }.also { list ->
-                list.map { article ->
-                    article.toArticleUI()
-                }
-            }
-            articles.forEach { art ->
-                newsModified.forEach { new ->
-                    if (art.title == new.title) {
-                        if (art.isFavorites) {
-                            new.isFavorites = true
-                        }
-                        if (art.isHistory) {
-                            new.isHistory = true
-                        }
-                    }
-                }
-            }
-            newsModified.also { listArticle ->
-                listArticle[0].viewType = BaseViewHolder.VIEW_TYPE_TOP_NEWS_HEADER
-            }
-            newsModified
-        }.subscribeDefault().subscribe({ listArticle ->
-            if (listArticle.isEmpty()) {
-                mutableFlow.value = TopNewsState.EmptyList
-            } else {
-                articleListHistory = listArticle.toMutableList()
-                mutableFlow.value = TopNewsState.SetNews(listArticle)
-            }
-        }, { error ->
-            if (error is HttpException){
-                mutableFlow.value = TopNewsState.ErrorLoadNews
-            }
-
-            Log.d(ERROR_LOAD_NEWS, error.localizedMessage)
-            Log.d(ERROR_LOAD_NEWS, error.message.toString())
-            Log.d(ERROR_LOAD_NEWS, error.javaClass.name)
-            Log.d(ERROR_LOAD_NEWS, error.javaClass.canonicalName)
-        }).disposableBy(bag)
-    }
-
     fun clickNews(article: Article) {
         if (!filterFlag) {
             if (accountId != ACCOUNT_ID_DEFAULT) {
                 saveArticle(article)
             }
-            mutableFlow.value = TopNewsState.ClickNews(article)
-            if (article.isFavorites) mutableFlow.value = TopNewsState.FavoritesIvSetLike
-            else mutableFlow.value = TopNewsState.FavoritesIvSetDislike
-            mutableFlow.value = TopNewsState.HideFilterCountry
+            mutableFlow.value = TopNewsState.ClickNews(article = article)
+            if (article.isFavorites) mutableFlow.value = TopNewsState.FavoritesImageViewSetLike
+            else mutableFlow.value = TopNewsState.FavoritesImageViewSetDislike
+            mutableFlow.value = TopNewsState.HideFilterButton
             mutableFlow.value = TopNewsState.BottomSheetExpanded
         }
+    }
+
+    fun clickImageFavorites(article: Article) {
+        if (article.isFavorites) {
+            mutableFlow.value = TopNewsState.FavoritesImageViewSetDislike
+            mutableFlow.value = TopNewsState.EventNavigationBarRemoveBadgeFavorites
+            deleteFavorites(article)
+            article.isFavorites = false
+        } else {
+            mutableFlow.value = TopNewsState.EventNavigationBarAddBadgeFavorites
+            mutableFlow.value = TopNewsState.FavoritesImageViewSetLike
+            saveArticleLike(article)
+            article.isFavorites = true
+        }
+    }
+
+    fun openScreenWebView(url: String) {
+        router.navigateTo(WebViewScreen(url))
+    }
+
+    fun onBackPressedRouter(): Boolean {
+        router.exit()
+        return true
+    }
+
+    fun filterButtonClick(country: String) {
+        if (!filterFlag) {
+            mutableFlow.value = TopNewsState.ShowFilterHideRecycler
+            filterFlag = !filterFlag
+        } else {
+            if (country.isEmpty() || !listCountry.map { itemCountry -> itemCountry.id }
+                    .contains(country)) {
+                mutableFlow.value = TopNewsState.ErrorSelectCountry
+            } else {
+                val countryCode = listCountry.find { listCountry ->
+                    listCountry.id == country
+                }?.code ?: ALL_COUNTRY_VALUE
+                sharedPreferenceAccount.setAccountCountryCode(countryCode)
+                sharedPreferenceAccount.setAccountCountry(country)
+                mutableFlow.value = TopNewsState.EventUpdateViewPager
+                if (accountId != ACCOUNT_ID_DEFAULT) {
+                    account.myCountry = country
+                    account.countryCode = countryCode
+                    accountRepoImpl.updateAccount(account.toAccountDbEntity()).subscribe({
+                    }, { error ->
+                        Log.d(ERROR_DB, error.localizedMessage)
+                    })
+                }
+            }
+        }
+    }
+
+    fun closeFilter() {
+        filterFlag = !filterFlag
+        mutableFlow.value = TopNewsState.HideFilterShowRecycler
+    }
+
+    fun behaviorCollapsed() {
+        mutableFlow.value = TopNewsState.ShowFilterButton
+    }
+
+    fun getCountry() {
+        countryRepoImpl.getCountry().subscribe({ listCountryDbEntity ->
+            listCountry = listCountryDbEntity.map { countryDbEntity ->
+                countryDbEntity.toCountry()
+            } as MutableList<Country>
+            listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
+            val list: MutableList<String> =
+                listCountry.map { country -> country.id }.sortedBy { country -> country }
+                    .toMutableList()
+            var index = list.indexOf(sharedPreferenceAccount.getAccountCountry())
+            if (index == -1) {
+                index = 0
+            }
+            mutableFlow.value = TopNewsState.SetCountry(list, index)
+        }, { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
+        })
     }
 
     private fun saveArticle(article: Article) {
@@ -151,7 +165,7 @@ class TopNewsViewModel @Inject constructor(
             if (!article.isFavorites && !article.isHistory) {
                 article.isHistory = true
                 article.dateAdded = Date().formatDateTime()
-                articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId))
+                articleRepoImpl.insertArticle(article.toArticleDbEntity(accountId))
                     .subscribe({
                         articleListHistory.find { articleHistory ->
                             articleHistory.title == article.title
@@ -165,9 +179,9 @@ class TopNewsViewModel @Inject constructor(
     }
 
     private fun saveArticleLike(article: Article) {
-        var item = mapToArticleDbEntity(article, accountId)
-        item.isFavorites = true
-        articleRepoImpl.insertArticle(item).subscribe({
+        val articleDbEntity = article.toArticleDbEntity(accountId)
+        articleDbEntity.isFavorites = true
+        articleRepoImpl.insertArticle(articleDbEntity).subscribe({
             articleListHistory.find { articleHistory ->
                 articleHistory.title == article.title
             }?.isFavorites = true
@@ -189,108 +203,84 @@ class TopNewsViewModel @Inject constructor(
             }).disposableBy(bag)
     }
 
-    fun setOnClickImageFavorites(article: Article) {
-        if (article.isFavorites) {
-            mutableFlow.value = TopNewsState.FavoritesIvSetDislike
-            mutableFlow.value = TopNewsState.NavigationBarRemoveBadgeFavorites
-            deleteFavorites(article)
-            article.isFavorites = false
+    private fun getAccountSettings() {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            accountRepoImpl.getAccountById(accountId).subscribe({ accountDb ->
+                account = accountDb
+                saveHistory = accountDb.saveHistory
+            }, { error ->
+                Log.d(ERROR_DB, error.localizedMessage)
+            }).disposableBy(bag)
         } else {
-            mutableFlow.value = TopNewsState.NavigationBarAddBadgeFavorites
-            mutableFlow.value = TopNewsState.FavoritesIvSetLike
-            saveArticleLike(article)
-            article.isFavorites = true
+            mutableFlow.value = TopNewsState.HideFavoritesImageView
         }
     }
 
-    fun openScreenWebView(url: String) {
-        router.navigateTo(WebViewScreen(url))
-    }
-
-    fun onBackPressedRouter(): Boolean {
-        router.exit()
-        return true
-    }
-
-    fun filterButtonClick(country: String) {
-        if (!filterFlag) {
-            mutableFlow.value = TopNewsState.FadeRecyclerShowCountry
-            filterFlag = !filterFlag
-        } else {
-            if (country.isEmpty() || !listCountry.map { itemCountry -> itemCountry.id }
-                    .contains(country)) {
-                mutableFlow.value = TopNewsState.ErrorCountry
-            } else {
-                var countryCode = listCountry.find { listCountry ->
-                    listCountry.id == country
-                }?.code ?: ALL_COUNTRY_VALUE
-                sharedPreferenceAccount.setAccountCountryCode(countryCode)
-                sharedPreferenceAccount.setAccountCountry(country)
-                mutableFlow.value = TopNewsState.UpdateViewPagerEvent
-                if (accountId != ACCOUNT_ID_DEFAULT) {
-                    account.myCountry = country
-                    account.countryCode = countryCode
-                    accountRepoImpl.updateAccount(account.toAccountDbEntity()).subscribe({
-                    }, { error ->
-                        Log.d(ERROR_DB, error.localizedMessage)
-                    })
+    private fun loadNews(category: String) {
+        val countryCode = sharedPreferenceAccount.getAccountCountryCode()
+        Single.zip(
+            newsRepoImpl.getTopicalHeadlinesCategoryCountry(
+                category = category,
+                country = countryCode,
+                key = API_KEY_NEWS),
+            articleRepoImpl.getArticleById(accountId)) { news, articles ->
+            val newsModified =
+                news.articles.map { articleDto -> articleDto.toArticle() }.also { list ->
+                    list.map { article ->
+                        article.toArticleUI()
+                    }
+                }
+            articles.forEach { art ->
+                newsModified.forEach { new ->
+                    if (art.title == new.title) {
+                        if (art.isFavorites) {
+                            new.isFavorites = true
+                        }
+                        if (art.isHistory) {
+                            new.isHistory = true
+                        }
+                    }
                 }
             }
-        }
-    }
-
-    fun cancelFilter() {
-        filterFlag = !filterFlag
-        mutableFlow.value = TopNewsState.SetAlfaCancel
-        mutableFlow.value = TopNewsState.SetImageFilterButtonCancel
-        mutableFlow.value = TopNewsState.HideCountryList
-        mutableFlow.value = TopNewsState.HideCancelButton
-    }
-
-    fun behaviorCollapsed() {
-        mutableFlow.value = TopNewsState.ShowFilterCountry
-    }
-
-    fun getCountry() {
-        countryRepoImpl.getCountry().subscribe({ country ->
-            listCountry = country.map { countryDbEntity ->
-                countryDbEntity.toCountry()
-            } as MutableList<Country>
-            listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
-            var list: MutableList<String> =
-                listCountry.map { country -> country.id }
-                    .sortedBy { country -> country } as MutableList<String>
-            var index = list.indexOf(sharedPreferenceAccount.getAccountCountry())
-            if (index == -1) {
-                index = 0
+            newsModified.also { listArticle ->
+                listArticle[0].viewType = BaseViewHolder.VIEW_TYPE_TOP_NEWS_HEADER
             }
-            mutableFlow.value = TopNewsState.SetCountry(list, index)
+            newsModified
+        }.subscribeDefault().subscribe({ listArticle ->
+            if (listArticle.isEmpty()) {
+                mutableFlow.value = TopNewsState.EmptyListLoadNews
+            } else {
+                articleListHistory = listArticle.toMutableList()
+                mutableFlow.value = TopNewsState.SetNews(listArticle)
+            }
         }, { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
-        })
+            mutableFlow.value = TopNewsState.ErrorLoadNews
+            Log.d(ERROR_LOAD_NEWS, error.localizedMessage)
+        }).disposableBy(bag)
     }
 
     sealed class TopNewsState {
-        data class SetNews(var articles: List<Article>) : TopNewsState()
         data class ClickNews(var article: Article) : TopNewsState()
+        data class SetNews(var articles: List<Article>) : TopNewsState()
         data class SetCountry(var listCountry: List<String>, var index: Int) : TopNewsState()
         data class UpdateListNews(var articleListHistory: MutableList<Article>) : TopNewsState()
-        object HideFavoritesImageView : TopNewsState()
-        object EmptyList : TopNewsState()
+
         object ErrorLoadNews : TopNewsState()
-        object FavoritesIvSetLike : TopNewsState()
-        object FavoritesIvSetDislike : TopNewsState()
-        object NavigationBarAddBadgeFavorites : TopNewsState()//SkipStrategy activityEvent
-        object NavigationBarRemoveBadgeFavorites : TopNewsState()//SkipStrategy activityEvent
+        object EmptyListLoadNews : TopNewsState()
+        object ErrorSelectCountry : TopNewsState()
+
+        object ShowFilterButton : TopNewsState()
+        object HideFilterButton : TopNewsState()
+        object ShowFilterHideRecycler : TopNewsState()
+        object HideFilterShowRecycler : TopNewsState()
+        object HideFavoritesImageView : TopNewsState()
+
+        object FavoritesImageViewSetLike : TopNewsState()
+        object FavoritesImageViewSetDislike : TopNewsState()
         object BottomSheetExpanded : TopNewsState()
-        object ShowFilterCountry : TopNewsState()
-        object HideFilterCountry : TopNewsState()
-        object SetAlfaCancel : TopNewsState()
-        object SetImageFilterButtonCancel : TopNewsState()
-        object HideCountryList : TopNewsState()
-        object HideCancelButton : TopNewsState()
-        object FadeRecyclerShowCountry : TopNewsState()
-        object ErrorCountry : TopNewsState()
-        object UpdateViewPagerEvent : TopNewsState()
+
+        object EventNavigationBarAddBadgeFavorites : TopNewsState()//SkipStrategy activityEvent
+        object EventNavigationBarRemoveBadgeFavorites : TopNewsState()//SkipStrategy activityEvent
+        object EventUpdateViewPager : TopNewsState()
     }
 }

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Fade
@@ -42,21 +43,37 @@ import ru.gb.veber.newsapi.view.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
 import javax.inject.Inject
 
-class TopNewsFragment : MvpAppCompatFragment(), BackPressedListener, EventBehaviorToActivity {
+class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity {
 
     private var _binding: TopNewsFragmentBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
-
-    private var itemListener = TopNewsListener { article -> topNewsViewModel.clickNews(article) }
-    private val newsAdapter = TopNewsAdapter(itemListener)
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val topNewsViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[TopNewsViewModel::class.java]
+    }
+
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
+
+    private var itemListener = TopNewsListener { article -> topNewsViewModel.clickNews(article) }
+    private val newsAdapter = TopNewsAdapter(itemListener)
+
+    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            when (newState) {
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+                    topNewsViewModel.behaviorCollapsed()
+                }
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+    }
+
+    private val listenerAdapter = AdapterView.OnItemClickListener { _, _, _, _ ->
+        binding.countryAutoComplete.hideKeyboard()
     }
 
     override fun onCreateView(
@@ -74,98 +91,93 @@ class TopNewsFragment : MvpAppCompatFragment(), BackPressedListener, EventBehavi
         initialization()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+        return topNewsViewModel.onBackPressedRouter()
+    }
+
+    override fun getStateBehavior(): Int {
+        return bSheetB.state
+    }
+
+    override fun setStateBehavior() {
+        bSheetB.collapsed()
+    }
+
     private fun initialization() {
         val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
         val categoryKey = arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL
-        initViewModel(accountId, categoryKey)
+        initViewModel(accountId = accountId, categoryKey = categoryKey)
         initView()
     }
 
     private fun initViewModel(accountId: Int, categoryKey: String) {
-        topNewsViewModel.subscribe(accountId, categoryKey).observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is TopNewsViewModel.TopNewsState.UpdateListNews -> {
-                    updateListNews(state.articleListHistory)
-                }
-                is TopNewsViewModel.TopNewsState.ClickNews -> {
-                    clickNews(state.article)
-                }
-                is TopNewsViewModel.TopNewsState.SetNews -> {
-                    setNews(state.articles)
-                }
-                is TopNewsViewModel.TopNewsState.SetCountry -> {
-                    setCountry(state.listCountry, state.index)
-                }
-                TopNewsViewModel.TopNewsState.EmptyList -> {
-                    emptyList()
-                }
-                TopNewsViewModel.TopNewsState.ErrorCountry -> {
-                    errorCountry()
-                }
-                TopNewsViewModel.TopNewsState.FadeRecyclerShowCountry -> {
-                    fadeRecyclerShowCountry()
-                }
-                TopNewsViewModel.TopNewsState.HideCancelButton -> {
-                    hideCancelButton()
-                }
-                TopNewsViewModel.TopNewsState.HideCountryList -> {
-                    hideCountryList()
-                }
-                TopNewsViewModel.TopNewsState.HideFavoritesImageView -> {
-                    hideFavoritesImageView()
-                }
-                TopNewsViewModel.TopNewsState.NavigationBarRemoveBadgeFavorites -> {
-                    navigationBarRemoveBadgeFavorites()
-                }
-                TopNewsViewModel.TopNewsState.NavigationBarAddBadgeFavorites -> {
-                    navigationBarAddBadgeFavorites()
-                }
-                TopNewsViewModel.TopNewsState.SetAlfaCancel -> {
-                    setAlfaCancel()
-                }
-                TopNewsViewModel.TopNewsState.SetImageFilterButtonCancel -> {
-                    setImageFilterButtonCancel()
-                }
-                TopNewsViewModel.TopNewsState.FavoritesIvSetLike -> {
-                    favoritesIvSetLike()
-                }
-                TopNewsViewModel.TopNewsState.FavoritesIvSetDislike -> {
-                    favoritesIvSetDislike()
-                }
-                TopNewsViewModel.TopNewsState.BottomSheetExpanded -> {
-                    bottomSheetExpanded()
-                }
-                TopNewsViewModel.TopNewsState.ShowFilterCountry -> {
-                    showFilterCountry()
-                }
-                TopNewsViewModel.TopNewsState.HideFilterCountry -> {
-                    hideFilterCountry()
-                }
-                TopNewsViewModel.TopNewsState.UpdateViewPagerEvent -> {
-                    updateViewPagerEvent()
-                }
-                TopNewsViewModel.TopNewsState.ErrorLoadNews -> {
-                    errorLoadNews()
+        topNewsViewModel.subscribe(accountId = accountId, categoryKey = categoryKey)
+            .observe(viewLifecycleOwner) { state ->
+                when (state) {
+                    is TopNewsViewModel.TopNewsState.UpdateListNews -> {
+                        updateListNews(newListNews = state.articleListHistory)
+                    }
+                    is TopNewsViewModel.TopNewsState.ClickNews -> {
+                        clickNews(article = state.article)
+                    }
+                    is TopNewsViewModel.TopNewsState.SetNews -> {
+                        setNews(listNews = state.articles)
+                    }
+                    is TopNewsViewModel.TopNewsState.SetCountry -> {
+                        setCountry(countryList = state.listCountry, startIndex = state.index)
+                    }
+                    TopNewsViewModel.TopNewsState.BottomSheetExpanded -> {
+                        bottomSheetExpanded()
+                    }
+                    TopNewsViewModel.TopNewsState.EmptyListLoadNews -> {
+                        emptyListLoadNews()
+                    }
+                    TopNewsViewModel.TopNewsState.ErrorLoadNews -> {
+                        errorLoadNews()
+                    }
+                    TopNewsViewModel.TopNewsState.ErrorSelectCountry -> {
+                        errorSelectCountry()
+                    }
+                    TopNewsViewModel.TopNewsState.EventNavigationBarAddBadgeFavorites -> {
+                        eventNavigationBarAddBadgeFavorites()
+                    }
+                    TopNewsViewModel.TopNewsState.EventNavigationBarRemoveBadgeFavorites -> {
+                        eventNavigationBarRemoveBadgeFavorites()
+                    }
+                    TopNewsViewModel.TopNewsState.EventUpdateViewPager -> {
+                        eventUpdateViewPager()
+                    }
+                    TopNewsViewModel.TopNewsState.FavoritesImageViewSetDislike -> {
+                        favoritesImageViewSetDislike()
+                    }
+                    TopNewsViewModel.TopNewsState.FavoritesImageViewSetLike -> {
+                        favoritesImageViewSetLike()
+                    }
+                    TopNewsViewModel.TopNewsState.HideFavoritesImageView -> {
+                        hideFavoritesImageView()
+                    }
+                    TopNewsViewModel.TopNewsState.HideFilterButton -> {
+                        hideFilterButton()
+                    }
+                    TopNewsViewModel.TopNewsState.HideFilterShowRecycler -> {
+                        hideFilterShowRecycler()
+                    }
+                    TopNewsViewModel.TopNewsState.ShowFilterButton -> {
+                        showFilterButton()
+                    }
+                    TopNewsViewModel.TopNewsState.ShowFilterHideRecycler -> {
+                        showFilterHideRecycler()
+                    }
                 }
             }
-        }
-    }
-
-    private fun errorLoadNews() {
-        binding.progressBarTopNews.hide()
-        binding.recyclerNews.show()
-        binding.statusTextList.show()
-        binding.statusTextList.text = getString(R.string.error_load_news)
     }
 
     private fun initView() {
-        binding.recyclerNews.adapter = newsAdapter
-        binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
-
-        bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer).apply {
-            addBottomSheetCallback(callBackBehavior)
-        }
-
         with(binding.countryAutoComplete) {
             threshold = 1
             onItemClickListener = listenerAdapter
@@ -174,29 +186,31 @@ class TopNewsFragment : MvpAppCompatFragment(), BackPressedListener, EventBehavi
             }
         }
 
+        binding.recyclerNews.adapter = newsAdapter
+        binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
+
         binding.filterButton.setOnClickListener {
-            topNewsViewModel.filterButtonClick(binding.countryAutoComplete.text.toString())
+            topNewsViewModel.filterButtonClick(country = binding.countryAutoComplete.text.toString())
         }
 
-        binding.cancelFilter.setOnClickListener {
-            topNewsViewModel.cancelFilter()
+        binding.closeFilter.setOnClickListener {
+            topNewsViewModel.closeFilter()
         }
+
+        bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
+        bSheetB.addBottomSheetCallback(callBackBehavior)
     }
 
-    private fun setNews(articles: List<Article>) {
+    private fun setNews(listNews: List<Article>) {
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
         TransitionManager.beginDelayedTransition(binding.root)
-        newsAdapter.articles = articles
+        newsAdapter.articles = listNews
         topNewsViewModel.getCountry()
     }
 
-    private fun updateListNews(articleListHistory: MutableList<Article>) {
-        newsAdapter.articles = articleListHistory
-    }
-
-    private fun bottomSheetExpanded() {
-        bSheetB.expanded()
+    private fun updateListNews(newListNews: MutableList<Article>) {
+        newsAdapter.articles = newListNews
     }
 
     private fun clickNews(article: Article) {
@@ -209,13 +223,20 @@ class TopNewsFragment : MvpAppCompatFragment(), BackPressedListener, EventBehavi
             setSpanDescription(article)
         }
 
-        binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
+        binding.behaviorInclude.descriptionNews.setOnClickListener {
             topNewsViewModel.openScreenWebView(article.url)
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
-            topNewsViewModel.setOnClickImageFavorites(article)
+            topNewsViewModel.clickImageFavorites(article)
         }
+    }
+
+    private fun setCountry(countryList: List<String>, startIndex: Int) {
+        binding.countryAutoComplete.setAdapter(ArrayAdapter(requireContext(),
+            android.R.layout.simple_list_item_1, countryList))
+        binding.countryAutoComplete.setText(binding.countryAutoComplete.adapter.getItem(startIndex)
+            .toString(), false)
     }
 
     private fun setSpanDescription(article: Article) {
@@ -231,104 +252,7 @@ class TopNewsFragment : MvpAppCompatFragment(), BackPressedListener, EventBehavi
         }
     }
 
-    private fun favoritesIvSetLike() {
-        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
-    }
-
-    private fun favoritesIvSetDislike() {
-        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
-    }
-
-    private fun navigationBarAddBadgeFavorites() {
-        (requireActivity() as EventAddingBadges).addBadge()
-    }
-
-    private fun navigationBarRemoveBadgeFavorites() {
-        (requireActivity() as EventAddingBadges).removeBadge()
-    }
-
-    private fun showFilterCountry() {
-        binding.filterButton.show()
-    }
-
-    private fun hideCancelButton() {
-        TransitionManager.beginDelayedTransition(binding.root)
-        binding.cancelFilter.hide()
-    }
-
-    private fun setAlfaCancel() {
-        TransitionManager.beginDelayedTransition(binding.root)
-        binding.recyclerNews.alpha = ALFA_FILTER_SHOW
-    }
-
-    private fun hideCountryList() {
-        TransitionManager.beginDelayedTransition(binding.root)
-        binding.countryTextInput.hide()
-    }
-
-    private fun setImageFilterButtonCancel() {
-        binding.filterButton.setImageResource(R.drawable.filter_icon)
-    }
-
-    private fun behaviorHide() {
-        bSheetB.collapsed()
-    }
-
-    private fun visibilityFilterButton() {
-        binding.filterButton.visibility = View.VISIBLE
-    }
-
-    private fun hideFavoritesImageView() {
-        binding.behaviorInclude.imageFavorites.hide()
-    }
-
-    private fun hideFilterCountry() {
-        binding.filterButton.hide()
-    }
-
-    private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            when (newState) {
-                BottomSheetBehavior.STATE_COLLAPSED -> {
-                    topNewsViewModel.behaviorCollapsed()
-                }
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        }
-    }
-
-    private val listenerAdapter = AdapterView.OnItemClickListener { _, _, _, _ ->
-        binding.countryAutoComplete.hideKeyboard()
-    }
-
-    private fun setCountry(country: List<String>, index: Int) {
-        binding.countryAutoComplete.setAdapter(ArrayAdapter(requireContext(),
-            android.R.layout.simple_list_item_1, country))
-        binding.countryAutoComplete.setText(binding.countryAutoComplete.adapter.getItem(index)
-            .toString(), false)
-    }
-
-    private fun emptyList() {
-        binding.progressBarTopNews.hide()
-        binding.recyclerNews.show()
-        binding.statusTextList.show()
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return topNewsViewModel.onBackPressedRouter()
-    }
-
-    override fun getStateBehavior(): Int {
-        return bSheetB.state
-    }
-
-    override fun setStateBehavior() {
-        bSheetB.collapsed()
-    }
-
-    private fun fadeRecyclerShowCountry() {
+    private fun showFilterHideRecycler() {
         TransitionSet().also { transition ->
             transition.duration = DURATION_FILTER_HIDE
             transition.addTransition(Fade(Fade.IN))
@@ -338,23 +262,77 @@ class TopNewsFragment : MvpAppCompatFragment(), BackPressedListener, EventBehavi
             binding.recyclerNews.alpha = ALFA_FILTER_HIDE
             binding.filterButton.setImageResource(R.drawable.check_icon)
             binding.countryTextInput.show()
-            binding.cancelFilter.show()
+            binding.closeFilter.show()
         }
     }
 
-    private fun errorCountry() {
+    private fun showFilterButton() {
+        binding.filterButton.show()
+    }
+
+    private fun hideFilterShowRecycler() {
+        TransitionManager.beginDelayedTransition(binding.root)
+        binding.recyclerNews.alpha = ALFA_FILTER_SHOW
+        binding.filterButton.setImageResource(R.drawable.filter_icon)
+        binding.countryTextInput.hide()
+        binding.closeFilter.hide()
+    }
+
+    private fun hideFavoritesImageView() {
+        binding.behaviorInclude.imageFavorites.hide()
+    }
+
+    private fun hideFilterButton() {
+        binding.filterButton.hide()
+    }
+
+    private fun favoritesImageViewSetLike() {
+        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+    }
+
+    private fun favoritesImageViewSetDislike() {
+        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+    }
+
+    private fun bottomSheetExpanded() {
+        bSheetB.expanded()
+    }
+
+    private fun errorLoadNews() {
+        binding.progressBarTopNews.hide()
+        binding.recyclerNews.show()
+        binding.statusTextList.show()
+        binding.statusTextList.text = getString(R.string.error_load_news)
+    }
+
+
+    private fun errorSelectCountry() {
         binding.countryTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.countryTextInput.error = null
         }, DURATION_ERROR_INPUT)
     }
 
-    private fun updateViewPagerEvent() {
+    private fun emptyListLoadNews() {
+        binding.progressBarTopNews.hide()
+        binding.recyclerNews.show()
+        binding.statusTextList.show()
+    }
+
+    private fun eventUpdateViewPager() {
         requireActivity().supportFragmentManager.fragments.forEach {
             if (it is EventTopNews) {
                 (it as EventTopNews).updateViewPager()
             }
         }
+    }
+
+    private fun eventNavigationBarAddBadgeFavorites() {
+        (requireActivity() as EventAddingBadges).addBadge()
+    }
+
+    private fun eventNavigationBarRemoveBadgeFavorites() {
+        (requireActivity() as EventAddingBadges).removeBadge()
     }
 
     companion object {
@@ -371,8 +349,4 @@ class TopNewsFragment : MvpAppCompatFragment(), BackPressedListener, EventBehavi
             }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

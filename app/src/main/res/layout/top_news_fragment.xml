@@ -56,7 +56,7 @@
         app:srcCompat="@drawable/filter_icon" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/cancelFilter"
+        android:id="@+id/closeFilter"
         style="@style/floatingActionButtonDefault"
         android:visibility="gone"
         app:layout_behavior=".view.topnews.fragment.filteranimation.BehaviorActionButtonCancel"

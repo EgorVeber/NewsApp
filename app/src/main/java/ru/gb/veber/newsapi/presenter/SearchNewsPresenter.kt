@@ -20,8 +20,8 @@ import ru.gb.veber.newsapi.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.disposableBy
 import ru.gb.veber.newsapi.utils.formatDateTime
-import ru.gb.veber.newsapi.utils.mapper.mapToArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticle
+import ru.gb.veber.newsapi.utils.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticleUI
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsView
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder.Companion.VIEW_TYPE_SEARCH_NEWS
@@ -185,7 +185,7 @@ class SearchNewsPresenter(
             if (!article.isFavorites && !article.isHistory) {
                 article.isHistory = true
                 article.dateAdded = Date().formatDateTime()
-                articleRepoImpl.insertArticle(mapToArticleDbEntity(article, accountId))
+                articleRepoImpl.insertArticle(article.toArticleDbEntity(accountId))
                     .subscribe({
                         articleListHistory.find { it.title == article.title }?.isHistory = true
                         viewState.changeNews(articleListHistory)
@@ -225,7 +225,7 @@ class SearchNewsPresenter(
     }
 
     private fun saveArticleLike(article: Article) {
-        var item = mapToArticleDbEntity(article, accountId)
+        var item = article.toArticleDbEntity( accountId)
         item.isFavorites = true
         articleRepoImpl.insertArticle(item).subscribe({
             articleListHistory.find { it.title == article.title }?.isFavorites = true
