@@ -5,10 +5,11 @@ import moxy.MvpPresenter
 import ru.gb.veber.newsapi.view.webview.WebView
 import javax.inject.Inject
 
-class WebViewPresenter() :
-    MvpPresenter<WebView>() {
+class WebViewPresenter : MvpPresenter<WebView>() {
+
     @Inject
     lateinit var router: Router
+
     fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
