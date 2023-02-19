@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
-import moxy.MvpAppCompatFragment
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavoritesViewPagerFragmentBinding
@@ -17,7 +17,7 @@ import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Co
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.HISTORY_POSITION
 import javax.inject.Inject
 
-class FavoritesViewPagerFragment : MvpAppCompatFragment(),
+class FavoritesViewPagerFragment : Fragment(),
     BackPressedListener {
 
     private var _binding: FavoritesViewPagerFragmentBinding? = null
