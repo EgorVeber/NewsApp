@@ -1,4 +1,5 @@
 package ru.gb.veber.newsapi.view.sources.recycler
+
 import ru.gb.veber.newsapi.model.Sources
 
 interface SourcesListener {

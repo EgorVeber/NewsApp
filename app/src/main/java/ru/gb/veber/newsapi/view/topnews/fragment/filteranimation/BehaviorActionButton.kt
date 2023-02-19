@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.topnews.pageritem
+package ru.gb.veber.newsapi.view.topnews.fragment.filteranimation
 
 import android.content.Context
 import android.util.AttributeSet
@@ -26,7 +26,8 @@ class BehaviorActionButton(context: Context, attr: AttributeSet? = null) :
         child.x = (dependency.width - child.height - MARGIN_END).toFloat()
         return super.onDependentViewChanged(parent, child, dependency)
     }
-    companion object{
+
+    companion object {
         const val BIAS_VERTICAL = 100
         const val MARGIN_END = 50
     }

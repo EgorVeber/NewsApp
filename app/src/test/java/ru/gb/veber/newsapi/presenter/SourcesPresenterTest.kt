@@ -1,17 +1,9 @@
 package ru.gb.veber.newsapi.presenter
 
 import com.github.terrakok.cicerone.Router
-import io.mockk.Called
-import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
-import io.mockk.just
-import io.mockk.runs
-import io.mockk.slot
-import io.mockk.unmockkAll
-import io.mockk.verify
-import io.mockk.verifySequence
 import io.reactivex.rxjava3.core.Completable
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -76,7 +68,7 @@ class SourcesPresenterTest {
 
         val expectedHistory = HistorySelect(0,5,sourcesId = expectedSource, sourcesName = expectedName)
 
-        assertEquals(expectedHistory.toHistorySelectDbEntity(),slot.captured)
+        assertEquals(expectedHistory.toHistorySelectDbEntity(), slot.captured)
     }
 
     @After

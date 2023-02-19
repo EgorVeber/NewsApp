@@ -3,20 +3,20 @@ package ru.gb.veber.newsapi.utils.mapper
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
 
-fun mapToArticleDbEntity(article: Article, accountId: Int): ArticleDbEntity {
+fun Article.toArticleDbEntity(accountId: Int): ArticleDbEntity {
     return ArticleDbEntity(
         id = 0,
         accountID = accountId,
-        author = article.author,
-        description = article.description,
-        publishedAt = article.publishedAt,
-        sourceId = article.source.id ?: "",
-        sourceName = article.source.name,
-        title = article.title.toString(),
-        url = article.url,
-        urlToImage = article.urlToImage,
-        isHistory = article.isHistory,
-        isFavorites = article.isFavorites,
-        dateAdded = article.dateAdded.toString()
+        author = this.author,
+        description = this.description,
+        publishedAt = this.publishedAt,
+        sourceId = this.source.id ?: "",
+        sourceName = this.source.name,
+        title = this.title.toString(),
+        url = this.url,
+        urlToImage = this.urlToImage,
+        isHistory = this.isHistory,
+        isFavorites = this.isFavorites,
+        dateAdded = this.dateAdded.toString()
     )
 }

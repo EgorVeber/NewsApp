@@ -109,4 +109,6 @@
     <string name="textDelete">Стиля для темной темы пока нету</string>
     <string name="searchNewsKey">Введите ключевое слово</string>
     <string name="notAvailable">Пока не доступно</string>
+    <string name="error_load_news">Ошибка загрузки данных</string>
+    <string name="error_load_default">Что то пошло не так повторите попытку позднее</string>
 </resources>

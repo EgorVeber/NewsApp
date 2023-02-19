@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.di
 
 import dagger.Component
+import ru.gb.veber.newsapi.view.favorites.FavoritesFragment
 import ru.gb.veber.newsapi.di.moduls.AppModule
 import ru.gb.veber.newsapi.di.moduls.DataBaseModule
 import ru.gb.veber.newsapi.di.moduls.NavigationModule
@@ -8,19 +9,17 @@ import ru.gb.veber.newsapi.di.moduls.NetworkModule
 import ru.gb.veber.newsapi.di.moduls.RepoNetworkModule
 import ru.gb.veber.newsapi.di.moduls.SharedPreferenceModule
 import ru.gb.veber.newsapi.di.moduls.ViewModelModule
-import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
-import ru.gb.veber.newsapi.presenter.CustomizeCategoryPresenter
-import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
-import ru.gb.veber.newsapi.presenter.SearchPresenter
-import ru.gb.veber.newsapi.presenter.TopNewsPresenter
+import ru.gb.veber.newsapi.presenter.CustomizeCategoryPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.view.activity.ActivityMain
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
+import ru.gb.veber.newsapi.view.topnews.fragment.TopNewsFragment
+import ru.gb.veber.newsapi.view.search.SearchFragment
 import ru.gb.veber.newsapi.view.sources.FragmentSources
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import javax.inject.Singleton
@@ -38,13 +37,12 @@ import javax.inject.Singleton
 )
 interface AppComponent {
     fun inject(mainActivity: ActivityMain)
-    fun inject(mainPresenter: ActivityPresenter)
     fun inject(accountFragment: AccountFragment)
     fun inject(authorizationPresenter: AuthorizationPresenter)
-    fun inject(topNewsPresenter: TopNewsPresenter)
-    fun inject(favoritesPresenter: FavoritesPresenter)
+    fun inject(searchFragment: SearchFragment)
+    fun inject(favoritesFragment: FavoritesFragment)
     fun inject(profileFragment: ProfileFragment)
-    fun inject(searchPresenter: SearchPresenter)
+    fun inject(topNewsFragment: TopNewsFragment)
     fun inject(searchNewsPresenter: SearchNewsPresenter)
     fun inject(fragmentSources: FragmentSources)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)

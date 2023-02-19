@@ -11,8 +11,11 @@ const val EVERYTHING = "everything"
 
 //ROOM
 const val ACCOUNT_ID_DEFAULT = 0
-const val ERROR_DB = "ERROR_DB"
 const val DATABASE_NAME = "news.db"
+
+//ERROR
+const val ERROR_LOAD_NEWS = "ERROR_LOAD_NEWS"
+const val ERROR_DB = "ERROR_DB"
 
 //BUNDLE SHARED
 const val FILE_SETTINGS = "FILE_SETTINGS"
