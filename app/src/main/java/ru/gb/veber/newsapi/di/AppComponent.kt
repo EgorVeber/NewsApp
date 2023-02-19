@@ -14,7 +14,6 @@ import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
 import ru.gb.veber.newsapi.presenter.SearchPresenter
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
-import ru.gb.veber.newsapi.presenter.SourcesPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.presenter.WebViewPresenter
 import ru.gb.veber.newsapi.presenter.CustomizeCategoryPresenter
@@ -23,6 +22,7 @@ import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
+import ru.gb.veber.newsapi.view.sources.FragmentSources
 import javax.inject.Singleton
 
 @Singleton
@@ -46,7 +46,7 @@ interface AppComponent {
     fun inject(profileFragment: ProfileFragment)
     fun inject(searchPresenter: SearchPresenter)
     fun inject(searchNewsPresenter: SearchNewsPresenter)
-    fun inject(sourcesPresenter: SourcesPresenter)
+    fun inject(fragmentSources: FragmentSources)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)
     fun inject(webViewPresenter: WebViewPresenter)
     fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)

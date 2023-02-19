@@ -11,7 +11,7 @@ import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerViewModel
 import ru.gb.veber.newsapi.view.profile.ProfileViewModel
 import ru.gb.veber.newsapi.view.profile.account.AccountViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
-
+import ru.gb.veber.newsapi.view.sources.SourcesViewModel
 
 @Module
 abstract class ViewModelModule {
@@ -23,6 +23,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(EditAccountViewModel::class)
     internal abstract fun bindEditAccountViewModel(viewModel: EditAccountViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SourcesViewModel::class)
+    internal abstract fun bindSourcesViewModel(viewModel: SourcesViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -40,7 +40,7 @@ class SourcesAdapterAutoCompile(
             convertView?.tag as SelectSourcesAutocompileBinding? ?: createBinding(parent.context)
         val sources = getItem(position)
         binding.textSourcesName.text = sources?.name
-        if (sources?.isLike == true) {
+        if (sources?.liked == true) {
             binding.checkSources.show()
         } else {
             binding.checkSources.hide()
