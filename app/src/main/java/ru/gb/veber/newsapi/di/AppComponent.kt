@@ -1,8 +1,6 @@
 package ru.gb.veber.newsapi.di
 
 import dagger.Component
-import ru.gb.veber.newsapi.di.moduls.*
-import ru.gb.veber.newsapi.presenter.*
 import ru.gb.veber.newsapi.di.moduls.AppModule
 import ru.gb.veber.newsapi.di.moduls.NavigationModule
 import ru.gb.veber.newsapi.di.moduls.NetworkModule
@@ -10,7 +8,6 @@ import ru.gb.veber.newsapi.di.moduls.SharedPreferenceModule
 import ru.gb.veber.newsapi.di.moduls.RepoNetworkModule
 import ru.gb.veber.newsapi.di.moduls.DataBaseModule
 import ru.gb.veber.newsapi.di.moduls.ViewModelModule
-import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
 import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
@@ -40,7 +37,6 @@ import javax.inject.Singleton
 )
 interface AppComponent {
     fun inject(mainActivity: ActivityMain)
-    fun inject(account: AccountPresenter)
     fun inject(accountFragment: AccountFragment)
     fun inject(authorizationPresenter: AuthorizationPresenter)
     fun inject(topNewsPresenter: TopNewsPresenter)
