@@ -76,12 +76,12 @@ class FavoritesFragment : Fragment(), BackPressedListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
+        init()
         observeLiveData()
         favoritesViewModel.getAccountArticle(
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
             arguments?.getString(PAGE) ?: PAGE
         )
-        init()
     }
 
     override fun onDestroyView() {
