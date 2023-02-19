@@ -6,19 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.WebViewFragmentBinding
-import ru.gb.veber.newsapi.presenter.WebViewPresenter
 import ru.gb.veber.newsapi.utils.hide
 import ru.gb.veber.newsapi.utils.show
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
 import javax.inject.Inject
 
-class WebViewFragment : MvpAppCompatFragment(), BackPressedListener {
+class WebViewFragment : Fragment(), BackPressedListener {
 
     private var _binding: WebViewFragmentBinding? = null
     private val binding get() = _binding!!
@@ -30,7 +28,7 @@ class WebViewFragment : MvpAppCompatFragment(), BackPressedListener {
         ViewModelProvider(this, viewModelFactory)[WebViewViewModel::class.java]
     }
 
-    private val webViewClient = object : WebViewClient() {
+    private val mWebViewClient = object : WebViewClient() {
         override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
             super.onPageFinished(view, url)
             webViewViewModel.successLoading()
@@ -50,17 +48,6 @@ class WebViewFragment : MvpAppCompatFragment(), BackPressedListener {
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
         initialization()
-        binding.webNews.webViewClient = webViewClient
-        binding.webNews.loadUrl(arguments?.getString(KEY_URL) ?: DEFAULT_URL)
-        binding.webNews.webChromeClient = WebChromeClient()
-        binding.webNews.settings.builtInZoomControls = true
-        binding.webNews.settings.displayZoomControls = false
-        binding.webNews.clearHistory()
-        binding.webNews.clearCache(true)
-
-        binding.backWebView.setOnClickListener {
-            webViewViewModel.back()
-        }
     }
 
     override fun onDestroyView() {
@@ -73,20 +60,40 @@ class WebViewFragment : MvpAppCompatFragment(), BackPressedListener {
     }
 
     private fun initialization() {
-        initViewModel()
+        val pageUrl = arguments?.getString(KEY_URL) ?: DEFAULT_URL
+        initViewModel(pageUrl)
         initView()
     }
 
+    private fun initViewModel(pageUrl: String) {
+        webViewViewModel.subscribe(pageUrl).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                WebViewViewModel.WebViewState.SuccessLoading -> {
+                    successLoading()
+                }
+                is WebViewViewModel.WebViewState.LoadingPage -> {
+                    binding.webNews.loadUrl(state.url)
+                }
+            }
+        }
+    }
+
     private fun initView() {
-        TODO("Not yet implemented")
+        with(binding.webNews) {
+            webViewClient = mWebViewClient
+            webChromeClient = WebChromeClient()
+            settings.builtInZoomControls = true
+            settings.displayZoomControls = false
+            clearHistory()
+            clearCache(true)
+        }
+
+        binding.backWebView.setOnClickListener {
+            webViewViewModel.back()
+        }
     }
 
-    private fun initViewModel() {
-
-    }
-
-
-    private fun showPage() {
+    private fun successLoading() {
         binding.webNews.show()
         binding.progressBarWebView.hide()
     }
