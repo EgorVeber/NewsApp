@@ -12,14 +12,14 @@ import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
 import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
-import ru.gb.veber.newsapi.presenter.FavoritesViewPagerPresenter
-import ru.gb.veber.newsapi.presenter.ProfilePresenter
 import ru.gb.veber.newsapi.presenter.SearchPresenter
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.presenter.WebViewPresenter
 import ru.gb.veber.newsapi.presenter.CustomizeCategoryPresenter
 import ru.gb.veber.newsapi.view.activity.ActivityMain
+import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
+import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.sources.FragmentSources
@@ -43,8 +43,7 @@ interface AppComponent {
     fun inject(authorizationPresenter: AuthorizationPresenter)
     fun inject(topNewsPresenter: TopNewsPresenter)
     fun inject(favoritesPresenter: FavoritesPresenter)
-    fun inject(favoritesViewPagerPresenter: FavoritesViewPagerPresenter)
-    fun inject(profilePresenter: ProfilePresenter)
+    fun inject(profileFragment: ProfileFragment)
     fun inject(searchPresenter: SearchPresenter)
     fun inject(searchNewsPresenter: SearchNewsPresenter)
     fun inject(fragmentSources: FragmentSources)
@@ -52,5 +51,6 @@ interface AppComponent {
     fun inject(webViewPresenter: WebViewPresenter)
     fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)
     fun inject(editAccountFragment: EditAccountFragment)
+    fun inject(favoritesViewPagerFragment: FavoritesViewPagerFragment)
 
 }
