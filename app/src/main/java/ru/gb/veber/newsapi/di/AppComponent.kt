@@ -12,7 +12,6 @@ import ru.gb.veber.newsapi.presenter.ActivityPresenter
 import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
 import ru.gb.veber.newsapi.presenter.FavoritesPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsPresenter
-import ru.gb.veber.newsapi.presenter.ProfilePresenter
 import ru.gb.veber.newsapi.presenter.SearchPresenter
 import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
 import ru.gb.veber.newsapi.presenter.SourcesPresenter
@@ -44,7 +43,6 @@ interface AppComponent {
     fun inject(authorizationPresenter: AuthorizationPresenter)
     fun inject(topNewsPresenter: TopNewsPresenter)
     fun inject(favoritesPresenter: FavoritesPresenter)
-    fun inject(profilePresenter: ProfilePresenter)
     fun inject(profileFragment: ProfileFragment)
     fun inject(searchPresenter: SearchPresenter)
     fun inject(searchNewsPresenter: SearchNewsPresenter)
