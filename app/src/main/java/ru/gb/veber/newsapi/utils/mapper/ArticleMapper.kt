@@ -6,10 +6,14 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.Source
 import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.model.network.ArticleDTO
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.FORMAT_DATE
+import ru.gb.veber.newsapi.utils.formatDateTime
+import ru.gb.veber.newsapi.utils.formatHour
+import ru.gb.veber.newsapi.utils.stringFromData
+import ru.gb.veber.newsapi.utils.takeDate
 import ru.gb.veber.newsapi.view.topnews.pageritem.BaseViewHolder
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 const val HIDE_HISTORY = "HIDE_HISTORY"
 
