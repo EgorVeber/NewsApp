@@ -25,7 +25,8 @@ class FragmentSourcesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SourcesViewHolder {
         return SourcesViewHolder(
             SourcesItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            listener)
+            listener
+        )
     }
 
     override fun onBindViewHolder(holder: SourcesViewHolder, position: Int) {

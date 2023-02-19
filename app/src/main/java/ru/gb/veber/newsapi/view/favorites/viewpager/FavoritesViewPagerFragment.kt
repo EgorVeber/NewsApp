@@ -49,8 +49,10 @@ class FavoritesViewPagerFragment : Fragment(),
     private fun initialization(accountID: Int) {
         binding.favoritesHistoryViewPager.adapter =
             FavoritesViewPagerAdapter(requireActivity(), accountID)
-        TabLayoutMediator(binding.favoritesHistoryTabLayout,
-            binding.favoritesHistoryViewPager) { tab, position ->
+        TabLayoutMediator(
+            binding.favoritesHistoryTabLayout,
+            binding.favoritesHistoryViewPager
+        ) { tab, position ->
             when (position) {
                 FAVORITES_POSITION -> {
                     tab.text = getString(R.string.favoritesLike)
