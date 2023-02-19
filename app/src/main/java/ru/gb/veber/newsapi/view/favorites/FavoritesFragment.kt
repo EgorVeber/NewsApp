@@ -27,11 +27,6 @@ import javax.inject.Inject
 class FavoritesFragment : Fragment(), BackPressedListener,
     EventBehaviorToActivity {
 
-    private var _binding: FavotitesFragmentBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -39,34 +34,10 @@ class FavoritesFragment : Fragment(), BackPressedListener,
         ViewModelProvider(this, viewModelFactory)[FavoritesViewModel::class.java]
     }
 
-    private fun clickNews(article: Article) {
-        bSheetB.expanded()
-        with(binding.behaviorInclude) {
-            imageViewAll.loadGlideNot(article.urlToImage)
-            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
-            titleNews.text = article.title
-            authorText.text = article.author
-            sourceText.text = article.source.name
-            setSpanDescription(article)
-        }
+    private var _binding: FavotitesFragmentBinding? = null
+    private val binding get() = _binding!!
 
-        binding.behaviorInclude.descriptionNews.setOnClickListener {
-            favoritesViewModel.openScreenWebView(article.url)
-        }
-    }
-
-    private fun setSpanDescription(article: Article) {
-        SpannableStringBuilder(article.description).also { span ->
-            span.setSpan(
-                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
-                span.length - 1,
-                span.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE
-            )
-            binding.behaviorInclude.descriptionNews.text = span
-            span.removeSpan(span)
-        }
-    }
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
     private var itemListener = object : RecyclerListener {
 
@@ -105,14 +76,59 @@ class FavoritesFragment : Fragment(), BackPressedListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
+        observeLiveData()
         favoritesViewModel.getAccountArticle(
             arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
             arguments?.getString(PAGE) ?: PAGE
         )
         init()
-        observeLiveData()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+        return favoritesViewModel.onBackPressedRouter()
+    }
+
+    override fun getStateBehavior(): Int {
+        return bSheetB.state
+    }
+
+    override fun setStateBehavior() {
+        bSheetB.collapsed()
+    }
+
+    private fun clickNews(article: Article) {
+        bSheetB.expanded()
+        with(binding.behaviorInclude) {
+            imageViewAll.loadGlideNot(article.urlToImage)
+            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
+            titleNews.text = article.title
+            authorText.text = article.author
+            sourceText.text = article.source.name
+            setSpanDescription(article)
+        }
+
+        binding.behaviorInclude.descriptionNews.setOnClickListener {
+            favoritesViewModel.openScreenWebView(article.url)
+        }
+    }
+
+    private fun setSpanDescription(article: Article) {
+        SpannableStringBuilder(article.description).also { span ->
+            span.setSpan(
+                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+                span.length - 1,
+                span.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
+            binding.behaviorInclude.descriptionNews.text = span
+            span.removeSpan(span)
+        }
+    }
 
     private fun observeLiveData() {
         favoritesViewModel.uiState.observe(viewLifecycleOwner, ::handleState)
@@ -126,13 +142,13 @@ class FavoritesFragment : Fragment(), BackPressedListener,
             is FavoritesViewModel.FavoritesState.SetSources -> {
                 setSources(state.articles)
             }
-            is FavoritesViewModel.FavoritesState.Loading -> {
+            FavoritesViewModel.FavoritesState.Loading -> {
                 loading()
             }
-            is FavoritesViewModel.FavoritesState.EmptyList -> {
+            FavoritesViewModel.FavoritesState.EmptyList -> {
                 emptyList()
             }
-            is FavoritesViewModel.FavoritesState.NotAuthorized -> {
+            FavoritesViewModel.FavoritesState.NotAuthorized -> {
                 notAuthorized()
             }
         }
@@ -168,23 +184,6 @@ class FavoritesFragment : Fragment(), BackPressedListener,
     private fun emptyList() {
         binding.statusTextLike.show()
         binding.statusTextLike.text = getString(R.string.empty_list)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return favoritesViewModel.onBackPressedRouter()
-    }
-
-    override fun getStateBehavior(): Int {
-        return bSheetB.state
-    }
-
-    override fun setStateBehavior() {
-        bSheetB.collapsed()
     }
 
     companion object {
