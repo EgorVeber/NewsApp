@@ -6,23 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.WebViewFragmentBinding
-import ru.gb.veber.newsapi.presenter.WebViewPresenter
 import ru.gb.veber.newsapi.utils.hide
 import ru.gb.veber.newsapi.utils.show
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import javax.inject.Inject
 
-class WebViewFragment : MvpAppCompatFragment(), WebView, BackPressedListener {
+class WebViewFragment : Fragment(), BackPressedListener {
 
     private var _binding: WebViewFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter: WebViewPresenter by moxyPresenter {
-        WebViewPresenter().apply {
-            App.instance.appComponent.inject(this)
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val webViewViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[WebViewViewModel::class.java]
+    }
+
+    private val mWebViewClient = object : WebViewClient() {
+        override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            webViewViewModel.successLoading()
         }
     }
 
@@ -35,13 +43,58 @@ class WebViewFragment : MvpAppCompatFragment(), WebView, BackPressedListener {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        App.instance.appComponent.inject(this)
+        initialization()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+        return webViewViewModel.onBackPressedRouter()
+    }
+
+    private fun initialization() {
+        val pageUrl = arguments?.getString(KEY_URL) ?: DEFAULT_URL
+        initViewModel(pageUrl)
+        initView()
+    }
+
+    private fun initViewModel(pageUrl: String) {
+        webViewViewModel.subscribe(pageUrl).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                WebViewViewModel.WebViewState.SuccessLoading -> {
+                    successLoading()
+                }
+                is WebViewViewModel.WebViewState.LoadingPage -> {
+                    binding.webNews.loadUrl(state.url)
+                }
+            }
+        }
+    }
+
+    private fun initView() {
+        with(binding.webNews) {
+            webViewClient = mWebViewClient
+            webChromeClient = WebChromeClient()
+            settings.builtInZoomControls = true
+            settings.displayZoomControls = false
+            clearHistory()
+            clearCache(true)
+        }
+
+        binding.backWebView.setOnClickListener {
+            webViewViewModel.back()
+        }
+    }
+
+    private fun successLoading() {
+        binding.webNews.show()
+        binding.progressBarWebView.hide()
     }
 
     companion object {
@@ -52,34 +105,5 @@ class WebViewFragment : MvpAppCompatFragment(), WebView, BackPressedListener {
                 putString(KEY_URL, url)
             }
         }
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.webNews.webViewClient = webViewClient
-        binding.webNews.loadUrl(arguments?.getString(KEY_URL) ?: DEFAULT_URL)
-        binding.webNews.webChromeClient = WebChromeClient()
-        binding.webNews.settings.builtInZoomControls = true
-        binding.webNews.settings.displayZoomControls = false
-        binding.webNews.clearHistory()
-        binding.webNews.clearCache(true)
-
-        binding.backWebView.setOnClickListener {
-            presenter.back()
-        }
-    }
-
-    private val webViewClient = object : WebViewClient() {
-        override fun onPageFinished(view: android.webkit.WebView?, url: String?) {
-            super.onPageFinished(view, url)
-            presenter.successLoading()
-        }
-    }
-
-    override fun showPage() {
-        binding.webNews.show()
-        binding.progressBarWebView.hide()
     }
 }
