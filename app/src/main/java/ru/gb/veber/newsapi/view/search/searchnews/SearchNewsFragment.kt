@@ -9,45 +9,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
-import ru.gb.veber.newsapi.presenter.SearchNewsPresenter
 import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
+import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
+import javax.inject.Inject
 
 
-class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedListener,
+class SearchNewsFragment : Fragment(), BackPressedListener,
     EventBehaviorToActivity {
 
     private var _binding: SearchNewsFragmentBinding? = null
     private val binding get() = _binding!!
-    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val presenter: SearchNewsPresenter by moxyPresenter {
-        SearchNewsPresenter(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
-            .apply {
-                App.instance.appComponent.inject(this)
-            }
+    private val searchNewsViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[SearchNewsViewModel::class.java]
     }
 
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private var itemListener = TopNewsListener { article -> presenter.clickNews(article) }
+    private var itemListener = TopNewsListener { article -> searchNewsViewModel.clickNews(article) }
 
     private val newsAdapter = TopNewsAdapter(itemListener)
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,59 +56,127 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         return binding.root
     }
 
-
     @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        App.instance.appComponent.inject(this)
         initialization()
         arguments?.let {
-            presenter.getNews(it.getParcelable(HISTORY_SELECT_BUNDLE))
+            searchNewsViewModel.getNews(it.getParcelable(HISTORY_SELECT_BUNDLE))
         }
-        presenter.getAccountSettings()
+        searchNewsViewModel.getAccountSettings()
     }
 
-
-    @SuppressLint("SetTextI18n")
-    override fun setTitle(keyWord: String?, sourcesId: String?, s: String?, dateSources: String?) {
-        binding.titleSearch.text = "$keyWord $sourcesId $s $dateSources"
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
+    override fun onBackPressedRouter(): Boolean {
+        return searchNewsViewModel.onBackPressedRouter()
+    }
+
+    override fun getStateBehavior(): Int {
+        return bSheetB.state
+    }
+
+    override fun setStateBehavior() {
+        bSheetB.collapsed()
+    }
 
     private fun initialization() {
+        initView()
+        initViewModel(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+    }
+
+    private fun initView() {
         bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
 
         binding.allNewsRecycler.adapter = newsAdapter
         binding.allNewsRecycler.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.backMainScreenImage.setOnClickListener { presenter.exit() }
+        binding.backMainScreenImage.setOnClickListener { searchNewsViewModel.exit() }
 
-        binding.behaviorInclude.saveSources.setOnClickListener { presenter.saveSources() }
+        binding.behaviorInclude.saveSources.setOnClickListener { searchNewsViewModel.saveSources() }
     }
 
-    override fun setNews(articles: List<Article>) {
+    private fun initViewModel(accountId: Int) {
+        searchNewsViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is SearchNewsViewModel.SearchNewsState.SetNews -> {
+                    setNews(state.list)
+                }
+                is SearchNewsViewModel.SearchNewsState.ClickNews -> {
+                    clickNews(state.article)
+                }
+                is SearchNewsViewModel.SearchNewsState.ChangeNews -> {
+                    changeNews(state.articleListHistory)
+                }
+                is SearchNewsViewModel.SearchNewsState.SetTitle -> {
+                    setTitle(state.keyWord, state.sourcesId, state.s, state.dateSources)
+                }
+                SearchNewsViewModel.SearchNewsState.EmptyList -> {
+                    emptyList()
+                }
+                SearchNewsViewModel.SearchNewsState.HideFavorites -> {
+                    hideFavorites()
+                }
+                SearchNewsViewModel.SearchNewsState.HideSaveSources -> {
+                    hideSaveSources()
+                }
+                SearchNewsViewModel.SearchNewsState.AddBadge -> {
+                    addBadge()
+                }
+                SearchNewsViewModel.SearchNewsState.RemoveBadge -> {
+                    removeBadge()
+                }
+                SearchNewsViewModel.SearchNewsState.SetLikeResourcesActive -> {
+                    setLikeResourcesActive()
+                }
+                SearchNewsViewModel.SearchNewsState.SetLikeResourcesNegative -> {
+                    setLikeResourcesNegative()
+                }
+                SearchNewsViewModel.SearchNewsState.SheetExpanded -> {
+                    sheetExpanded()
+                }
+                SearchNewsViewModel.SearchNewsState.ShowSaveSources -> {
+                    showSaveSources()
+                }
+                SearchNewsViewModel.SearchNewsState.SuccessSaveSources -> {
+                    successSaveSources()
+                }
+            }
+        }
+    }
+
+    private fun setTitle(keyWord: String?, sourcesId: String?, s: String?, dateSources: String?) {
+        binding.titleSearch.text = "$keyWord $sourcesId $s $dateSources"
+    }
+
+    private fun setNews(articles: List<Article>) {
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = articles
         binding.progressBarAllNews.hide()
         binding.allNewsRecycler.show()
     }
 
-    override fun changeNews(articleListHistory: MutableList<Article>) {
+    private fun changeNews(articleListHistory: List<Article>) {
         newsAdapter.articles = articleListHistory
     }
 
-    override fun loading() {
+    private fun loading() {
         binding.progressBarAllNews.show()
         binding.allNewsRecycler.hide()
     }
 
 
-    override fun emptyList() {
+    private fun emptyList() {
         binding.progressBarAllNews.hide()
         binding.allNewsRecycler.show()
         binding.statusTextList.show()
     }
 
-    override fun clickNews(article: Article) {
+    private fun clickNews(article: Article) {
 
         with(binding.behaviorInclude) {
             imageViewAll.loadGlideNot(article.urlToImage)
@@ -122,43 +188,43 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
-            presenter.openScreenWebView(article.url)
+            searchNewsViewModel.openScreenWebView(article.url)
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
-            presenter.setOnClickImageFavorites(article)
+            searchNewsViewModel.setOnClickImageFavorites(article)
         }
     }
 
-    override fun showSaveSources() {
+    private fun showSaveSources() {
         binding.behaviorInclude.saveSources.show()
     }
 
-    override fun hideSaveSources() {
+    private fun hideSaveSources() {
         binding.behaviorInclude.saveSources.hide()
     }
 
-    override fun sheetExpanded() {
+    private fun sheetExpanded() {
         bSheetB.expanded()
     }
 
-    override fun setLikeResourcesActive() {
+    private fun setLikeResourcesActive() {
         binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
     }
 
-    override fun setLikeResourcesNegative() {
+    private fun setLikeResourcesNegative() {
         binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
     }
 
-    override fun addBadge() {
+    private fun addBadge() {
         (requireActivity() as EventAddingBadges).addBadge()
     }
 
-    override fun removeBadge() {
+    private fun removeBadge() {
         (requireActivity() as EventAddingBadges).removeBadge()
     }
 
-    override fun successSaveSources() {
+    private fun successSaveSources() {
         binding.behaviorInclude.saveSources.hide()
         binding.root.showSnackBarError(getString(R.string.sourcesSaved), "", {})
     }
@@ -176,13 +242,8 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+    private fun hideFavorites() {
+        binding.behaviorInclude.imageFavorites.hide()
     }
 
     companion object {
@@ -197,17 +258,5 @@ class SearchNewsFragment : MvpAppCompatFragment(), SearchNewsView, BackPressedLi
                 }
             }
         }
-    }
-
-    override fun hideFavorites() {
-        binding.behaviorInclude.imageFavorites.hide()
-    }
-
-    override fun getStateBehavior(): Int {
-        return bSheetB.state
-    }
-
-    override fun setStateBehavior() {
-        bSheetB.collapsed()
     }
 }

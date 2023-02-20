@@ -32,6 +32,9 @@ import javax.inject.Inject
 
 class SearchFragment : Fragment(), BackPressedListener {
 
+    private var _binding: SearchFragmentBinding? = null
+    private val binding get() = _binding!!
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -39,11 +42,7 @@ class SearchFragment : Fragment(), BackPressedListener {
         ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
     }
 
-    private var _binding: SearchFragmentBinding? = null
-    private val binding get() = _binding!!
-
     private lateinit var adapter: SourcesAdapterAutoCompile
-
     private var dateInput: String = NOT_INPUT_DATE
     private var datePiker = MaterialDatePicker.Builder.datePicker()
 
@@ -146,8 +145,8 @@ class SearchFragment : Fragment(), BackPressedListener {
 
 
     private fun initialization() {
-        initViewModel(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
         initView()
+        initViewModel(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
     }
 
     private fun initView() = with(binding) {
