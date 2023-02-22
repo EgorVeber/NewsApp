@@ -13,6 +13,7 @@ import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerViewModel
 import ru.gb.veber.newsapi.view.profile.ProfileViewModel
 import ru.gb.veber.newsapi.view.profile.account.AccountViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
+import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationViewModel
 import ru.gb.veber.newsapi.view.search.SearchViewModel
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsViewModel
 import ru.gb.veber.newsapi.view.sources.SourcesViewModel
@@ -81,5 +82,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(WebViewViewModel::class)
     internal abstract fun bindWebViewViewModel(viewModel: WebViewViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AuthorizationViewModel::class)
+    internal abstract fun bindAuthorizationViewModel(viewModel: AuthorizationViewModel): ViewModel
 }
 
