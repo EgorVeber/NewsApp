@@ -19,7 +19,17 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.HistorySelect
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.HISTORY_SELECT_BUNDLE
+import ru.gb.veber.newsapi.utils.collapsed
+import ru.gb.veber.newsapi.utils.expanded
+import ru.gb.veber.newsapi.utils.formatDateDay
+import ru.gb.veber.newsapi.utils.hide
+import ru.gb.veber.newsapi.utils.loadGlideNot
+import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.showSnackBarError
+import ru.gb.veber.newsapi.utils.stringFromData
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
@@ -113,7 +123,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
                     changeNews(state.articleListHistory)
                 }
                 is SearchNewsViewModel.SearchNewsState.SetTitle -> {
-                    setTitle(state.keyWord, state.sourcesId, state.s, state.dateSources)
+                    setTitle(state.keyWord, state.sourcesId, state.sortType, state.dateSources)
                 }
                 SearchNewsViewModel.SearchNewsState.EmptyList -> {
                     emptyList()
@@ -149,8 +159,13 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         }
     }
 
-    private fun setTitle(keyWord: String?, sourcesId: String?, s: String?, dateSources: String?) {
-        binding.titleSearch.text = "$keyWord $sourcesId $s $dateSources"
+    private fun setTitle(
+        keyWord: String?,
+        sourcesId: String?,
+        sortType: String?,
+        dateSources: String?
+    ) {
+        binding.titleSearch.text = "$keyWord $sourcesId $sortType $dateSources"
     }
 
     private fun setNews(articles: List<Article>) {
@@ -164,6 +179,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         newsAdapter.articles = articleListHistory
     }
 
+    // TODO: чекнуть нужен ли
     private fun loading() {
         binding.progressBarAllNews.show()
         binding.allNewsRecycler.hide()

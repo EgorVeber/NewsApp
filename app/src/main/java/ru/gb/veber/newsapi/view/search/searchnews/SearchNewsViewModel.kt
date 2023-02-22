@@ -17,7 +17,11 @@ import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.API_KEY_NEWS
+import ru.gb.veber.newsapi.utils.ERROR_DB
+import ru.gb.veber.newsapi.utils.disposableBy
+import ru.gb.veber.newsapi.utils.formatDateTime
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticleUI
@@ -77,12 +81,20 @@ class SearchNewsViewModel @Inject constructor(
         }
     }
 
+    fun openScreenWebView(url: String) {
+        router.navigateTo(WebViewScreen(url))
+    }
+
+    fun exit() {
+        router.exit()
+    }
+
     fun getNews(historySelect: HistorySelect?) {
 
         mutableFlow.value = SearchNewsState.SetTitle(
             keyWord = historySelect?.keyWord,
             sourcesId = historySelect?.sourcesName,
-            s = if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
+            sortType = if (!historySelect?.keyWord.isNullOrEmpty()) historySelect?.sortByKeyWord else historySelect?.sortBySources,
             dateSources = historySelect?.dateSources
         )
 
@@ -135,6 +147,23 @@ class SearchNewsViewModel @Inject constructor(
         }).disposableBy(bag)
     }
 
+    fun setOnClickImageFavorites(article: Article) {
+        if (article.isFavorites) {
+            mutableFlow.value = SearchNewsState.SetLikeResourcesNegative
+            mutableFlow.value = SearchNewsState.RemoveBadge
+
+            deleteFavorites(article)
+            article.isFavorites = false
+
+        } else {
+            mutableFlow.value = SearchNewsState.AddBadge
+            mutableFlow.value = SearchNewsState.SetLikeResourcesActive
+
+            saveArticleLike(article)
+            article.isFavorites = true
+        }
+    }
+
     fun clickNews(article: Article) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             val isLikeSources = likeSources.find { it.idSources == article.source.id }?.id ?: 0
@@ -182,24 +211,6 @@ class SearchNewsViewModel @Inject constructor(
         }
     }
 
-
-    fun setOnClickImageFavorites(article: Article) {
-        if (article.isFavorites) {
-            mutableFlow.value = SearchNewsState.SetLikeResourcesNegative
-            mutableFlow.value = SearchNewsState.RemoveBadge
-
-            deleteFavorites(article)
-            article.isFavorites = false
-
-        } else {
-            mutableFlow.value = SearchNewsState.AddBadge
-            mutableFlow.value = SearchNewsState.SetLikeResourcesActive
-
-            saveArticleLike(article)
-            article.isFavorites = true
-        }
-    }
-
     private fun deleteFavorites(article: Article) {
         article.isFavorites = false
         articleRepo.deleteArticleByIdFavorites(article.title.toString(), accountId).subscribe({
@@ -218,14 +229,6 @@ class SearchNewsViewModel @Inject constructor(
             mutableFlow.value = SearchNewsState.ChangeNews(articleListHistory)
         }, {
         }).disposableBy(bag)
-    }
-
-    fun openScreenWebView(url: String) {
-        router.navigateTo(WebViewScreen(url))
-    }
-
-    fun exit() {
-        router.exit()
     }
 
     private fun getSourcesLike() {
@@ -249,7 +252,7 @@ class SearchNewsViewModel @Inject constructor(
         data class SetTitle(
             val keyWord: String?,
             val sourcesId: String?,
-            val s: String?,
+            val sortType: String?,
             val dateSources: String?
         ) : SearchNewsState()
 
