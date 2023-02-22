@@ -129,8 +129,8 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="@dimen/padding_15"
                 android:src="@drawable/ic_share"
-                app:layout_constraintBottom_toTopOf="@+id/titleNews"
-                app:layout_constraintEnd_toStartOf="@+id/imageFavorites" />
+                app:layout_constraintEnd_toStartOf="@+id/imageFavorites"
+                app:layout_constraintTop_toTopOf="@+id/sourceText" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageFavorites"
@@ -138,8 +138,8 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="@dimen/padding_15"
                 android:src="@drawable/ic_favorite_36"
-                app:layout_constraintBottom_toTopOf="@+id/titleNews"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageShare" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
