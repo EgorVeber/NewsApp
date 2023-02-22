@@ -63,8 +63,8 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
         val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
-        initViewModel(accountId)
         init()
+        initViewModel(accountId)
     }
 
     override fun onDestroyView() {
@@ -129,32 +129,11 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
                 is AuthorizationViewModel.AuthorizationViewState.EmailRegisterIsValidate -> {
                     emailRegisterIsValidate(state.email)
                 }
-                AuthorizationViewModel.AuthorizationViewState.EmailRegisterNotValidate -> {
-                    emailRegisterNotValidate()
-                }
-                AuthorizationViewModel.AuthorizationViewState.EmptyAccount -> {
-                    emptyAccount()
-                }
-                AuthorizationViewModel.AuthorizationViewState.ErrorRegister -> {
-                    errorRegister()
-                }
-                AuthorizationViewModel.AuthorizationViewState.ErrorSignIn -> {
-                    errorSignIn()
-                }
-                AuthorizationViewModel.AuthorizationViewState.Init -> {
-                    init()
-                }
                 is AuthorizationViewModel.AuthorizationViewState.LoginIsValidate -> {
                     loginIsValidate(state.charSequence)
                 }
-                AuthorizationViewModel.AuthorizationViewState.LoginNotValidate -> {
-                    loginNotValidate()
-                }
                 is AuthorizationViewModel.AuthorizationViewState.LoginRegisterIsValidate -> {
                     loginRegisterIsValidate(state.login)
-                }
-                AuthorizationViewModel.AuthorizationViewState.LoginRegisterNotValidate -> {
-                    loginRegisterNotValidate()
                 }
                 is AuthorizationViewModel.AuthorizationViewState.PasswordIsValidate -> {
                     passwordIsValidate(state.password)
@@ -168,23 +147,45 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
                 is AuthorizationViewModel.AuthorizationViewState.PasswordRegisterNotValidate -> {
                     passwordRegisterNotValidate(state.password)
                 }
-                AuthorizationViewModel.AuthorizationViewState.SendActivityOpenScreen -> {
-                    sendActivityOpenScreen()
-                }
                 is AuthorizationViewModel.AuthorizationViewState.SetBottomNavigationIcon -> {
                     setBottomNavigationIcon(state.checkLogin)
-                }
-                AuthorizationViewModel.AuthorizationViewState.SetLoginAnim -> {
-                    setLoginAnim()
-                }
-                AuthorizationViewModel.AuthorizationViewState.SetRegisterAnim -> {
-                    setRegisterAnim()
                 }
                 is AuthorizationViewModel.AuthorizationViewState.SuccessRegister -> {
                     successRegister(state.id)
                 }
                 is AuthorizationViewModel.AuthorizationViewState.SuccessSignIn -> {
                     successSignIn(state.id)
+                }
+                AuthorizationViewModel.AuthorizationViewState.EmailRegisterNotValidate -> {
+                    emailRegisterNotValidate()
+                }
+                AuthorizationViewModel.AuthorizationViewState.EmptyAccount -> {
+                    emptyAccount()
+                }
+                AuthorizationViewModel.AuthorizationViewState.ErrorRegister -> {
+                    errorRegister()
+                }
+                AuthorizationViewModel.AuthorizationViewState.ErrorSignIn -> {
+                    errorSignIn()
+                }
+
+                AuthorizationViewModel.AuthorizationViewState.LoginNotValidate -> {
+                    loginNotValidate()
+                }
+
+                AuthorizationViewModel.AuthorizationViewState.LoginRegisterNotValidate -> {
+                    loginRegisterNotValidate()
+                }
+
+                AuthorizationViewModel.AuthorizationViewState.SendActivityOpenScreen -> {
+                    sendActivityOpenScreen()
+                }
+
+                AuthorizationViewModel.AuthorizationViewState.SetLoginAnim -> {
+                    setLoginAnim()
+                }
+                AuthorizationViewModel.AuthorizationViewState.SetRegisterAnim -> {
+                    setRegisterAnim()
                 }
             }
         }

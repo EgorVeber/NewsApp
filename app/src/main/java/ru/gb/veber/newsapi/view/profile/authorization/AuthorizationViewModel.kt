@@ -34,8 +34,12 @@ class AuthorizationViewModel @Inject constructor(
 
     private val bag = CompositeDisposable()
 
+    override fun onCleared() {
+        super.onCleared()
+        bag.dispose()
+    }
+
     fun subscribe(accountId: Int): LiveData<AuthorizationViewState> {
-        mutableFlow.value = AuthorizationViewState.Init
         return flow
     }
 
@@ -149,26 +153,13 @@ class AuthorizationViewModel @Inject constructor(
     }
 
     sealed class AuthorizationViewState {
-        object Init : AuthorizationViewState()
 
         data class SuccessRegister(val id: Int) : AuthorizationViewState()
-        object ErrorRegister : AuthorizationViewState()
-        data class SuccessSignIn(val id: Int) : AuthorizationViewState()
-        object ErrorSignIn : AuthorizationViewState()
-
-        object SendActivityOpenScreen : AuthorizationViewState()
-        object SetRegisterAnim : AuthorizationViewState()
-        object SetLoginAnim : AuthorizationViewState()
-
-        object LoginNotValidate : AuthorizationViewState()
         data class LoginIsValidate(val charSequence: CharSequence?) : AuthorizationViewState()
-
         data class PasswordIsValidate(val password: CharSequence?) : AuthorizationViewState()
         data class PasswordNotValidate(val password: CharSequence?) : AuthorizationViewState()
-
         data class LoginRegisterIsValidate(val login: CharSequence?) : AuthorizationViewState()
-        object LoginRegisterNotValidate : AuthorizationViewState()
-
+        data class SuccessSignIn(val id: Int) : AuthorizationViewState()
         data class PasswordRegisterIsValidate(val password: CharSequence?) :
             AuthorizationViewState()
 
@@ -176,9 +167,17 @@ class AuthorizationViewModel @Inject constructor(
             AuthorizationViewState()
 
         data class EmailRegisterIsValidate(val email: CharSequence?) : AuthorizationViewState()
-        object EmailRegisterNotValidate : AuthorizationViewState()
-
-        object EmptyAccount : AuthorizationViewState()
         data class SetBottomNavigationIcon(val checkLogin: String) : AuthorizationViewState()
+
+        object ErrorSignIn : AuthorizationViewState()
+        object ErrorRegister : AuthorizationViewState()
+        object SendActivityOpenScreen : AuthorizationViewState()
+        object SetRegisterAnim : AuthorizationViewState()
+        object SetLoginAnim : AuthorizationViewState()
+        object LoginNotValidate : AuthorizationViewState()
+        object LoginRegisterNotValidate : AuthorizationViewState()
+        object EmailRegisterNotValidate : AuthorizationViewState()
+        object EmptyAccount : AuthorizationViewState()
+        //object Init : AuthorizationViewState()
     }
 }
