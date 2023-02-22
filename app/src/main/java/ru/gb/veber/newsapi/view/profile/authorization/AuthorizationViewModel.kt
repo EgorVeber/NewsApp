@@ -176,6 +176,5 @@ class AuthorizationViewModel @Inject constructor(
         object LoginRegisterNotValidate : AuthorizationViewState()
         object EmailRegisterNotValidate : AuthorizationViewState()
         object EmptyAccount : AuthorizationViewState()
-        //object Init : AuthorizationViewState()
     }
 }
