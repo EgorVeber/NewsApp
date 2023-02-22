@@ -162,10 +162,8 @@ class AuthorizationViewModel @Inject constructor(
         data class SuccessSignIn(val id: Int) : AuthorizationViewState()
         data class PasswordRegisterIsValidate(val password: CharSequence?) :
             AuthorizationViewState()
-
         data class PasswordRegisterNotValidate(val password: CharSequence?) :
             AuthorizationViewState()
-
         data class EmailRegisterIsValidate(val email: CharSequence?) : AuthorizationViewState()
         data class SetBottomNavigationIcon(val checkLogin: String) : AuthorizationViewState()
 
