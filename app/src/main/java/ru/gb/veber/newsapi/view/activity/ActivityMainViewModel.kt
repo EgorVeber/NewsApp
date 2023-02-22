@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.core.TopNewsViewPagerScreen
-import ru.gb.veber.newsapi.core.SourcesScreen
+import ru.gb.veber.newsapi.core.FavoritesViewPagerScreen
 import ru.gb.veber.newsapi.core.ProfileScreen
 import ru.gb.veber.newsapi.core.SearchScreen
-import ru.gb.veber.newsapi.core.FavoritesViewPagerScreen
+import ru.gb.veber.newsapi.core.SourcesScreen
+import ru.gb.veber.newsapi.core.TopNewsViewPagerScreen
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.network.NewsRepo
 import ru.gb.veber.newsapi.model.repository.room.CountryRepo
@@ -31,7 +31,6 @@ class ActivityMainViewModel @Inject constructor(
     private val flow: LiveData<ViewMainState> = mutableFlow
 
     fun subscribe(): LiveData<ViewMainState> {
-        mutableFlow.value = ViewMainState.Init
         return flow
     }
 
@@ -113,7 +112,6 @@ class ActivityMainViewModel @Inject constructor(
     }
 
     sealed class ViewMainState() {
-        object Init : ViewMainState()
         data class OnCreateSetIconTitleAccount(val accountLogin: String) : ViewMainState()
         object CompletableInsertSources : ViewMainState()
         object HideAllBehavior : ViewMainState()
