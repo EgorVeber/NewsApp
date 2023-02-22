@@ -11,27 +11,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
-import moxy.MvpAppCompatFragment
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.showSnackBarError
-import ru.gb.veber.newsapi.utils.LOGIN_STR
-import ru.gb.veber.newsapi.utils.PASSWORD_STR
-import ru.gb.veber.newsapi.utils.EMAIL_STR
+import ru.gb.veber.newsapi.utils.*
 import ru.gb.veber.newsapi.utils.ColorUtils.getColor
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.activity.OpenScreen
 import javax.inject.Inject
 
-class AuthorizationFragment : MvpAppCompatFragment(), BackPressedListener {
+class AuthorizationFragment : Fragment(), BackPressedListener {
 
     private var _binding: AuthorizationFragmentBinding? = null
     private val binding get() = _binding!!
