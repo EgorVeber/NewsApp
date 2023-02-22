@@ -307,7 +307,7 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
 
 
     private fun errorSelectCountry() {
-        binding.countryTextInput.error = getString(R.string.errorSelectSources)
+        binding.countryTextInput.error = getString(R.string.errorCountryNotSelected)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.countryTextInput.error = null
         }, DURATION_ERROR_INPUT)
