@@ -155,10 +155,10 @@ class FavoritesViewModel @Inject constructor(
     }
 
     sealed class FavoritesState {
+        data class ClickNews(val article: Article) : FavoritesState()
+        data class SetSources(val articles: List<Article>) : FavoritesState()
         object EmptyList : FavoritesState()
         object Loading : FavoritesState()
         object NotAuthorized : FavoritesState()
-        data class ClickNews(val article: Article) : FavoritesState()
-        data class SetSources(val articles: List<Article>) : FavoritesState()
     }
 }

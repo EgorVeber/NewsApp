@@ -32,6 +32,7 @@ import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.utils.stringFromData
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
+import ru.gb.veber.newsapi.view.activity.EventShareLink
 import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
@@ -210,6 +211,11 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.behaviorInclude.imageFavorites.setOnClickListener {
             searchNewsViewModel.setOnClickImageFavorites(article)
         }
+
+        binding.behaviorInclude.imageShare.setOnClickListener {
+            (requireActivity() as EventShareLink).shareLink(article.url)
+        }
+
     }
 
     private fun showSaveSources() {
@@ -261,6 +267,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
     private fun hideFavorites() {
         binding.behaviorInclude.imageFavorites.hide()
     }
+
 
     companion object {
         fun getInstance(

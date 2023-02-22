@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.view.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,12 +12,12 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
 import ru.gb.veber.newsapi.utils.COUNTER_BACKSTACK
 import ru.gb.veber.newsapi.utils.COUNTER_BADGE
-import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.utils.DELAY_BACK_STACK
 import ru.gb.veber.newsapi.utils.showText
-import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
@@ -40,8 +41,12 @@ interface EventAddingBadges {
     fun removeBadge()
 }
 
+interface EventShareLink {
+    fun shareLink(url: String)
+}
+
 class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
-    EventAddingBadges {
+    EventAddingBadges, EventShareLink {
 
     private lateinit var binding: ActivityMainBinding
     private var backStack = COUNTER_BACKSTACK
@@ -247,5 +252,16 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
 
     private fun errorSourcesDownload() {
         binding.root.showText(getString(R.string.error_sources_download))
+    }
+
+    override fun shareLink(url: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, url)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }
