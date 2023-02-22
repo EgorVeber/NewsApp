@@ -8,7 +8,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import moxy.MvpAppCompatFragment
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.WebViewFragmentBinding
 import ru.gb.veber.newsapi.utils.hide

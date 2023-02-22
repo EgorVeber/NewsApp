@@ -37,6 +37,6 @@ class WebViewViewModel @Inject constructor(
 
     sealed class WebViewState {
         object SuccessLoading : WebViewState()
-        data class LoadingPage(val url:String) : WebViewState()
+        data class LoadingPage(val url: String) : WebViewState()
     }
 }
