@@ -4,13 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsViewPagerFragmentBinding
-import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
@@ -21,22 +20,24 @@ import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Compan
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SCIENCE
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SPORTS
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.TECHNOLOGY
+import javax.inject.Inject
 
 
 interface EventTopNews {
     fun updateViewPager()
 }
 
-class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
+class TopNewsViewPagerFragment : Fragment(),
     BackPressedListener, EventTopNews {
 
     private var _binding: TopNewsViewPagerFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter: TopNewsViewPagerPresenter by moxyPresenter {
-        TopNewsViewPagerPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val topNewsViewPagerViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[TopNewsViewPagerViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -50,7 +51,9 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        App.instance.appComponent.inject(this)
         initialization(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        initViewModel()
     }
 
     private fun initialization(accountID: Int) {
@@ -69,8 +72,14 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
         }.attach()
     }
 
-    override fun init() {
-
+    private fun initViewModel() {
+        topNewsViewPagerViewModel.subscribe().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                TopNewsViewPagerViewModel.TopNewsViewPagerState.InitView -> {
+                    topNewsViewPagerViewModel.init()
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -79,7 +88,7 @@ class TopNewsViewPagerFragment : MvpAppCompatFragment(), TopNewsViewPagerView,
     }
 
     override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+        return topNewsViewPagerViewModel.onBackPressedRouter()
     }
 
     companion object {
