@@ -8,7 +8,6 @@ import ru.gb.veber.newsapi.di.moduls.NetworkModule
 import ru.gb.veber.newsapi.di.moduls.RepoNetworkModule
 import ru.gb.veber.newsapi.di.moduls.SharedPreferenceModule
 import ru.gb.veber.newsapi.di.moduls.ViewModelModule
-import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
 import ru.gb.veber.newsapi.presenter.CustomizeCategoryPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.view.activity.ActivityMain
@@ -17,6 +16,7 @@ import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
+import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
 import ru.gb.veber.newsapi.view.search.SearchFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.view.sources.FragmentSources
@@ -38,7 +38,6 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(mainActivity: ActivityMain)
     fun inject(accountFragment: AccountFragment)
-    fun inject(authorizationPresenter: AuthorizationPresenter)
     fun inject(searchFragment: SearchFragment)
     fun inject(favoritesFragment: FavoritesFragment)
     fun inject(profileFragment: ProfileFragment)
@@ -50,4 +49,5 @@ interface AppComponent {
     fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)
     fun inject(editAccountFragment: EditAccountFragment)
     fun inject(favoritesViewPagerFragment: FavoritesViewPagerFragment)
+    fun inject(authorizationFragment: AuthorizationFragment)
 }

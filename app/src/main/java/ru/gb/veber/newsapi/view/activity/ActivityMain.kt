@@ -75,13 +75,17 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        activityMainViewModel.getAccountSettings()
-        activityMainViewModel.getCheckFirstStartApp()
+        init()
         initViewModel()
 
         if (savedInstanceState != null) {
             activityMainViewModel.openScreenProfile()
         }
+
+        activityMainViewModel.getAccountSettings()
+        activityMainViewModel.getCheckFirstStartApp()
+
+
     }
 
     override fun onResumeFragments() {
@@ -180,9 +184,6 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
     private fun initViewModel() {
         activityMainViewModel.subscribe().observe(this) { state ->
             when (state) {
-                ActivityMainViewModel.ViewMainState.Init -> {
-                    init()
-                }
                 ActivityMainViewModel.ViewMainState.CompletableInsertSources -> {
                     completableInsertSources()
                 }
@@ -193,7 +194,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
                     hideAllBehavior()
                 }
                 is ActivityMainViewModel.ViewMainState.OnCreateSetIconTitleAccount -> {
-                    onCreateSetIconTitleAccount(ACCOUNT_LOGIN_DEFAULT)
+                    onCreateSetIconTitleAccount(state.accountLogin)
                 }
             }
         }
