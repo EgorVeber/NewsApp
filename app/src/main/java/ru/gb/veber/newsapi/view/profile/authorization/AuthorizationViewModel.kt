@@ -14,13 +14,13 @@ import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.utils.ALL_COUNTRY
 import ru.gb.veber.newsapi.utils.ALL_COUNTRY_VALUE
+import ru.gb.veber.newsapi.utils.EMAIL_PATTERN
 import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.disposableBy
-import ru.gb.veber.newsapi.utils.checkLogin
 import ru.gb.veber.newsapi.utils.LOGIN_PATTERN
 import ru.gb.veber.newsapi.utils.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.utils.EMAIL_PATTERN
-import java.util.Date
+import ru.gb.veber.newsapi.utils.checkLogin
+import ru.gb.veber.newsapi.utils.disposableBy
+import java.util.*
 import javax.inject.Inject
 
 class AuthorizationViewModel @Inject constructor(
@@ -162,8 +162,10 @@ class AuthorizationViewModel @Inject constructor(
         data class SuccessSignIn(val id: Int) : AuthorizationViewState()
         data class PasswordRegisterIsValidate(val password: CharSequence?) :
             AuthorizationViewState()
+
         data class PasswordRegisterNotValidate(val password: CharSequence?) :
             AuthorizationViewState()
+
         data class EmailRegisterIsValidate(val email: CharSequence?) : AuthorizationViewState()
         data class SetBottomNavigationIcon(val checkLogin: String) : AuthorizationViewState()
 

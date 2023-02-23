@@ -19,8 +19,13 @@ import com.jakewharton.rxbinding.widget.RxTextView
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ColorUtils.getColor
+import ru.gb.veber.newsapi.utils.EMAIL_STR
+import ru.gb.veber.newsapi.utils.LOGIN_STR
+import ru.gb.veber.newsapi.utils.PASSWORD_STR
+import ru.gb.veber.newsapi.utils.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.activity.OpenScreen
