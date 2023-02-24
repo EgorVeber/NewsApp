@@ -53,7 +53,6 @@ class TopNewsViewPagerFragment : Fragment(),
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
         initialization(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
-        initViewModel()
     }
 
     private fun initialization(accountID: Int) {
@@ -70,16 +69,6 @@ class TopNewsViewPagerFragment : Fragment(),
                 TECHNOLOGY -> tab.text = getString(R.string.categoryTechnology)
             }
         }.attach()
-    }
-
-    private fun initViewModel() {
-        topNewsViewPagerViewModel.subscribe().observe(viewLifecycleOwner) { state ->
-            when (state) {
-                TopNewsViewPagerViewModel.TopNewsViewPagerState.InitView -> {
-                    topNewsViewPagerViewModel.init()
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
