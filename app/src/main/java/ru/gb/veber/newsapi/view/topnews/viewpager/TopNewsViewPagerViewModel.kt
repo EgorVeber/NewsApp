@@ -8,6 +8,7 @@ class TopNewsViewPagerViewModel @Inject constructor(private val router: Router) 
 
     fun onBackPressedRouter(): Boolean {
         router.exit()
+
         return true
     }
 
