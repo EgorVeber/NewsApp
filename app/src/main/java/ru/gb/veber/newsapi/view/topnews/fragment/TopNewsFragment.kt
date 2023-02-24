@@ -19,7 +19,6 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import moxy.MvpAppCompatFragment
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
@@ -37,11 +36,13 @@ import ru.gb.veber.newsapi.utils.show
 import ru.gb.veber.newsapi.utils.stringFromData
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
+import ru.gb.veber.newsapi.view.activity.EventShareLink
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.view.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
 import javax.inject.Inject
+
 
 class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity {
 
@@ -230,6 +231,10 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
         binding.behaviorInclude.imageFavorites.setOnClickListener {
             topNewsViewModel.clickImageFavorites(article)
         }
+
+        binding.behaviorInclude.imageShare.setOnClickListener {
+            (requireActivity() as EventShareLink).shareLink(article.url)
+        }
     }
 
     private fun setCountry(countryList: List<String>, startIndex: Int) {
@@ -307,7 +312,7 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
 
 
     private fun errorSelectCountry() {
-        binding.countryTextInput.error = getString(R.string.errorSelectSources)
+        binding.countryTextInput.error = getString(R.string.errorCountryNotSelected)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.countryTextInput.error = null
         }, DURATION_ERROR_INPUT)
@@ -334,6 +339,7 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
     private fun eventNavigationBarRemoveBadgeFavorites() {
         (requireActivity() as EventAddingBadges).removeBadge()
     }
+
 
     companion object {
         private const val CATEGORY_KEY = "CATEGORY_KEY"

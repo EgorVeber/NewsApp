@@ -1,8 +1,6 @@
 package ru.gb.veber.newsapi.di
 
 import dagger.Component
-import ru.gb.veber.newsapi.di.moduls.*
-import ru.gb.veber.newsapi.presenter.CustomizeCategoryPresenter
 import ru.gb.veber.newsapi.di.moduls.AppModule
 import ru.gb.veber.newsapi.di.moduls.DataBaseModule
 import ru.gb.veber.newsapi.di.moduls.NavigationModule
@@ -16,6 +14,7 @@ import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
+import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
 import ru.gb.veber.newsapi.view.search.SearchFragment
@@ -46,10 +45,9 @@ interface AppComponent {
     fun inject(searchNewsFragment: SearchNewsFragment)
     fun inject(fragmentSources: FragmentSources)
     fun inject(webViewFragment: WebViewFragment)
-    fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)
     fun inject(editAccountFragment: EditAccountFragment)
     fun inject(favoritesViewPagerFragment: FavoritesViewPagerFragment)
     fun inject(authorizationFragment: AuthorizationFragment)
     fun inject(topNewsViewPagerFragment:TopNewsViewPagerFragment)
-
+    fun inject(customizeCategoryFragment: CustomizeCategoryFragment)
 }

@@ -31,7 +31,7 @@ import ru.gb.veber.newsapi.utils.mapper.toArticleUI
 import ru.gb.veber.newsapi.utils.mapper.toCountry
 import ru.gb.veber.newsapi.utils.subscribeDefault
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
-import java.util.Date
+import java.util.*
 import javax.inject.Inject
 
 class TopNewsViewModel @Inject constructor(
@@ -95,6 +95,7 @@ class TopNewsViewModel @Inject constructor(
             article.isFavorites = true
         }
     }
+
 
     fun openScreenWebView(url: String) {
         router.navigateTo(WebViewScreen(url))
@@ -222,8 +223,10 @@ class TopNewsViewModel @Inject constructor(
             newsRepoImpl.getTopicalHeadlinesCategoryCountry(
                 category = category,
                 country = countryCode,
-                key = API_KEY_NEWS),
-            articleRepoImpl.getArticleById(accountId)) { news, articles ->
+                key = API_KEY_NEWS
+            ),
+            articleRepoImpl.getArticleById(accountId)
+        ) { news, articles ->
             val newsModified =
                 news.articles.map { articleDto -> articleDto.toArticle() }.also { list ->
                     list.map { article ->

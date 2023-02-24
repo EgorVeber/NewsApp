@@ -4,23 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import moxy.MvpAppCompatFragment
-import moxy.MvpView
-import moxy.ktx.moxyPresenter
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.CustomizeCategoryFragmentBinding
-import ru.gb.veber.newsapi.presenter.CustomizeCategoryPresenter
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import javax.inject.Inject
 
-class CustomizeCategoryFragment : MvpAppCompatFragment(), MvpView, BackPressedListener {
+class CustomizeCategoryFragment : Fragment(), BackPressedListener {
 
     private var _binding: CustomizeCategoryFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter: CustomizeCategoryPresenter by moxyPresenter {
-        CustomizeCategoryPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val customizeCategoryViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[CustomizeCategoryViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -34,26 +34,26 @@ class CustomizeCategoryFragment : MvpAppCompatFragment(), MvpView, BackPressedLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        App.instance.appComponent.inject(this)
         initialize()
     }
 
-    private fun initialize() {
-        binding.backAccountScreen.setOnClickListener {
-            presenter.backAccountScreen()
-        }
-    }
-
-    companion object {
-        fun getInstance() = CustomizeCategoryFragment()
-    }
-
     override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
+        return customizeCategoryViewModel.onBackPressedRouter()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initialize() {
+        binding.backAccountScreen.setOnClickListener {
+            customizeCategoryViewModel.backAccountScreen()
+        }
+    }
+
+    companion object {
+        fun getInstance() = CustomizeCategoryFragment()
     }
 }

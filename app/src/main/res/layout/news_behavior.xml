@@ -1,105 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_sheet_container"
-    style="@style/behaviorStyle"
->
+    style="@style/behaviorStyle">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewAll"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:background="@color/color_background_behavior_image"
-            android:scaleType="fitXY"
-            android:src="@drawable/chipmunk"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/titleNews"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:padding="@dimen/padding_10"
-            android:paddingEnd="@dimen/padding_15"
-            android:textColor="@color/color_black"
-            android:textSize="@dimen/text_size_title_behavior"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewAll" />
+            <TextView
+                android:id="@+id/sourceText"
+                style="@style/sourceNameBackgroundImage"
+                android:layout_marginStart="@dimen/margin_10"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageCardView"
+                tools:text="ABC News" />
 
-        <TextView
-            android:id="@+id/dateNews"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_10"
-            android:textColor="@color/color_published_at_search_news"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleNews" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/imageCardView"
+                style="@style/cardViewDefault"
+                android:layout_margin="@dimen/margin_card_view_10"
+                app:cardElevation="@dimen/header_news_elevation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/descriptionNews"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_6"
-            android:padding="@dimen/padding_10"
-            android:paddingEnd="@dimen/padding_5"
-            android:textColor="@color/color_black"
-            android:textSize="@dimen/text_size_description_behavior"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateNews" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@color/color_background_behavior_image"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/chipmunk"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </com.google.android.material.card.MaterialCardView>
 
+            <TextView
+                android:id="@+id/titleNews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_10"
+                android:paddingEnd="@dimen/padding_15"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/text_size_title_behavior"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sourceText"
+                tools:text="MyamaymyaMyamaymyaMyamaymyaMyamaymya" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/saveSources"
-            style="@style/MyMaterialTextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_10"
-            android:background="?selectableItemBackground"
-            android:text="@string/save_sources"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/authorText" />
-
-        <TextView
-            android:id="@+id/authorText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_5"
-            android:paddingEnd="@dimen/padding_15"
-            android:textColor="@color/color_black"
-            android:textSize="@dimen/text_size_author"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionNews" />
+            <TextView
+                android:id="@+id/dateNews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_10"
+                android:textColor="@color/color_published_at_search_news"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionNews"
+                tools:text="21 February 2023, 13:44" />
 
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageFavorites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/padding_15"
-            android:src="@drawable/ic_favorite_36"
-            app:layout_constraintBottom_toBottomOf="@id/dateNews"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/dateNews" />
+            <TextView
+                android:id="@+id/descriptionNews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_10"
+                android:paddingEnd="@dimen/padding_5"
+                android:textColor="@color/color_black"
+                android:textSize="@dimen/text_size_description_behavior"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.312"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleNews"
+                tools:text="MyamaymyaMyamaymyaMyamaymyaMyamaymya" />
 
-        <TextView
-            android:id="@+id/sourceText"
-            style="@style/sourceNameBackgroundImage"
-            app:layout_constraintBottom_toBottomOf="@+id/imageViewAll"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveSources"
+                style="@style/MyMaterialTextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:background="?selectableItemBackground"
+                android:text="@string/save_sources"
+                android:visibility="gone"
+                tools:text="Save sources"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/authorText" />
+
+            <TextView
+                android:id="@+id/authorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_marginEnd="@dimen/margin_10"
+                android:paddingEnd="@dimen/padding_15"
+                android:textColor="@color/color_published_at_search_news"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/authorText2"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionNews"
+                tools:text="Anonymous author" />
+
+
+            <TextView
+                android:id="@+id/authorText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_10"
+                android:paddingEnd="@dimen/padding_15"
+                android:text="."
+                android:textColor="@color/color_published_at_search_news"
+                android:textSize="@dimen/text_size_title_behavior"
+                app:layout_constraintBottom_toBottomOf="@+id/dateNews"
+                app:layout_constraintStart_toEndOf="@+id/dateNews" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/padding_15"
+                android:src="@drawable/ic_share"
+                app:layout_constraintEnd_toStartOf="@+id/imageFavorites"
+                app:layout_constraintTop_toTopOf="@+id/sourceText" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageFavorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/padding_15"
+                android:src="@drawable/ic_favorite_36"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageShare" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

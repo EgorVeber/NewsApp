@@ -17,12 +17,22 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.utils.PAGE
+import ru.gb.veber.newsapi.utils.collapsed
+import ru.gb.veber.newsapi.utils.expanded
+import ru.gb.veber.newsapi.utils.formatDateDay
+import ru.gb.veber.newsapi.utils.hide
+import ru.gb.veber.newsapi.utils.loadGlideNot
+import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.stringFromData
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import javax.inject.Inject
+import ru.gb.veber.newsapi.view.activity.EventShareLink
 import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
+import javax.inject.Inject
 
 class FavoritesFragment : Fragment(), BackPressedListener,
     EventBehaviorToActivity {
@@ -114,6 +124,10 @@ class FavoritesFragment : Fragment(), BackPressedListener,
 
         binding.behaviorInclude.descriptionNews.setOnClickListener {
             favoritesViewModel.openScreenWebView(article.url)
+        }
+
+        binding.behaviorInclude.imageShare.setOnClickListener {
+            (requireActivity() as EventShareLink).shareLink(article.url)
         }
     }
 

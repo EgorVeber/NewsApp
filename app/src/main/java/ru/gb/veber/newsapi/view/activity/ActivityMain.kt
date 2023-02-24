@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.view.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -40,8 +41,12 @@ interface EventAddingBadges {
     fun removeBadge()
 }
 
+interface EventShareLink {
+    fun shareLink(url: String)
+}
+
 class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
-    EventAddingBadges {
+    EventAddingBadges, EventShareLink {
 
     private lateinit var binding: ActivityMainBinding
     private var backStack = COUNTER_BACKSTACK
@@ -248,5 +253,16 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
 
     private fun errorSourcesDownload() {
         binding.root.showText(getString(R.string.error_sources_download))
+    }
+
+    override fun shareLink(url: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, url)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }

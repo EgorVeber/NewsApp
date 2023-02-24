@@ -112,4 +112,5 @@
     <string name="notAvailable">Not yet available</string>
     <string name="error_load_news">Data loading error</string>
     <string name="error_load_default">Something went wrong, please try again later.</string>
+    <string name="errorCountryNotSelected">Сountry not selected</string>
 </resources>
