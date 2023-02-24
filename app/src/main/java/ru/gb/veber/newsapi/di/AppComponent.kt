@@ -8,13 +8,13 @@ import ru.gb.veber.newsapi.di.moduls.NetworkModule
 import ru.gb.veber.newsapi.di.moduls.RepoNetworkModule
 import ru.gb.veber.newsapi.di.moduls.SharedPreferenceModule
 import ru.gb.veber.newsapi.di.moduls.ViewModelModule
-import ru.gb.veber.newsapi.presenter.CustomizeCategoryPresenter
 import ru.gb.veber.newsapi.presenter.TopNewsViewPagerPresenter
 import ru.gb.veber.newsapi.view.activity.ActivityMain
 import ru.gb.veber.newsapi.view.favorites.FavoritesFragment
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
+import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
 import ru.gb.veber.newsapi.view.search.SearchFragment
@@ -46,8 +46,8 @@ interface AppComponent {
     fun inject(fragmentSources: FragmentSources)
     fun inject(topNewsViewPagerPresenter: TopNewsViewPagerPresenter)
     fun inject(webViewFragment: WebViewFragment)
-    fun inject(customizeCategoryPresenter: CustomizeCategoryPresenter)
     fun inject(editAccountFragment: EditAccountFragment)
     fun inject(favoritesViewPagerFragment: FavoritesViewPagerFragment)
     fun inject(authorizationFragment: AuthorizationFragment)
+    fun inject(customizeCategoryFragment: CustomizeCategoryFragment)
 }
