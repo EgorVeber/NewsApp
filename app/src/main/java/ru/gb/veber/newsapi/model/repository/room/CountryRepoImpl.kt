@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.model.database.dao.CountryDao
 import ru.gb.veber.newsapi.model.database.entity.CountryDbEntity
-import ru.gb.veber.newsapi.utils.subscribeDefault
+import ru.gb.veber.newsapi.utils.extentions.subscribeDefault
 
 class CountryRepoImpl(private val countryDao: CountryDao) : CountryRepo {
 
@@ -14,5 +14,13 @@ class CountryRepoImpl(private val countryDao: CountryDao) : CountryRepo {
 
     override fun getCountry(): Single<List<CountryDbEntity>> {
         return countryDao.getCountry().subscribeDefault()
+    }
+
+    override suspend fun insertAllV2(countryDbEntity: List<CountryDbEntity>) {
+        countryDao.insertAllV2(countryDbEntity)
+    }
+
+    override suspend fun getCountryV2(): List<CountryDbEntity> {
+        return countryDao.getCountryV2()
     }
 }

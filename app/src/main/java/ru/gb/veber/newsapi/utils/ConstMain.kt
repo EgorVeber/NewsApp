@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.utils
 
 //API NEWS
-const val API_KEY_NEWS = "33804c62820c4b94864ee739f17a8d08"
+const val API_KEY_NEWS = "a4ee7882ba1141308c7a345418cd8124"
 const val API_KEY = "apiKey"
 const val PAGE_SIZE = "pageSize"
 const val PAGE_SIZE_COUNT = "100"
@@ -11,8 +11,11 @@ const val EVERYTHING = "everything"
 
 //ROOM
 const val ACCOUNT_ID_DEFAULT = 0
-const val ERROR_DB = "ERROR_DB"
 const val DATABASE_NAME = "news.db"
+
+//ERROR
+const val ERROR_LOAD_NEWS = "ERROR_LOAD_NEWS"
+const val ERROR_DB = "ERROR_DB"
 
 //BUNDLE SHARED
 const val FILE_SETTINGS = "FILE_SETTINGS"

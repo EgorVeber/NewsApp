@@ -1,27 +1,30 @@
 package ru.gb.veber.newsapi.view.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import io.reactivex.rxjava3.core.Completable
-import moxy.MvpAppCompatActivity
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.presenter.ActivityPresenter
-import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.utils.COUNTER_BACKSTACK
+import ru.gb.veber.newsapi.utils.COUNTER_BADGE
 import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
+import ru.gb.veber.newsapi.utils.DELAY_BACK_STACK
+import ru.gb.veber.newsapi.utils.extentions.showText
 import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
-import ru.gb.veber.newsapi.view.topnews.pageritem.EventBehaviorToActivity
+import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
 
 interface OpenScreen {
     fun openMainScreen()
@@ -38,13 +41,16 @@ interface EventAddingBadges {
     fun removeBadge()
 }
 
-class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAccountScreen,
-    EventAddingBadges {
+interface EventShareLink {
+    fun shareLink(url: String)
+}
+
+class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
+    EventAddingBadges, EventShareLink {
 
     private lateinit var binding: ActivityMainBinding
     private var backStack = COUNTER_BACKSTACK
     private var counterBadge = COUNTER_BADGE
-
 
     @Inject
     lateinit var sharedPreferenceAccount: SharedPreferenceAccount
@@ -53,10 +59,11 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
     lateinit var navigatorHolder: NavigatorHolder
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
 
-    private val presenter: ActivityPresenter by moxyPresenter {
-        ActivityPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val activityMainViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ActivityMainViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,12 +74,18 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter.getAccountSettings()
-        presenter.getCheckFirstStartApp()
+
+        init()
+        initViewModel()
 
         if (savedInstanceState != null) {
-            presenter.openScreenProfile()
+            activityMainViewModel.openScreenProfile()
         }
+
+        activityMainViewModel.getAccountSettings()
+        activityMainViewModel.getCheckFirstStartApp()
+
+
     }
 
     override fun onResumeFragments() {
@@ -85,47 +98,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         super.onPause()
         //App.instance.navigationHolder.removeNavigator()
         navigatorHolder.removeNavigator()
-    }
-
-    override fun hideAllBehavior() {
-        supportFragmentManager.fragments.forEach { fm ->
-            if (fm is EventBehaviorToActivity) {
-                (fm as EventBehaviorToActivity).setStateBehavior()
-            }
-        }
-    }
-
-    override fun init() {
-        binding.bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.topNews -> {
-                    presenter.openScreenNews()
-                }
-                R.id.searchNews -> {
-                    presenter.openScreenSearchNews()
-                }
-                R.id.actionSources -> {
-                    presenter.openScreenSources()
-                }
-                R.id.favoritesNews -> {
-                    presenter.openFavoritesScreen()
-                    val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
-                    if (badgeDrawable != null) {
-                        badgeDrawable.number = 0
-                        counterBadge = 0
-                        binding.bottomNavigationView.removeBadge(R.id.favoritesNews)
-                    }
-                }
-                R.id.actionProfile -> {
-                    presenter.openScreenProfile()
-                }
-            }
-            true
-        }
-        binding.bottomNavigationView.selectedItemId = R.id.topNews
-        binding.bottomNavigationView.setOnItemReselectedListener {
-
-        }
     }
 
     override fun onBackPressed() {
@@ -176,16 +148,6 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_add_alt_1_24)
     }
 
-    override fun onCreateSetIconTitleAccount(accountLogin: String) {
-        var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
-        item.title = accountLogin
-        item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_24)
-    }
-
-    override fun completableInsertSources() {
-        Toast.makeText(this, getString(R.string.source_loaded), Toast.LENGTH_SHORT).show()
-    }
-
     override fun bottomNavigationSetCurrentAccount(checkLogin: String) {
         var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
         item.title = checkLogin
@@ -219,7 +181,88 @@ class ActivityMain : MvpAppCompatActivity(), ViewMain, OpenScreen, EventLogoutAc
         }
     }
 
-    override fun errorSourcesDownload() {
+    private fun initViewModel() {
+        activityMainViewModel.subscribe().observe(this) { state ->
+            when (state) {
+                ActivityMainViewModel.ViewMainState.CompletableInsertSources -> {
+                    completableInsertSources()
+                }
+                ActivityMainViewModel.ViewMainState.ErrorSourcesDownload -> {
+                    errorSourcesDownload()
+                }
+                ActivityMainViewModel.ViewMainState.HideAllBehavior -> {
+                    hideAllBehavior()
+                }
+                is ActivityMainViewModel.ViewMainState.OnCreateSetIconTitleAccount -> {
+                    onCreateSetIconTitleAccount(state.accountLogin)
+                }
+            }
+        }
+    }
+
+    private fun hideAllBehavior() {
+        supportFragmentManager.fragments.forEach { fm ->
+            if (fm is EventBehaviorToActivity) {
+                (fm as EventBehaviorToActivity).setStateBehavior()
+            }
+        }
+    }
+
+    private fun init() {
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.topNews -> {
+                    activityMainViewModel.openScreenNews()
+                }
+                R.id.searchNews -> {
+                    activityMainViewModel.openScreenSearchNews()
+                }
+                R.id.actionSources -> {
+                    activityMainViewModel.openScreenSources()
+                }
+                R.id.favoritesNews -> {
+                    activityMainViewModel.openFavoritesScreen()
+                    val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
+                    if (badgeDrawable != null) {
+                        badgeDrawable.number = 0
+                        counterBadge = 0
+                        binding.bottomNavigationView.removeBadge(R.id.favoritesNews)
+                    }
+                }
+                R.id.actionProfile -> {
+                    activityMainViewModel.openScreenProfile()
+                }
+            }
+            true
+        }
+        binding.bottomNavigationView.selectedItemId = R.id.topNews
+        binding.bottomNavigationView.setOnItemReselectedListener {
+
+        }
+    }
+
+    private fun onCreateSetIconTitleAccount(accountLogin: String) {
+        var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
+        item.title = accountLogin
+        item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_24)
+    }
+
+    private fun completableInsertSources() {
+        Toast.makeText(this, getString(R.string.source_loaded), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun errorSourcesDownload() {
         binding.root.showText(getString(R.string.error_sources_download))
+    }
+
+    override fun shareLink(url: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, url)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }

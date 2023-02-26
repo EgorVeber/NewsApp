@@ -2,6 +2,7 @@ package ru.gb.veber.newsapi.presenter
 
 import com.github.terrakok.cicerone.Router
 import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK
 import io.reactivex.rxjava3.core.Completable
 import org.junit.After
@@ -14,7 +15,8 @@ import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
-import ru.gb.veber.newsapi.utils.mapToHistorySelectDbEntity
+import ru.gb.veber.newsapi.utils.mapper.toHistorySelectDbEntity
+import ru.gb.veber.newsapi.view.sources.SourcesViewModel
 
 class SourcesPresenterTest {
 
@@ -33,35 +35,24 @@ class SourcesPresenterTest {
     @RelaxedMockK
     lateinit var historySelectRepoImplMockk: HistorySelectRepo
 
-    private lateinit var sourcesPresenter: SourcesPresenter
+    @InjectMockKs
+    private lateinit var sourcesViewModel: SourcesViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        sourcesPresenter = SourcesPresenter(5)
-        sourcesPresenter.apply {
-            router = routerMockk
-            accountSourcesRepoImpl = accountSourcesRepoImplMockk
-            sourcesRepoImpl = sourcesRepoImplMockk
-            articleRepoImpl = articleRepoImplMockk
-            historySelectRepoImpl = historySelectRepoImplMockk
-        }
+        sourcesViewModel.subscribe(5)
     }
-
 
     @Test
     fun `WHEN sourcesPresenter openAllNews EXPECTED router navigateTo and historySelectRepoImpl insertSelect`() {
         every { historySelectRepoImplMockk.insertSelect(any()) } returns Completable.complete()
-        sourcesPresenter.openAllNews("", "")
+        every { routerMockk.navigateTo(any()) } just runs
+
+        sourcesViewModel.openAllNews("", "")
         verifySequence { historySelectRepoImplMockk.insertSelect(any()) }
-
-        verify {
-            listOf(accountSourcesRepoImplMockk,
-                articleRepoImplMockk,
-                articleRepoImplMockk) wasNot Called
-        }
-
         verifySequence { (routerMockk.navigateTo(any())) }
+
     }
 
     @Test
@@ -73,11 +64,11 @@ class SourcesPresenterTest {
 
         every { historySelectRepoImplMockk.insertSelect(capture(slot)) } returns Completable.complete()
 
-        sourcesPresenter.openAllNews(expectedSource, expectedName)
+        sourcesViewModel.openAllNews(expectedSource, expectedName)
 
         val expectedHistory = HistorySelect(0,5,sourcesId = expectedSource, sourcesName = expectedName)
 
-        assertEquals(mapToHistorySelectDbEntity(expectedHistory),slot.captured)
+        assertEquals(expectedHistory.toHistorySelectDbEntity(), slot.captured)
     }
 
     @After

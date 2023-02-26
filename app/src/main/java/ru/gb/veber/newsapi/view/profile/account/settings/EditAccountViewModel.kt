@@ -8,12 +8,12 @@ import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.SharedPreferenceAccount
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
-import ru.gb.veber.newsapi.utils.EMAIL_PATTERN
+import ru.gb.veber.newsapi.utils.extentions.EMAIL_PATTERN
 import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.LOGIN_PATTERN
-import ru.gb.veber.newsapi.utils.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.utils.checkLogin
-import ru.gb.veber.newsapi.utils.mapToAccountDbEntity
+import ru.gb.veber.newsapi.utils.extentions.LOGIN_PATTERN
+import ru.gb.veber.newsapi.utils.extentions.PASSWORD_PATTERN
+import ru.gb.veber.newsapi.utils.extentions.checkLogin
+import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
 import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(
@@ -39,7 +39,7 @@ class EditAccountViewModel @Inject constructor(
             account.email = userEmail
             account.userName = userLogin
             account.password = userPassword
-            roomRepoImpl.updateAccount(mapToAccountDbEntity(account)).subscribe({
+            roomRepoImpl.updateAccount(account.toAccountDbEntity()).subscribe({
                 mutableFlow.value =
                     EditAccountState.SuccessUpdateAccount(account.userName.checkLogin())
                 prefsAccount.setAccountLogin(account.userName.checkLogin())

@@ -3,12 +3,12 @@ package ru.gb.veber.newsapi.view.topnews.viewpager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import ru.gb.veber.newsapi.view.topnews.pageritem.TopNewsFragment
+import ru.gb.veber.newsapi.view.topnews.fragment.TopNewsFragment
 
 
 class TopNewsViewPagerAdapter(
     fragmentManager: FragmentActivity,
-    private val accountID: Int
+    private val accountID: Int,
 ) :
     FragmentStateAdapter(fragmentManager) {
     companion object {

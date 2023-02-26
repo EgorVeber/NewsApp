@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import ru.gb.veber.newsapi.utils.ALL_COUNTRY
 import ru.gb.veber.newsapi.utils.ALL_COUNTRY_VALUE
-import ru.gb.veber.newsapi.utils.formatDateTime
+import ru.gb.veber.newsapi.utils.extentions.formatDateTime
 import java.util.*
 
 data class Account(
@@ -55,7 +55,7 @@ data class Sources(
     var category: String? = "",
     var language: String? = "",
     var country: String? = "",
-    var isLike: Boolean = false,
+    var liked: Boolean = false,
     var totalHistory: Int = 0,
     var totalFavorites: Int = 0,
 )

@@ -11,31 +11,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
-import moxy.MvpAppCompatFragment
-import moxy.ktx.moxyPresenter
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
-import ru.gb.veber.newsapi.presenter.AuthorizationPresenter
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ColorUtils.getColor
-import ru.gb.veber.newsapi.utils.EMAIL_STR
-import ru.gb.veber.newsapi.utils.LOGIN_STR
-import ru.gb.veber.newsapi.utils.PASSWORD_STR
-import ru.gb.veber.newsapi.utils.showSnackBarError
+import ru.gb.veber.newsapi.utils.extentions.EMAIL_STR
+import ru.gb.veber.newsapi.utils.extentions.LOGIN_STR
+import ru.gb.veber.newsapi.utils.extentions.PASSWORD_STR
+import ru.gb.veber.newsapi.utils.extentions.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.activity.OpenScreen
+import javax.inject.Inject
 
-
-class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
-    BackPressedListener {
+class AuthorizationFragment : Fragment(), BackPressedListener {
 
     private var _binding: AuthorizationFragmentBinding? = null
     private val binding get() = _binding!!
-
 
     private val constraintSetLogin = ConstraintSet()
     private val changeBounds = ChangeBounds().apply {
@@ -49,10 +48,11 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     private var userRegisterPassword: String = ""
     private var userEmail: String = ""
 
-    private val presenter: AuthorizationPresenter by moxyPresenter {
-        AuthorizationPresenter().apply {
-            App.instance.appComponent.inject(this)
-        }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val authorizationViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[AuthorizationViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -64,24 +64,40 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        App.instance.appComponent.inject(this)
+        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
+        init()
+        initViewModel(accountId)
+    }
 
-    override fun init() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+        return authorizationViewModel.onBackPressedRouter()
+    }
+
+    private fun init() {
 
         setSpanRegulationsTv()
         constraintSetLogin.clone(binding.root)
         rxTextChangerValidation()
 
         binding.privacyPolicy.setOnClickListener {
-            presenter.openScreenWebView(getString(R.string.team_site))
+            authorizationViewModel.openScreenWebView(getString(R.string.team_site))
         }
 
         binding.backMainScreen.setOnClickListener {
-            presenter.openMain()
+            authorizationViewModel.openMain()
         }
 
         binding.changeRegisterButton.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.root, changeBounds)
-            presenter.changeRegisterAnim()
+            authorizationViewModel.changeRegisterAnim()
             if (checkNullRegisterData()) {
                 binding.registerButton.alpha = ALFA_LOGIN_BUTTON
             }
@@ -89,7 +105,7 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
         binding.changeSignButton.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.root, changeBounds)
-            presenter.changeLoginAnim()
+            authorizationViewModel.changeLoginAnim()
             if (checkNullSignUpData()) {
                 binding.signInButton.alpha = ALFA_LOGIN_BUTTON
             }
@@ -97,13 +113,85 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
 
         binding.signInButton.setOnClickListener {
             if (checkNullSignUpData()) {
-                presenter.checkSignIn(userLogin, userPassword)
+                authorizationViewModel.checkSignIn(userLogin, userPassword)
             }
         }
 
         binding.registerButton.setOnClickListener {
             if (checkNullRegisterData()) {
-                presenter.createAccount(userRegisterLogin, userEmail, userRegisterPassword)
+                authorizationViewModel.createAccount(
+                    userRegisterLogin,
+                    userEmail,
+                    userRegisterPassword
+                )
+            }
+        }
+    }
+
+    private fun initViewModel(accountId: Int) {
+        authorizationViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is AuthorizationViewModel.AuthorizationViewState.EmailRegisterIsValidate -> {
+                    emailRegisterIsValidate(state.email)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.LoginIsValidate -> {
+                    loginIsValidate(state.charSequence)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.LoginRegisterIsValidate -> {
+                    loginRegisterIsValidate(state.login)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.PasswordIsValidate -> {
+                    passwordIsValidate(state.password)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.PasswordNotValidate -> {
+                    passwordNotValidate(state.password)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.PasswordRegisterIsValidate -> {
+                    passwordRegisterIsValidate(state.password)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.PasswordRegisterNotValidate -> {
+                    passwordRegisterNotValidate(state.password)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.SetBottomNavigationIcon -> {
+                    setBottomNavigationIcon(state.checkLogin)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.SuccessRegister -> {
+                    successRegister(state.id)
+                }
+                is AuthorizationViewModel.AuthorizationViewState.SuccessSignIn -> {
+                    successSignIn(state.id)
+                }
+                AuthorizationViewModel.AuthorizationViewState.EmailRegisterNotValidate -> {
+                    emailRegisterNotValidate()
+                }
+                AuthorizationViewModel.AuthorizationViewState.EmptyAccount -> {
+                    emptyAccount()
+                }
+                AuthorizationViewModel.AuthorizationViewState.ErrorRegister -> {
+                    errorRegister()
+                }
+                AuthorizationViewModel.AuthorizationViewState.ErrorSignIn -> {
+                    errorSignIn()
+                }
+
+                AuthorizationViewModel.AuthorizationViewState.LoginNotValidate -> {
+                    loginNotValidate()
+                }
+
+                AuthorizationViewModel.AuthorizationViewState.LoginRegisterNotValidate -> {
+                    loginRegisterNotValidate()
+                }
+
+                AuthorizationViewModel.AuthorizationViewState.SendActivityOpenScreen -> {
+                    sendActivityOpenScreen()
+                }
+
+                AuthorizationViewModel.AuthorizationViewState.SetLoginAnim -> {
+                    setLoginAnim()
+                }
+                AuthorizationViewModel.AuthorizationViewState.SetRegisterAnim -> {
+                    setRegisterAnim()
+                }
             }
         }
     }
@@ -111,84 +199,79 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
     private fun rxTextChangerValidation() {
 
         RxTextView.textChanges(binding.passwordEditText)
-            .filter { it.toString().isNotEmpty() }
+            .filter { text -> text.toString().isNotEmpty() }
             .skip(6)
-            .subscribe({
-                presenter.passwordValidation(it)
+            .subscribe({ text ->
+                authorizationViewModel.passwordValidation(text)
             }, {
             })
 
         RxTextView.textChanges(binding.userNameEditText)
-            .filter { it.toString().isNotEmpty() }
+            .filter { text -> text.toString().isNotEmpty() }
             .skip(4)
-            .subscribe({
-                presenter.loginValidation(it)
+            .subscribe({ text ->
+                authorizationViewModel.loginValidation(text)
             }, {
             })
 
         RxTextView.textChanges(binding.passwordRegisterEditText)
-            .filter { it.toString().isNotEmpty() }
+            .filter { text -> text.toString().isNotEmpty() }
             .skip(6)
-            .subscribe({
-                presenter.passwordRegisterValidation(it)
+            .subscribe({ text ->
+                authorizationViewModel.passwordRegisterValidation(text)
             }, {
             })
 
         RxTextView.textChanges(binding.userNameRegisterEditText)
-            .filter { it.toString().isNotEmpty() }
+            .filter { text -> text.toString().isNotEmpty() }
             .skip(4)
-            .subscribe({
-                presenter.loginRegisterValidation(it)
+            .subscribe({ text ->
+                authorizationViewModel.loginRegisterValidation(text)
             }, {
             })
 
-       //TODO NewsAndroid-4 Почистить проект от хлама
-       var subscription: rx.Subscription? =  RxTextView.textChanges(binding.emailRegisterEditText)
-            .filter { it.toString().isNotEmpty() }
+        //TODO NewsAndroid-4 Почистить проект от хлама
+        var subscription: rx.Subscription? = RxTextView.textChanges(binding.emailRegisterEditText)
+            .filter { text -> text.toString().isNotEmpty() }
             .skip(5)
-            .subscribe({
-                presenter.emailRegisterValidation(it)
+            .subscribe({ text ->
+                authorizationViewModel.emailRegisterValidation(text)
             }, {
             })
-
-
     }
 
-
-    override fun errorSignIn() {
+    private fun errorSignIn() {
         binding.passwordTextInput.error = getString(R.string.invalid_password)
     }
 
-    override fun errorRegister() {
+    private fun errorRegister() {
         binding.userNameRegisterTextInput.error = getString(R.string.check_login)
         binding.emailRegisterTextInput.error = getString(R.string.check_email)
         binding.root.showSnackBarError(getString(R.string.unique_email_username), "", {})
     }
 
-    override fun successSignIn(id: Int) {
-        presenter.openScreenProfile(id)
+    private fun successSignIn(id: Int) {
+        authorizationViewModel.openScreenProfile(id)
     }
 
-    override fun successRegister(id: Int) {
+    private fun successRegister(id: Int) {
         binding.root.showSnackBarError(getString(R.string.create_account), "", {})
-        presenter.openScreenProfile(id)
+        authorizationViewModel.openScreenProfile(id)
     }
 
-
-    override fun sendActivityOpenScreen() {
+    private fun sendActivityOpenScreen() {
         (requireActivity() as OpenScreen).openMainScreen()
     }
 
-    override fun emptyAccount() {
+    private fun emptyAccount() {
         binding.userNameTextInput.error = getString(R.string.user_none)
     }
 
-    override fun setBottomNavigationIcon(checkLogin: String) {
+    private fun setBottomNavigationIcon(checkLogin: String) {
         (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetCurrentAccount(checkLogin)
     }
 
-
-    override fun loginIsValidate(charSequence: CharSequence?) {
+    private fun loginIsValidate(charSequence: CharSequence?) {
         binding.userNameTextInput.error = null
         userLogin = charSequence.toString()
         if (userPassword != "") {
@@ -196,150 +279,172 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         }
     }
 
-    override fun loginNotValidate() {
+    private fun loginNotValidate() {
         binding.userNameTextInput.error = getString(R.string.error_input_email) + "($LOGIN_STR)"
         userLogin = ""
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
-    override fun passwordIsValidate(it: CharSequence?) {
+    private fun passwordIsValidate(password: CharSequence?) {
         binding.passwordTextInput.error = null
-        userPassword = it.toString()
+        userPassword = password.toString()
         if (userLogin != "") {
             binding.signInButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
-    override fun passwordNotValidate(it: CharSequence?) {
+    private fun passwordNotValidate(password: CharSequence?) {
         userPassword = ""
         binding.passwordTextInput.error =
             getString(R.string.error_input_email) + "($PASSWORD_STR)"
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
-    override fun loginRegisterIsValidate(it: CharSequence?) {
+    private fun loginRegisterIsValidate(login: CharSequence?) {
         binding.userNameRegisterTextInput.error = null
-        userRegisterLogin = it.toString()
+        userRegisterLogin = login.toString()
         if (userRegisterPassword != "" && userEmail != "") {
             binding.registerButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
-    override fun loginRegisterNotValidate() {
+    private fun loginRegisterNotValidate() {
         binding.userNameRegisterTextInput.error =
             getString(R.string.error_input_email) + "($LOGIN_STR)"
         userRegisterLogin = ""
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
-    override fun passwordRegisterIsValidate(it: CharSequence?) {
+    private fun passwordRegisterIsValidate(password: CharSequence?) {
         binding.passwordRegisterTextInput.error = null
-        userRegisterPassword = it.toString()
+        userRegisterPassword = password.toString()
         if (userRegisterLogin != "" && userEmail != "") {
             binding.registerButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
-    override fun passwordRegisterNotValidate(it: CharSequence?) {
+    private fun passwordRegisterNotValidate(password: CharSequence?) {
         userRegisterPassword = ""
         binding.passwordRegisterTextInput.error =
             getString(R.string.error_input_email) + "($PASSWORD_STR)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
-    override fun emailRegisterIsValidate(it: CharSequence?) {
+    private fun emailRegisterIsValidate(email: CharSequence?) {
         binding.emailRegisterTextInput.error = null
-        userEmail = it.toString()
+        userEmail = email.toString()
         if (userRegisterLogin != "" && userRegisterPassword != "") {
             binding.registerButton.alpha = ALFA_LOGIN_BUTTON
         }
     }
 
-    override fun emailRegisterNotValidate() {
+    private fun emailRegisterNotValidate() {
         userEmail = ""
         binding.emailRegisterTextInput.error =
             getString(R.string.error_input_email) + "($EMAIL_STR)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
-    override fun setRegisterAnim() {
+    private fun setRegisterAnim() {
         constraintSetLogin.clear(R.id.userNameTextInput, ConstraintSet.END)
         constraintSetLogin.clear(R.id.userNameTextInput, ConstraintSet.START)
-        constraintSetLogin.connect(R.id.userNameTextInput,
+        constraintSetLogin.connect(
+            R.id.userNameTextInput,
             ConstraintSet.START,
             R.id.constraintLayoutSet,
-            ConstraintSet.END)
+            ConstraintSet.END
+        )
         constraintSetLogin.applyTo(binding.root)
 
-        constraintSetLogin.connect(R.id.userNameRegisterTextInput,
+        constraintSetLogin.connect(
+            R.id.userNameRegisterTextInput,
             ConstraintSet.START,
             R.id.constraintLayoutSet,
-            ConstraintSet.START)
-        constraintSetLogin.connect(R.id.userNameRegisterTextInput,
+            ConstraintSet.START
+        )
+        constraintSetLogin.connect(
+            R.id.userNameRegisterTextInput,
             ConstraintSet.END,
             R.id.constraintLayoutSet,
-            ConstraintSet.END)
+            ConstraintSet.END
+        )
         constraintSetLogin.applyTo(binding.root)
 
         constraintSetLogin.clear(R.id.privacyPolicy, ConstraintSet.TOP)
-        constraintSetLogin.connect(R.id.privacyPolicy,
+        constraintSetLogin.connect(
+            R.id.privacyPolicy,
             ConstraintSet.TOP,
             R.id.changeSignButton,
-            ConstraintSet.BOTTOM)
+            ConstraintSet.BOTTOM
+        )
         constraintSetLogin.applyTo(binding.root)
     }
 
-    override fun setLoginAnim() {
+    private fun setLoginAnim() {
         constraintSetLogin.clear(R.id.userNameRegisterTextInput, ConstraintSet.END)
         constraintSetLogin.clear(R.id.userNameRegisterTextInput, ConstraintSet.START)
-        constraintSetLogin.connect(R.id.userNameRegisterTextInput,
+        constraintSetLogin.connect(
+            R.id.userNameRegisterTextInput,
             ConstraintSet.END,
             R.id.constraintLayoutSet,
-            ConstraintSet.START)
+            ConstraintSet.START
+        )
         constraintSetLogin.applyTo(binding.root)
 
         constraintSetLogin.clear(R.id.userNameTextInput, ConstraintSet.START)
-        constraintSetLogin.connect(R.id.userNameTextInput,
+        constraintSetLogin.connect(
+            R.id.userNameTextInput,
             ConstraintSet.START,
             R.id.constraintLayoutSet,
-            ConstraintSet.START)
-        constraintSetLogin.connect(R.id.userNameTextInput,
+            ConstraintSet.START
+        )
+        constraintSetLogin.connect(
+            R.id.userNameTextInput,
             ConstraintSet.END,
             R.id.constraintLayoutSet,
-            ConstraintSet.END)
+            ConstraintSet.END
+        )
         constraintSetLogin.applyTo(binding.root)
         constraintSetLogin.clear(R.id.privacyPolicy, ConstraintSet.TOP)
-        constraintSetLogin.connect(R.id.privacyPolicy, ConstraintSet.TOP,
+        constraintSetLogin.connect(
+            R.id.privacyPolicy, ConstraintSet.TOP,
             R.id.changeRegisterButton,
-            ConstraintSet.BOTTOM)
+            ConstraintSet.BOTTOM
+        )
         constraintSetLogin.applyTo(binding.root)
     }
 
     private fun setSpanRegulationsTv() {
 
-        SpannableStringBuilder(binding.privacyPolicy.text).also {span->
+        SpannableStringBuilder(binding.privacyPolicy.text).also { span ->
             var colorPrimary = this.getColor(R.color.color_primary_app)
 
-            span.setSpan(ForegroundColorSpan(colorPrimary),
+            span.setSpan(
+                ForegroundColorSpan(colorPrimary),
                 SPAN_START_INDEX_PRIVACY,
                 SPAN_START_END_PRIVACY,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            span.setSpan(ForegroundColorSpan(colorPrimary),
+            span.setSpan(
+                ForegroundColorSpan(colorPrimary),
                 SPAN_START_START_POLICY,
                 SPAN_START_END_POLICY,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            span.setSpan(UnderlineSpan(),
+            span.setSpan(
+                UnderlineSpan(),
                 SPAN_START_INDEX_PRIVACY,
                 SPAN_START_END_PRIVACY,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            span.setSpan(UnderlineSpan(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            span.setSpan(
+                UnderlineSpan(),
                 SPAN_START_START_POLICY,
                 SPAN_START_END_POLICY,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
 
             binding.privacyPolicy.text = span
             span.removeSpan(this)
@@ -354,22 +459,13 @@ class AuthorizationFragment : MvpAppCompatFragment(), AuthorizationView,
         return userRegisterLogin != "" && userRegisterPassword != "" && userEmail != ""
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return presenter.onBackPressedRouter()
-    }
-
     companion object {
         const val DURATION_REGISTER = 650L
         const val ALFA_LOGIN_BUTTON = 1F
         const val ALFA_HALF_LOGIN_BUTTON = 0.5F
         const val SPAN_START_INDEX_PRIVACY = 41
         const val SPAN_START_END_PRIVACY = 55
-        const val SPAN_START_START_POLICY= 60
+        const val SPAN_START_START_POLICY = 60
         const val SPAN_START_END_POLICY = 76
         fun getInstance(): AuthorizationFragment {
             return AuthorizationFragment()
