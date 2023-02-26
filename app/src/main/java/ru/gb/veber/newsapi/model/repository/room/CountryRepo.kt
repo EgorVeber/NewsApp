@@ -7,4 +7,6 @@ import ru.gb.veber.newsapi.model.database.entity.CountryDbEntity
 interface CountryRepo {
     fun insertAll(countryDbEntity: List<CountryDbEntity>): Completable
     fun getCountry(): Single<List<CountryDbEntity>>
+    suspend fun insertAllV2(countryDbEntity: List<CountryDbEntity>)
+    suspend fun getCountryV2(): List<CountryDbEntity>
 }

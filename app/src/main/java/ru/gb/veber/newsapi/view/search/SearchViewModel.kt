@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.core.SearchNewsScreen
@@ -16,12 +17,12 @@ import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.NOT_INPUT_DATE
-import ru.gb.veber.newsapi.utils.formatDate
+import ru.gb.veber.newsapi.utils.extentions.formatDate
 import ru.gb.veber.newsapi.utils.mapper.toHistorySelect
 import ru.gb.veber.newsapi.utils.mapper.toHistorySelectDbEntity
-import ru.gb.veber.newsapi.utils.stringFromDataNews
-import ru.gb.veber.newsapi.utils.stringFromDataPiker
-import ru.gb.veber.newsapi.utils.takeDate
+import ru.gb.veber.newsapi.utils.extentions.stringFromDataNews
+import ru.gb.veber.newsapi.utils.extentions.stringFromDataPiker
+import ru.gb.veber.newsapi.utils.extentions.takeDate
 import java.util.*
 import javax.inject.Inject
 

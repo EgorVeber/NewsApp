@@ -18,4 +18,19 @@ interface ArticleRepo {
     fun deleteArticleByIdFavorites(title: String, accountId: Int): Completable
     fun deleteArticleByIdHistory(title: String, accountId: Int): Completable
     fun deleteArticleByIdHistoryGroup( accountId: Int,dateAdded:String): Completable
+
+
+    suspend fun insertArticleV2(articleDbEntity: ArticleDbEntity)
+    suspend fun updateArticleV2(articleDbEntity: ArticleDbEntity)
+    suspend fun deleteArticleV2(articleDbEntity: ArticleDbEntity)
+    suspend fun deleteAllArticleV2()
+    suspend fun getHistoryArticleByIdV2(accountId: Int): List<ArticleDbEntity>
+    suspend fun getLikeArticleByIdV2(accountId: Int): List<ArticleDbEntity>
+    suspend fun getLastArticleV2(): ArticleDbEntity
+    suspend fun getArticleByIdV2(accountId: Int): List<ArticleDbEntity>
+    suspend fun deleteArticleIsFavoriteByIdV2(accountId: Int)
+    suspend fun deleteArticleIsHistoryByIdV2(accountId: Int)
+    suspend fun deleteArticleByIdFavoritesV2(title: String, accountId: Int)
+    suspend fun deleteArticleByIdHistoryV2(title: String, accountId: Int)
+    suspend fun deleteArticleByIdHistoryGroupV2( accountId: Int,dateAdded:String)
 }

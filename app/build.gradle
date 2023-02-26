@@ -51,13 +51,6 @@ dependencies {
     androidTestImplementation "androidx.test.ext:$versions.extjunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
 
-
-    //Moxy
-    implementation "com.github.moxy-community:moxy:$versions.moxy"
-    implementation "com.github.moxy-community:moxy-ktx:$versions.moxy"
-    implementation "com.github.moxy-community:moxy-androidx:$versions.moxy"
-    kapt "com.github.moxy-community:moxy-compiler:$versions.moxy"
-
     //cicerone
     implementation "com.github.terrakok:cicerone:$versions.cicerone"
 
@@ -67,13 +60,13 @@ dependencies {
     //binging
     implementation "com.jakewharton.rxbinding:rxbinding:$versions.rxbinding"
 
-
     //Retrofit
     implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttpLogging"
     implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofit2"
     implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit2"
     implementation "com.squareup.retrofit2:adapter-rxjava3:$versions.retrofit2"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$versions.coroutineAdapter"
 
     //Glide Coil
     implementation "com.github.bumptech.glide:glide:$versions.glide"
@@ -82,19 +75,17 @@ dependencies {
     //Room
     implementation "androidx.room:room-runtime:$versions.room"
     implementation "androidx.room:room-rxjava3:$versions.room"
+    implementation "androidx.room:room-ktx:$versions.room"
     kapt "androidx.room:room-compiler:$versions.room"
 
     //Dagger
     implementation "com.google.dagger:dagger:$versions.dagger"
     kapt "com.google.dagger:dagger-compiler:$versions.dagger"
-
-
-    //await
-    implementation "io.reactivex.rxjava2:rxandroid:+"
-    implementation "io.reactivex.rxjava2:rxjava:+"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:+"
-
+    
     //Test
     testImplementation "io.mockk:mockk:$versions.mockk"
     testImplementation "io.mockk:mockk-agent-jvm:$versions.mockk"
+
+    //ViewModelScope
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
 }

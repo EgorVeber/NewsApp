@@ -2,9 +2,9 @@ package ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder
 
 import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.utils.hide
-import ru.gb.veber.newsapi.utils.loadGlideNot
-import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.extentions.hide
+import ru.gb.veber.newsapi.utils.extentions.loadGlideNot
+import ru.gb.veber.newsapi.utils.extentions.show
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
 
 class NewsHeaderViewHolder(

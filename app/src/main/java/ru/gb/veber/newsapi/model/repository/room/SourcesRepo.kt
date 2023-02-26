@@ -9,4 +9,7 @@ import ru.gb.veber.newsapi.model.database.entity.SourcesDbEntity
 interface SourcesRepo {
     fun insertAll(sourcesDbEntity: List<SourcesDbEntity>): Completable
     fun getSources(): Single<MutableList<Sources>>
+
+    suspend fun insertAllV2(sourcesDbEntity: List<SourcesDbEntity>)
+    suspend fun getSourcesV2(): MutableList<Sources>
 }

@@ -13,4 +13,12 @@ interface AccountRepo {
     fun deleteAllAccount(): Completable
     fun getAccountById(accountId: Int): Single<Account>
     fun getAccountByUserName(userName: String): Single<Account>
+
+    suspend fun createAccountV2(accountDbEntity: AccountDbEntity)
+    suspend fun updateAccountV2(accountDbEntity: AccountDbEntity)
+    suspend fun updateAccountByIdV2(accountId: Int, saveHistory: Boolean)
+    suspend fun deleteAccountV2(account:Int)
+    suspend fun deleteAllAccountV2()
+    suspend fun getAccountByIdV2(accountId: Int): Account
+    suspend fun getAccountByUserNameV2(userName: String): Account
 }

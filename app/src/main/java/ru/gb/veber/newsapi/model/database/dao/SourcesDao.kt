@@ -16,4 +16,9 @@ interface SourcesDao {
     @Query("Select * from sources")
     fun getSources(): Single<List<SourcesDbEntity>>
 
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertAllV2(sourcesDbEntity: List<SourcesDbEntity>)
+
+    @Query("Select * from sources")
+    suspend fun getSourcesV2(): List<SourcesDbEntity>
 }

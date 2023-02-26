@@ -6,11 +6,11 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.Source
 import ru.gb.veber.newsapi.model.database.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.model.network.ArticleDTO
-import ru.gb.veber.newsapi.utils.FORMAT_DATE
-import ru.gb.veber.newsapi.utils.formatDateTime
-import ru.gb.veber.newsapi.utils.formatHour
-import ru.gb.veber.newsapi.utils.stringFromData
-import ru.gb.veber.newsapi.utils.takeDate
+import ru.gb.veber.newsapi.utils.extentions.FORMAT_DATE
+import ru.gb.veber.newsapi.utils.extentions.formatDateTime
+import ru.gb.veber.newsapi.utils.extentions.formatHour
+import ru.gb.veber.newsapi.utils.extentions.stringFromData
+import ru.gb.veber.newsapi.utils.extentions.takeDate
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
 import java.text.SimpleDateFormat
 import java.util.Date

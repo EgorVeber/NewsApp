@@ -22,10 +22,10 @@ import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ColorUtils.getColor
-import ru.gb.veber.newsapi.utils.EMAIL_STR
-import ru.gb.veber.newsapi.utils.LOGIN_STR
-import ru.gb.veber.newsapi.utils.PASSWORD_STR
-import ru.gb.veber.newsapi.utils.showSnackBarError
+import ru.gb.veber.newsapi.utils.extentions.EMAIL_STR
+import ru.gb.veber.newsapi.utils.extentions.LOGIN_STR
+import ru.gb.veber.newsapi.utils.extentions.PASSWORD_STR
+import ru.gb.veber.newsapi.utils.extentions.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.activity.OpenScreen

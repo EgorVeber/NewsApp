@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.Filter
 import ru.gb.veber.newsapi.databinding.SelectSourcesAutocompileBinding
 import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.utils.hide
-import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.extentions.hide
+import ru.gb.veber.newsapi.utils.extentions.show
 import java.util.*
 
 class SourcesAdapterAutoCompile(

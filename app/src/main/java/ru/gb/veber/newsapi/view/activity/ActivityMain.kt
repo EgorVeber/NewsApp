@@ -17,7 +17,7 @@ import ru.gb.veber.newsapi.utils.COUNTER_BACKSTACK
 import ru.gb.veber.newsapi.utils.COUNTER_BADGE
 import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.utils.DELAY_BACK_STACK
-import ru.gb.veber.newsapi.utils.showText
+import ru.gb.veber.newsapi.utils.extentions.showText
 import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment

@@ -22,14 +22,14 @@ import ru.gb.veber.newsapi.utils.ALL_COUNTRY_VALUE
 import ru.gb.veber.newsapi.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.ERROR_LOAD_NEWS
-import ru.gb.veber.newsapi.utils.disposableBy
-import ru.gb.veber.newsapi.utils.formatDateTime
+import ru.gb.veber.newsapi.utils.extentions.disposableBy
+import ru.gb.veber.newsapi.utils.extentions.formatDateTime
 import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticleUI
 import ru.gb.veber.newsapi.utils.mapper.toCountry
-import ru.gb.veber.newsapi.utils.subscribeDefault
+import ru.gb.veber.newsapi.utils.extentions.subscribeDefault
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
 import java.util.*
 import javax.inject.Inject

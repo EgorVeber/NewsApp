@@ -15,4 +15,10 @@ interface CountryDao {
 
     @Query("Select * from country_directory")
     fun getCountry(): Single<List<CountryDbEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllV2(countryDbEntity: List<CountryDbEntity>)
+
+    @Query("Select * from country_directory")
+    suspend fun getCountryV2(): List<CountryDbEntity>
 }

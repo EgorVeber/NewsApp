@@ -5,21 +5,27 @@ import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxbinding.widget.RxTextView
-import moxy.MvpAppCompatFragment
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.extentions.EMAIL_STR
+import ru.gb.veber.newsapi.utils.extentions.LOGIN_STR
+import ru.gb.veber.newsapi.utils.extentions.PASSWORD_STR
+import ru.gb.veber.newsapi.utils.extentions.hide
+import ru.gb.veber.newsapi.utils.extentions.show
+import ru.gb.veber.newsapi.utils.extentions.showSnackBarError
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
 import javax.inject.Inject
 
-class EditAccountFragment : MvpAppCompatFragment(), BackPressedListener {
+class EditAccountFragment : Fragment(), BackPressedListener {
 
     private var _binding: EditAccountFragmentBinding? = null
     private val binding get() = _binding!!
