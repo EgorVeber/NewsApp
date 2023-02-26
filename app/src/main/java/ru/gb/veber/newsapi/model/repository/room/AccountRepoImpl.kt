@@ -6,7 +6,7 @@ import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.database.dao.AccountsDao
 import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toAccount
-import ru.gb.veber.newsapi.utils.subscribeDefault
+import ru.gb.veber.newsapi.utils.extentions.subscribeDefault
 
 class AccountRepoImpl(private val accountDao: AccountsDao) : AccountRepo {
 
@@ -36,8 +36,36 @@ class AccountRepoImpl(private val accountDao: AccountsDao) : AccountRepo {
     }
 
     override fun getAccountByUserName(userName: String): Single<Account> {
-        return accountDao.getAccountByUserName(userName).subscribeDefault().map { accountDb->
+        return accountDao.getAccountByUserName(userName).subscribeDefault().map { accountDb ->
             accountDb.toAccount()
         }
+    }
+
+    override suspend fun createAccountV2(accountDbEntity: AccountDbEntity) {
+        accountDao.createAccountV2(accountDbEntity)
+    }
+
+    override suspend fun updateAccountV2(accountDbEntity: AccountDbEntity) {
+        accountDao.updateAccountV2(accountDbEntity)
+    }
+
+    override suspend fun updateAccountByIdV2(accountId: Int, saveHistory: Boolean) {
+        accountDao.updateAccountByIdV2(accountId, saveHistory)
+    }
+
+    override suspend fun deleteAccountV2(accountID: Int) {
+        accountDao.deleteAccountV2(accountID)
+    }
+
+    override suspend fun deleteAllAccountV2() {
+        accountDao.deleteAllAccountV2()
+    }
+
+    override suspend fun getAccountByIdV2(accountId: Int): Account {
+        return accountDao.getAccountByIdV2(accountId).toAccount()
+    }
+
+    override suspend fun getAccountByUserNameV2(userName: String): Account {
+        return accountDao.getAccountByUserNameV2(userName).toAccount()
     }
 }

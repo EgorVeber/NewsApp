@@ -28,4 +28,25 @@ interface AccountsDao {
 
     @Query("Select * from accounts where userName =:userName")
     fun getAccountByUserName(userName: String): Single<AccountDbEntity>
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun createAccountV2(accountDbEntity: AccountDbEntity)
+
+    @Update
+    suspend fun updateAccountV2(accountDbEntity: AccountDbEntity)
+
+    @Query("Update accounts set save_history = :saveHistory  where id = :accountId")
+    suspend fun updateAccountByIdV2(accountId: Int, saveHistory: Boolean)
+
+    @Query("Delete from accounts where id = :accountId")
+    suspend fun deleteAccountV2(accountId: Int)
+
+    @Query("Delete from accounts")
+    suspend fun deleteAllAccountV2()
+
+    @Query("Select  * from accounts where id =:accountId")
+    suspend fun getAccountByIdV2(accountId: Int): AccountDbEntity
+
+    @Query("Select * from accounts where userName =:userName")
+    suspend fun getAccountByUserNameV2(userName: String): AccountDbEntity
 }

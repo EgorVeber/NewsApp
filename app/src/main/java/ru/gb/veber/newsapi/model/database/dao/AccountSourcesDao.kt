@@ -23,4 +23,16 @@ interface AccountSourcesDao {
 
     @Query("Delete from account_sources where account_id =:accountId ")
     fun deleteSources(accountId: Int): Completable
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertV2(accountSourcesDbEntity: AccountSourcesDbEntity)
+
+    @Query("Select * from sources join account_sources on sources.id = account_sources.sources_id  where account_sources.account_id =:accountId")
+    suspend fun getLikeSourcesFromAccountV2(accountId: Int): List<SourcesDbEntity>
+
+    @Query("Delete from account_sources where account_id =:accountId and sources_id =:sourcesId ")
+    suspend fun deleteSourcesLikeV2(accountId: Int, sourcesId: Int)
+
+    @Query("Delete from account_sources where account_id =:accountId ")
+    suspend fun deleteSourcesV2(accountId: Int)
 }

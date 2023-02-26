@@ -3,9 +3,9 @@ package ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder
 import android.view.View
 import ru.gb.veber.newsapi.databinding.FavoritesHistoryItemBinding
 import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.utils.hide
-import ru.gb.veber.newsapi.utils.loadGlide
-import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.extentions.hide
+import ru.gb.veber.newsapi.utils.extentions.loadGlide
+import ru.gb.veber.newsapi.utils.extentions.show
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
 
 class FavoritesHistoryViewHolder(

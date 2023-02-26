@@ -26,12 +26,12 @@ import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.DURATION_ERROR_INPUT
-import ru.gb.veber.newsapi.utils.FORMAT_DATE_NEWS
+import ru.gb.veber.newsapi.utils.extentions.FORMAT_DATE_NEWS
 import ru.gb.veber.newsapi.utils.NOT_INPUT_DATE
-import ru.gb.veber.newsapi.utils.TIME_ZONE
-import ru.gb.veber.newsapi.utils.hide
-import ru.gb.veber.newsapi.utils.hideKeyboard
-import ru.gb.veber.newsapi.utils.show
+import ru.gb.veber.newsapi.utils.extentions.TIME_ZONE
+import ru.gb.veber.newsapi.utils.extentions.hide
+import ru.gb.veber.newsapi.utils.extentions.hideKeyboard
+import ru.gb.veber.newsapi.utils.extentions.show
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import java.text.SimpleDateFormat
 import java.util.*

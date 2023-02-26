@@ -11,12 +11,12 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.formatDateTime
+import ru.gb.veber.newsapi.utils.extentions.formatDateTime
 import ru.gb.veber.newsapi.utils.mapper.HIDE_HISTORY
 import ru.gb.veber.newsapi.utils.mapper.SHOW_HISTORY
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toNewListArticleGroupByDate
-import ru.gb.veber.newsapi.utils.stringFromData
+import ru.gb.veber.newsapi.utils.extentions.stringFromData
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
 import javax.inject.Inject

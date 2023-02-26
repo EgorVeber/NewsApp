@@ -20,8 +20,8 @@ import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.disposableBy
-import ru.gb.veber.newsapi.utils.formatDateTime
+import ru.gb.veber.newsapi.utils.extentions.disposableBy
+import ru.gb.veber.newsapi.utils.extentions.formatDateTime
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticleUI

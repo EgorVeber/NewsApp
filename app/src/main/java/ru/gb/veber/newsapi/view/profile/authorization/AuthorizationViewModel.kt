@@ -14,12 +14,12 @@ import ru.gb.veber.newsapi.model.database.entity.AccountDbEntity
 import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.utils.ALL_COUNTRY
 import ru.gb.veber.newsapi.utils.ALL_COUNTRY_VALUE
-import ru.gb.veber.newsapi.utils.EMAIL_PATTERN
+import ru.gb.veber.newsapi.utils.extentions.EMAIL_PATTERN
 import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.LOGIN_PATTERN
-import ru.gb.veber.newsapi.utils.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.utils.checkLogin
-import ru.gb.veber.newsapi.utils.disposableBy
+import ru.gb.veber.newsapi.utils.extentions.LOGIN_PATTERN
+import ru.gb.veber.newsapi.utils.extentions.PASSWORD_PATTERN
+import ru.gb.veber.newsapi.utils.extentions.checkLogin
+import ru.gb.veber.newsapi.utils.extentions.disposableBy
 import java.util.*
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.utils
+package ru.gb.veber.newsapi.utils.extentions
 
 import android.content.Context
 import android.graphics.drawable.Drawable

@@ -16,6 +16,7 @@ import ru.gb.veber.newsapi.model.repository.room.AccountRepo
 import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.*
+import ru.gb.veber.newsapi.utils.extentions.subscribeDefault
 import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
 import javax.inject.Inject
 
