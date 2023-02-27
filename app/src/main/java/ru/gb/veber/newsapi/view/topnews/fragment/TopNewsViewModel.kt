@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Article
@@ -22,16 +21,15 @@ import ru.gb.veber.newsapi.utils.ALL_COUNTRY_VALUE
 import ru.gb.veber.newsapi.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.ERROR_LOAD_NEWS
-import ru.gb.veber.newsapi.utils.extentions.disposableBy
 import ru.gb.veber.newsapi.utils.extentions.formatDateTime
+import ru.gb.veber.newsapi.utils.extentions.launchJob
 import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.utils.mapper.toArticleUI
 import ru.gb.veber.newsapi.utils.mapper.toCountry
-import ru.gb.veber.newsapi.utils.extentions.subscribeDefault
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 class TopNewsViewModel @Inject constructor(
@@ -54,13 +52,6 @@ class TopNewsViewModel @Inject constructor(
 
     private var articleListHistory: MutableList<Article> = mutableListOf()
     private var listCountry: MutableList<Country> = mutableListOf()
-
-    private val bag = CompositeDisposable()
-
-    override fun onCleared() {
-        super.onCleared()
-        bag.dispose()
-    }
 
     fun subscribe(accountId: Int, categoryKey: String): LiveData<TopNewsState> {
         this.accountId = accountId
@@ -96,7 +87,6 @@ class TopNewsViewModel @Inject constructor(
         }
     }
 
-
     fun openScreenWebView(url: String) {
         router.navigateTo(WebViewScreen(url))
     }
@@ -118,16 +108,23 @@ class TopNewsViewModel @Inject constructor(
                 val countryCode = listCountry.find { listCountry ->
                     listCountry.id == country
                 }?.code ?: ALL_COUNTRY_VALUE
+
                 sharedPreferenceAccount.setAccountCountryCode(countryCode)
                 sharedPreferenceAccount.setAccountCountry(country)
-                mutableFlow.value = TopNewsState.EventUpdateViewPager
+
                 if (accountId != ACCOUNT_ID_DEFAULT) {
                     account.myCountry = country
                     account.countryCode = countryCode
-                    accountRepoImpl.updateAccount(account.toAccountDbEntity()).subscribe({
-                    }, { error ->
+
+                    viewModelScope.launchJob(tryBlock = {
+                        accountRepoImpl.updateAccountV2(account.toAccountDbEntity())
+                    }, catchBlock = { error ->
                         Log.d(ERROR_DB, error.localizedMessage)
+                    }, finallyBlock = {
+                        mutableFlow.postValue(TopNewsState.EventUpdateViewPager)
                     })
+                } else{
+                    mutableFlow.postValue(TopNewsState.EventUpdateViewPager)
                 }
             }
         }
@@ -143,7 +140,8 @@ class TopNewsViewModel @Inject constructor(
     }
 
     fun getCountry() {
-        countryRepoImpl.getCountry().subscribe({ listCountryDbEntity ->
+        viewModelScope.launchJob(tryBlock = {
+            var listCountryDbEntity = countryRepoImpl.getCountryV2()
             listCountry = listCountryDbEntity.map { countryDbEntity ->
                 countryDbEntity.toCountry()
             } as MutableList<Country>
@@ -155,8 +153,8 @@ class TopNewsViewModel @Inject constructor(
             if (index == -1) {
                 index = 0
             }
-            mutableFlow.value = TopNewsState.SetCountry(list, index)
-        }, { error ->
+            mutableFlow.postValue(TopNewsState.SetCountry(list, index))
+        }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
     }
@@ -166,15 +164,15 @@ class TopNewsViewModel @Inject constructor(
             if (!article.isFavorites && !article.isHistory) {
                 article.isHistory = true
                 article.dateAdded = Date().formatDateTime()
-                articleRepoImpl.insertArticle(article.toArticleDbEntity(accountId))
-                    .subscribe({
-                        articleListHistory.find { articleHistory ->
-                            articleHistory.title == article.title
-                        }?.isHistory = true
-                        mutableFlow.value = TopNewsState.UpdateListNews(articleListHistory)
-                    }, { error ->
-                        Log.d(ERROR_DB, error.localizedMessage)
-                    }).disposableBy(bag)
+                viewModelScope.launchJob(tryBlock = {
+                    articleRepoImpl.insertArticleV2(article.toArticleDbEntity(accountId))
+                    articleListHistory.find { articleHistory ->
+                        articleHistory.title == article.title
+                    }?.isHistory = true
+                    mutableFlow.postValue(TopNewsState.UpdateListNews(articleListHistory))
+                }, catchBlock = { error ->
+                    Log.d(ERROR_DB, error.localizedMessage)
+                })
             }
         }
     }
@@ -182,36 +180,40 @@ class TopNewsViewModel @Inject constructor(
     private fun saveArticleLike(article: Article) {
         val articleDbEntity = article.toArticleDbEntity(accountId)
         articleDbEntity.isFavorites = true
-        articleRepoImpl.insertArticle(articleDbEntity).subscribe({
+
+        viewModelScope.launchJob(tryBlock = {
+            articleRepoImpl.insertArticleV2(articleDbEntity)
             articleListHistory.find { articleHistory ->
                 articleHistory.title == article.title
             }?.isFavorites = true
-            mutableFlow.value = TopNewsState.UpdateListNews(articleListHistory)
-        }, {
-        }).disposableBy(bag)
+
+            mutableFlow.postValue(TopNewsState.UpdateListNews(articleListHistory))
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
+        })
     }
 
     private fun deleteFavorites(article: Article) {
         article.isFavorites = false
-        articleRepoImpl.deleteArticleByIdFavorites(article.title.toString(), accountId)
-            .subscribe({
-                articleListHistory.find { articleHistory ->
-                    articleHistory.title == article.title
-                }?.isFavorites = false
-                mutableFlow.value = TopNewsState.UpdateListNews(articleListHistory)
-            }, { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
-            }).disposableBy(bag)
+        viewModelScope.launchJob(tryBlock = {
+            articleRepoImpl.deleteArticleByIdFavoritesV2(article.title.toString(), accountId)
+            articleListHistory.find { articleHistory ->
+                articleHistory.title == article.title
+            }?.isFavorites = false
+            mutableFlow.postValue(TopNewsState.UpdateListNews(articleListHistory))
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
+        })
     }
 
     private fun getAccountSettings() {
         if (accountId != ACCOUNT_ID_DEFAULT) {
-            accountRepoImpl.getAccountById(accountId).subscribe({ accountDb ->
-                account = accountDb
-                saveHistory = accountDb.saveHistory
-            }, { error ->
+            viewModelScope.launchJob(tryBlock = {
+                account = accountRepoImpl.getAccountByIdV2(accountId)
+                saveHistory = account.saveHistory
+            }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
-            }).disposableBy(bag)
+            })
         } else {
             mutableFlow.value = TopNewsState.HideFavoritesImageView
         }
@@ -219,47 +221,48 @@ class TopNewsViewModel @Inject constructor(
 
     private fun loadNews(category: String) {
         val countryCode = sharedPreferenceAccount.getAccountCountryCode()
-        Single.zip(
-            newsRepoImpl.getTopicalHeadlinesCategoryCountry(
+        viewModelScope.launchJob(tryBlock = {
+            var newsDto = newsRepoImpl.getTopicalHeadlinesCategoryCountryV2(
                 category = category,
                 country = countryCode,
                 key = API_KEY_NEWS
-            ),
-            articleRepoImpl.getArticleById(accountId)
-        ) { news, articles ->
-            val newsModified =
-                news.articles.map { articleDto -> articleDto.toArticle() }.also { list ->
+            )
+
+            val newsUI =
+                newsDto.articles.map { articleDto -> articleDto.toArticle() }.also { list ->
                     list.map { article ->
                         article.toArticleUI()
                     }
                 }
-            articles.forEach { art ->
-                newsModified.forEach { new ->
-                    if (art.title == new.title) {
-                        if (art.isFavorites) {
-                            new.isFavorites = true
-                        }
-                        if (art.isHistory) {
-                            new.isHistory = true
+            if (accountId != ACCOUNT_ID_DEFAULT) {
+                var articles = articleRepoImpl.getArticleByIdV2(accountId)
+                articles.forEach { art ->
+                    newsUI.forEach { new ->
+                        if (art.title == new.title) {
+                            if (art.isFavorites) {
+                                new.isFavorites = true
+                            }
+                            if (art.isHistory) {
+                                new.isHistory = true
+                            }
                         }
                     }
                 }
             }
-            newsModified.also { listArticle ->
+            newsUI.also { listArticle ->
                 listArticle[0].viewType = BaseViewHolder.VIEW_TYPE_TOP_NEWS_HEADER
             }
-            newsModified
-        }.subscribeDefault().subscribe({ listArticle ->
-            if (listArticle.isEmpty()) {
-                mutableFlow.value = TopNewsState.EmptyListLoadNews
+
+            if (newsUI.isEmpty()) {
+                mutableFlow.postValue(TopNewsState.EmptyListLoadNews)
             } else {
-                articleListHistory = listArticle.toMutableList()
-                mutableFlow.value = TopNewsState.SetNews(listArticle)
+                articleListHistory = newsUI.toMutableList()
+                mutableFlow.postValue(TopNewsState.SetNews(newsUI))
             }
-        }, { error ->
-            mutableFlow.value = TopNewsState.ErrorLoadNews
+        }, catchBlock = { error ->
+            mutableFlow.postValue(TopNewsState.ErrorLoadNews)
             Log.d(ERROR_LOAD_NEWS, error.localizedMessage)
-        }).disposableBy(bag)
+        })
     }
 
     sealed class TopNewsState {
