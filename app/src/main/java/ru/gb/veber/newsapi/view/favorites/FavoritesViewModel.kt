@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
@@ -12,6 +13,7 @@ import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ERROR_DB
 import ru.gb.veber.newsapi.utils.extentions.formatDateTime
+import ru.gb.veber.newsapi.utils.extentions.launchJob
 import ru.gb.veber.newsapi.utils.mapper.HIDE_HISTORY
 import ru.gb.veber.newsapi.utils.mapper.SHOW_HISTORY
 import ru.gb.veber.newsapi.utils.mapper.toArticle
@@ -42,34 +44,39 @@ class FavoritesViewModel @Inject constructor(
         if (accountID != ACCOUNT_ID_DEFAULT) {
             if (page == FavoritesViewPagerAdapter.FAVORITES) {
                 _uiState.value = FavoritesState.Loading
-                articleRepoImpl.getLikeArticleById(accountID).subscribe({ listArticleDb ->
+                viewModelScope.launchJob(tryBlock = {
+                    val listArticleDb = articleRepoImpl.getLikeArticleByIdV2(accountID)
+
                     if (listArticleDb.isEmpty()) {
-                        _uiState.value = FavoritesState.EmptyList
+                        _uiState.postValue(FavoritesState.EmptyList)
                     } else {
-                        _uiState.value = FavoritesState.SetSources(listArticleDb.map { articleDb ->
+                        _uiState.postValue(FavoritesState.SetSources(listArticleDb.map { articleDb ->
                             articleDb.toArticle()
                         }.reversed().map { article ->
                             article.publishedAtChange =
                                 stringFromData(article.publishedAt).formatDateTime()
                             article.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
                             article
-                        })
+                        }))
                     }
-                }, { error ->
-                    error.localizedMessage?.let { Log.d(ERROR_DB, it) }
-                })
+                },
+                    catchBlock = { error ->
+                        error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+                    }
+                )
             } else {
                 _uiState.value = FavoritesState.Loading
-                articleRepoImpl.getHistoryArticleById(accountID).subscribe({ listArticle ->
+                viewModelScope.launchJob(tryBlock = {
+                    val listArticle = articleRepoImpl.getHistoryArticleByIdV2(accountID)
                     if (listArticle.isEmpty()) {
-                        _uiState.value = FavoritesState.EmptyList
+                        _uiState.postValue(FavoritesState.EmptyList)
                     } else {
                         listSave = listArticle.map { articleDb ->
                             articleDb.toArticle()
                         }.toNewListArticleGroupByDate()
-                        _uiState.value = FavoritesState.SetSources(listSave)
+                        _uiState.postValue(FavoritesState.SetSources(listSave))
                     }
-                }, { error ->
+                }, catchBlock = { error ->
                     error.localizedMessage?.let { Log.d(ERROR_DB, it) }
                 })
             }
@@ -84,9 +91,14 @@ class FavoritesViewModel @Inject constructor(
 
     fun deleteFavorites(article: Article) {
         article.title?.let { title ->
-            articleRepoImpl.deleteArticleByIdFavorites(title, accountIdS)
-                .andThen(articleRepoImpl.getLikeArticleById(accountIdS)).subscribe({ list ->
-                    _uiState.value = FavoritesState.SetSources(list.map { articleDb ->
+
+            viewModelScope.launchJob(tryBlock = {
+
+                articleRepoImpl.deleteArticleByIdFavoritesV2(title, accountIdS)
+                val art = (articleRepoImpl.getLikeArticleByIdV2(accountIdS))
+
+                _uiState.postValue(
+                    FavoritesState.SetSources(art.map { articleDb ->
                         articleDb.toArticle()
                     }.reversed()
                         .map { art ->
@@ -94,9 +106,10 @@ class FavoritesViewModel @Inject constructor(
                             art.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
                             art
                         })
-                }, { error ->
-                    error.localizedMessage?.let { Log.d(ERROR_DB, it) }
-                })
+                )
+            }, catchBlock = { error ->
+                error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+            })
         }
     }
 
@@ -106,15 +119,18 @@ class FavoritesViewModel @Inject constructor(
 
     fun deleteHistory(article: Article) {
         article.title?.let { title ->
-            articleRepoImpl.deleteArticleByIdHistory(title, accountIdS)
-                .andThen(articleRepoImpl.getHistoryArticleById(accountIdS)).subscribe({ list ->
-                    listSave = list.map { articleDb ->
-                        articleDb.toArticle()
-                    }.toNewListArticleGroupByDate()
-                    _uiState.value = FavoritesState.SetSources(listSave)
-                }, { error ->
-                    error.localizedMessage?.let { Log.d(ERROR_DB, it) }
-                })
+
+            viewModelScope.launchJob(tryBlock = {
+                articleRepoImpl.deleteArticleByIdHistoryV2(title, accountIdS)
+                val art = (articleRepoImpl.getHistoryArticleByIdV2(accountIdS))
+
+                listSave = art.map { articleDb ->
+                    articleDb.toArticle()
+                }.toNewListArticleGroupByDate()
+                _uiState.postValue(FavoritesState.SetSources(listSave))
+            }, catchBlock = { error ->
+                error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+            })
         }
     }
 
@@ -139,17 +155,19 @@ class FavoritesViewModel @Inject constructor(
     }
 
     fun deleteGroupHistory(article: Article) {
-        articleRepoImpl.deleteArticleByIdHistoryGroup(accountIdS, article.publishedAt).subscribe({
+
+        viewModelScope.launchJob(tryBlock = {
+            articleRepoImpl.deleteArticleByIdHistoryGroup(accountIdS, article.publishedAt)
             Log.d(ERROR_DB, "success")
             articleRepoImpl.getHistoryArticleById(accountIdS).subscribe({ list ->
                 listSave = list.map { articleDb ->
                     articleDb.toArticle()
                 }.toNewListArticleGroupByDate()
-                _uiState.value = FavoritesState.SetSources(listSave)
+                _uiState.postValue(FavoritesState.SetSources(listSave))
             }, { error ->
                 error.localizedMessage?.let { Log.d(ERROR_DB, it) }
             })
-        }, { error ->
+        }, catchBlock = { error ->
             error.localizedMessage?.let { Log.d(ERROR_DB, it) }
         })
     }
