@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.view.favorites
 
-
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,7 +29,6 @@ class FavoritesViewModel @Inject constructor(
 
     private val _uiState: MutableLiveData<FavoritesState> = MutableLiveData()
     val uiState: LiveData<FavoritesState> = _uiState
-
     private var accountIdS: Int = 0
     private var listSave: MutableList<Article> = mutableListOf()
 
@@ -46,7 +44,6 @@ class FavoritesViewModel @Inject constructor(
                 _uiState.value = FavoritesState.Loading
                 viewModelScope.launchJob(tryBlock = {
                     val listArticleDb = articleRepoImpl.getLikeArticleByIdV2(accountID)
-
                     if (listArticleDb.isEmpty()) {
                         _uiState.postValue(FavoritesState.EmptyList)
                     } else {
@@ -91,12 +88,9 @@ class FavoritesViewModel @Inject constructor(
 
     fun deleteFavorites(article: Article) {
         article.title?.let { title ->
-
             viewModelScope.launchJob(tryBlock = {
-
                 articleRepoImpl.deleteArticleByIdFavoritesV2(title, accountIdS)
                 val art = (articleRepoImpl.getLikeArticleByIdV2(accountIdS))
-
                 _uiState.postValue(
                     FavoritesState.SetSources(art.map { articleDb ->
                         articleDb.toArticle()
@@ -119,11 +113,9 @@ class FavoritesViewModel @Inject constructor(
 
     fun deleteHistory(article: Article) {
         article.title?.let { title ->
-
             viewModelScope.launchJob(tryBlock = {
                 articleRepoImpl.deleteArticleByIdHistoryV2(title, accountIdS)
                 val art = (articleRepoImpl.getHistoryArticleByIdV2(accountIdS))
-
                 listSave = art.map { articleDb ->
                     articleDb.toArticle()
                 }.toNewListArticleGroupByDate()
@@ -155,16 +147,16 @@ class FavoritesViewModel @Inject constructor(
     }
 
     fun deleteGroupHistory(article: Article) {
-
         viewModelScope.launchJob(tryBlock = {
-            articleRepoImpl.deleteArticleByIdHistoryGroup(accountIdS, article.publishedAt)
-            Log.d(ERROR_DB, "success")
-            articleRepoImpl.getHistoryArticleById(accountIdS).subscribe({ list ->
+            articleRepoImpl.deleteArticleByIdHistoryGroupV2(accountIdS, article.publishedAt)
+            viewModelScope.launchJob(tryBlock = {
+                val list = articleRepoImpl.getHistoryArticleByIdV2(accountIdS)
                 listSave = list.map { articleDb ->
                     articleDb.toArticle()
                 }.toNewListArticleGroupByDate()
                 _uiState.postValue(FavoritesState.SetSources(listSave))
-            }, { error ->
+            }, catchBlock = {
+                    error ->
                 error.localizedMessage?.let { Log.d(ERROR_DB, it) }
             })
         }, catchBlock = { error ->
