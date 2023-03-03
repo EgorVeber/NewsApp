@@ -74,7 +74,8 @@ class FavoritesViewModel @Inject constructor(
                         _uiState.postValue(FavoritesState.SetSources(listSave))
                     }
                 }, catchBlock = { error ->
-                    error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+                    error.localizedMessage?.let {
+                        Log.d(ERROR_DB, it) }
                 })
             }
         } else {
@@ -91,15 +92,16 @@ class FavoritesViewModel @Inject constructor(
             viewModelScope.launchJob(tryBlock = {
                 articleRepoImpl.deleteArticleByIdFavoritesV2(title, accountIdS)
                 val art = (articleRepoImpl.getLikeArticleByIdV2(accountIdS))
+                val artModified = art.map { articleDb ->
+                    articleDb.toArticle()
+                }.reversed()
+                    .map { art ->
+                        art.publishedAtChange = stringFromData(art.publishedAt).formatDateTime()
+                        art.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
+                        art
+                    }
                 _uiState.postValue(
-                    FavoritesState.SetSources(art.map { articleDb ->
-                        articleDb.toArticle()
-                    }.reversed()
-                        .map { art ->
-                            art.publishedAtChange = stringFromData(art.publishedAt).formatDateTime()
-                            art.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
-                            art
-                        })
+                    FavoritesState.SetSources(artModified)
                 )
             }, catchBlock = { error ->
                 error.localizedMessage?.let { Log.d(ERROR_DB, it) }
@@ -149,18 +151,15 @@ class FavoritesViewModel @Inject constructor(
     fun deleteGroupHistory(article: Article) {
         viewModelScope.launchJob(tryBlock = {
             articleRepoImpl.deleteArticleByIdHistoryGroupV2(accountIdS, article.publishedAt)
-            viewModelScope.launchJob(tryBlock = {
                 val list = articleRepoImpl.getHistoryArticleByIdV2(accountIdS)
                 listSave = list.map { articleDb ->
                     articleDb.toArticle()
                 }.toNewListArticleGroupByDate()
                 _uiState.postValue(FavoritesState.SetSources(listSave))
-            }, catchBlock = {
-                    error ->
-                error.localizedMessage?.let { Log.d(ERROR_DB, it) }
-            })
         }, catchBlock = { error ->
-            error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+            error.localizedMessage?.let {
+                _uiState.postValue(FavoritesState.ErrorDeleteGroup)
+                Log.d(ERROR_DB, it) }
         })
     }
 
@@ -170,5 +169,6 @@ class FavoritesViewModel @Inject constructor(
         object EmptyList : FavoritesState()
         object Loading : FavoritesState()
         object NotAuthorized : FavoritesState()
+        object ErrorDeleteGroup : FavoritesState()
     }
 }
