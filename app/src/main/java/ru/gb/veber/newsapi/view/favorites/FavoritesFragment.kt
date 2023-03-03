@@ -22,11 +22,12 @@ import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.PAGE
 import ru.gb.veber.newsapi.utils.extentions.collapsed
 import ru.gb.veber.newsapi.utils.extentions.expanded
+import ru.gb.veber.newsapi.utils.extentions.showText
+import ru.gb.veber.newsapi.utils.extentions.loadGlideNot
+import ru.gb.veber.newsapi.utils.extentions.stringFromData
 import ru.gb.veber.newsapi.utils.extentions.formatDateDay
 import ru.gb.veber.newsapi.utils.extentions.hide
-import ru.gb.veber.newsapi.utils.extentions.loadGlideNot
 import ru.gb.veber.newsapi.utils.extentions.show
-import ru.gb.veber.newsapi.utils.extentions.stringFromData
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventShareLink
 import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
@@ -165,6 +166,9 @@ class FavoritesFragment : Fragment(), BackPressedListener,
             FavoritesViewModel.FavoritesState.NotAuthorized -> {
                 notAuthorized()
             }
+            FavoritesViewModel.FavoritesState.ErrorDeleteGroup -> {
+                toastDeleteHistoryError()
+            }
         }
     }
 
@@ -198,6 +202,10 @@ class FavoritesFragment : Fragment(), BackPressedListener,
     private fun emptyList() {
         binding.statusTextLike.show()
         binding.statusTextLike.text = getString(R.string.empty_list)
+    }
+
+    private fun toastDeleteHistoryError() {
+        binding.root.showText(getString(R.string.historyCanNotBeCleared))
     }
 
     companion object {
