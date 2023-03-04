@@ -82,9 +82,9 @@ object SharedPreferenceAccount {
 
 
     fun getArrayCountry(): HashMap<String, String> {
-        var hashMap = hashMapOf<String, String>()
-        var name = App.instance.applicationContext.resources.getStringArray(R.array.countryName)
-        var code = App.instance.applicationContext.resources.getStringArray(R.array.countryCode)
+        val hashMap = hashMapOf<String, String>()
+        val name = App.instance.applicationContext.resources.getStringArray(R.array.countryName)
+        val code = App.instance.applicationContext.resources.getStringArray(R.array.countryCode)
 
         for (i in name.indices) {
             hashMap[name[i]] = code[i]
