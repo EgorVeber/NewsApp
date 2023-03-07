@@ -123,16 +123,21 @@ class TopNewsViewModel @Inject constructor(
                     }, finallyBlock = {
                         mutableFlow.postValue(TopNewsState.EventUpdateViewPager)
                     })
-                } else{
+                } else {
                     mutableFlow.postValue(TopNewsState.EventUpdateViewPager)
                 }
             }
         }
     }
 
-    fun closeFilter() {
-        filterFlag = !filterFlag
-        mutableFlow.value = TopNewsState.HideFilterShowRecycler
+    fun closeFilter(country: String) {
+        if (country.isEmpty() || !listCountry.map { itemCountry -> itemCountry.id }
+                .contains(country)) {
+            mutableFlow.value = TopNewsState.ErrorSelectCountry
+        } else {
+            filterFlag = !filterFlag
+            mutableFlow.value = TopNewsState.HideFilterShowRecycler
+        }
     }
 
     fun behaviorCollapsed() {

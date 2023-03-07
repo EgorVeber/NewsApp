@@ -195,7 +195,7 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
         }
 
         binding.closeFilter.setOnClickListener {
-            topNewsViewModel.closeFilter()
+            topNewsViewModel.closeFilter(country = binding.countryAutoComplete.text.toString())
         }
 
         bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
@@ -264,7 +264,7 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
             transition.addTransition(Fade(Fade.OUT))
             TransitionManager.beginDelayedTransition(binding.root, transition)
 
-            binding.recyclerNews.alpha = ALFA_FILTER_HIDE
+            binding.recyclerNews.alpha =  ALFA_FILTER_HIDE
             binding.filterButton.setImageResource(R.drawable.check_icon)
             binding.countryTextInput.show()
             binding.closeFilter.show()
