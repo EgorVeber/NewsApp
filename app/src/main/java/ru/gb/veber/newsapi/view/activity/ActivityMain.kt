@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import io.reactivex.rxjava3.core.Completable
+import kotlinx.coroutines.flow.onEach
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
@@ -17,6 +19,7 @@ import ru.gb.veber.newsapi.utils.COUNTER_BACKSTACK
 import ru.gb.veber.newsapi.utils.COUNTER_BADGE
 import ru.gb.veber.newsapi.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.utils.DELAY_BACK_STACK
+import ru.gb.veber.newsapi.utils.extentions.flowStarted
 import ru.gb.veber.newsapi.utils.extentions.showText
 import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
@@ -57,6 +60,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
 
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
+
     private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
 
     @Inject
@@ -90,13 +94,11 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        //App.instance.navigationHolder.setNavigator(navigator)
         navigatorHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
         super.onPause()
-        //App.instance.navigationHolder.removeNavigator()
         navigatorHolder.removeNavigator()
     }
 
@@ -182,7 +184,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
     }
 
     private fun initViewModel() {
-        activityMainViewModel.subscribe().observe(this) { state ->
+        activityMainViewModel.subscribe().onEach { state ->
             when (state) {
                 ActivityMainViewModel.ViewMainState.CompletableInsertSources -> {
                     completableInsertSources()
@@ -196,8 +198,9 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
                 is ActivityMainViewModel.ViewMainState.OnCreateSetIconTitleAccount -> {
                     onCreateSetIconTitleAccount(state.accountLogin)
                 }
+                ActivityMainViewModel.ViewMainState.StartedState -> {}
             }
-        }
+        }.flowStarted(lifecycleScope)
     }
 
     private fun hideAllBehavior() {
