@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.profile.account.settings
+package ru.gb.veber.newsapi.view.profile.account.settings.customize
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +17,21 @@ class CustomizeCategoryViewModel @Inject constructor(
     private val mutableFlow: MutableLiveData<CustomizeCategoryState> = MutableLiveData()
     private val flow: LiveData<CustomizeCategoryState> = mutableFlow
 
+    private val customList: MutableLiveData<MutableList<Category>> = MutableLiveData()
+    private val _customList: LiveData<MutableList<Category>> = customList
+
+    init {
+        customList.value = CategoryData.getCategory()
+    }
+
+    fun getLiveDataCategory() : LiveData<MutableList<Category>> {
+        return _customList
+    }
+
+    fun getLiveData(): LiveData<CustomizeCategoryState> {
+        return flow
+    }
+
     fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
@@ -26,5 +41,7 @@ class CustomizeCategoryViewModel @Inject constructor(
         router.exit()
     }
 
-    sealed class CustomizeCategoryState {}
+    sealed class CustomizeCategoryState {
+        data class ListChanged(val list: MutableList<Category>): CustomizeCategoryState()
+    }
 }

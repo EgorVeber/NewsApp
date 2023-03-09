@@ -78,6 +78,19 @@
     <dimen name="margin_25">25dp</dimen>
     <dimen name="margin_12_dp">12dp</dimen>
     <dimen name="text_size_customize_category_fragment">18sp</dimen>
+    <dimen name="categories_order_marginStart">16dp</dimen>
+    <dimen name="categories_order_marginTop">16dp</dimen>
+    <dimen name="categories_order_marginEnd">16dp</dimen>
+    <dimen name="categories_order_marginBottom">8dp</dimen>
+    <dimen name="hamburger_custom_padding">12dp</dimen>
+    <dimen name="category_textSize">16sp</dimen>
+    <dimen name="categoryText_paddingVertical">16dp</dimen>
+    <dimen name="hamburgerCustom_marginStart">5dp</dimen>
+    <dimen name="hamburgerCustom_width">48dp</dimen>
+    <dimen name="hamburgerCustom_height">48dp</dimen>
+    <dimen name="cardView_paddingStart">16dp</dimen>
+    <dimen name="cardView_paddingEnd">4dp</dimen>
+    <dimen name="elevation">2dp</dimen>
 
 
 </resources>
