@@ -53,7 +53,6 @@ class SourcesViewModel @Inject constructor(
             })
         } else {
             viewModelScope.launchJob(tryBlock = {
-                val listSources = sourcesRepoImpl.getSourcesV2()
                 val all = sourcesRepoImpl.getSourcesV2()
                 val like = accountSourcesRepoImpl.getLikeSourcesFromAccountV2(accountId = accountId)
                 val article = articleRepoImpl.getArticleByIdV2(accountId = accountId)
