@@ -44,7 +44,6 @@ class SourcesViewModel @Inject constructor(
 
     fun getSources(accountId: Int) {
         if (accountId == ACCOUNT_ID_DEFAULT) {
-            //       sourcesRepoImpl.getSources().subscribe({ listSources ->
             viewModelScope.launchJob(tryBlock = {
                 val listSources = sourcesRepoImpl.getSourcesV2()
                 allSources = listSources
@@ -72,7 +71,16 @@ class SourcesViewModel @Inject constructor(
                         }
                     }
                 }
-                mutableFlow.postValue(SourcesState.SetSources(listSources))
+                all.forEach { sor ->
+                    article.forEach { art ->
+                        if (sor.idSources == art.sourceId) {
+                            if (art.isFavorites) sor.totalFavorites += 1
+                            else sor.totalHistory += 1
+                        }
+                    }
+                }
+
+                mutableFlow.postValue(SourcesState.SetSources(all))
 
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
@@ -113,7 +121,7 @@ class SourcesViewModel @Inject constructor(
             }
 
         } else {
-            mutableFlow.postValue( SourcesState.ShowToastLogIn)
+            mutableFlow.postValue(SourcesState.ShowToastLogIn)
         }
     }
 
@@ -124,13 +132,8 @@ class SourcesViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             historySelectRepoImpl.insertSelectV2(historyDbEntity = history.toHistorySelectDbEntity())
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)} )
-/*
-        historySelectRepoImpl.insertSelect(historyDbEntity = history.toHistorySelectDbEntity())
-            .subscribe({}, { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
-            })
-*/
+            Log.d(ERROR_DB, error.localizedMessage)
+        })
     }
 
     fun onBackPressedRouter(): Boolean {
