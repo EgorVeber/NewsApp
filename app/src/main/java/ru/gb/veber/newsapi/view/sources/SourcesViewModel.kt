@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.core.SearchNewsScreen
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.HistorySelect
@@ -17,6 +17,7 @@ import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
 import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.ERROR_DB
+import ru.gb.veber.newsapi.utils.extentions.launchJob
 import ru.gb.veber.newsapi.utils.mapper.toHistorySelectDbEntity
 import javax.inject.Inject
 
@@ -43,18 +44,20 @@ class SourcesViewModel @Inject constructor(
 
     fun getSources(accountId: Int) {
         if (accountId == ACCOUNT_ID_DEFAULT) {
-            sourcesRepoImpl.getSources().subscribe({ listSources ->
+            //       sourcesRepoImpl.getSources().subscribe({ listSources ->
+            viewModelScope.launchJob(tryBlock = {
+                val listSources = sourcesRepoImpl.getSourcesV2()
                 allSources = listSources
-                mutableFlow.value = SourcesState.SetSources(listSources)
-            }, { error ->
+                mutableFlow.postValue(SourcesState.SetSources(listSources))
+            }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
         } else {
-            Single.zip(
-                sourcesRepoImpl.getSources(),
-                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountId = accountId),
-                articleRepoImpl.getArticleById(accountId = accountId)
-            ) { all, like, article ->
+            viewModelScope.launchJob(tryBlock = {
+                val listSources = sourcesRepoImpl.getSourcesV2()
+                val all = sourcesRepoImpl.getSourcesV2()
+                val like = accountSourcesRepoImpl.getLikeSourcesFromAccountV2(accountId = accountId)
+                val article = articleRepoImpl.getArticleByIdV2(accountId = accountId)
                 allSources = all
                 like.map { sources ->
                     sources.liked = true
@@ -69,19 +72,9 @@ class SourcesViewModel @Inject constructor(
                         }
                     }
                 }
+                mutableFlow.postValue(SourcesState.SetSources(listSources))
 
-                all.forEach { sor ->
-                    article.forEach { art ->
-                        if (sor.idSources == art.sourceId) {
-                            if (art.isFavorites) sor.totalFavorites += 1
-                            else sor.totalHistory += 1
-                        }
-                    }
-                }
-                all
-            }.subscribe({ listSources ->
-                mutableFlow.value = SourcesState.SetSources(listSources)
-            }, { error ->
+            }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
         }
@@ -95,28 +88,32 @@ class SourcesViewModel @Inject constructor(
         if (accountId != ACCOUNT_ID_DEFAULT) {
             if (source.liked) {
                 source.liked = false
-                accountSourcesRepoImpl.deleteSourcesLike(
-                    accountId = accountId,
-                    sourcesId = source.id
-                ).subscribe({
+
+                viewModelScope.launchJob(tryBlock = {
+                    accountSourcesRepoImpl.deleteSourcesLikeV2(
+                        accountId = accountId,
+                        sourcesId = source.id
+                    )
                     getSources(accountId)
-                }, { error ->
+                }, catchBlock = { error ->
                     Log.d(ERROR_DB, error.localizedMessage)
                 })
             } else {
                 source.liked = true
-                accountSourcesRepoImpl.insert(
-                    accountSourcesDbEntity = AccountSourcesDbEntity(
-                        accountId, source.id
+                viewModelScope.launchJob(tryBlock = {
+                    accountSourcesRepoImpl.insertV2(
+                        accountSourcesDbEntity = AccountSourcesDbEntity(
+                            accountId, source.id
+                        )
                     )
-                ).subscribe({
                     getSources(accountId)
-                }, { error ->
+                }, catchBlock = { error ->
                     Log.d(ERROR_DB, error.localizedMessage)
                 })
             }
+
         } else {
-            mutableFlow.value = SourcesState.ShowToastLogIn
+            mutableFlow.postValue( SourcesState.ShowToastLogIn)
         }
     }
 
@@ -124,10 +121,16 @@ class SourcesViewModel @Inject constructor(
         val history =
             HistorySelect(0, accountID = accountId, sourcesId = source, sourcesName = name)
         router.navigateTo(SearchNewsScreen(accountId = accountId, historySelect = history))
+        viewModelScope.launchJob(tryBlock = {
+            historySelectRepoImpl.insertSelectV2(historyDbEntity = history.toHistorySelectDbEntity())
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)} )
+/*
         historySelectRepoImpl.insertSelect(historyDbEntity = history.toHistorySelectDbEntity())
             .subscribe({}, { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
+*/
     }
 
     fun onBackPressedRouter(): Boolean {
