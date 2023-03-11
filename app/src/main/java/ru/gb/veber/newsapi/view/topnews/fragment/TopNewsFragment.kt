@@ -21,6 +21,7 @@ import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.core.App
+import ru.gb.veber.newsapi.core.NewsFragment
 import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
@@ -44,28 +45,20 @@ import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Compan
 import javax.inject.Inject
 
 
-class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity {
-
-    private var _binding: TopNewsFragmentBinding? = null
-    private val binding get() = _binding!!
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val topNewsViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[TopNewsViewModel::class.java]
-    }
+class TopNewsFragment :
+    NewsFragment<TopNewsFragmentBinding, TopNewsViewModel>(TopNewsFragmentBinding::inflate),
+    EventBehaviorToActivity {
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private var itemListener = TopNewsListener { article -> topNewsViewModel.clickNews(article) }
+    private var itemListener = TopNewsListener { article -> newsViewModel.clickNews(article) }
     private val newsAdapter = TopNewsAdapter(itemListener)
 
     private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             when (newState) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
-                    topNewsViewModel.behaviorCollapsed()
+                    newsViewModel.behaviorCollapsed()
                 }
             }
         }
@@ -77,30 +70,6 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
         binding.countryAutoComplete.hideKeyboard()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = TopNewsFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        App.instance.appComponent.inject(this)
-        initialization()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return topNewsViewModel.onBackPressedRouter()
-    }
-
     override fun getStateBehavior(): Int {
         return bSheetB.state
     }
@@ -109,15 +78,41 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
         bSheetB.collapsed()
     }
 
-    private fun initialization() {
-        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
-        val categoryKey = arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL
-        initViewModel(accountId = accountId, categoryKey = categoryKey)
-        initView()
+    override fun getViewModelClass() = TopNewsViewModel::class.java
+
+    override fun onInject() {
+        App.instance.appComponent.inject(this)
     }
 
-    private fun initViewModel(accountId: Int, categoryKey: String) {
-        topNewsViewModel.subscribe(accountId = accountId, categoryKey = categoryKey)
+    override fun onInitView() {
+        with(binding.countryAutoComplete) {
+            threshold = 1
+            onItemClickListener = listenerAdapter
+            setOnClickListener {
+                showDropDown()
+            }
+        }
+
+        binding.recyclerNews.adapter = newsAdapter
+        binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.filterButton.setOnClickListener {
+            newsViewModel.filterButtonClick(country = binding.countryAutoComplete.text.toString())
+        }
+
+        binding.closeFilter.setOnClickListener {
+            newsViewModel.closeFilter(country = binding.countryAutoComplete.text.toString())
+        }
+
+        bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
+        bSheetB.addBottomSheetCallback(callBackBehavior)
+    }
+
+
+    override fun onObserveData() {
+        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
+        val categoryKey = arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL
+        newsViewModel.subscribe(accountId = accountId, categoryKey = categoryKey)
             .observe(viewLifecycleOwner) { state ->
                 when (state) {
                     is TopNewsViewModel.TopNewsState.UpdateListNews -> {
@@ -178,36 +173,12 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
             }
     }
 
-    private fun initView() {
-        with(binding.countryAutoComplete) {
-            threshold = 1
-            onItemClickListener = listenerAdapter
-            setOnClickListener {
-                showDropDown()
-            }
-        }
-
-        binding.recyclerNews.adapter = newsAdapter
-        binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
-
-        binding.filterButton.setOnClickListener {
-            topNewsViewModel.filterButtonClick(country = binding.countryAutoComplete.text.toString())
-        }
-
-        binding.closeFilter.setOnClickListener {
-            topNewsViewModel.closeFilter(country = binding.countryAutoComplete.text.toString())
-        }
-
-        bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
-        bSheetB.addBottomSheetCallback(callBackBehavior)
-    }
-
     private fun setNews(listNews: List<Article>) {
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = listNews
-        topNewsViewModel.getCountry()
+        newsViewModel.getCountry()
     }
 
     private fun updateListNews(newListNews: MutableList<Article>) {
@@ -225,11 +196,11 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener {
-            topNewsViewModel.openScreenWebView(article.url)
+            newsViewModel.openScreenWebView(article.url)
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
-            topNewsViewModel.clickImageFavorites(article)
+            newsViewModel.clickImageFavorites(article)
         }
 
         binding.behaviorInclude.imageShare.setOnClickListener {
@@ -264,7 +235,7 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
             transition.addTransition(Fade(Fade.OUT))
             TransitionManager.beginDelayedTransition(binding.root, transition)
 
-            binding.recyclerNews.alpha =  ALFA_FILTER_HIDE
+            binding.recyclerNews.alpha = ALFA_FILTER_HIDE
             binding.filterButton.setImageResource(R.drawable.check_icon)
             binding.countryTextInput.show()
             binding.closeFilter.show()
@@ -354,5 +325,4 @@ class TopNewsFragment : Fragment(), BackPressedListener, EventBehaviorToActivity
                 }
             }
     }
-
 }
