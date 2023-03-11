@@ -22,6 +22,8 @@ import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.HISTORY_SELECT_BUNDLE
+import ru.gb.veber.newsapi.utils.extentions.BundleHistorySelect
+import ru.gb.veber.newsapi.utils.extentions.BundleInt
 import ru.gb.veber.newsapi.utils.extentions.collapsed
 import ru.gb.veber.newsapi.utils.extentions.expanded
 import ru.gb.veber.newsapi.utils.extentions.formatDateDay
@@ -58,6 +60,9 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
 
     private val newsAdapter = TopNewsAdapter(itemListener)
 
+    private var historySelect by BundleHistorySelect(HISTORY_SELECT_BUNDLE)
+    private var accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,9 +77,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
         initialization()
-        arguments?.let {
-            searchNewsViewModel.getNews(it.getParcelable(HISTORY_SELECT_BUNDLE))
-        }
+        searchNewsViewModel.getNews(historySelect)
         searchNewsViewModel.getAccountSettings()
     }
 
@@ -97,7 +100,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
 
     private fun initialization() {
         initView()
-        initViewModel(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        initViewModel()
     }
 
     private fun initView() {
@@ -111,7 +114,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.behaviorInclude.saveSources.setOnClickListener { searchNewsViewModel.saveSources() }
     }
 
-    private fun initViewModel(accountId: Int) {
+    private fun initViewModel() {
         searchNewsViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is SearchNewsViewModel.SearchNewsState.SetNews -> {
@@ -164,7 +167,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         keyWord: String?,
         sourcesId: String?,
         sortType: String?,
-        dateSources: String?
+        dateSources: String?,
     ) {
         binding.titleSearch.text = "$keyWord $sourcesId $sortType $dateSources"
     }
@@ -268,17 +271,14 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.behaviorInclude.imageFavorites.hide()
     }
 
-
     companion object {
         fun getInstance(
             accountId: Int,
             historySelect: HistorySelect,
         ): SearchNewsFragment {
             return SearchNewsFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ACCOUNT_ID, accountId)
-                    putParcelable(HISTORY_SELECT_BUNDLE, historySelect)
-                }
+                this.accountId = accountId
+                this.historySelect = historySelect
             }
         }
     }

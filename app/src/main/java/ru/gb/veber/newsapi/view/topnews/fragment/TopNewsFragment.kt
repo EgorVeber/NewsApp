@@ -6,14 +6,10 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
@@ -35,14 +31,12 @@ import ru.gb.veber.newsapi.utils.extentions.hideKeyboard
 import ru.gb.veber.newsapi.utils.extentions.loadGlideNot
 import ru.gb.veber.newsapi.utils.extentions.show
 import ru.gb.veber.newsapi.utils.extentions.stringFromData
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.activity.EventShareLink
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.view.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
-import javax.inject.Inject
 
 
 class TopNewsFragment :
@@ -51,14 +45,14 @@ class TopNewsFragment :
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private var itemListener = TopNewsListener { article -> newsViewModel.clickNews(article) }
+    private var itemListener = TopNewsListener { article -> viewModel.clickNews(article) }
     private val newsAdapter = TopNewsAdapter(itemListener)
 
     private val callBackBehavior = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             when (newState) {
                 BottomSheetBehavior.STATE_COLLAPSED -> {
-                    newsViewModel.behaviorCollapsed()
+                    viewModel.behaviorCollapsed()
                 }
             }
         }
@@ -97,11 +91,11 @@ class TopNewsFragment :
         binding.recyclerNews.layoutManager = LinearLayoutManager(requireContext())
 
         binding.filterButton.setOnClickListener {
-            newsViewModel.filterButtonClick(country = binding.countryAutoComplete.text.toString())
+            viewModel.filterButtonClick(country = binding.countryAutoComplete.text.toString())
         }
 
         binding.closeFilter.setOnClickListener {
-            newsViewModel.closeFilter(country = binding.countryAutoComplete.text.toString())
+            viewModel.closeFilter(country = binding.countryAutoComplete.text.toString())
         }
 
         bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
@@ -112,7 +106,7 @@ class TopNewsFragment :
     override fun onObserveData() {
         val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
         val categoryKey = arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL
-        newsViewModel.subscribe(accountId = accountId, categoryKey = categoryKey)
+        viewModel.subscribe(accountId = accountId, categoryKey = categoryKey)
             .observe(viewLifecycleOwner) { state ->
                 when (state) {
                     is TopNewsViewModel.TopNewsState.UpdateListNews -> {
@@ -178,7 +172,7 @@ class TopNewsFragment :
         binding.recyclerNews.show()
         TransitionManager.beginDelayedTransition(binding.root)
         newsAdapter.articles = listNews
-        newsViewModel.getCountry()
+        viewModel.getCountry()
     }
 
     private fun updateListNews(newListNews: MutableList<Article>) {
@@ -196,11 +190,11 @@ class TopNewsFragment :
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener {
-            newsViewModel.openScreenWebView(article.url)
+            viewModel.openScreenWebView(article.url)
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
-            newsViewModel.clickImageFavorites(article)
+            viewModel.clickImageFavorites(article)
         }
 
         binding.behaviorInclude.imageShare.setOnClickListener {
