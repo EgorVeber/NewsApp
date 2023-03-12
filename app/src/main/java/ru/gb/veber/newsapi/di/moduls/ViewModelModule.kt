@@ -18,8 +18,8 @@ import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationViewModel
 import ru.gb.veber.newsapi.view.search.SearchViewModel
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsViewModel
 import ru.gb.veber.newsapi.view.sources.SourcesViewModel
-import ru.gb.veber.newsapi.view.topnews.fragment.TopNewsViewModel
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerViewModel
+import ru.gb.veber.newsapi.presentation.topnews.fragment.TopNewsViewModel
+import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerViewModel
 import ru.gb.veber.newsapi.view.webview.WebViewViewModel
 
 

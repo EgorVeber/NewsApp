@@ -3,8 +3,11 @@ package ru.gb.veber.newsapi.di.moduls
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ru.gb.veber.newsapi.model.database.NewsDataBase
-import ru.gb.veber.newsapi.model.repository.room.*
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
+import ru.gb.veber.newsapi.domain.repository.ArticleRepo
+import ru.gb.veber.newsapi.domain.repository.CountryRepo
+import ru.gb.veber.newsapi.data.NewsDataBase
+import ru.gb.veber.newsapi.data.repository.*
 import javax.inject.Singleton
 
 @Module

@@ -10,15 +10,15 @@ import ru.gb.veber.newsapi.core.SearchNewsScreen
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.model.database.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
-import ru.gb.veber.newsapi.model.repository.room.HistorySelectRepo
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.extentions.launchJob
-import ru.gb.veber.newsapi.utils.mapper.toHistorySelectDbEntity
+import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.data.repository.AccountSourcesRepo
+import ru.gb.veber.newsapi.domain.repository.ArticleRepo
+import ru.gb.veber.newsapi.data.repository.HistorySelectRepo
+import ru.gb.veber.newsapi.data.repository.SourcesRepo
+import ru.gb.veber.newsapi.core.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.core.utils.ERROR_DB
+import ru.gb.veber.newsapi.core.utils.extentions.launchJob
+import ru.gb.veber.newsapi.data.mapper.toHistorySelectDbEntity
 import javax.inject.Inject
 
 class SourcesViewModel @Inject constructor(

@@ -12,13 +12,13 @@ import ru.gb.veber.newsapi.core.CustomizeCategoryScreen
 import ru.gb.veber.newsapi.core.EditAccountScreen
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepo
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
-import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.utils.extentions.launchJob
-import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
+import ru.gb.veber.newsapi.data.repository.AccountSourcesRepo
+import ru.gb.veber.newsapi.domain.repository.ArticleRepo
+import ru.gb.veber.newsapi.core.utils.*
+import ru.gb.veber.newsapi.core.utils.extentions.launchJob
+import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(

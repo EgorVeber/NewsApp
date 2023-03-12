@@ -1,8 +1,6 @@
 package ru.gb.veber.newsapi.view.activity
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
@@ -14,16 +12,16 @@ import ru.gb.veber.newsapi.core.ProfileScreen
 import ru.gb.veber.newsapi.core.SearchScreen
 import ru.gb.veber.newsapi.core.SourcesScreen
 import ru.gb.veber.newsapi.core.TopNewsViewPagerScreen
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.network.NewsRepo
-import ru.gb.veber.newsapi.model.repository.room.CountryRepo
-import ru.gb.veber.newsapi.model.repository.room.SourcesRepo
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.extentions.launchJob
-import ru.gb.veber.newsapi.utils.mapper.newCountryDbEntity
-import ru.gb.veber.newsapi.utils.mapper.toSourcesDbEntity
+import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.domain.repository.NewsRepo
+import ru.gb.veber.newsapi.domain.repository.CountryRepo
+import ru.gb.veber.newsapi.data.repository.SourcesRepo
+import ru.gb.veber.newsapi.core.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.core.utils.API_KEY_NEWS
+import ru.gb.veber.newsapi.core.utils.ERROR_DB
+import ru.gb.veber.newsapi.core.utils.extentions.launchJob
+import ru.gb.veber.newsapi.data.mapper.newCountryDbEntity
+import ru.gb.veber.newsapi.data.mapper.toSourcesDbEntity
 import javax.inject.Inject
 
 class ActivityMainViewModel @Inject constructor(
