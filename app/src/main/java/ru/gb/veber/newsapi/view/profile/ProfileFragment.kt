@@ -3,9 +3,8 @@ package ru.gb.veber.newsapi.view.profile
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import javax.inject.Inject
 
 class ProfileFragment : Fragment() {

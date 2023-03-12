@@ -7,18 +7,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.core.AuthorizationScreen
-import ru.gb.veber.newsapi.core.CustomizeCategoryScreen
-import ru.gb.veber.newsapi.core.EditAccountScreen
-import ru.gb.veber.newsapi.core.WebViewScreen
-import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepo
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
-import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.utils.extentions.launchJob
-import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.common.extentions.launchJob
+import ru.gb.veber.newsapi.common.screen.AuthorizationScreen
+import ru.gb.veber.newsapi.common.screen.CustomizeCategoryScreen
+import ru.gb.veber.newsapi.common.screen.EditAccountScreen
+import ru.gb.veber.newsapi.common.screen.WebViewScreen
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.common.utils.KEY_THEME_DARK
+import ru.gb.veber.newsapi.common.utils.KEY_THEME_DEFAULT
+import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
+import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
+import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(

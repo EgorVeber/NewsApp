@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.SourcesItemBinding
-import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.domain.models.Sources
 import ru.gb.veber.newsapi.view.sources.recycler.SourcesDiffUtil
 import ru.gb.veber.newsapi.view.sources.recycler.SourcesListener
 import ru.gb.veber.newsapi.view.sources.recycler.SourcesViewHolder
