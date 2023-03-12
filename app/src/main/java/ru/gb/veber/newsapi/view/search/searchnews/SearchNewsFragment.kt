@@ -29,6 +29,7 @@ import ru.gb.veber.newsapi.utils.extentions.expanded
 import ru.gb.veber.newsapi.utils.extentions.formatDateDay
 import ru.gb.veber.newsapi.utils.extentions.hide
 import ru.gb.veber.newsapi.utils.extentions.loadGlideNot
+import ru.gb.veber.newsapi.utils.extentions.observeFlow
 import ru.gb.veber.newsapi.utils.extentions.show
 import ru.gb.veber.newsapi.utils.extentions.showSnackBarError
 import ru.gb.veber.newsapi.utils.extentions.stringFromData
@@ -77,8 +78,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
         initialization()
-        searchNewsViewModel.getNews(historySelect)
-        searchNewsViewModel.getAccountSettings()
+        searchNewsViewModel.getAccountSettings(historySelect)
     }
 
     override fun onDestroyView() {
@@ -115,19 +115,32 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
     }
 
     private fun initViewModel() {
-        searchNewsViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+        searchNewsViewModel.articleDataFlow.observeFlow(this) {
+            clickNews(it)
+        }
+
+        searchNewsViewModel.imageLikeFlow.observeFlow(this) { showLikeImageView ->
+            if (showLikeImageView) setLikeResourcesActive() else setLikeResourcesNegative()
+        }
+
+        searchNewsViewModel.saveSourcesFlow.observeFlow(this) { showSaveSources ->
+            if (showSaveSources) showSaveSources() else hideSaveSources()
+        }
+
+        searchNewsViewModel.showMessageFlow.observeFlow(this) { showMessage ->
+            if (showMessage) successSaveSources()
+        }
+
+        searchNewsViewModel.subscribe(accountId).observeFlow(this) { state ->
             when (state) {
                 is SearchNewsViewModel.SearchNewsState.SetNews -> {
                     setNews(state.list)
-                }
-                is SearchNewsViewModel.SearchNewsState.ClickNews -> {
-                    clickNews(state.article)
                 }
                 is SearchNewsViewModel.SearchNewsState.ChangeNews -> {
                     changeNews(state.articleListHistory)
                 }
                 is SearchNewsViewModel.SearchNewsState.SetTitle -> {
-                    setTitle(state.keyWord, state.sourcesId, state.sortType, state.dateSources)
+                    setTitle(state.historySelect)
                 }
                 SearchNewsViewModel.SearchNewsState.EmptyList -> {
                     emptyList()
@@ -135,41 +148,34 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
                 SearchNewsViewModel.SearchNewsState.HideFavorites -> {
                     hideFavorites()
                 }
-                SearchNewsViewModel.SearchNewsState.HideSaveSources -> {
-                    hideSaveSources()
-                }
+
                 SearchNewsViewModel.SearchNewsState.AddBadge -> {
                     addBadge()
                 }
                 SearchNewsViewModel.SearchNewsState.RemoveBadge -> {
                     removeBadge()
                 }
-                SearchNewsViewModel.SearchNewsState.SetLikeResourcesActive -> {
-                    setLikeResourcesActive()
-                }
-                SearchNewsViewModel.SearchNewsState.SetLikeResourcesNegative -> {
-                    setLikeResourcesNegative()
-                }
                 SearchNewsViewModel.SearchNewsState.SheetExpanded -> {
                     sheetExpanded()
                 }
-                SearchNewsViewModel.SearchNewsState.ShowSaveSources -> {
-                    showSaveSources()
-                }
-                SearchNewsViewModel.SearchNewsState.SuccessSaveSources -> {
-                    successSaveSources()
+                SearchNewsViewModel.SearchNewsState.StartedState -> {}
+                SearchNewsViewModel.SearchNewsState.HideProgress -> {
+                    hideProgress()
                 }
             }
         }
     }
 
-    private fun setTitle(
-        keyWord: String?,
-        sourcesId: String?,
-        sortType: String?,
-        dateSources: String?,
-    ) {
-        binding.titleSearch.text = "$keyWord $sourcesId $sortType $dateSources"
+    private fun setTitle(historySelect: HistorySelect) {
+        val keyWord = historySelect.keyWord
+        val sourcesId = historySelect.sourcesName
+        val sortType =
+            if (!historySelect.keyWord.isNullOrEmpty()) historySelect.sortByKeyWord
+            else historySelect.sortBySources
+        val dateSources = historySelect.dateSources
+        val text = "$keyWord $sourcesId $sortType $dateSources"
+
+        binding.titleSearch.text = text
     }
 
     private fun setNews(articles: List<Article>) {
@@ -179,16 +185,13 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.allNewsRecycler.show()
     }
 
+    private fun hideProgress() {
+        binding.progressBarAllNews.hide()
+    }
+
     private fun changeNews(articleListHistory: List<Article>) {
         newsAdapter.articles = articleListHistory
     }
-
-    // TODO: чекнуть нужен ли
-    private fun loading() {
-        binding.progressBarAllNews.show()
-        binding.allNewsRecycler.hide()
-    }
-
 
     private fun emptyList() {
         binding.progressBarAllNews.hide()
@@ -250,7 +253,6 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
     }
 
     private fun successSaveSources() {
-        binding.behaviorInclude.saveSources.hide()
         binding.root.showSnackBarError(getString(R.string.sourcesSaved), "", {})
     }
 
