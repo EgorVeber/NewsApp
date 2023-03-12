@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
+import ru.gb.veber.newsapi.core.NewsViewModel
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.model.Article
@@ -39,7 +40,7 @@ class TopNewsViewModel @Inject constructor(
     private val articleRepoImpl: ArticleRepo,
     private val accountRepoImpl: AccountRepo,
     private val countryRepoImpl: CountryRepo,
-) : ViewModel() {
+) : NewsViewModel() {
 
     private val mutableFlow: MutableLiveData<TopNewsState> = MutableLiveData()
     private val flow: LiveData<TopNewsState> = mutableFlow
@@ -91,7 +92,7 @@ class TopNewsViewModel @Inject constructor(
         router.navigateTo(WebViewScreen(url))
     }
 
-    fun onBackPressedRouter(): Boolean {
+    override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }

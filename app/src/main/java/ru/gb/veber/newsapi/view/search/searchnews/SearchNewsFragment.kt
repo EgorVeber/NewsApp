@@ -22,6 +22,8 @@ import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.HISTORY_SELECT_BUNDLE
+import ru.gb.veber.newsapi.utils.extentions.BundleHistorySelect
+import ru.gb.veber.newsapi.utils.extentions.BundleInt
 import ru.gb.veber.newsapi.utils.extentions.collapsed
 import ru.gb.veber.newsapi.utils.extentions.expanded
 import ru.gb.veber.newsapi.utils.extentions.formatDateDay
@@ -59,6 +61,9 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
 
     private val newsAdapter = TopNewsAdapter(itemListener)
 
+    private var historySelect by BundleHistorySelect(HISTORY_SELECT_BUNDLE)
+    private var accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,6 +78,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
         initialization()
+        searchNewsViewModel.getAccountSettings(historySelect)
     }
 
     override fun onDestroyView() {
@@ -93,12 +99,8 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
     }
 
     private fun initialization() {
-        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
-        //TODO NewsAndroid-59 Изменить модельку поиска и логику поиска с HistorySelect.
-        val historySelect: HistorySelect = arguments?.getParcelable(HISTORY_SELECT_BUNDLE)!!
         initView()
-        initViewModel(accountId)
-        searchNewsViewModel.getAccountSettings(historySelect)
+        initViewModel()
     }
 
     private fun initView() {
@@ -112,7 +114,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.behaviorInclude.saveSources.setOnClickListener { searchNewsViewModel.saveSources() }
     }
 
-    private fun initViewModel(accountId: Int) {
+    private fun initViewModel() {
         searchNewsViewModel.articleDataFlow.observeFlow(this) {
             clickNews(it)
         }
@@ -271,17 +273,14 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.behaviorInclude.imageFavorites.hide()
     }
 
-
     companion object {
         fun getInstance(
             accountId: Int,
             historySelect: HistorySelect,
         ): SearchNewsFragment {
             return SearchNewsFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ACCOUNT_ID, accountId)
-                    putParcelable(HISTORY_SELECT_BUNDLE, historySelect)
-                }
+                this.accountId = accountId
+                this.historySelect = historySelect
             }
         }
     }

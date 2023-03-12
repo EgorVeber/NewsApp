@@ -3,9 +3,9 @@ package ru.gb.veber.newsapi.view.favorites
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
+import ru.gb.veber.newsapi.core.NewsViewModel
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
@@ -25,14 +25,14 @@ import javax.inject.Inject
 class FavoritesViewModel @Inject constructor(
     private val router: Router,
     private val articleRepoImpl: ArticleRepo,
-) : ViewModel() {
+) : NewsViewModel() {
 
     private val _uiState: MutableLiveData<FavoritesState> = MutableLiveData()
     val uiState: LiveData<FavoritesState> = _uiState
     private var accountIdS: Int = 0
     private var listSave: MutableList<Article> = mutableListOf()
 
-    fun onBackPressedRouter(): Boolean {
+     override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
@@ -75,7 +75,8 @@ class FavoritesViewModel @Inject constructor(
                     }
                 }, catchBlock = { error ->
                     error.localizedMessage?.let {
-                        Log.d(ERROR_DB, it) }
+                        Log.d(ERROR_DB, it)
+                    }
                 })
             }
         } else {
@@ -151,15 +152,16 @@ class FavoritesViewModel @Inject constructor(
     fun deleteGroupHistory(article: Article) {
         viewModelScope.launchJob(tryBlock = {
             articleRepoImpl.deleteArticleByIdHistoryGroupV2(accountIdS, article.publishedAt)
-                val list = articleRepoImpl.getHistoryArticleByIdV2(accountIdS)
-                listSave = list.map { articleDb ->
-                    articleDb.toArticle()
-                }.toNewListArticleGroupByDate()
-                _uiState.postValue(FavoritesState.SetSources(listSave))
+            val list = articleRepoImpl.getHistoryArticleByIdV2(accountIdS)
+            listSave = list.map { articleDb ->
+                articleDb.toArticle()
+            }.toNewListArticleGroupByDate()
+            _uiState.postValue(FavoritesState.SetSources(listSave))
         }, catchBlock = { error ->
             error.localizedMessage?.let {
                 _uiState.postValue(FavoritesState.ErrorDeleteGroup)
-                Log.d(ERROR_DB, it) }
+                Log.d(ERROR_DB, it)
+            }
         })
     }
 

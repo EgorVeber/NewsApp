@@ -101,17 +101,17 @@ class SearchNewsViewModel @Inject constructor(
     fun getAccountSettings(historySelect: HistorySelect) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             viewModelScope.launchJob(tryBlock = {
-                accountRepo.getAccountByIdV2(accountId).also {
-                    saveHistory = it.saveHistory
+                accountRepo.getAccountByIdV2(accountId).also { account ->
+                    saveHistory = account.saveHistory
                 }
-            }, catchBlock = {
-                Log.d(ERROR_DB, it.localizedMessage)
+            }, catchBlock = { error ->
+                Log.d(ERROR_DB, error.localizedMessage)
             })
             viewModelScope.launchJob(tryBlock = {
                 getSourcesLike()
                 getSources()
-            }, catchBlock = {
-                Log.d(ERROR_DB, it.localizedMessage)
+            }, catchBlock = { error ->
+                Log.d(ERROR_DB, error.localizedMessage)
             })
         } else {
             searchNewsState.tryEmit(SearchNewsState.HideFavorites)
@@ -136,8 +136,10 @@ class SearchNewsViewModel @Inject constructor(
 
     fun clickNews(article: Article) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
-            val isLikeSources = likeSources.find { it.idSources == article.source.id }?.id ?: 0
-            sourcesID = allSources.find { it.idSources == article.source.id }?.id ?: 0
+            val isLikeSources =
+                likeSources.find { sources -> sources.idSources == article.source.id }?.id ?: 0
+            sourcesID =
+                allSources.find { sources -> sources.idSources == article.source.id }?.id ?: 0
 
             if (isLikeSources != 0 || sourcesID == 0) {
                 saveSourcesState.tryEmit(false)
@@ -163,8 +165,8 @@ class SearchNewsViewModel @Inject constructor(
             showMessageState.emit(true)
             saveSourcesState.emit(false)
             getSourcesLike()
-        }, catchBlock = {
-            Log.d(ERROR_DB, it.localizedMessage)
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
@@ -210,9 +212,9 @@ class SearchNewsViewModel @Inject constructor(
                     searchNewsState.tryEmit(SearchNewsState.SetNews(articleListHistory))
                 }
             }
-        }, catchBlock = {
+        }, catchBlock = { error ->
             searchNewsState.tryEmit(SearchNewsState.EmptyList)
-            Log.d(ERROR_DB, it.localizedMessage)
+            Log.d(ERROR_DB, error.localizedMessage)
         }, finallyBlock = {
             searchNewsState.tryEmit(SearchNewsState.HideProgress)
         })
@@ -232,10 +234,11 @@ class SearchNewsViewModel @Inject constructor(
                 article.dateAdded = Date().formatDateTime()
                 viewModelScope.launchJob(tryBlock = {
                     articleRepo.insertArticleV2(article.toArticleDbEntity(accountId))
-                    articleListHistory.find { it.title == article.title }?.isHistory = true
+                    articleListHistory.find { articleHistory -> articleHistory.title == article.title }
+                        ?.isHistory = true
                     searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
-                }, catchBlock = {
-                    Log.d(ERROR_DB, it.localizedMessage)
+                }, catchBlock = { error ->
+                    Log.d(ERROR_DB, error.localizedMessage)
                 })
             }
         }
@@ -247,11 +250,12 @@ class SearchNewsViewModel @Inject constructor(
 
             articleRepo.deleteArticleByIdFavoritesV2(article.title.toString(), accountId)
 
-            articleListHistory.find { it.title == article.title }?.isFavorites = false
+            articleListHistory.find { articleHistory -> articleHistory.title == article.title }
+                ?.isFavorites = false
 
             searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
-        }, catchBlock = {
-            Log.d(ERROR_DB, it.localizedMessage)
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
@@ -260,27 +264,28 @@ class SearchNewsViewModel @Inject constructor(
         item.isFavorites = true
         viewModelScope.launchJob(tryBlock = {
             articleRepo.insertArticleV2(item)
-            articleListHistory.find { it.title == article.title }?.isFavorites = true
+            articleListHistory.find { articleHistory -> articleHistory.title == article.title }
+                ?.isFavorites = true
             searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
 
-        }, catchBlock = {
-            Log.d(ERROR_DB, it.localizedMessage)
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
     private fun getSourcesLike() {
         viewModelScope.launchJob(tryBlock = {
             likeSources = accountSourcesRepo.getLikeSourcesFromAccountV2(accountId).toMutableList()
-        }, catchBlock = {
-            Log.d(ERROR_DB, it.localizedMessage)
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
     private fun getSources() {
         viewModelScope.launchJob(tryBlock = {
             allSources = sourcesRepo.getSourcesV2()
-        }, catchBlock = {
-            Log.d(ERROR_DB, it.localizedMessage)
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
