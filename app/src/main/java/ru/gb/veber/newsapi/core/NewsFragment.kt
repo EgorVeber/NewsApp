@@ -24,7 +24,7 @@ abstract class NewsFragment<T : ViewBinding, ViewModel : NewsViewModel>(
     protected val binding: T
         get() = _binding!!
 
-    protected lateinit var newsViewModel: ViewModel
+    protected lateinit var viewModel: ViewModel
 
     protected abstract fun getViewModelClass(): Class<ViewModel>
 
@@ -46,8 +46,8 @@ abstract class NewsFragment<T : ViewBinding, ViewModel : NewsViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onInitView()
         onInitViewModel()
+        onInitView()
         onObserveData()
         onStartAction()
     }
@@ -55,7 +55,7 @@ abstract class NewsFragment<T : ViewBinding, ViewModel : NewsViewModel>(
     protected open fun onInitView() {}
 
     private fun onInitViewModel() {
-        newsViewModel = ViewModelProvider(this, viewModelFactory)[getViewModelClass()]
+        viewModel = ViewModelProvider(this, viewModelFactory)[getViewModelClass()]
     }
 
     protected open fun onObserveData() {}
@@ -69,7 +69,7 @@ abstract class NewsFragment<T : ViewBinding, ViewModel : NewsViewModel>(
     }
 
     override fun onBackPressedRouter(): Boolean {
-        newsViewModel.onBackPressedRouter()
+        viewModel.onBackPressedRouter()
         return true
     }
 }

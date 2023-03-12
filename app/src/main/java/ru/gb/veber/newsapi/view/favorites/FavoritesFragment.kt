@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.view.favorites
 
-import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
@@ -16,24 +15,55 @@ import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.utils.PAGE
+import ru.gb.veber.newsapi.utils.extentions.BundleInt
+import ru.gb.veber.newsapi.utils.extentions.BundleString
 import ru.gb.veber.newsapi.utils.extentions.collapsed
 import ru.gb.veber.newsapi.utils.extentions.expanded
-import ru.gb.veber.newsapi.utils.extentions.showText
-import ru.gb.veber.newsapi.utils.extentions.loadGlideNot
-import ru.gb.veber.newsapi.utils.extentions.stringFromData
 import ru.gb.veber.newsapi.utils.extentions.formatDateDay
 import ru.gb.veber.newsapi.utils.extentions.hide
+import ru.gb.veber.newsapi.utils.extentions.loadGlideNot
 import ru.gb.veber.newsapi.utils.extentions.show
+import ru.gb.veber.newsapi.utils.extentions.showText
+import ru.gb.veber.newsapi.utils.extentions.stringFromData
 import ru.gb.veber.newsapi.view.activity.EventShareLink
+import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.fragment.TopNewsFragment
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerAdapter
 
 class FavoritesFragment :
     NewsFragment<FavotitesFragmentBinding, FavoritesViewModel>(FavotitesFragmentBinding::inflate),
     EventBehaviorToActivity {
+
+    private var itemListener = object : TopNewsListener {
+
+        override fun clickNews(article: Article) {
+            viewModel.clickNews(article)
+        }
+
+        override fun deleteFavorites(article: Article) {
+            viewModel.deleteFavorites(article)
+        }
+
+        override fun deleteHistory(article: Article) {
+            viewModel.deleteHistory(article)
+        }
+
+        override fun clickGroupHistory(article: Article) {
+            viewModel.clickGroupHistory(article)
+        }
+
+        override fun deleteGroupHistory(article: Article) {
+            viewModel.deleteGroupHistory(article)
+        }
+    }
+
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
+
+    private val historyAdapter = TopNewsAdapter(itemListener)
+
+    private var accountID by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var tagPage by BundleString(PAGE, FAVORITES)
 
     override fun getViewModelClass(): Class<FavoritesViewModel> {
         return FavoritesViewModel::class.java
@@ -52,41 +82,12 @@ class FavoritesFragment :
     }
 
     override fun onObserveData() {
-        newsViewModel.uiState.observe(viewLifecycleOwner, ::handleState)
+        viewModel.uiState.observe(viewLifecycleOwner, ::handleState)
     }
 
     override fun onStartAction() {
-        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
-        val page = arguments?.getString(PAGE) ?: PAGE
-        newsViewModel.getAccountArticle(accountId, page)
+        viewModel.getAccountArticle(accountID, tagPage)
     }
-
-    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
-
-    private var itemListener = object : TopNewsListener {
-
-        override fun clickNews(article: Article) {
-            newsViewModel.clickNews(article)
-        }
-
-        override fun deleteFavorites(article: Article) {
-            newsViewModel.deleteFavorites(article)
-        }
-
-        override fun deleteHistory(article: Article) {
-            newsViewModel.deleteHistory(article)
-        }
-
-        override fun clickGroupHistory(article: Article) {
-            newsViewModel.clickGroupHistory(article)
-        }
-
-        override fun deleteGroupHistory(article: Article) {
-            newsViewModel.deleteGroupHistory(article)
-        }
-    }
-
-    private val historyAdapter = TopNewsAdapter(itemListener)
 
     override fun getStateBehavior(): Int {
         return bSheetB.state
@@ -108,7 +109,7 @@ class FavoritesFragment :
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener {
-            newsViewModel.openScreenWebView(article.url)
+            viewModel.openScreenWebView(article.url)
         }
 
         binding.behaviorInclude.imageShare.setOnClickListener {
@@ -182,10 +183,8 @@ class FavoritesFragment :
 
     companion object {
         fun getInstance(page: String, accountID: Int) = FavoritesFragment().apply {
-            arguments = Bundle().apply {
-                putInt(ACCOUNT_ID, accountID)
-                putString(PAGE, page)
-            }
+            this.accountID = accountID
+            this.tagPage = page
         }
     }
 }
