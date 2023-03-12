@@ -2,8 +2,8 @@ package ru.gb.veber.newsapi.core
 
 import android.app.Application
 import ru.gb.veber.newsapi.di.AppComponent
-import ru.gb.veber.newsapi.di.moduls.AppModule
 import ru.gb.veber.newsapi.di.DaggerAppComponent
+import ru.gb.veber.newsapi.di.moduls.AppModule
 
 class App : Application() {
 

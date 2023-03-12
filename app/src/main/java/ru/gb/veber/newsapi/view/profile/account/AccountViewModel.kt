@@ -1,23 +1,28 @@
 package ru.gb.veber.newsapi.view.profile.account
 
+
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.core.AuthorizationScreen
-import ru.gb.veber.newsapi.core.CustomizeCategoryScreen
-import ru.gb.veber.newsapi.core.EditAccountScreen
-import ru.gb.veber.newsapi.core.WebViewScreen
-import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepo
-import ru.gb.veber.newsapi.model.repository.room.AccountSourcesRepo
-import ru.gb.veber.newsapi.model.repository.room.ArticleRepo
-import ru.gb.veber.newsapi.utils.*
-import ru.gb.veber.newsapi.utils.extentions.subscribeDefault
-import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.common.extentions.launchJob
+import ru.gb.veber.newsapi.common.screen.AuthorizationScreen
+import ru.gb.veber.newsapi.common.screen.CustomizeCategoryScreen
+import ru.gb.veber.newsapi.common.screen.EditAccountScreen
+import ru.gb.veber.newsapi.common.screen.WebViewScreen
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.common.utils.KEY_THEME_DARK
+import ru.gb.veber.newsapi.common.utils.KEY_THEME_DEFAULT
+import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
+import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
+import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
@@ -59,25 +64,26 @@ class AccountViewModel @Inject constructor(
 
     fun deleteAccount(accountID: Int) {
         if (accountID != ACCOUNT_ID_DEFAULT) {
-            accountRepo.deleteAccount(accountID).subscribe({
+
+            viewModelScope.launchJob(tryBlock = {
+                accountRepo.deleteAccountV2(accountID)
                 logout()
-                _uiState.value = AccountViewState.SetBottomNavigationIcon
-            }, { throwable ->
-                Log.d(ERROR_DB, throwable.localizedMessage)
+                _uiState.postValue(AccountViewState.SetBottomNavigationIcon)
+            }, catchBlock = { error ->
+                Log.d(ERROR_DB, error.localizedMessage)
             })
         }
     }
+
 
     fun getAccountSettings(accountID: Int?) {
         _uiState.value = AccountViewState.Loading
         accountID?.let { acc ->
             accountId = accountID
-            Single.zip(
-                accountRepo.getAccountById(acc),
-                articleRepoImpl.getArticleById(accountID),
-                accountSourcesRepoImpl.getLikeSourcesFromAccount(accountID)
-            ) { account, articles, listSources ->
-
+            viewModelScope.launchJob(tryBlock = {
+                val account = accountRepo.getAccountByIdV2(acc)
+                val articles = articleRepoImpl.getArticleByIdV2(accountID)
+                val listSources = accountSourcesRepoImpl.getLikeSourcesFromAccountV2(accountID)
                 accountMain = account
                 account.totalFavorites = articles.filter { article ->
                     article.isFavorites
@@ -89,15 +95,13 @@ class AccountViewModel @Inject constructor(
                         article.isHistory
                     }.size.toString()
                 account.totalSources = listSources.size.toString()
-                account
-            }.subscribeDefault().subscribe({ account ->
-                _uiState.value =
-                    AccountViewState.SetAccountInfo(
-                        account,
-                        sharedPreferenceAccount.getThemePrefs()
-                    )
-            }, { throwable ->
-                Log.d(ERROR_DB, throwable.localizedMessage)
+                _uiState.postValue(AccountViewState.SetAccountInfo(
+                    account,
+                    sharedPreferenceAccount.getThemePrefs()
+                ))
+
+            }, catchBlock = { error ->
+                Log.d(ERROR_DB, error.localizedMessage)
             })
         }
     }
@@ -117,51 +121,59 @@ class AccountViewModel @Inject constructor(
     }
 
     fun clearHistory(accountId: Int) {
-        articleRepoImpl.deleteArticleIsHistoryById(accountId).subscribe({
-            _uiState.value = AccountViewState.ClearHistory
-        }, { throwable ->
-            Log.d(ERROR_DB, throwable.localizedMessage)
+        viewModelScope.launchJob(tryBlock = {
+            articleRepoImpl.deleteArticleIsHistoryByIdV2(accountId)
+            _uiState.postValue(AccountViewState.ClearHistory)
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
     fun clearFavorites(accountId: Int) {
-        articleRepoImpl.deleteArticleIsFavoriteById(accountId).subscribe({
-            _uiState.value = AccountViewState.ClearFavorites
-        }, { throwable ->
-            Log.d(ERROR_DB, throwable.localizedMessage)
+        viewModelScope.launchJob(tryBlock = {
+            articleRepoImpl.deleteArticleIsFavoriteByIdV2(accountId)
+            _uiState.postValue(AccountViewState.ClearFavorites)
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
     fun clearSources(accountId: Int) {
-        accountSourcesRepoImpl.deleteSources(accountId).subscribe({
-            _uiState.value = AccountViewState.ClearSources
-        }, {
+        viewModelScope.launchJob(tryBlock = {
+            accountSourcesRepoImpl.deleteSourcesV2(accountId)
+            _uiState.postValue(AccountViewState.ClearSources)
+        }, catchBlock = {error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
 
     fun updateAccountSaveHistory(checked: Boolean) {
-        accountRepo.updateAccountById(accountId, checked).subscribe({
-        }, { throwable ->
-            Log.d(ERROR_DB, throwable.localizedMessage)
+        viewModelScope.launchJob(tryBlock = {
+            accountRepo.updateAccountByIdV2(accountId, checked)
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.localizedMessage)
+
         })
     }
 
     fun updateAccountShowListFavorite(b: Boolean) {
         accountMain?.let { account ->
             account.displayOnlySources = b
-            accountRepo.updateAccount(account.toAccountDbEntity()).subscribe({
-            }, { throwable ->
-                Log.d(ERROR_DB, throwable.localizedMessage)
+            viewModelScope.launchJob(tryBlock = {
+                accountRepo.updateAccountV2(account.toAccountDbEntity())
+            }, catchBlock = { error ->
+                Log.d(ERROR_DB, error.localizedMessage)
             })
         }
     }
 
     fun updateAccountSaveHistorySelect(checked: Boolean) {
         accountMain.saveSelectHistory = checked
-        accountRepo.updateAccount(accountMain.toAccountDbEntity()).subscribe({
-        }, { throwable ->
-            Log.d(ERROR_DB, throwable.localizedMessage)
+        viewModelScope.launchJob(tryBlock = {
+            accountRepo.updateAccountV2(accountMain.toAccountDbEntity())
+        }, catchBlock = {error ->
+            Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 

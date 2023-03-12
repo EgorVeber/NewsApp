@@ -4,16 +4,18 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepo
-import ru.gb.veber.newsapi.utils.extentions.EMAIL_PATTERN
-import ru.gb.veber.newsapi.utils.ERROR_DB
-import ru.gb.veber.newsapi.utils.extentions.LOGIN_PATTERN
-import ru.gb.veber.newsapi.utils.extentions.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.utils.extentions.checkLogin
-import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
+import ru.gb.veber.newsapi.common.extentions.LOGIN_PATTERN
+import ru.gb.veber.newsapi.common.extentions.PASSWORD_PATTERN
+import ru.gb.veber.newsapi.common.extentions.checkLogin
+import ru.gb.veber.newsapi.common.extentions.launchJob
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(
@@ -39,17 +41,16 @@ class EditAccountViewModel @Inject constructor(
             account.email = userEmail
             account.userName = userLogin
             account.password = userPassword
-            roomRepoImpl.updateAccount(account.toAccountDbEntity()).subscribe({
-                mutableFlow.value =
-                    EditAccountState.SuccessUpdateAccount(account.userName.checkLogin())
+            viewModelScope.launchJob(tryBlock = {
+                roomRepoImpl.updateAccountV2(account.toAccountDbEntity())
+                mutableFlow.postValue(EditAccountState.SuccessUpdateAccount(account.userName.checkLogin()))
                 prefsAccount.setAccountLogin(account.userName.checkLogin())
-            }, {error->
-                mutableFlow.value = EditAccountState.ErrorUpdateAccount
+            }, catchBlock = { error ->
+                mutableFlow.postValue(EditAccountState.ErrorUpdateAccount)
                 Log.d(ERROR_DB, error.localizedMessage)
             })
         }
     }
-
 
     fun passwordValidation(text: CharSequence?) {
         if (PASSWORD_PATTERN.matcher(text).matches()) {
@@ -86,12 +87,13 @@ class EditAccountViewModel @Inject constructor(
 
     private fun getAccountDataBase(accountId: Int) {
         mutableFlow.value = EditAccountState.Loading
-        roomRepoImpl.getAccountById(accountId).subscribe({accountDb->
+        viewModelScope.launchJob(tryBlock = {
+            val accountDb = roomRepoImpl.getAccountByIdV2(accountId)
             account = accountDb
-            mutableFlow.value = EditAccountState.SetAccountDate(account)
-        }, {error->
+            mutableFlow.postValue(EditAccountState.SetAccountDate(account))
+        }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
-            mutableFlow.value = EditAccountState.ErrorLoadingAccount
+            mutableFlow.postValue(EditAccountState.ErrorLoadingAccount)
         })
     }
 

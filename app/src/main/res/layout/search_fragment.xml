@@ -106,7 +106,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleFilter">
 
-        <ru.gb.veber.newsapi.utils.CustomAutoCompleteTextView
+        <ru.gb.veber.newsapi.common.utils.CustomAutoCompleteTextView
             android:id="@+id/searchSpinnerCountry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

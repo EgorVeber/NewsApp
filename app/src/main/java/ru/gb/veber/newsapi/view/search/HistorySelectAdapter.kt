@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.databinding.HistorySelectItemBinding
-import ru.gb.veber.newsapi.model.HistorySelect
-import ru.gb.veber.newsapi.utils.extentions.hide
-import ru.gb.veber.newsapi.utils.extentions.show
+import ru.gb.veber.newsapi.domain.models.HistorySelect
 
 
 interface RecyclerListenerHistorySelect {
