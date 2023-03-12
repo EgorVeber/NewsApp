@@ -1,11 +1,11 @@
 package ru.gb.veber.newsapi.data.repository
 
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.domain.repository.NewsRepo
-import ru.gb.veber.newsapi.data.network.ArticlesDTO
+import ru.gb.veber.newsapi.common.extentions.subscribeDefault
 import ru.gb.veber.newsapi.data.NewsApi
-import ru.gb.veber.newsapi.data.network.SourcesRequestDTO
-import ru.gb.veber.newsapi.core.utils.extentions.subscribeDefault
+import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
+import ru.gb.veber.newsapi.data.models.network.SourcesRequestDTO
+import ru.gb.veber.newsapi.domain.repository.NewsRepo
 
 class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
 

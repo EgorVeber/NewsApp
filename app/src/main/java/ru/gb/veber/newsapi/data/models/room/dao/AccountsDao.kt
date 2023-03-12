@@ -1,6 +1,10 @@
 package ru.gb.veber.newsapi.data.models.room.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity

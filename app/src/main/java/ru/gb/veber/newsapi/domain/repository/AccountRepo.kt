@@ -2,8 +2,8 @@ package ru.gb.veber.newsapi.domain.repository
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.model.Account
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
+import ru.gb.veber.newsapi.domain.models.Account
 
 interface AccountRepo {
     fun createAccount(accountDbEntity: AccountDbEntity): Completable

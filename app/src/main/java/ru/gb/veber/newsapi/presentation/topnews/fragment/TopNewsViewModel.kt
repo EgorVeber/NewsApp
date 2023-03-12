@@ -5,25 +5,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.core.NewsViewModel
-import ru.gb.veber.newsapi.core.WebViewScreen
-import ru.gb.veber.newsapi.domain.interactor.TopNewsInteractor
-import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.Country
-import ru.gb.veber.newsapi.core.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.core.utils.ALL_COUNTRY_VALUE
-import ru.gb.veber.newsapi.core.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.core.utils.ERROR_DB
-import ru.gb.veber.newsapi.core.utils.ERROR_LOAD_NEWS
-import ru.gb.veber.newsapi.core.utils.extentions.formatDateTime
-import ru.gb.veber.newsapi.core.utils.extentions.launchJob
+import ru.gb.veber.newsapi.common.base.NewsViewModel
+import ru.gb.veber.newsapi.common.extentions.formatDateTime
+import ru.gb.veber.newsapi.common.extentions.launchJob
+import ru.gb.veber.newsapi.common.screen.WebViewScreen
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
+import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
+import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.common.utils.ERROR_LOAD_NEWS
 import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
 import ru.gb.veber.newsapi.data.mapper.toArticle
 import ru.gb.veber.newsapi.data.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.data.mapper.toArticleUI
+import ru.gb.veber.newsapi.data.mapper.toCountry
+import ru.gb.veber.newsapi.domain.interactor.TopNewsInteractor
+import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.domain.models.Country
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
-import java.util.Date
+import java.util.*
 import javax.inject.Inject
 
 class TopNewsViewModel @Inject constructor(
@@ -136,9 +138,19 @@ class TopNewsViewModel @Inject constructor(
 
     fun getCountry() {
         viewModelScope.launchJob(tryBlock = {
-            val result = topNewsInteractor.getCountry(listCountry)
-            listCountry = result.third
-            mutableFlow.postValue(TopNewsState.SetCountry(result.first, result.second))
+            var listCountryDbEntity = topNewsInteractor.getCountryV2()
+            listCountry = listCountryDbEntity.map { countryDbEntity ->
+                countryDbEntity.toCountry()
+            } as MutableList<Country>
+            listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
+            val list: MutableList<String> =
+                listCountry.map { country -> country.id }.sortedBy { country -> country }
+                    .toMutableList()
+            var index = list.indexOf(topNewsInteractor.getAccountCountry())
+            if (index == -1) {
+                index = 0
+            }
+            mutableFlow.postValue(TopNewsState.SetCountry(list, index))
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
@@ -150,14 +162,10 @@ class TopNewsViewModel @Inject constructor(
                 article.isHistory = true
                 article.dateAdded = Date().formatDateTime()
                 viewModelScope.launchJob(tryBlock = {
-                    val newList =
-                        topNewsInteractor.insertArticleV2(
-                            article.toArticleDbEntity(accountId),
-                            articleListHistory,
-                            article.title
-                        )
-
-                    articleListHistory = newList
+                    topNewsInteractor.insertArticleV2(article.toArticleDbEntity(accountId))
+                    articleListHistory.find { articleHistory ->
+                        articleHistory.title == article.title
+                    }?.isHistory = true
                     mutableFlow.postValue(TopNewsState.UpdateListNews(articleListHistory))
                 }, catchBlock = { error ->
                     Log.d(ERROR_DB, error.localizedMessage)
@@ -171,14 +179,10 @@ class TopNewsViewModel @Inject constructor(
         articleDbEntity.isFavorites = true
 
         viewModelScope.launchJob(tryBlock = {
-            val newList =
-                topNewsInteractor.insertArticleV2(
-                    article.toArticleDbEntity(accountId),
-                    articleListHistory,
-                    article.title
-                )
-
-            articleListHistory = newList
+            topNewsInteractor.insertArticleV2(articleDbEntity)
+            articleListHistory.find { articleHistory ->
+                articleHistory.title == article.title
+            }?.isFavorites = true
 
             mutableFlow.postValue(TopNewsState.UpdateListNews(articleListHistory))
         }, catchBlock = { error ->

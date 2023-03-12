@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.core.utils.extentions
+package ru.gb.veber.newsapi.common.extentions
 
 import java.text.SimpleDateFormat
 import java.util.*

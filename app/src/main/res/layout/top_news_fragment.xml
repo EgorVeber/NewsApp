@@ -25,7 +25,7 @@
         app:helperText="@string/helperFilter"
         app:hintTextColor="@color/color_primary_app">
 
-        <ru.gb.veber.newsapi.core.utils.CustomAutoCompleteTextView
+        <ru.gb.veber.newsapi.common.utils.CustomAutoCompleteTextView
             android:id="@+id/countryAutoComplete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

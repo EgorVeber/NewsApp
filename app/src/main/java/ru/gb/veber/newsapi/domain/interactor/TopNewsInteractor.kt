@@ -1,20 +1,21 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.model.Account
-import ru.gb.veber.newsapi.model.Country
+import android.util.Log
+import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
+import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
 import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.data.mapper.toCountry
+import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.CountryDbEntity
-import ru.gb.veber.newsapi.data.network.ArticlesDTO
-import ru.gb.veber.newsapi.domain.repository.NewsRepo
+import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.domain.models.Country
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import ru.gb.veber.newsapi.domain.repository.CountryRepo
-import ru.gb.veber.newsapi.core.utils.ALL_COUNTRY
-import ru.gb.veber.newsapi.core.utils.ALL_COUNTRY_VALUE
-import ru.gb.veber.newsapi.data.mapper.toCountry
-import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.domain.repository.NewsRepo
 import javax.inject.Inject
 
 class TopNewsInteractor @Inject constructor(
@@ -36,20 +37,8 @@ class TopNewsInteractor @Inject constructor(
         accountRepoImpl.updateAccountV2(toAccountDbEntity)
     }
 
-
-    suspend fun insertArticleV2(
-        toArticleDbEntity: ArticleDbEntity,
-        articleListHistory: MutableList<Article>,
-        title: String?
-    ): MutableList<Article> {
-
-        articleRepoImpl.insertArticleV2(toArticleDbEntity)
-
-        articleListHistory.find { articleHistory ->
-            articleHistory.title == title
-        }?.isHistory = true
-
-        return articleListHistory
+    suspend fun insertArticleV2(articleDb: ArticleDbEntity) {
+        articleRepoImpl.insertArticleV2(articleDb)
     }
 
     suspend fun deleteArticleByIdFavoritesV2(toString: String, accountId: Int) {
@@ -76,36 +65,11 @@ class TopNewsInteractor @Inject constructor(
         return articleRepoImpl.getArticleByIdV2(accountId)
     }
 
-    suspend fun getCountry(listCountry: MutableList<Country>): Triple<MutableList<String>, Int, MutableList<Country>> {
-
-        val listCountryDbEntity = getCountryV2()
-
-        var newList = listCountry
-
-        newList = listCountryDbEntity.map { countryDbEntity ->
-            countryDbEntity.toCountry()
-        } as MutableList<Country>
-
-        newList.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
-
-        val list: MutableList<String> =
-            newList.map { country -> country.id }.sortedBy { country -> country }
-                .toMutableList()
-
-        var index = list.indexOf(getAccountCountry())
-
-        if (index == -1) {
-            index = 0
-        }
-
-        return Triple(list, index, newList)
-    }
-
-    private suspend fun getCountryV2(): List<CountryDbEntity> {
+    suspend fun getCountryV2(): List<CountryDbEntity> {
         return countryRepoImpl.getCountryV2()
     }
 
-    private fun getAccountCountry(): String {
+    fun getAccountCountry(): String {
         return sharedPreferenceAccount.getAccountCountry()
     }
 }

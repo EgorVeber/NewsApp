@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.core.utils.extentions
+package ru.gb.veber.newsapi.common.extentions
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable

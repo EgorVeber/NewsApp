@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.data.network
+package ru.gb.veber.newsapi.data.models.network
 
 data class ArticlesDTO(
     val articles: List<ArticleDTO>,

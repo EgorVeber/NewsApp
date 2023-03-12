@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.core
+package ru.gb.veber.newsapi.common.base
 
 import android.content.Context
 import android.os.Bundle

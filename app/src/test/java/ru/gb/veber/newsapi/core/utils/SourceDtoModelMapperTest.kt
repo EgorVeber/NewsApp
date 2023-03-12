@@ -1,10 +1,13 @@
 package ru.gb.veber.newsapi.core.utils
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotSame
+import org.junit.Assert.assertSame
 import org.junit.Test
-import ru.gb.veber.newsapi.model.Source
-import ru.gb.veber.newsapi.data.network.SourceDTO
 import ru.gb.veber.newsapi.data.mapper.toSource
+import ru.gb.veber.newsapi.data.models.network.SourceDTO
+import ru.gb.veber.newsapi.domain.models.Source
 
 class SourceDtoModelMapperTest {
 

@@ -6,19 +6,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.core.SearchNewsScreen
-import ru.gb.veber.newsapi.core.WebViewScreen
-import ru.gb.veber.newsapi.model.HistorySelect
-import ru.gb.veber.newsapi.model.Sources
-import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.data.repository.AccountSourcesRepo
-import ru.gb.veber.newsapi.domain.repository.ArticleRepo
-import ru.gb.veber.newsapi.data.repository.HistorySelectRepo
-import ru.gb.veber.newsapi.data.repository.SourcesRepo
-import ru.gb.veber.newsapi.core.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.core.utils.ERROR_DB
-import ru.gb.veber.newsapi.core.utils.extentions.launchJob
+import ru.gb.veber.newsapi.common.extentions.launchJob
+import ru.gb.veber.newsapi.common.screen.SearchNewsScreen
+import ru.gb.veber.newsapi.common.screen.WebViewScreen
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.data.mapper.toHistorySelectDbEntity
+import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
+import ru.gb.veber.newsapi.domain.repository.ArticleRepo
+import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
+import ru.gb.veber.newsapi.domain.repository.SourcesRepo
 import javax.inject.Inject
 
 class SourcesViewModel @Inject constructor(

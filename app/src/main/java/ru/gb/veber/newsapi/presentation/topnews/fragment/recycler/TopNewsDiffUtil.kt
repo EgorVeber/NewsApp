@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.domain.models.Article
 
 class TopNewsDiffUtil(
     private val oldItems: List<Article>,

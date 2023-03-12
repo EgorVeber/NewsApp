@@ -3,7 +3,7 @@ package ru.gb.veber.newsapi.core.utils
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import ru.gb.veber.newsapi.core.utils.extentions.EMAIL_PATTERN
+import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
 
 class EmailPatternTest {
 

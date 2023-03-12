@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.data.repository
+package ru.gb.veber.newsapi.domain.repository
 
 
 import io.reactivex.rxjava3.core.Completable

@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.core.utils
+package ru.gb.veber.newsapi.common.utils
 
 import android.app.Activity
 import android.graphics.drawable.Drawable

@@ -1,8 +1,8 @@
 package ru.gb.veber.newsapi.domain.repository
 
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.data.network.ArticlesDTO
-import ru.gb.veber.newsapi.data.network.SourcesRequestDTO
+import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
+import ru.gb.veber.newsapi.data.models.network.SourcesRequestDTO
 
 interface NewsRepo {
     //TOP_HEADLINES

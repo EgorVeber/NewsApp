@@ -1,8 +1,8 @@
-package ru.gb.veber.newsapi.core.utils.extentions
+package ru.gb.veber.newsapi.common.utils
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import ru.gb.veber.newsapi.model.HistorySelect
+import ru.gb.veber.newsapi.domain.models.HistorySelect
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

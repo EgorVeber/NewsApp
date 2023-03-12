@@ -3,8 +3,19 @@ package ru.gb.veber.newsapi.data
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_COUNTRY
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_COUNTRY_CODE
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
+import ru.gb.veber.newsapi.common.utils.FILE_SETTINGS
+import ru.gb.veber.newsapi.common.utils.FIRST_START_APP
+import ru.gb.veber.newsapi.common.utils.KEY_THEME
+import ru.gb.veber.newsapi.common.utils.KEY_THEME_DARK
+import ru.gb.veber.newsapi.common.utils.KEY_THEME_DEFAULT
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.core.utils.*
 
 
 object SharedPreferenceAccount {

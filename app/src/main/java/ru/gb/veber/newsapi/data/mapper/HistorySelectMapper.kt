@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.data.mapper
 
-import ru.gb.veber.newsapi.model.HistorySelect
 import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
+import ru.gb.veber.newsapi.domain.models.HistorySelect
 
 fun HistorySelectDbEntity.toHistorySelect(): HistorySelect {
     return HistorySelect(

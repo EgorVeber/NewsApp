@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.core.utils
+package ru.gb.veber.newsapi.common.utils
 
 import android.content.Context
 import android.graphics.Rect

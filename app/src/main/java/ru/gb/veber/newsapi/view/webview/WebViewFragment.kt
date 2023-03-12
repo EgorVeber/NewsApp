@@ -8,10 +8,10 @@ import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.WebViewFragmentBinding
-import ru.gb.veber.newsapi.core.utils.extentions.hide
-import ru.gb.veber.newsapi.core.utils.extentions.show
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import javax.inject.Inject
 

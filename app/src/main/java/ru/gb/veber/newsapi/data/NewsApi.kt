@@ -3,11 +3,11 @@ package ru.gb.veber.newsapi.data
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.gb.veber.newsapi.data.network.ArticlesDTO
-import ru.gb.veber.newsapi.data.network.SourcesRequestDTO
-import ru.gb.veber.newsapi.core.utils.EVERYTHING
-import ru.gb.veber.newsapi.core.utils.TOP_HEADLINES
-import ru.gb.veber.newsapi.core.utils.TOP_HEADLINES_SOURCES
+import ru.gb.veber.newsapi.common.utils.EVERYTHING
+import ru.gb.veber.newsapi.common.utils.TOP_HEADLINES
+import ru.gb.veber.newsapi.common.utils.TOP_HEADLINES_SOURCES
+import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
+import ru.gb.veber.newsapi.data.models.network.SourcesRequestDTO
 
 interface NewsApi {
     @GET(TOP_HEADLINES)

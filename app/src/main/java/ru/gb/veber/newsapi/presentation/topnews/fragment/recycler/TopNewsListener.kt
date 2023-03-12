@@ -1,6 +1,6 @@
 package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler
 
-import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.domain.models.Article
 
 fun interface TopNewsListener {
     fun clickNews(article: Article)

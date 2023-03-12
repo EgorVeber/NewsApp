@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.TopNewsFragment
 
-
 class TopNewsViewPagerAdapter(
     fragmentManager: FragmentActivity,
     private val accountID: Int,

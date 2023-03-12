@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.core.utils
+package ru.gb.veber.newsapi.common.utils
 
 //API NEWS
 const val API_KEY_NEWS = "a4ee7882ba1141308c7a345418cd8124"

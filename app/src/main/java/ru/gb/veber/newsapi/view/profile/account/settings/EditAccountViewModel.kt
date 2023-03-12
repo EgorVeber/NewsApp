@@ -6,16 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.model.Account
+import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
+import ru.gb.veber.newsapi.common.extentions.LOGIN_PATTERN
+import ru.gb.veber.newsapi.common.extentions.PASSWORD_PATTERN
+import ru.gb.veber.newsapi.common.extentions.checkLogin
+import ru.gb.veber.newsapi.common.extentions.launchJob
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.data.SharedPreferenceAccount
-import ru.gb.veber.newsapi.domain.repository.AccountRepo
-import ru.gb.veber.newsapi.core.utils.ERROR_DB
-import ru.gb.veber.newsapi.core.utils.extentions.launchJob
-import ru.gb.veber.newsapi.core.utils.extentions.checkLogin
-import ru.gb.veber.newsapi.core.utils.extentions.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.core.utils.extentions.LOGIN_PATTERN
-import ru.gb.veber.newsapi.core.utils.extentions.EMAIL_PATTERN
 import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(

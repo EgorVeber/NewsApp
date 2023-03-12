@@ -16,27 +16,27 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.base.NewsFragment
+import ru.gb.veber.newsapi.common.extentions.collapsed
+import ru.gb.veber.newsapi.common.extentions.expanded
+import ru.gb.veber.newsapi.common.extentions.formatDateDay
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.hideKeyboard
+import ru.gb.veber.newsapi.common.extentions.loadGlideNot
+import ru.gb.veber.newsapi.common.extentions.show
+import ru.gb.veber.newsapi.common.extentions.stringFromData
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.core.NewsFragment
 import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.core.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.core.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.core.utils.DURATION_ERROR_INPUT
-import ru.gb.veber.newsapi.core.utils.extentions.collapsed
-import ru.gb.veber.newsapi.core.utils.extentions.expanded
-import ru.gb.veber.newsapi.core.utils.extentions.formatDateDay
-import ru.gb.veber.newsapi.core.utils.extentions.hide
-import ru.gb.veber.newsapi.core.utils.extentions.hideKeyboard
-import ru.gb.veber.newsapi.core.utils.extentions.loadGlideNot
-import ru.gb.veber.newsapi.core.utils.extentions.show
-import ru.gb.veber.newsapi.core.utils.extentions.stringFromData
-import ru.gb.veber.newsapi.view.activity.EventAddingBadges
-import ru.gb.veber.newsapi.view.activity.EventShareLink
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
+import ru.gb.veber.newsapi.view.activity.EventAddingBadges
+import ru.gb.veber.newsapi.view.activity.EventShareLink
 
 
 class TopNewsFragment :

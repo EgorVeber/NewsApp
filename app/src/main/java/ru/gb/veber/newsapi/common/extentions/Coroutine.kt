@@ -1,11 +1,10 @@
-package ru.gb.veber.newsapi.core.utils.extentions
+package ru.gb.veber.newsapi.common.extentions
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -14,15 +13,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlin.coroutines.AbstractCoroutineContextElement
+import ru.gb.veber.newsapi.common.base.BaseCoroutineExceptionHandler
 import kotlin.coroutines.CoroutineContext
-
-class BaseCoroutineExceptionHandler(private val catchBlock: (t: Throwable) -> Unit) :
-    AbstractCoroutineContextElement(CoroutineExceptionHandler), CoroutineExceptionHandler {
-    override fun handleException(context: CoroutineContext, exception: Throwable) {
-        catchBlock(exception)
-    }
-}
 
 fun CoroutineScope.launchJob(
     catchBlock: (t: Throwable) -> Unit,

@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.view.sources.recycler
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.domain.models.Sources
 
 class SourcesDiffUtil(
     private val oldItems: List<Sources>,

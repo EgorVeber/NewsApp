@@ -2,12 +2,12 @@ package ru.gb.veber.newsapi.data.repository
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.domain.repository.AccountRepo
-import ru.gb.veber.newsapi.model.Account
+import ru.gb.veber.newsapi.common.extentions.subscribeDefault
+import ru.gb.veber.newsapi.data.mapper.toAccount
 import ru.gb.veber.newsapi.data.models.room.dao.AccountsDao
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
-import ru.gb.veber.newsapi.data.mapper.toAccount
-import ru.gb.veber.newsapi.core.utils.extentions.subscribeDefault
+import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
 
 class AccountRepoImpl(private val accountDao: AccountsDao) : AccountRepo {
 

@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.data.mapper
 
+import ru.gb.veber.newsapi.data.models.network.SourcesDTO
 import ru.gb.veber.newsapi.data.models.room.entity.SourcesDbEntity
-import ru.gb.veber.newsapi.data.network.SourcesDTO
 
 fun SourcesDTO.toSourcesDbEntity(): SourcesDbEntity {
     return SourcesDbEntity(

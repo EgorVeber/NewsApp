@@ -2,8 +2,8 @@ package ru.gb.veber.newsapi.view.profile
 
 import androidx.lifecycle.ViewModel
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.core.AccountScreen
-import ru.gb.veber.newsapi.core.AuthorizationScreen
+import ru.gb.veber.newsapi.common.screen.AccountScreen
+import ru.gb.veber.newsapi.common.screen.AuthorizationScreen
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(

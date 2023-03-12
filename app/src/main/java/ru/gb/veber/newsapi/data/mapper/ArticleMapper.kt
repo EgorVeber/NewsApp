@@ -1,19 +1,19 @@
 package ru.gb.veber.newsapi.data.mapper
 
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.extentions.FORMAT_DATE
+import ru.gb.veber.newsapi.common.extentions.formatDateTime
+import ru.gb.veber.newsapi.common.extentions.formatHour
+import ru.gb.veber.newsapi.common.extentions.stringFromData
+import ru.gb.veber.newsapi.common.extentions.takeDate
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.Source
+import ru.gb.veber.newsapi.data.models.network.ArticleDTO
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
-import ru.gb.veber.newsapi.data.network.ArticleDTO
-import ru.gb.veber.newsapi.core.utils.extentions.FORMAT_DATE
-import ru.gb.veber.newsapi.core.utils.extentions.formatDateTime
-import ru.gb.veber.newsapi.core.utils.extentions.formatHour
-import ru.gb.veber.newsapi.core.utils.extentions.stringFromData
-import ru.gb.veber.newsapi.core.utils.extentions.takeDate
+import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.domain.models.Source
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 const val HIDE_HISTORY = "HIDE_HISTORY"
 

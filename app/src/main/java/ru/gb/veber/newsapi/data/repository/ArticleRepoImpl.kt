@@ -2,10 +2,10 @@ package ru.gb.veber.newsapi.data.repository
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.domain.repository.ArticleRepo
+import ru.gb.veber.newsapi.common.extentions.subscribeDefault
 import ru.gb.veber.newsapi.data.models.room.dao.ArticleDao
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
-import ru.gb.veber.newsapi.core.utils.extentions.subscribeDefault
+import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 
 class ArticleRepoImpl(private val articleDao: ArticleDao) : ArticleRepo {
 

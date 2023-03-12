@@ -3,7 +3,7 @@ package ru.gb.veber.newsapi.view.sources.recycler
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.databinding.SourcesItemBinding
-import ru.gb.veber.newsapi.model.Sources
+import ru.gb.veber.newsapi.domain.models.Sources
 
 class SourcesViewHolder(
     private val binding: SourcesItemBinding,

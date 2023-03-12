@@ -1,10 +1,10 @@
 package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder
 
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.loadGlide
+import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.databinding.SearchNewsItemBinding
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.core.utils.extentions.hide
-import ru.gb.veber.newsapi.core.utils.extentions.loadGlide
-import ru.gb.veber.newsapi.core.utils.extentions.show
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
 
 class SearchNewsViewHolder(

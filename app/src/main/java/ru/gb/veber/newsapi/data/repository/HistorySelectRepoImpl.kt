@@ -2,9 +2,10 @@ package ru.gb.veber.newsapi.data.repository
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import ru.gb.veber.newsapi.common.extentions.subscribeDefault
 import ru.gb.veber.newsapi.data.models.room.dao.HistorySelectDao
 import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
-import ru.gb.veber.newsapi.core.utils.extentions.subscribeDefault
+import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
 
 class HistorySelectRepoImpl(private val historySelectDao: HistorySelectDao) : HistorySelectRepo {
     override fun insertSelect(historyDbEntity: HistorySelectDbEntity): Completable {

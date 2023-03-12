@@ -4,9 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import ru.gb.veber.newsapi.data.models.room.dao.*
-import ru.gb.veber.newsapi.data.models.room.entity.*
-import ru.gb.veber.newsapi.core.utils.DATABASE_NAME
+import ru.gb.veber.newsapi.common.utils.DATABASE_NAME
+import ru.gb.veber.newsapi.data.models.room.dao.AccountSourcesDao
+import ru.gb.veber.newsapi.data.models.room.dao.AccountsDao
+import ru.gb.veber.newsapi.data.models.room.dao.ArticleDao
+import ru.gb.veber.newsapi.data.models.room.dao.CountryDao
+import ru.gb.veber.newsapi.data.models.room.dao.HistorySelectDao
+import ru.gb.veber.newsapi.data.models.room.dao.SourcesDao
+import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
+import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
+import ru.gb.veber.newsapi.data.models.room.entity.CountryDbEntity
+import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
+import ru.gb.veber.newsapi.data.models.room.entity.SourcesDbEntity
 
 @Database(
     version = 1,

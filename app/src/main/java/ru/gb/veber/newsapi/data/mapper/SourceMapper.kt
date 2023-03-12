@@ -1,6 +1,6 @@
 package ru.gb.veber.newsapi.data.mapper
-import ru.gb.veber.newsapi.model.Source
-import ru.gb.veber.newsapi.data.network.SourceDTO
+import ru.gb.veber.newsapi.data.models.network.SourceDTO
+import ru.gb.veber.newsapi.domain.models.Source
 
 fun SourceDTO.toSource(): Source {
     return Source(
@@ -9,7 +9,7 @@ fun SourceDTO.toSource(): Source {
     )
 }
 
-fun getNewSource(sourcesId: String, sourcesName: String):Source{
+fun getNewSource(sourcesId: String, sourcesName: String): Source {
     return Source(
         id = sourcesId,
         name = sourcesName

@@ -2,7 +2,7 @@ package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.domain.models.Article
 
 abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     abstract fun bind(item: Article)

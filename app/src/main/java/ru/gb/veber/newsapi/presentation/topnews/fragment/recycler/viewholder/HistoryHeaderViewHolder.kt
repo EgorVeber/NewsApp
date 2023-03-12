@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder
 
 import ru.gb.veber.newsapi.databinding.HistoryArticleHeaderBinding
-import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
 
 class HistoryHeaderViewHolder(

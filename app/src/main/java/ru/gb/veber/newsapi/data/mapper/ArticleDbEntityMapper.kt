@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.data.mapper
 
-import ru.gb.veber.newsapi.model.Article
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
+import ru.gb.veber.newsapi.domain.models.Article
 
 fun Article.toArticleDbEntity(accountId: Int): ArticleDbEntity {
     return ArticleDbEntity(

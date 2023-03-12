@@ -1,6 +1,10 @@
 package ru.gb.veber.newsapi.data.models.room.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity

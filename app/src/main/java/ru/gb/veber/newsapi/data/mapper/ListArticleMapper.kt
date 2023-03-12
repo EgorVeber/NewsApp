@@ -1,9 +1,9 @@
 package ru.gb.veber.newsapi.data.mapper
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.core.utils.extentions.formatDate
-import ru.gb.veber.newsapi.core.utils.extentions.formatDateTime
-import ru.gb.veber.newsapi.core.utils.extentions.stringFromData
-import ru.gb.veber.newsapi.core.utils.extentions.stringFromDataTime
+import ru.gb.veber.newsapi.common.extentions.formatDate
+import ru.gb.veber.newsapi.common.extentions.formatDateTime
+import ru.gb.veber.newsapi.common.extentions.stringFromData
+import ru.gb.veber.newsapi.common.extentions.stringFromDataTime
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 
 const val SHOW_HISTORY = "SHOW_HISTORY"

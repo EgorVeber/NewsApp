@@ -9,7 +9,7 @@ import ru.gb.veber.newsapi.databinding.HistoryArticleHeaderBinding
 import ru.gb.veber.newsapi.databinding.SearchNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
-import ru.gb.veber.newsapi.model.Article
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_HEADER

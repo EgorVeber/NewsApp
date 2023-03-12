@@ -1,9 +1,9 @@
-package ru.gb.veber.newsapi.data.repository
+package ru.gb.veber.newsapi.domain.repository
 
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.model.Sources
 import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.domain.models.Sources
 
 interface AccountSourcesRepo {
     fun insert(accountSourcesDbEntity: AccountSourcesDbEntity): Completable
