@@ -1,19 +1,27 @@
 package ru.gb.veber.newsapi.view.favorites
 
-import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
 import android.transition.TransitionManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.base.NewsFragment
+import ru.gb.veber.newsapi.common.extentions.collapsed
+import ru.gb.veber.newsapi.common.extentions.expanded
+import ru.gb.veber.newsapi.common.extentions.formatDateDay
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.loadGlideNot
+import ru.gb.veber.newsapi.common.extentions.show
+import ru.gb.veber.newsapi.common.extentions.showText
+import ru.gb.veber.newsapi.common.extentions.stringFromData
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.BundleInt
+import ru.gb.veber.newsapi.common.utils.BundleString
+import ru.gb.veber.newsapi.common.utils.PAGE
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
 import ru.gb.veber.newsapi.model.Article
@@ -29,79 +37,69 @@ import ru.gb.veber.newsapi.utils.extentions.formatDateDay
 import ru.gb.veber.newsapi.utils.extentions.hide
 import ru.gb.veber.newsapi.utils.extentions.show
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
+import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
+import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.view.activity.EventShareLink
-import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
-import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
-import javax.inject.Inject
+import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 
-class FavoritesFragment : Fragment(), BackPressedListener,
+class FavoritesFragment :
+    NewsFragment<FavotitesFragmentBinding, FavoritesViewModel>(FavotitesFragmentBinding::inflate),
     EventBehaviorToActivity {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val favoritesViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[FavoritesViewModel::class.java]
-    }
-
-    private var _binding: FavotitesFragmentBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
     private var itemListener = object : TopNewsListener {
 
         override fun clickNews(article: Article) {
-            favoritesViewModel.clickNews(article)
+            viewModel.clickNews(article)
         }
 
         override fun deleteFavorites(article: Article) {
-            favoritesViewModel.deleteFavorites(article)
+            viewModel.deleteFavorites(article)
         }
 
         override fun deleteHistory(article: Article) {
-            favoritesViewModel.deleteHistory(article)
+            viewModel.deleteHistory(article)
         }
 
         override fun clickGroupHistory(article: Article) {
-            favoritesViewModel.clickGroupHistory(article)
+            viewModel.clickGroupHistory(article)
         }
 
         override fun deleteGroupHistory(article: Article) {
-            favoritesViewModel.deleteGroupHistory(article)
+            viewModel.deleteGroupHistory(article)
         }
     }
 
+    private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
+
     private val historyAdapter = TopNewsAdapter(itemListener)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = FavotitesFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+    private var accountID by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var tagPage by BundleString(PAGE, FAVORITES)
+
+    override fun getViewModelClass(): Class<FavoritesViewModel> {
+        return FavoritesViewModel::class.java
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onInject() {
         App.instance.appComponent.inject(this)
-        init()
-        observeLiveData()
-        favoritesViewModel.getAccountArticle(
-            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT,
-            arguments?.getString(PAGE) ?: PAGE
-        )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onInitView() {
+        binding.likeRecycler.adapter = historyAdapter
+        binding.likeRecycler.itemAnimator = null
+        binding.likeRecycler.layoutManager = LinearLayoutManager(requireContext())
+        bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
+        binding.behaviorInclude.imageFavorites.hide()
     }
 
-    override fun onBackPressedRouter(): Boolean {
-        return favoritesViewModel.onBackPressedRouter()
+    override fun onObserveData() {
+        viewModel.uiState.observe(viewLifecycleOwner, ::handleState)
+    }
+
+    override fun onStartAction() {
+        viewModel.getAccountArticle(accountID, tagPage)
     }
 
     override fun getStateBehavior(): Int {
@@ -124,7 +122,7 @@ class FavoritesFragment : Fragment(), BackPressedListener,
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener {
-            favoritesViewModel.openScreenWebView(article.url)
+            viewModel.openScreenWebView(article.url)
         }
 
         binding.behaviorInclude.imageShare.setOnClickListener {
@@ -145,10 +143,6 @@ class FavoritesFragment : Fragment(), BackPressedListener,
         }
     }
 
-    private fun observeLiveData() {
-        favoritesViewModel.uiState.observe(viewLifecycleOwner, ::handleState)
-    }
-
     private fun handleState(state: FavoritesViewModel.FavoritesState) {
         when (state) {
             is FavoritesViewModel.FavoritesState.ClickNews -> {
@@ -166,6 +160,10 @@ class FavoritesFragment : Fragment(), BackPressedListener,
             FavoritesViewModel.FavoritesState.NotAuthorized -> {
                 notAuthorized()
             }
+            FavoritesViewModel.FavoritesState.ErrorDeleteGroup -> {
+                toastDeleteHistoryError()
+            }
+        }
             FavoritesViewModel.FavoritesState.ErrorDeleteGroup -> {
                 toastDeleteHistoryError()
             }
@@ -210,10 +208,8 @@ class FavoritesFragment : Fragment(), BackPressedListener,
 
     companion object {
         fun getInstance(page: String, accountID: Int) = FavoritesFragment().apply {
-            arguments = Bundle().apply {
-                putInt(ACCOUNT_ID, accountID)
-                putString(PAGE, page)
-            }
+            this.accountID = accountID
+            this.tagPage = page
         }
     }
 }

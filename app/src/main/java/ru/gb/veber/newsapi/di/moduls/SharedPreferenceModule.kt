@@ -3,7 +3,7 @@ package ru.gb.veber.newsapi.di.moduls
 
 import dagger.Module
 import dagger.Provides
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
+import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import javax.inject.Singleton
 
 @Module

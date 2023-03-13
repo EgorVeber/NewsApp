@@ -15,27 +15,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.extentions.collapsed
+import ru.gb.veber.newsapi.common.extentions.expanded
+import ru.gb.veber.newsapi.common.extentions.formatDateDay
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.loadGlideNot
+import ru.gb.veber.newsapi.common.extentions.observeFlow
+import ru.gb.veber.newsapi.common.extentions.show
+import ru.gb.veber.newsapi.common.extentions.showSnackBarError
+import ru.gb.veber.newsapi.common.extentions.stringFromData
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.BundleHistorySelect
+import ru.gb.veber.newsapi.common.utils.BundleInt
+import ru.gb.veber.newsapi.common.utils.HISTORY_SELECT_BUNDLE
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
-import ru.gb.veber.newsapi.model.Article
-import ru.gb.veber.newsapi.model.HistorySelect
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.utils.HISTORY_SELECT_BUNDLE
-import ru.gb.veber.newsapi.utils.extentions.collapsed
-import ru.gb.veber.newsapi.utils.extentions.expanded
-import ru.gb.veber.newsapi.utils.extentions.formatDateDay
-import ru.gb.veber.newsapi.utils.extentions.hide
-import ru.gb.veber.newsapi.utils.extentions.loadGlideNot
-import ru.gb.veber.newsapi.utils.extentions.show
-import ru.gb.veber.newsapi.utils.extentions.showSnackBarError
-import ru.gb.veber.newsapi.utils.extentions.stringFromData
+import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
+import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
+import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.activity.EventShareLink
-import ru.gb.veber.newsapi.view.topnews.fragment.EventBehaviorToActivity
-import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsAdapter
-import ru.gb.veber.newsapi.view.topnews.fragment.recycler.TopNewsListener
 import javax.inject.Inject
 
 
@@ -58,6 +61,9 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
 
     private val newsAdapter = TopNewsAdapter(itemListener)
 
+    private var historySelect by BundleHistorySelect(HISTORY_SELECT_BUNDLE)
+    private var accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,10 +78,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
         initialization()
-        arguments?.let {
-            searchNewsViewModel.getNews(it.getParcelable(HISTORY_SELECT_BUNDLE))
-        }
-        searchNewsViewModel.getAccountSettings()
+        searchNewsViewModel.getAccountSettings(historySelect)
     }
 
     override fun onDestroyView() {
@@ -97,7 +100,7 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
 
     private fun initialization() {
         initView()
-        initViewModel(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        initViewModel()
     }
 
     private fun initView() {
@@ -111,20 +114,33 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.behaviorInclude.saveSources.setOnClickListener { searchNewsViewModel.saveSources() }
     }
 
-    private fun initViewModel(accountId: Int) {
-        searchNewsViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+    private fun initViewModel() {
+        searchNewsViewModel.articleDataFlow.observeFlow(this) {
+            clickNews(it)
+        }
+
+        searchNewsViewModel.imageLikeFlow.observeFlow(this) { showLikeImageView ->
+            if (showLikeImageView) setLikeResourcesActive() else setLikeResourcesNegative()
+        }
+
+        searchNewsViewModel.saveSourcesFlow.observeFlow(this) { showSaveSources ->
+            if (showSaveSources) showSaveSources() else hideSaveSources()
+        }
+
+        searchNewsViewModel.showMessageFlow.observeFlow(this) { showMessage ->
+            if (showMessage) successSaveSources()
+        }
+
+        searchNewsViewModel.subscribe(accountId).observeFlow(this) { state ->
             when (state) {
                 is SearchNewsViewModel.SearchNewsState.SetNews -> {
                     setNews(state.list)
-                }
-                is SearchNewsViewModel.SearchNewsState.ClickNews -> {
-                    clickNews(state.article)
                 }
                 is SearchNewsViewModel.SearchNewsState.ChangeNews -> {
                     changeNews(state.articleListHistory)
                 }
                 is SearchNewsViewModel.SearchNewsState.SetTitle -> {
-                    setTitle(state.keyWord, state.sourcesId, state.sortType, state.dateSources)
+                    setTitle(state.historySelect)
                 }
                 SearchNewsViewModel.SearchNewsState.EmptyList -> {
                     emptyList()
@@ -132,41 +148,34 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
                 SearchNewsViewModel.SearchNewsState.HideFavorites -> {
                     hideFavorites()
                 }
-                SearchNewsViewModel.SearchNewsState.HideSaveSources -> {
-                    hideSaveSources()
-                }
+
                 SearchNewsViewModel.SearchNewsState.AddBadge -> {
                     addBadge()
                 }
                 SearchNewsViewModel.SearchNewsState.RemoveBadge -> {
                     removeBadge()
                 }
-                SearchNewsViewModel.SearchNewsState.SetLikeResourcesActive -> {
-                    setLikeResourcesActive()
-                }
-                SearchNewsViewModel.SearchNewsState.SetLikeResourcesNegative -> {
-                    setLikeResourcesNegative()
-                }
                 SearchNewsViewModel.SearchNewsState.SheetExpanded -> {
                     sheetExpanded()
                 }
-                SearchNewsViewModel.SearchNewsState.ShowSaveSources -> {
-                    showSaveSources()
-                }
-                SearchNewsViewModel.SearchNewsState.SuccessSaveSources -> {
-                    successSaveSources()
+                SearchNewsViewModel.SearchNewsState.StartedState -> {}
+                SearchNewsViewModel.SearchNewsState.HideProgress -> {
+                    hideProgress()
                 }
             }
         }
     }
 
-    private fun setTitle(
-        keyWord: String?,
-        sourcesId: String?,
-        sortType: String?,
-        dateSources: String?
-    ) {
-        binding.titleSearch.text = "$keyWord $sourcesId $sortType $dateSources"
+    private fun setTitle(historySelect: HistorySelect) {
+        val keyWord = historySelect.keyWord
+        val sourcesId = historySelect.sourcesName
+        val sortType =
+            if (!historySelect.keyWord.isNullOrEmpty()) historySelect.sortByKeyWord
+            else historySelect.sortBySources
+        val dateSources = historySelect.dateSources
+        val text = "$keyWord $sourcesId $sortType $dateSources"
+
+        binding.titleSearch.text = text
     }
 
     private fun setNews(articles: List<Article>) {
@@ -176,16 +185,13 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.allNewsRecycler.show()
     }
 
+    private fun hideProgress() {
+        binding.progressBarAllNews.hide()
+    }
+
     private fun changeNews(articleListHistory: List<Article>) {
         newsAdapter.articles = articleListHistory
     }
-
-    // TODO: чекнуть нужен ли
-    private fun loading() {
-        binding.progressBarAllNews.show()
-        binding.allNewsRecycler.hide()
-    }
-
 
     private fun emptyList() {
         binding.progressBarAllNews.hide()
@@ -247,7 +253,6 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
     }
 
     private fun successSaveSources() {
-        binding.behaviorInclude.saveSources.hide()
         binding.root.showSnackBarError(getString(R.string.sourcesSaved), "", {})
     }
 
@@ -268,17 +273,14 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         binding.behaviorInclude.imageFavorites.hide()
     }
 
-
     companion object {
         fun getInstance(
             accountId: Int,
             historySelect: HistorySelect,
         ): SearchNewsFragment {
             return SearchNewsFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ACCOUNT_ID, accountId)
-                    putParcelable(HISTORY_SELECT_BUNDLE, historySelect)
-                }
+                this.accountId = accountId
+                this.historySelect = historySelect
             }
         }
     }

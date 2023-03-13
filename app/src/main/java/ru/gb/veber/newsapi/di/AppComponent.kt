@@ -8,10 +8,11 @@ import ru.gb.veber.newsapi.di.moduls.NetworkModule
 import ru.gb.veber.newsapi.di.moduls.RepoNetworkModule
 import ru.gb.veber.newsapi.di.moduls.SharedPreferenceModule
 import ru.gb.veber.newsapi.di.moduls.ViewModelModule
+import ru.gb.veber.newsapi.presentation.topnews.fragment.TopNewsFragment
+import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.view.activity.ActivityMain
 import ru.gb.veber.newsapi.view.favorites.FavoritesFragment
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
-import ru.gb.veber.newsapi.view.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.CustomizeCategoryFragment
@@ -20,7 +21,6 @@ import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
 import ru.gb.veber.newsapi.view.search.SearchFragment
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.view.sources.FragmentSources
-import ru.gb.veber.newsapi.view.topnews.fragment.TopNewsFragment
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 import javax.inject.Singleton
 

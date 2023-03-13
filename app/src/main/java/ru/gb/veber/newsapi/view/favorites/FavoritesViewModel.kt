@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.model.Article
@@ -18,21 +19,34 @@ import ru.gb.veber.newsapi.utils.mapper.SHOW_HISTORY
 import ru.gb.veber.newsapi.utils.mapper.toArticle
 import ru.gb.veber.newsapi.utils.mapper.toNewListArticleGroupByDate
 import ru.gb.veber.newsapi.utils.extentions.stringFromData
+import ru.gb.veber.newsapi.common.base.NewsViewModel
+import ru.gb.veber.newsapi.common.extentions.formatDateTime
+import ru.gb.veber.newsapi.common.extentions.launchJob
+import ru.gb.veber.newsapi.common.extentions.stringFromData
+import ru.gb.veber.newsapi.common.screen.WebViewScreen
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.data.mapper.HIDE_HISTORY
+import ru.gb.veber.newsapi.data.mapper.SHOW_HISTORY
+import ru.gb.veber.newsapi.data.mapper.toArticle
+import ru.gb.veber.newsapi.data.mapper.toNewListArticleGroupByDate
+import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.domain.repository.ArticleRepo
+import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter
-import ru.gb.veber.newsapi.view.topnews.fragment.recycler.viewholder.BaseViewHolder
 import javax.inject.Inject
 
 class FavoritesViewModel @Inject constructor(
     private val router: Router,
     private val articleRepoImpl: ArticleRepo,
-) : ViewModel() {
+) : NewsViewModel() {
 
     private val _uiState: MutableLiveData<FavoritesState> = MutableLiveData()
     val uiState: LiveData<FavoritesState> = _uiState
     private var accountIdS: Int = 0
     private var listSave: MutableList<Article> = mutableListOf()
 
-    fun onBackPressedRouter(): Boolean {
+     override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
@@ -72,6 +86,10 @@ class FavoritesViewModel @Inject constructor(
                             articleDb.toArticle()
                         }.toNewListArticleGroupByDate()
                         _uiState.postValue(FavoritesState.SetSources(listSave))
+                    }
+                }, catchBlock = { error ->
+                    error.localizedMessage?.let {
+                        Log.d(ERROR_DB, it)
                     }
                 }, catchBlock = { error ->
                     error.localizedMessage?.let {
@@ -149,6 +167,18 @@ class FavoritesViewModel @Inject constructor(
     }
 
     fun deleteGroupHistory(article: Article) {
+        viewModelScope.launchJob(tryBlock = {
+            articleRepoImpl.deleteArticleByIdHistoryGroupV2(accountIdS, article.publishedAt)
+            val list = articleRepoImpl.getHistoryArticleByIdV2(accountIdS)
+            listSave = list.map { articleDb ->
+                articleDb.toArticle()
+            }.toNewListArticleGroupByDate()
+            _uiState.postValue(FavoritesState.SetSources(listSave))
+        }, catchBlock = { error ->
+            error.localizedMessage?.let {
+                _uiState.postValue(FavoritesState.ErrorDeleteGroup)
+                Log.d(ERROR_DB, it)
+            }
         viewModelScope.launchJob(tryBlock = {
             articleRepoImpl.deleteArticleByIdHistoryGroupV2(accountIdS, article.publishedAt)
                 val list = articleRepoImpl.getHistoryArticleByIdV2(accountIdS)

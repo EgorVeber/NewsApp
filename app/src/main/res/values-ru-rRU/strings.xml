@@ -113,5 +113,6 @@
     <string name="error_load_default">Что то пошло не так повторите попытку позднее</string>
     <string name="errorCountryNotSelected">Страна не выбрана</string>
     <string name="historyCanNotBeCleared">Очистить историю невозможно</string>
+    <string name="historyCanNotBeCleared">Очистить историю невозможно</string>
     <string name="categories_order">Порядок категорий</string>
 </resources>

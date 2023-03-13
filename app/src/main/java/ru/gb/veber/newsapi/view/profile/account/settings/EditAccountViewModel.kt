@@ -16,6 +16,16 @@ import ru.gb.veber.newsapi.utils.extentions.PASSWORD_PATTERN
 import ru.gb.veber.newsapi.utils.extentions.LOGIN_PATTERN
 import ru.gb.veber.newsapi.utils.extentions.EMAIL_PATTERN
 import ru.gb.veber.newsapi.utils.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
+import ru.gb.veber.newsapi.common.extentions.LOGIN_PATTERN
+import ru.gb.veber.newsapi.common.extentions.PASSWORD_PATTERN
+import ru.gb.veber.newsapi.common.extentions.checkLogin
+import ru.gb.veber.newsapi.common.extentions.launchJob
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(
