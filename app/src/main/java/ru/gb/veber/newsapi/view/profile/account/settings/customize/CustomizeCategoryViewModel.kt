@@ -14,22 +14,21 @@ class CustomizeCategoryViewModel @Inject constructor(
     private val accountRepo: AccountRepo
 ) : ViewModel() {
 
-    private val mutableFlow: MutableLiveData<CustomizeCategoryState> = MutableLiveData()
-    private val flow: LiveData<CustomizeCategoryState> = mutableFlow
-
     private val customList: MutableLiveData<MutableList<Category>> = MutableLiveData()
     private val _customList: LiveData<MutableList<Category>> = customList
 
     init {
-        customList.value = CategoryData.getCategory()
+        val list: MutableList<Category> = mutableListOf()
+        val listFromArray = sharedPreferenceAccount.getArrayCategories()
+
+        listFromArray.forEach {
+            list.add(Category(it))
+        }
+        customList.value = list
     }
 
     fun getLiveDataCategory() : LiveData<MutableList<Category>> {
         return _customList
-    }
-
-    fun getLiveData(): LiveData<CustomizeCategoryState> {
-        return flow
     }
 
     fun onBackPressedRouter(): Boolean {

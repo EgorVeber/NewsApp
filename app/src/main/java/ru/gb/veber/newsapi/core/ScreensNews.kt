@@ -85,7 +85,9 @@ data class EditAccountScreen(private val accountId: Int) : FragmentScreen {
 
 data class CustomizeCategoryScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return CustomizeCategoryFragment.getInstance()
+        return CustomizeCategoryFragment.getInstance(Bundle().apply {
+            putInt(ACCOUNT_ID, accountId)
+        })
     }
 }
 

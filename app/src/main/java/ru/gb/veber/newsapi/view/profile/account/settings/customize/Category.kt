@@ -1,3 +1,3 @@
 package ru.gb.veber.newsapi.view.profile.account.settings.customize
 
-data class Category(var category: String)
+data class Category(val category: String)

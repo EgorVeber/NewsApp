@@ -91,6 +91,7 @@
     <dimen name="cardView_paddingStart">16dp</dimen>
     <dimen name="cardView_paddingEnd">4dp</dimen>
     <dimen name="elevation">2dp</dimen>
+    <dimen name="recyclerView_marginTop">8dp</dimen>
 
 
 </resources>

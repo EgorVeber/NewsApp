@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.view.profile.account.settings.customize.helper
 
 import android.graphics.Canvas
+import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.abs
@@ -57,8 +58,13 @@ class SimpleItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
+        if (actionState == ItemTouchHelper.ANIMATION_TYPE_SWIPE_CANCEL) {
+            Log.d("actionState",
+                "ANIMATION_TYPE_SWIPE_CANCEL()")
+        }
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val alpha = ALPHA_FULL - (abs(dX) / viewHolder.itemView.width.toFloat()) * ALPHA_MAGNIFICATION
+            val alpha =
+                ALPHA_FULL - (abs(dX) / viewHolder.itemView.width.toFloat()) * ALPHA_MAGNIFICATION
             viewHolder.itemView.alpha = alpha
             viewHolder.itemView.translationX = dX
         } else {

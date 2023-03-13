@@ -1,31 +1,47 @@
 package ru.gb.veber.newsapi.view.profile.account.settings.customize
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.CustomizeCategoryFragmentBinding
+import ru.gb.veber.newsapi.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.EventDraw
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.SimpleItemTouchHelperCallback
 import javax.inject.Inject
 
-class CustomizeCategoryFragment : Fragment(), BackPressedListener {
+class CustomizeCategoryFragment() : Fragment(), BackPressedListener {
 
     private var _binding: CustomizeCategoryFragmentBinding? = null
     private val binding get() = _binding!!
-    private val adapter = CustomizeCategoryAdapter()
+    private var mItemTouchHelper: ItemTouchHelper? = null
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val customizeCategoryViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[CustomizeCategoryViewModel::class.java]
     }
+
+    private val listener = object : EventDraw {
+        override fun onStartDrag(holder: CustomizeCategoryAdapter.ItemViewHolder) {
+            mItemTouchHelper?.startDrag(holder)
+        }
+
+        override fun setNewList(dataList: MutableList<Category>) {
+            Log.d("NewList", "setNewList() called with: dataList = $dataList")
+        }
+
+    }
+
+    private val myAdapter = CustomizeCategoryAdapter(listener)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,9 +56,12 @@ class CustomizeCategoryFragment : Fragment(), BackPressedListener {
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
         initRecycler()
-        initViewModel()
         initialize()
-        ItemTouchHelper(SimpleItemTouchHelperCallback(adapter)).attachToRecyclerView(binding.recyclerView)
+        initViewModel()
+
+        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(myAdapter)
+        mItemTouchHelper = ItemTouchHelper(callback)
+        mItemTouchHelper!!.attachToRecyclerView(binding.recyclerView)
     }
 
     override fun onBackPressedRouter(): Boolean {
@@ -55,16 +74,16 @@ class CustomizeCategoryFragment : Fragment(), BackPressedListener {
     }
 
     private fun initRecycler() {
-        binding.recyclerView.also {
-            it.adapter = adapter
-            it.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.apply {
+            this.adapter = myAdapter
+            this.layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
     private fun initViewModel() {
-        customizeCategoryViewModel.getLiveDataCategory().observe(viewLifecycleOwner, Observer { it.let {
-            adapter.refreshCategory(it)
-        } })
+        customizeCategoryViewModel.getLiveDataCategory().observe(viewLifecycleOwner) { listCategory ->
+                myAdapter.refreshCategory(listCategory)
+        }
     }
 
     private fun initialize() {
@@ -74,6 +93,6 @@ class CustomizeCategoryFragment : Fragment(), BackPressedListener {
     }
 
     companion object {
-        fun getInstance() = CustomizeCategoryFragment()
+        fun getInstance(bundle: Bundle) = CustomizeCategoryFragment().apply { arguments = bundle }
     }
 }

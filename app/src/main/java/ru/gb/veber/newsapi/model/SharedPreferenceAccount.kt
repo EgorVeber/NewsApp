@@ -91,6 +91,10 @@ object SharedPreferenceAccount {
         }
         return hashMap
     }
+
+    fun getArrayCategories(): Array<String> {
+        return App.instance.applicationContext.resources.getStringArray(R.array.newsCategory)
+    }
 }
 
 

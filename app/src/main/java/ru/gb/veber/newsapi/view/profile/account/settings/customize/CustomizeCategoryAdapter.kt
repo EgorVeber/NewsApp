@@ -1,13 +1,17 @@
 package ru.gb.veber.newsapi.view.profile.account.settings.customize
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.CustomizeCategoryItemTaskBinding
+import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.EventDraw
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.ItemTouchHelperAdapter
+import java.util.Collections
 import kotlin.collections.ArrayList
 
-class CustomizeCategoryAdapter() :
+class CustomizeCategoryAdapter(private val listener: EventDraw) :
     RecyclerView.Adapter<CustomizeCategoryAdapter.ItemViewHolder>(), ItemTouchHelperAdapter {
 
     private var dataList: MutableList<Category> = ArrayList()
@@ -37,16 +41,22 @@ class CustomizeCategoryAdapter() :
 
     inner class ItemViewHolder(private val binding: CustomizeCategoryItemTaskBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(data: Category) {
-            binding.categoryText.text = dataList[layoutPosition].category
+            binding.categoryText.text = data.category
+            binding.hamburgerCustom.setOnTouchListener {_, motionEvent ->
+                if (MotionEventCompat.getActionMasked(motionEvent) == MotionEvent.ACTION_DOWN) {
+                    listener.onStartDrag(this)
+                }
+                false
+            }
         }
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
-        dataList.removeAt(fromPosition).apply {
-            dataList.add(toPosition, this)
-        }
+        Collections.swap(dataList,fromPosition,toPosition)
         notifyItemMoved(fromPosition, toPosition)
+        listener.setNewList(dataList)
     }
 
     override fun onItemDismiss(position: Int) {
