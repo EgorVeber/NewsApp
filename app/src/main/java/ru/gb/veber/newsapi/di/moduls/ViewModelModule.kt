@@ -17,8 +17,8 @@ import ru.gb.veber.newsapi.view.profile.account.AccountViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationViewModel
-import ru.gb.veber.newsapi.view.search.SearchViewModel
-import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsViewModel
+import ru.gb.veber.newsapi.presentation.search.SearchViewModel
+import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsViewModel
 import ru.gb.veber.newsapi.presentation.sources.SourcesViewModel
 import ru.gb.veber.newsapi.view.webview.WebViewViewModel
 

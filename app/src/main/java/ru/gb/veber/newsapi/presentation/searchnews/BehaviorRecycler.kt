@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.search.searchnews
+package ru.gb.veber.newsapi.presentation.searchnews
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 
-class BehaviorTitleSearch(context: Context, attr: AttributeSet? = null) :
+class BehaviorRecycler(context: Context, attr: AttributeSet? = null) :
     CoordinatorLayout.Behavior<View>(context, attr) {
 
     override fun layoutDependsOn(
@@ -22,10 +22,10 @@ class BehaviorTitleSearch(context: Context, attr: AttributeSet? = null) :
         child: View,
         dependency: View,
     ): Boolean {
-        child.x = (dependency.x + dependency.width + MARGIN_LEFT)
+        child.y = (dependency.y + dependency.height * BIAS_VERTICAL)
         return super.onDependentViewChanged(parent, child, dependency)
     }
     companion object{
-        const val MARGIN_LEFT= 30
+        const val BIAS_VERTICAL = 1.5F
     }
 }

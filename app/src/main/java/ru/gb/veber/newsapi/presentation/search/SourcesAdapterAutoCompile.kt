@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.search
+package ru.gb.veber.newsapi.presentation.search
 
 import android.content.Context
 import android.support.annotation.NonNull
