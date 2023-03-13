@@ -112,8 +112,6 @@
     <string name="notAvailable">Not yet available</string>
     <string name="error_load_news">Data loading error</string>
     <string name="error_load_default">Something went wrong, please try again later.</string>
-    <string name="errorCountryNotSelected">Сountry not selected</string>
-    <string name="historyCanNotBeCleared">History can not be cleared</string>
     <string name="errorCountryNotSelected">Country not selected</string>
     <string name="historyCanNotBeCleared">History can not be cleared</string>
     <string name="categories_order">Categories order</string>

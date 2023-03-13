@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.model.SharedPreferenceAccount
-import ru.gb.veber.newsapi.model.repository.room.AccountRepo
+import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import javax.inject.Inject
 
 class CustomizeCategoryViewModel @Inject constructor(
