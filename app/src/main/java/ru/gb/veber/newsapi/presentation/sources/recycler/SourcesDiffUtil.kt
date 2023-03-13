@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.sources.recycler
+package ru.gb.veber.newsapi.presentation.sources.recycler
 
 import androidx.recyclerview.widget.DiffUtil
 import ru.gb.veber.newsapi.domain.models.Sources

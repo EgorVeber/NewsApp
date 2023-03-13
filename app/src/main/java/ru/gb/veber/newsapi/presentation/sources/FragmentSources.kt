@@ -1,31 +1,32 @@
-package ru.gb.veber.newsapi.view.sources
+package ru.gb.veber.newsapi.presentation.sources
 
 import android.os.Bundle
 import android.transition.TransitionManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.base.NewsFragment
 import ru.gb.veber.newsapi.common.extentions.showText
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.presentation.sources.recycler.SourcesListener
 import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.sources.recycler.SourcesListener
-import javax.inject.Inject
+import ru.gb.veber.newsapi.view.sources.FragmentSourcesAdapter
 
-class FragmentSources : Fragment(), BackPressedListener {
+class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
+    SourcesFragmentBinding::inflate
+), BackPressedListener {
 
-    private var _binding: SourcesFragmentBinding? = null
-    private val binding get() = _binding!!
+    private var accountId: Int by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    override fun getViewModelClass(): Class<SourcesViewModel> = SourcesViewModel::class.java
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    override fun onInject() {
+        App.instance.appComponent.inject(this)
+    }
 
     private val sourcesViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[SourcesViewModel::class.java]
@@ -49,37 +50,15 @@ class FragmentSources : Fragment(), BackPressedListener {
 
     private val sourcesAdapter = FragmentSourcesAdapter(listener)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = SourcesFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        App.instance.appComponent.inject(this)
-        initialization()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     override fun onBackPressedRouter(): Boolean {
         return sourcesViewModel.onBackPressedRouter()
     }
 
-    private fun initialization() {
-        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
-        initViewModel(accountId)
-        initView()
+    override fun onObserveData() {
+        onObserveData(accountId)
     }
 
-    private fun initViewModel(accountId: Int) {
+    private fun onObserveData(accountId: Int) {
         sourcesViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is SourcesViewModel.SourcesState.SetSources -> {
@@ -92,7 +71,7 @@ class FragmentSources : Fragment(), BackPressedListener {
         }
     }
 
-    private fun initView() {
+    override fun onInitView() {
         binding.recyclerSources.adapter = sourcesAdapter
         binding.recyclerSources.itemAnimator = null
         binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())

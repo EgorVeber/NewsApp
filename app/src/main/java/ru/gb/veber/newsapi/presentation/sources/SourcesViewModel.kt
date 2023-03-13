@@ -1,11 +1,11 @@
-package ru.gb.veber.newsapi.view.sources
+package ru.gb.veber.newsapi.presentation.sources
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
+import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.SearchNewsScreen
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
@@ -13,21 +13,15 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.data.mapper.toHistorySelectDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.domain.interactor.SourceInteractor
 import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.domain.models.Sources
-import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
-import ru.gb.veber.newsapi.domain.repository.ArticleRepo
-import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
-import ru.gb.veber.newsapi.domain.repository.SourcesRepo
 import javax.inject.Inject
 
 class SourcesViewModel @Inject constructor(
-    private val accountSourcesRepoImpl: AccountSourcesRepo,
     private val router: Router,
-    private val sourcesRepoImpl: SourcesRepo,
-    private val articleRepoImpl: ArticleRepo,
-    private val historySelectRepoImpl: HistorySelectRepo,
-) : ViewModel() {
+    private val sourceInteractor: SourceInteractor
+    ) : NewsViewModel() {
 
     private val mutableFlow: MutableLiveData<SourcesState> = MutableLiveData()
     private val flow: LiveData<SourcesState> = mutableFlow
@@ -45,7 +39,7 @@ class SourcesViewModel @Inject constructor(
     fun getSources(accountId: Int) {
         if (accountId == ACCOUNT_ID_DEFAULT) {
             viewModelScope.launchJob(tryBlock = {
-                val listSources = sourcesRepoImpl.getSourcesV2()
+                val listSources = sourceInteractor.getSourcesV2()
                 allSources = listSources
                 mutableFlow.postValue(SourcesState.SetSources(listSources))
             }, catchBlock = { error ->
@@ -53,9 +47,9 @@ class SourcesViewModel @Inject constructor(
             })
         } else {
             viewModelScope.launchJob(tryBlock = {
-                val all = sourcesRepoImpl.getSourcesV2()
-                val like = accountSourcesRepoImpl.getLikeSourcesFromAccountV2(accountId = accountId)
-                val article = articleRepoImpl.getArticleByIdV2(accountId = accountId)
+                val all = sourceInteractor.getSourcesV2()
+                val like = sourceInteractor.getLikeSourcesFromAccountV2(accountId = accountId)
+                val article = sourceInteractor.getArticleByIdV2(accountId = accountId)
                 allSources = all
                 like.map { sources ->
                     sources.liked = true
@@ -97,7 +91,7 @@ class SourcesViewModel @Inject constructor(
                 source.liked = false
 
                 viewModelScope.launchJob(tryBlock = {
-                    accountSourcesRepoImpl.deleteSourcesLikeV2(
+                    sourceInteractor.deleteSourcesLikeV2(
                         accountId = accountId,
                         sourcesId = source.id
                     )
@@ -108,7 +102,7 @@ class SourcesViewModel @Inject constructor(
             } else {
                 source.liked = true
                 viewModelScope.launchJob(tryBlock = {
-                    accountSourcesRepoImpl.insertV2(
+                    sourceInteractor.insertV2(
                         accountSourcesDbEntity = AccountSourcesDbEntity(
                             accountId, source.id
                         )
@@ -129,13 +123,13 @@ class SourcesViewModel @Inject constructor(
             HistorySelect(0, accountID = accountId, sourcesId = source, sourcesName = name)
         router.navigateTo(SearchNewsScreen(accountId = accountId, historySelect = history))
         viewModelScope.launchJob(tryBlock = {
-            historySelectRepoImpl.insertSelectV2(historyDbEntity = history.toHistorySelectDbEntity())
+            sourceInteractor.insertSelectV2(historyDbEntity = history.toHistorySelectDbEntity())
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
-    fun onBackPressedRouter(): Boolean {
+    override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
