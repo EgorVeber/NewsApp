@@ -22,7 +22,7 @@ import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
 import ru.gb.veber.newsapi.domain.repository.SourcesRepo
-import ru.gb.veber.newsapi.view.sources.SourcesViewModel
+import ru.gb.veber.newsapi.presentation.sources.SourcesViewModel
 
 class SourcesPresenterTest {
 
