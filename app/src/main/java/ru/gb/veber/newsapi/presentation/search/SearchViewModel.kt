@@ -1,11 +1,11 @@
-package ru.gb.veber.newsapi.view.search
+package ru.gb.veber.newsapi.presentation.search
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
+import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.common.extentions.formatDate
 import ru.gb.veber.newsapi.common.extentions.stringFromDataNews
 import ru.gb.veber.newsapi.common.extentions.stringFromDataPiker
@@ -16,22 +16,16 @@ import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
 import ru.gb.veber.newsapi.data.mapper.toHistorySelect
 import ru.gb.veber.newsapi.data.mapper.toHistorySelectDbEntity
+import ru.gb.veber.newsapi.domain.interactor.SearchInteractor
 import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.domain.models.Sources
-import ru.gb.veber.newsapi.domain.repository.AccountRepo
-import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
-import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
-import ru.gb.veber.newsapi.domain.repository.SourcesRepo
 import java.util.*
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     private val router: Router,
-    private val accountRepo: AccountRepo,
-    private val historySelectRepo: HistorySelectRepo,
-    private val sourcesRepo: SourcesRepo,
-    private val accountSourcesRepo: AccountSourcesRepo,
-) : ViewModel() {
+    private val searchInteractor: SearchInteractor,
+) : NewsViewModel() {
 
     private lateinit var allSources: MutableList<Sources>
     private lateinit var likeSources: List<Sources>
@@ -46,7 +40,7 @@ class SearchViewModel @Inject constructor(
         return flow
     }
 
-    fun onBackPressedRouter(): Boolean {
+    override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
@@ -56,7 +50,7 @@ class SearchViewModel @Inject constructor(
             mutableFlow.value = SearchState.HideSelectHistory
             mutableFlow.value = SearchState.HideEmptyList
 
-            sourcesRepo.getSources().subscribe({
+            searchInteractor.getSources().subscribe({
                 allSources = it
                 mutableFlow.value = SearchState.SetSources(it)
             }, {
@@ -64,9 +58,9 @@ class SearchViewModel @Inject constructor(
             })
         } else {
             Single.zip(
-                sourcesRepo.getSources(),
-                accountSourcesRepo.getLikeSourcesFromAccount(accountId),
-                accountRepo.getAccountById(accountId)
+                searchInteractor.getSources(),
+                searchInteractor.getLikeSourcesFromAccount(accountId),
+                searchInteractor.getAccountById(accountId)
             ) { all, like, account ->
 
                 accountHistorySelect = account.saveSelectHistory
@@ -80,6 +74,7 @@ class SearchViewModel @Inject constructor(
                 }
                 if (like.isEmpty()) {
                     return@zip all
+                    
                 } else {
                     for (j in like.size - 1 downTo 0) {
                         for (i in all.indices) {
@@ -129,7 +124,7 @@ class SearchViewModel @Inject constructor(
                     router.navigateTo(SearchNewsScreen(accountId, x))
 
                     if (accountHistorySelect) {
-                        historySelectRepo.insertSelect(x.toHistorySelectDbEntity())
+                        searchInteractor.insertSelect(x.toHistorySelectDbEntity())
                             .subscribe({}, {
                                 it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
                             })
@@ -145,7 +140,7 @@ class SearchViewModel @Inject constructor(
 
                     router.navigateTo(SearchNewsScreen(accountId, x))
                     if (accountHistorySelect) {
-                        historySelectRepo.insertSelect(x.toHistorySelectDbEntity())
+                        searchInteractor.insertSelect(x.toHistorySelectDbEntity())
                             .subscribe({}, {
                                 it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
                             })
@@ -172,7 +167,7 @@ class SearchViewModel @Inject constructor(
 
             router.navigateTo(SearchNewsScreen(accountId, x))
             if (accountHistorySelect) {
-                historySelectRepo.insertSelect(x.toHistorySelectDbEntity()).subscribe({}, {
+                searchInteractor.insertSelect(x.toHistorySelectDbEntity()).subscribe({}, {
                     it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
                 })
             }
@@ -194,7 +189,7 @@ class SearchViewModel @Inject constructor(
                 router.navigateTo(SearchNewsScreen(accountId, x))
 
                 if (accountHistorySelect) {
-                    historySelectRepo.insertSelect(x.toHistorySelectDbEntity())
+                    searchInteractor.insertSelect(x.toHistorySelectDbEntity())
                         .subscribe({}, {
                             it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
                         })
@@ -213,7 +208,7 @@ class SearchViewModel @Inject constructor(
 
     fun getHistorySelect() {
         if (accountId != ACCOUNT_ID_DEFAULT) {
-            historySelectRepo.getHistoryById(accountId)
+            searchInteractor.getHistoryById(accountId)
                 .subscribe({ listSelectDbEntity ->
                     if (listSelectDbEntity.isEmpty()) {
                         mutableFlow.value = SearchState.SetHistory(listOf())
@@ -235,7 +230,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun clearHistory() {
-        historySelectRepo.deleteSelectById(accountId).subscribe({
+        searchInteractor.deleteSelectById(accountId).subscribe({
             mutableFlow.value = SearchState.SetHistory(listOf())
             mutableFlow.value = SearchState.EmptyHistory
         }, {
@@ -244,7 +239,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun deleteHistory(historySelect: HistorySelect) {
-        historySelectRepo.deleteSelect(historySelect.toHistorySelectDbEntity()).subscribe({
+        searchInteractor.deleteSelect(historySelect.toHistorySelectDbEntity()).subscribe({
             getHistorySelect()
         }, {
             it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }

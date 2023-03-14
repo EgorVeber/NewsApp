@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.search
+package ru.gb.veber.newsapi.presentation.search.recycler
 
 import androidx.recyclerview.widget.DiffUtil
 import ru.gb.veber.newsapi.domain.models.HistorySelect

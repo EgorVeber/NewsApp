@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.search.searchnews
+package ru.gb.veber.newsapi.presentation.searchnews
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
