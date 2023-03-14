@@ -14,8 +14,8 @@ import ru.gb.veber.newsapi.view.favorites.FavoritesViewModel
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerViewModel
 import ru.gb.veber.newsapi.view.profile.ProfileViewModel
 import ru.gb.veber.newsapi.view.profile.account.AccountViewModel
-import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
+import ru.gb.veber.newsapi.view.profile.account.settings.customize.CustomizeCategoryViewModel
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationViewModel
 import ru.gb.veber.newsapi.view.search.SearchViewModel
 import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsViewModel
