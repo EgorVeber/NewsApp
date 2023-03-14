@@ -1,8 +1,6 @@
 package ru.gb.veber.newsapi.presentation.sources
 
-import android.os.Bundle
 import android.transition.TransitionManager
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
@@ -14,12 +12,10 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Sources
 import ru.gb.veber.newsapi.presentation.sources.recycler.SourcesListener
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.sources.FragmentSourcesAdapter
 
 class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
-    SourcesFragmentBinding::inflate
-), BackPressedListener {
+    SourcesFragmentBinding::inflate) {
 
     private var accountId: Int by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
     override fun getViewModelClass(): Class<SourcesViewModel> = SourcesViewModel::class.java
@@ -28,38 +24,30 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
         App.instance.appComponent.inject(this)
     }
 
-    private val sourcesViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[SourcesViewModel::class.java]
-    }
-
     private val listener = object : SourcesListener {
         override fun openUrl(url: String?) {
             url?.let { urlString ->
-                sourcesViewModel.openWebView(urlString)
+                viewModel.openWebView(urlString)
             }
         }
 
         override fun imageClick(source: Sources) {
-            sourcesViewModel.imageClick(source)
+            viewModel.imageClick(source)
         }
 
         override fun newsClick(source: String?, name: String?) {
-            sourcesViewModel.openAllNews(source, name)
+            viewModel.openAllNews(source, name)
         }
     }
 
     private val sourcesAdapter = FragmentSourcesAdapter(listener)
-
-    override fun onBackPressedRouter(): Boolean {
-        return sourcesViewModel.onBackPressedRouter()
-    }
 
     override fun onObserveData() {
         onObserveData(accountId)
     }
 
     private fun onObserveData(accountId: Int) {
-        sourcesViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+        viewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is SourcesViewModel.SourcesState.SetSources -> {
                     setSources(state.list)
@@ -89,9 +77,7 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
     companion object {
         fun getInstance(accountID: Int): FragmentSources {
             return FragmentSources().apply {
-                arguments = Bundle().apply {
-                    putInt(ACCOUNT_ID, accountID)
-                }
+                this.accountId = accountID
             }
         }
     }
