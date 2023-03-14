@@ -1,20 +1,14 @@
 package ru.gb.veber.newsapi.presentation.searchnews
 
-import android.annotation.SuppressLint
-import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.base.NewsFragment
 import ru.gb.veber.newsapi.common.extentions.collapsed
 import ru.gb.veber.newsapi.common.extentions.expanded
 import ru.gb.veber.newsapi.common.extentions.formatDateDay
@@ -36,59 +30,21 @@ import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventAddingBadges
 import ru.gb.veber.newsapi.view.activity.EventShareLink
-import javax.inject.Inject
 
-
-class SearchNewsFragment : Fragment(), BackPressedListener,
+class SearchNewsFragment :
+    NewsFragment<SearchNewsFragmentBinding, SearchNewsViewModel>(SearchNewsFragmentBinding::inflate),
     EventBehaviorToActivity {
-
-    private var _binding: SearchNewsFragmentBinding? = null
-    private val binding get() = _binding!!
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val searchNewsViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[SearchNewsViewModel::class.java]
-    }
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
 
-    private var itemListener = TopNewsListener { article -> searchNewsViewModel.clickNews(article) }
+    private var itemListener = TopNewsListener { article -> viewModel.clickNews(article) }
 
     private val newsAdapter = TopNewsAdapter(itemListener)
 
     private var historySelect by BundleHistorySelect(HISTORY_SELECT_BUNDLE)
     private var accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = SearchNewsFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    @SuppressLint("ResourceType")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        App.instance.appComponent.inject(this)
-        initialization()
-        searchNewsViewModel.getAccountSettings(historySelect)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return searchNewsViewModel.onBackPressedRouter()
-    }
 
     override fun getStateBehavior(): Int {
         return bSheetB.state
@@ -98,40 +54,41 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         bSheetB.collapsed()
     }
 
-    private fun initialization() {
-        initView()
-        initViewModel()
+    override fun getViewModelClass(): Class<SearchNewsViewModel> = SearchNewsViewModel::class.java
+
+    override fun onInject() {
+        App.instance.appComponent.inject(this)
     }
 
-    private fun initView() {
+    override fun onInitView() {
         bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
 
         binding.allNewsRecycler.adapter = newsAdapter
         binding.allNewsRecycler.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.backMainScreenImage.setOnClickListener { searchNewsViewModel.exit() }
+        binding.backMainScreenImage.setOnClickListener { viewModel.exit() }
 
-        binding.behaviorInclude.saveSources.setOnClickListener { searchNewsViewModel.saveSources() }
+        binding.behaviorInclude.saveSources.setOnClickListener { viewModel.saveSources() }
     }
 
-    private fun initViewModel() {
-        searchNewsViewModel.articleDataFlow.observeFlow(this) {
+    override fun onObserveData() {
+        viewModel.articleDataFlow.observeFlow(this) {
             clickNews(it)
         }
 
-        searchNewsViewModel.imageLikeFlow.observeFlow(this) { showLikeImageView ->
+        viewModel.imageLikeFlow.observeFlow(this) { showLikeImageView ->
             if (showLikeImageView) setLikeResourcesActive() else setLikeResourcesNegative()
         }
 
-        searchNewsViewModel.saveSourcesFlow.observeFlow(this) { showSaveSources ->
+        viewModel.saveSourcesFlow.observeFlow(this) { showSaveSources ->
             if (showSaveSources) showSaveSources() else hideSaveSources()
         }
 
-        searchNewsViewModel.showMessageFlow.observeFlow(this) { showMessage ->
+        viewModel.showMessageFlow.observeFlow(this) { showMessage ->
             if (showMessage) successSaveSources()
         }
 
-        searchNewsViewModel.subscribe(accountId).observeFlow(this) { state ->
+        viewModel.subscribe(accountId).observeFlow(this) { state ->
             when (state) {
                 is SearchNewsViewModel.SearchNewsState.SetNews -> {
                     setNews(state.list)
@@ -164,6 +121,10 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
                 }
             }
         }
+    }
+
+    override fun onStartAction() {
+        viewModel.getAccountSettings(historySelect)
     }
 
     private fun setTitle(historySelect: HistorySelect) {
@@ -211,11 +172,11 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
-            searchNewsViewModel.openScreenWebView(article.url)
+            viewModel.openScreenWebView(article.url)
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
-            searchNewsViewModel.setOnClickImageFavorites(article)
+            viewModel.setOnClickImageFavorites(article)
         }
 
         binding.behaviorInclude.imageShare.setOnClickListener {
@@ -284,4 +245,5 @@ class SearchNewsFragment : Fragment(), BackPressedListener,
             }
         }
     }
+
 }

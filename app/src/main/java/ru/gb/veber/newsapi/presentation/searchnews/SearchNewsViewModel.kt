@@ -1,7 +1,6 @@
 package ru.gb.veber.newsapi.presentation.searchnews
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
 import ru.gb.veber.newsapi.common.extentions.formatDateTime
 import ru.gb.veber.newsapi.common.extentions.launchJob
@@ -23,26 +23,18 @@ import ru.gb.veber.newsapi.data.mapper.toArticle
 import ru.gb.veber.newsapi.data.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.data.mapper.toArticleUI
 import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.domain.interactor.SearchNewsInteractor
 import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.domain.models.Sources
-import ru.gb.veber.newsapi.domain.repository.AccountRepo
-import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
-import ru.gb.veber.newsapi.domain.repository.ArticleRepo
-import ru.gb.veber.newsapi.domain.repository.NewsRepo
-import ru.gb.veber.newsapi.domain.repository.SourcesRepo
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import java.util.*
 import javax.inject.Inject
 
 class SearchNewsViewModel @Inject constructor(
     private val router: Router,
-    private val accountRepo: AccountRepo,
-    private val sourcesRepo: SourcesRepo,
-    private val accountSourcesRepo: AccountSourcesRepo,
-    private val articleRepo: ArticleRepo,
-    private val newsRepo: NewsRepo,
-) : ViewModel() {
+    private val searchNewsInteractor: SearchNewsInteractor,
+) : NewsViewModel() {
 
     private val searchNewsState: MutableSharedFlow<SearchNewsState> =
         MutableSharedFlow(replay = 2,
@@ -93,7 +85,7 @@ class SearchNewsViewModel @Inject constructor(
         router.exit()
     }
 
-    fun onBackPressedRouter(): Boolean {
+    override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
@@ -101,7 +93,7 @@ class SearchNewsViewModel @Inject constructor(
     fun getAccountSettings(historySelect: HistorySelect) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             viewModelScope.launchJob(tryBlock = {
-                accountRepo.getAccountByIdV2(accountId).also { account ->
+                searchNewsInteractor.getAccount(accountId).also { account ->
                     saveHistory = account.saveHistory
                 }
             }, catchBlock = { error ->
@@ -161,7 +153,7 @@ class SearchNewsViewModel @Inject constructor(
 
     fun saveSources() {
         viewModelScope.launchJob(tryBlock = {
-            accountSourcesRepo.insertV2(AccountSourcesDbEntity(accountId, sourcesID))
+            searchNewsInteractor.insertSource(AccountSourcesDbEntity(accountId, sourcesID))
             showMessageState.emit(true)
             saveSourcesState.emit(false)
             getSourcesLike()
@@ -173,7 +165,7 @@ class SearchNewsViewModel @Inject constructor(
     private fun getNews(historySelect: HistorySelect) {
         viewModelScope.launchJob(tryBlock = {
             searchNewsState.tryEmit(SearchNewsState.SetTitle(historySelect))
-            val articlesDto = newsRepo.getEverythingKeyWordSearchInSourcesV2(
+            val articlesDto = searchNewsInteractor.getNews(
                 sources = historySelect.sourcesId,
                 q = historySelect.keyWord,
                 searchIn = historySelect.searchIn,
@@ -191,7 +183,7 @@ class SearchNewsViewModel @Inject constructor(
                 article
             }
 
-            val articlesDb = articleRepo.getArticleByIdV2(accountId)
+            val articlesDb = searchNewsInteractor.getArticles(accountId)
             articlesDb.forEach { art ->
                 articlesUi.forEach { new ->
                     if (art.title == new.title) {
@@ -233,7 +225,7 @@ class SearchNewsViewModel @Inject constructor(
                 article.isHistory = true
                 article.dateAdded = Date().formatDateTime()
                 viewModelScope.launchJob(tryBlock = {
-                    articleRepo.insertArticleV2(article.toArticleDbEntity(accountId))
+                    searchNewsInteractor.insertArticle(article.toArticleDbEntity(accountId))
                     articleListHistory.find { articleHistory -> articleHistory.title == article.title }
                         ?.isHistory = true
                     searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
@@ -248,7 +240,7 @@ class SearchNewsViewModel @Inject constructor(
         article.isFavorites = false
         viewModelScope.launchJob(tryBlock = {
 
-            articleRepo.deleteArticleByIdFavoritesV2(article.title.toString(), accountId)
+            searchNewsInteractor.deleteArticleByIdFavoritesV2(article.title.toString(), accountId)
 
             articleListHistory.find { articleHistory -> articleHistory.title == article.title }
                 ?.isFavorites = false
@@ -263,7 +255,7 @@ class SearchNewsViewModel @Inject constructor(
         val item = article.toArticleDbEntity(accountId)
         item.isFavorites = true
         viewModelScope.launchJob(tryBlock = {
-            articleRepo.insertArticleV2(item)
+            searchNewsInteractor.insertArticle(item)
             articleListHistory.find { articleHistory -> articleHistory.title == article.title }
                 ?.isFavorites = true
             searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
@@ -275,7 +267,7 @@ class SearchNewsViewModel @Inject constructor(
 
     private fun getSourcesLike() {
         viewModelScope.launchJob(tryBlock = {
-            likeSources = accountSourcesRepo.getLikeSourcesFromAccountV2(accountId).toMutableList()
+            likeSources = searchNewsInteractor.getLikeSources(accountId).toMutableList()
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
@@ -283,7 +275,7 @@ class SearchNewsViewModel @Inject constructor(
 
     private fun getSources() {
         viewModelScope.launchJob(tryBlock = {
-            allSources = sourcesRepo.getSourcesV2()
+            allSources = searchNewsInteractor.getSources()
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
