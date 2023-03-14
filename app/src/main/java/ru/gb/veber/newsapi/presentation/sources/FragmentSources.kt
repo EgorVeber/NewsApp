@@ -43,11 +43,7 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
     private val sourcesAdapter = FragmentSourcesAdapter(listener)
 
     override fun onObserveData() {
-        onObserveData(accountId)
-    }
-
-    private fun onObserveData(accountId: Int) {
-        viewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+       viewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is SourcesViewModel.SourcesState.SetSources -> {
                     setSources(state.list)

@@ -20,8 +20,8 @@ import javax.inject.Inject
 
 class SourcesViewModel @Inject constructor(
     private val router: Router,
-    private val sourceInteractor: SourceInteractor
-    ) : NewsViewModel() {
+    private val sourceInteractor: SourceInteractor,
+) : NewsViewModel() {
 
     private val mutableFlow: MutableLiveData<SourcesState> = MutableLiveData()
     private val flow: LiveData<SourcesState> = mutableFlow
