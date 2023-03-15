@@ -1,11 +1,11 @@
-package ru.gb.veber.newsapi.view.search
+package ru.gb.veber.newsapi.presentation.sources.recycler
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.domain.models.Sources
 
-class HistoryDiffUtil(
-    private val oldItems: List<HistorySelect>,
-    private val newItems: List<HistorySelect>,
+class SourcesDiffUtil(
+    private val oldItems: List<Sources>,
+    private val newItems: List<Sources>,
 ) : DiffUtil.Callback() {
     override fun getOldListSize() = oldItems.size
 
@@ -16,7 +16,7 @@ class HistoryDiffUtil(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldItems[oldItemPosition].id == newItems[newItemPosition].id
+        return oldItems[oldItemPosition].liked != newItems[newItemPosition].liked
     }
 }
 

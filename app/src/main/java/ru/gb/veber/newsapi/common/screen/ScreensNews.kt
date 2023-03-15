@@ -13,9 +13,9 @@ import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
-import ru.gb.veber.newsapi.view.search.SearchFragment
-import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
-import ru.gb.veber.newsapi.view.sources.FragmentSources
+import ru.gb.veber.newsapi.presentation.search.SearchFragment
+import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
+import ru.gb.veber.newsapi.presentation.sources.FragmentSources
 import ru.gb.veber.newsapi.view.webview.WebViewFragment
 
 data class ProfileScreen(private val accountId: Int) : FragmentScreen {
