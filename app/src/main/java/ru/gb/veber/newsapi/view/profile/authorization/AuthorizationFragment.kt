@@ -20,9 +20,8 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.extentions.EMAIL_STR
 import ru.gb.veber.newsapi.common.extentions.LOGIN_STR
 import ru.gb.veber.newsapi.common.extentions.PASSWORD_STR
+import ru.gb.veber.newsapi.common.extentions.observeFlow
 import ru.gb.veber.newsapi.common.extentions.showSnackBarError
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ColorUtils.getColor
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
@@ -67,9 +66,8 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
-        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
         init()
-        initViewModel(accountId)
+        initViewModel()
     }
 
     override fun onDestroyView() {
@@ -128,8 +126,16 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
         }
     }
 
-    private fun initViewModel(accountId: Int) {
-        authorizationViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+    private fun initViewModel() {
+        authorizationViewModel.logInFlow.observeFlow(this) { loginInfo ->
+            if (loginInfo.first) successRegister(loginInfo.second)
+        }
+
+        authorizationViewModel.signInFlow.observeFlow(this) { accountId ->
+            successSignIn(accountId)
+        }
+
+        authorizationViewModel.subscribe().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AuthorizationViewModel.AuthorizationViewState.EmailRegisterIsValidate -> {
                     emailRegisterIsValidate(state.email)
@@ -154,12 +160,6 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
                 }
                 is AuthorizationViewModel.AuthorizationViewState.SetBottomNavigationIcon -> {
                     setBottomNavigationIcon(state.checkLogin)
-                }
-                is AuthorizationViewModel.AuthorizationViewState.SuccessRegister -> {
-                    successRegister(state.id)
-                }
-                is AuthorizationViewModel.AuthorizationViewState.SuccessSignIn -> {
-                    successSignIn(state.id)
                 }
                 AuthorizationViewModel.AuthorizationViewState.EmailRegisterNotValidate -> {
                     emailRegisterNotValidate()
@@ -230,8 +230,7 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
             }, {
             })
 
-        //TODO NewsAndroid-4 Почистить проект от хлама
-        var subscription: rx.Subscription? = RxTextView.textChanges(binding.emailRegisterEditText)
+        RxTextView.textChanges(binding.emailRegisterEditText)
             .filter { text -> text.toString().isNotEmpty() }
             .skip(5)
             .subscribe({ text ->
