@@ -25,7 +25,7 @@ import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
-import ru.gb.veber.newsapi.view.webview.WebViewFragment
+import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

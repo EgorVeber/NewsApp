@@ -21,7 +21,7 @@ import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
 import ru.gb.veber.newsapi.presentation.search.SearchFragment
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.presentation.sources.FragmentSources
-import ru.gb.veber.newsapi.view.webview.WebViewFragment
+import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
 import javax.inject.Singleton
 
 @Singleton

@@ -20,7 +20,7 @@ import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationViewModel
 import ru.gb.veber.newsapi.presentation.search.SearchViewModel
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsViewModel
 import ru.gb.veber.newsapi.presentation.sources.SourcesViewModel
-import ru.gb.veber.newsapi.view.webview.WebViewViewModel
+import ru.gb.veber.newsapi.presentation.webview.WebViewViewModel
 
 
 @Module
