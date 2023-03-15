@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/cardViewDefault"
+    android:background="#FFFFFF"
+    android:elevation="@dimen/elevation"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/cardView_paddingStart"
+    android:paddingEnd="@dimen/cardView_paddingEnd"
+    app:cardElevation="@dimen/header_news_elevation">
+
+    <TextView
+        android:id="@+id/categoryText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/roboto"
+        android:paddingVertical="@dimen/categoryText_paddingVertical"
+        android:text="@string/category"
+        android:textColor="#00325E"
+        android:textSize="@dimen/category_textSize" />
+
+    <ImageView
+        android:id="@+id/hamburgerCustom"
+        android:layout_width="@dimen/hamburgerCustom_width"
+        android:layout_height="@dimen/hamburgerCustom_height"
+        android:layout_marginStart="@dimen/hamburgerCustom_marginStart"
+        android:padding="@dimen/hamburger_custom_padding"
+        android:src="@drawable/ic_customize" />
+
+</LinearLayout>
