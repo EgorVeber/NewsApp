@@ -11,11 +11,6 @@ class SimpleItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter
     ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 ) {
 
-    companion object {
-        const val ALPHA_FULL = 1.0f
-        const val ALPHA_MAGNIFICATION = 1.2f
-    }
-
     override fun isLongPressDragEnabled(): Boolean {
         return true
     }
@@ -58,10 +53,6 @@ class SimpleItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        if (actionState == ItemTouchHelper.ANIMATION_TYPE_SWIPE_CANCEL) {
-            Log.d("actionState",
-                "ANIMATION_TYPE_SWIPE_CANCEL()")
-        }
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             val alpha =
                 ALPHA_FULL - (abs(dX) / viewHolder.itemView.width.toFloat()) * ALPHA_MAGNIFICATION
@@ -70,5 +61,10 @@ class SimpleItemTouchHelperCallback(private val mAdapter: ItemTouchHelperAdapter
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         }
+    }
+
+    companion object {
+        const val ALPHA_FULL = 1.0f
+        const val ALPHA_MAGNIFICATION = 1.2f
     }
 }
