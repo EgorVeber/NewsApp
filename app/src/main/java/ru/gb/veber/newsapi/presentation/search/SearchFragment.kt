@@ -138,17 +138,8 @@ class SearchFragment :
                 SearchViewModel.SearchState.SearchInShow -> {
                     searchInShow()
                 }
-                SearchViewModel.SearchState.EmptyHistory -> {
-                    emptyHistory()
-                }
                 SearchViewModel.SearchState.ErrorDateInput -> {
                     errorDateInput()
-                }
-                SearchViewModel.SearchState.HideEmptyList -> {
-                    hideEmptyList()
-                }
-                SearchViewModel.SearchState.HideSelectHistory -> {
-                    hideSelectHistory()
                 }
                 SearchViewModel.SearchState.PikerNegative -> {
                     pikerNegative()
@@ -158,6 +149,19 @@ class SearchFragment :
                 }
                 SearchViewModel.SearchState.SourcesInShow -> {
                     sourcesInShow()
+                }
+            }
+        }
+        viewModel.subscribeVisibility(accountId).observe(viewLifecycleOwner) { state ->
+            when (state) {
+                SearchViewModel.VisibilityState.EmptyHistory -> {
+                    emptyHistory()
+                }
+                SearchViewModel.VisibilityState.HideEmptyList -> {
+                    hideEmptyList()
+                }
+                SearchViewModel.VisibilityState.HideSelectHistory -> {
+                    hideSelectHistory()
                 }
             }
         }

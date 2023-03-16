@@ -33,21 +33,29 @@ class SearchViewModel @Inject constructor(
 
     private val mutableFlow: MutableLiveData<SearchState> = MutableLiveData()
     private val flow: LiveData<SearchState> = mutableFlow
+    private val mutableFlowVisibility: MutableLiveData<VisibilityState> = MutableLiveData()
+    private val flowVisibility: LiveData<VisibilityState> = mutableFlowVisibility
     private var accountId: Int = 0
 
     fun subscribe(accountId: Int): LiveData<SearchState> {
         this.accountId = accountId
         return flow
     }
-
+    fun subscribeVisibility(accountId: Int): LiveData<VisibilityState> {
+        this.accountId = accountId
+        return flowVisibility
+    }
     override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
+    private fun isAuthorized(): Boolean {
+        return (accountId == ACCOUNT_ID_DEFAULT)
+    }
 
     fun getSources() {
-        if (accountId == ACCOUNT_ID_DEFAULT) {
-            mutableFlow.value = SearchState.HideSelectHistory
+        if (isAuthorized()) {
+            mutableFlowVisibility.value = VisibilityState.HideSelectHistory
 
             searchInteractor.getSources().subscribe({
                 allSources = it
@@ -211,7 +219,7 @@ class SearchViewModel @Inject constructor(
                 .subscribe({ listSelectDbEntity ->
                     if (listSelectDbEntity.isEmpty()) {
                         mutableFlow.value = SearchState.SetHistory(listOf())
-                        mutableFlow.value = SearchState.EmptyHistory
+                        mutableFlowVisibility.value = VisibilityState.EmptyHistory
                     } else {
                         mutableFlow.value =
                             SearchState.SetHistory(listSelectDbEntity.map { historySelectDbEntity ->
@@ -231,7 +239,7 @@ class SearchViewModel @Inject constructor(
     fun clearHistory() {
         searchInteractor.deleteSelectById(accountId).subscribe({
             mutableFlow.value = SearchState.SetHistory(listOf())
-            mutableFlow.value = SearchState.EmptyHistory
+            mutableFlowVisibility.value = VisibilityState.EmptyHistory
         }, {
             it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
         })
@@ -256,13 +264,15 @@ class SearchViewModel @Inject constructor(
         data class SetSources(val list: List<Sources>) : SearchState()
         data class SetHistory(val list: List<HistorySelect>) : SearchState()
         data class PikerPositive(val l: Long) : SearchState()
-        object HideSelectHistory : SearchState()
         object SearchInShow : SearchState()
-        object EmptyHistory : SearchState()
         object PikerNegative : SearchState()
         object SelectSources : SearchState()
         object ErrorDateInput : SearchState()
         object SourcesInShow : SearchState()
-        object HideEmptyList : SearchState()
+    }
+    sealed class VisibilityState {
+        object HideSelectHistory : VisibilityState()
+        object EmptyHistory : VisibilityState()
+        object HideEmptyList : VisibilityState()
     }
 }
