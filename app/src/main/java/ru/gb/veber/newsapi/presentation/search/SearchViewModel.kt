@@ -48,7 +48,6 @@ class SearchViewModel @Inject constructor(
     fun getSources() {
         if (accountId == ACCOUNT_ID_DEFAULT) {
             mutableFlow.value = SearchState.HideSelectHistory
-            mutableFlow.value = SearchState.HideEmptyList
 
             searchInteractor.getSources().subscribe({
                 allSources = it
