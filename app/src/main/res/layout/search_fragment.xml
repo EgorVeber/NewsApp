@@ -119,7 +119,7 @@
         android:id="@+id/groupHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="titleHistory,deleteHistoryAll,recyclerHistory" />
+        app:constraint_referenced_ids="titleHistory,deleteHistoryAll,recyclerHistory,emptyHistory" />
 
     <TextView
         android:id="@+id/titleHistory"
