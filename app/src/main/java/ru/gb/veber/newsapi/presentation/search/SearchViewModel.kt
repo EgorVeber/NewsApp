@@ -220,6 +220,7 @@ class SearchViewModel @Inject constructor(
                         mutableFlow.value = SearchState.SetHistory(listOf())
                         mutableFlowVisibility.value = VisibilityState.EmptyHistory
                     } else {
+                        mutableFlowVisibility.value = VisibilityState.HideEmptyList
                         mutableFlow.value =
                             SearchState.SetHistory(listSelectDbEntity.map { historySelectDbEntity ->
                                 historySelectDbEntity.toHistorySelect()
