@@ -152,7 +152,7 @@ class SearchFragment :
                 }
             }
         }
-        viewModel.subscribeVisibility(accountId).observe(viewLifecycleOwner) { state ->
+        viewModel.subscribeVisibility().observe(viewLifecycleOwner) { state ->
             when (state) {
                 SearchViewModel.VisibilityState.EmptyHistory -> {
                     emptyHistory()

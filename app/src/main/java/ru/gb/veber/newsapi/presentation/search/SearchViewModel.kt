@@ -41,17 +41,16 @@ class SearchViewModel @Inject constructor(
         this.accountId = accountId
         return flow
     }
-    fun subscribeVisibility(accountId: Int): LiveData<VisibilityState> {
-        this.accountId = accountId
+
+    fun subscribeVisibility(): LiveData<VisibilityState> {
         return flowVisibility
     }
+
     override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
-    private fun isAuthorized(): Boolean {
-        return (accountId == ACCOUNT_ID_DEFAULT)
-    }
+    private fun isAuthorized()= (accountId == ACCOUNT_ID_DEFAULT)
 
     fun getSources() {
         if (isAuthorized()) {
