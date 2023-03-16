@@ -2,13 +2,9 @@ package ru.gb.veber.newsapi.view.profile.account.settings
 
 import android.os.Bundle
 import android.transition.TransitionManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxbinding.widget.RxTextView
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.base.NewsFragment
 import ru.gb.veber.newsapi.common.extentions.EMAIL_STR
 import ru.gb.veber.newsapi.common.extentions.LOGIN_STR
 import ru.gb.veber.newsapi.common.extentions.PASSWORD_STR
@@ -17,65 +13,47 @@ import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.common.extentions.showSnackBarError
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
-import javax.inject.Inject
 
-class EditAccountFragment : Fragment(), BackPressedListener {
-
-    private var _binding: EditAccountFragmentBinding? = null
-    private val binding get() = _binding!!
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val editAccountViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[EditAccountViewModel::class.java]
-    }
+class EditAccountFragment : NewsFragment<EditAccountFragmentBinding, EditAccountViewModel>(EditAccountFragmentBinding::inflate) {
 
     private var userLogin: String = ""
     private var userPassword: String = ""
     private var userEmail: String = ""
 
+    private val accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = EditAccountFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getViewModelClass(): Class<EditAccountViewModel> = EditAccountViewModel::class.java
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onInject() {
         App.instance.appComponent.inject(this)
-        initialization()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return editAccountViewModel.onBackPressedRouter()
-    }
-
-    private fun initialization() {
-        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
-        initViewModel(accountId)
-        initView()
+    override fun onInitView() {
         initRxTextChangerValidation()
+        binding.backAccountScreen.setOnClickListener {
+            viewModel.arrowBack()
+        }
+
+        binding.saveChangeAccount.setOnClickListener {
+            if (checkNullSignUpData()) {
+                viewModel.checkSaveAccount(
+                    userLogin = userLogin,
+                    userPassword = userPassword,
+                    userEmail = userEmail
+                )
+            }
+        }
     }
 
-    private fun initViewModel(accountId: Int) {
-        editAccountViewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+    override fun onObserveData() {
+        viewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is EditAccountViewModel.EditAccountState.NoChangeAccount -> {
                     noChangeAccount()
@@ -117,41 +95,25 @@ class EditAccountFragment : Fragment(), BackPressedListener {
         }
     }
 
-    private fun initView() {
-        binding.backAccountScreen.setOnClickListener {
-            editAccountViewModel.arrowBack()
-        }
-
-        binding.saveChangeAccount.setOnClickListener {
-            if (checkNullSignUpData()) {
-                editAccountViewModel.checkSaveAccount(
-                    userLogin = userLogin,
-                    userPassword = userPassword,
-                    userEmail = userEmail
-                )
-            }
-        }
-    }
-
     private fun initRxTextChangerValidation() {
         RxTextView.textChanges(binding.passwordChangeEditText)
             .filter { text -> text.toString().isNotEmpty() }
             .subscribe({ text ->
-                editAccountViewModel.passwordValidation(text)
+                viewModel.passwordValidation(text)
             }, {
             })
 
         RxTextView.textChanges(binding.userNameChangeEditText)
             .filter { text -> text.toString().isNotEmpty() }
             .subscribe({ text ->
-                editAccountViewModel.loginValidation(text)
+                viewModel.loginValidation(text)
             }, {
             })
 
         RxTextView.textChanges(binding.emailChangeEditText)
             .filter { text -> text.toString().isNotEmpty() }
             .subscribe({ text ->
-                editAccountViewModel.emailRegisterValidation(text)
+                viewModel.emailRegisterValidation(text)
             }, {
             })
     }
@@ -224,7 +186,7 @@ class EditAccountFragment : Fragment(), BackPressedListener {
 
     private fun successUpdateAccount(userLogin: String) {
         binding.root.showSnackBarError(getString(R.string.dataUpdated), "", {})
-        editAccountViewModel.arrowBack()
+        viewModel.arrowBack()
         (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetTitleCurrentAccount(
             userLogin)
     }

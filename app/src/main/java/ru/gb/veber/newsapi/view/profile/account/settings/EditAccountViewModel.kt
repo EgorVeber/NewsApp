@@ -3,26 +3,24 @@ package ru.gb.veber.newsapi.view.profile.account.settings
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
+import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
 import ru.gb.veber.newsapi.common.extentions.LOGIN_PATTERN
 import ru.gb.veber.newsapi.common.extentions.PASSWORD_PATTERN
 import ru.gb.veber.newsapi.common.extentions.checkLogin
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
+import ru.gb.veber.newsapi.domain.interactor.EditAccountInteractor
 import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(
-    private val roomRepoImpl: AccountRepo,
     private val router: Router,
-    private val prefsAccount: SharedPreferenceAccount,
-) : ViewModel() {
+    private val editAccountInteractor: EditAccountInteractor,
+) : NewsViewModel() {
 
     private val mutableFlow: MutableLiveData<EditAccountState> = MutableLiveData()
     private val flow: LiveData<EditAccountState> = mutableFlow
@@ -42,9 +40,9 @@ class EditAccountViewModel @Inject constructor(
             account.userName = userLogin
             account.password = userPassword
             viewModelScope.launchJob(tryBlock = {
-                roomRepoImpl.updateAccountV2(account.toAccountDbEntity())
+                editAccountInteractor.updateAccount(account.toAccountDbEntity())
                 mutableFlow.postValue(EditAccountState.SuccessUpdateAccount(account.userName.checkLogin()))
-                prefsAccount.setAccountLogin(account.userName.checkLogin())
+                editAccountInteractor.setAccount(account.userName.checkLogin())
             }, catchBlock = { error ->
                 mutableFlow.postValue(EditAccountState.ErrorUpdateAccount)
                 Log.d(ERROR_DB, error.localizedMessage)
@@ -80,7 +78,7 @@ class EditAccountViewModel @Inject constructor(
         router.exit()
     }
 
-    fun onBackPressedRouter(): Boolean {
+    override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
@@ -88,7 +86,7 @@ class EditAccountViewModel @Inject constructor(
     private fun getAccountDataBase(accountId: Int) {
         mutableFlow.value = EditAccountState.Loading
         viewModelScope.launchJob(tryBlock = {
-            val accountDb = roomRepoImpl.getAccountByIdV2(accountId)
+            val accountDb = editAccountInteractor.getAccount(accountId)
             account = accountDb
             mutableFlow.postValue(EditAccountState.SetAccountDate(account))
         }, catchBlock = { error ->
