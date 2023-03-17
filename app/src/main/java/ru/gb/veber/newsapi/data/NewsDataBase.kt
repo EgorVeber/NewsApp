@@ -7,12 +7,14 @@ import androidx.room.RoomDatabase
 import ru.gb.veber.newsapi.common.utils.DATABASE_NAME
 import ru.gb.veber.newsapi.data.models.room.dao.AccountSourcesDao
 import ru.gb.veber.newsapi.data.models.room.dao.AccountsDao
+import ru.gb.veber.newsapi.data.models.room.dao.ApiKeysDao
 import ru.gb.veber.newsapi.data.models.room.dao.ArticleDao
 import ru.gb.veber.newsapi.data.models.room.dao.CountryDao
 import ru.gb.veber.newsapi.data.models.room.dao.HistorySelectDao
 import ru.gb.veber.newsapi.data.models.room.dao.SourcesDao
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
+import ru.gb.veber.newsapi.data.models.room.entity.ApiKeysDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.CountryDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
@@ -26,7 +28,8 @@ import ru.gb.veber.newsapi.data.models.room.entity.SourcesDbEntity
         SourcesDbEntity::class,
         AccountSourcesDbEntity::class,
         HistorySelectDbEntity::class,
-        CountryDbEntity::class]
+        CountryDbEntity::class,
+        ApiKeysDbEntity::class]
 )
 abstract class NewsDataBase : RoomDatabase() {
 
@@ -36,6 +39,7 @@ abstract class NewsDataBase : RoomDatabase() {
     abstract fun accountSourcesDao(): AccountSourcesDao
     abstract fun historySelectDao(): HistorySelectDao
     abstract fun countryDao(): CountryDao
+    abstract fun apiKeysDao(): ApiKeysDao
 
     companion object {
         fun createDb(context: Context): NewsDataBase {
