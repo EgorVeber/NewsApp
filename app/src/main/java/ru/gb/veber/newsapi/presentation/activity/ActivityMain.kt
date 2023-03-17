@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.activity
+package ru.gb.veber.newsapi.presentation.activity
 
 import android.content.Intent
 import android.os.Bundle

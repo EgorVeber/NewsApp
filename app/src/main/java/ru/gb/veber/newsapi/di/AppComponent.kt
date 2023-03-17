@@ -10,7 +10,7 @@ import ru.gb.veber.newsapi.di.moduls.SharedPreferenceModule
 import ru.gb.veber.newsapi.di.moduls.ViewModelModule
 import ru.gb.veber.newsapi.presentation.topnews.fragment.TopNewsFragment
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerFragment
-import ru.gb.veber.newsapi.view.activity.ActivityMain
+import ru.gb.veber.newsapi.presentation.activity.ActivityMain
 import ru.gb.veber.newsapi.view.favorites.FavoritesFragment
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.view.profile.ProfileFragment

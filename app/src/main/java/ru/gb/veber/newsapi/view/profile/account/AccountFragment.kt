@@ -20,8 +20,8 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
 import ru.gb.veber.newsapi.databinding.ConfirmDialogBinding
 import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
+import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
 import javax.inject.Inject
 
 class AccountFragment : Fragment(), BackPressedListener {

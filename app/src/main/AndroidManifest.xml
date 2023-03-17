@@ -23,7 +23,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".view.activity.ActivityMain"
+            android:name=".presentation.activity.ActivityMain"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">

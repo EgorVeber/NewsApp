@@ -20,8 +20,8 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
+import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
 import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
 import javax.inject.Inject

@@ -9,7 +9,7 @@ import ru.gb.veber.newsapi.di.ViewModelFactory
 import ru.gb.veber.newsapi.di.ViewModelKey
 import ru.gb.veber.newsapi.presentation.topnews.fragment.TopNewsViewModel
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerViewModel
-import ru.gb.veber.newsapi.view.activity.ActivityMainViewModel
+import ru.gb.veber.newsapi.presentation.activity.ActivityMainViewModel
 import ru.gb.veber.newsapi.view.favorites.FavoritesViewModel
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerViewModel
 import ru.gb.veber.newsapi.view.profile.ProfileViewModel

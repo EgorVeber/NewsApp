@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.activity
+package ru.gb.veber.newsapi.presentation.activity
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
