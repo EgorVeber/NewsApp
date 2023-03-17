@@ -19,7 +19,7 @@ import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapte
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SCIENCE
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SPORTS
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.TECHNOLOGY
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
 import javax.inject.Inject
 
 class TopNewsViewPagerFragment : Fragment(),

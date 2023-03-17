@@ -30,8 +30,8 @@ import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
-import ru.gb.veber.newsapi.view.activity.EventAddingBadges
-import ru.gb.veber.newsapi.view.activity.EventShareLink
+import ru.gb.veber.newsapi.presentation.activity.EventAddingBadges
+import ru.gb.veber.newsapi.presentation.activity.EventShareLink
 
 class SearchNewsFragment :
     NewsFragment<SearchNewsFragmentBinding, SearchNewsViewModel>(SearchNewsFragmentBinding::inflate),
