@@ -40,9 +40,8 @@ class EditAccountViewModel @Inject constructor(
             account.userName = userLogin
             account.password = userPassword
             viewModelScope.launchJob(tryBlock = {
-                editAccountInteractor.updateAccount(account.toAccountDbEntity())
+                editAccountInteractor.updateAccount(account.toAccountDbEntity(), account.userName.checkLogin())
                 mutableFlow.postValue(EditAccountState.SuccessUpdateAccount(account.userName.checkLogin()))
-                editAccountInteractor.setAccount(account.userName.checkLogin())
             }, catchBlock = { error ->
                 mutableFlow.postValue(EditAccountState.ErrorUpdateAccount)
                 Log.d(ERROR_DB, error.localizedMessage)

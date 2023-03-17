@@ -11,15 +11,12 @@ class EditAccountInteractor @Inject constructor(
     private val prefsAccount: SharedPreferenceAccount,
 ) {
 
-    suspend fun updateAccount(accountDbEntity: AccountDbEntity) {
+    suspend fun updateAccount(accountDbEntity: AccountDbEntity, login: String) {
         roomRepoImpl.updateAccountV2(accountDbEntity)
+        prefsAccount.setAccountLogin(login)
     }
 
     suspend fun getAccount(accountId: Int): Account {
         return roomRepoImpl.getAccountByIdV2(accountId)
-    }
-
-    fun setAccount(login: String) {
-        prefsAccount.setAccountLogin(login)
     }
 }

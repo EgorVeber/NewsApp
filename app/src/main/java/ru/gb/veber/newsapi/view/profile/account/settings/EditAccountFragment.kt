@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.view.profile.account.settings
 
-import android.os.Bundle
 import android.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
 import ru.gb.veber.newsapi.R
@@ -27,7 +26,7 @@ class EditAccountFragment : NewsFragment<EditAccountFragmentBinding, EditAccount
     private var userPassword: String = ""
     private var userEmail: String = ""
 
-    private val accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
 
     override fun getViewModelClass(): Class<EditAccountViewModel> = EditAccountViewModel::class.java
 
@@ -200,6 +199,6 @@ class EditAccountFragment : NewsFragment<EditAccountFragmentBinding, EditAccount
     }
 
     companion object {
-        fun getInstance(bundle: Bundle) = EditAccountFragment().apply { arguments = bundle }
+        fun getInstance(accountID: Int) = EditAccountFragment().apply { this.accountId = accountID }
     }
 }
