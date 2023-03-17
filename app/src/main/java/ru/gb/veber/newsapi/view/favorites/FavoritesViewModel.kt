@@ -16,15 +16,15 @@ import ru.gb.veber.newsapi.data.mapper.HIDE_HISTORY
 import ru.gb.veber.newsapi.data.mapper.SHOW_HISTORY
 import ru.gb.veber.newsapi.data.mapper.toArticle
 import ru.gb.veber.newsapi.data.mapper.toNewListArticleGroupByDate
+import ru.gb.veber.newsapi.domain.interactor.FavoritesInteractor
 import ru.gb.veber.newsapi.domain.models.Article
-import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter
 import javax.inject.Inject
 
 class FavoritesViewModel @Inject constructor(
     private val router: Router,
-    private val articleRepoImpl: ArticleRepo,
+    private val favoritesInteractor: FavoritesInteractor
 ) : NewsViewModel() {
 
     private val _uiState: MutableLiveData<FavoritesState> = MutableLiveData()
@@ -43,7 +43,7 @@ class FavoritesViewModel @Inject constructor(
             if (page == FavoritesViewPagerAdapter.FAVORITES) {
                 _uiState.value = FavoritesState.Loading
                 viewModelScope.launchJob(tryBlock = {
-                    val listArticleDb = articleRepoImpl.getLikeArticleByIdV2(accountID)
+                    val listArticleDb = favoritesInteractor.getLikeArticle(accountID)
                     if (listArticleDb.isEmpty()) {
                         _uiState.postValue(FavoritesState.EmptyList)
                     } else {
@@ -64,7 +64,7 @@ class FavoritesViewModel @Inject constructor(
             } else {
                 _uiState.value = FavoritesState.Loading
                 viewModelScope.launchJob(tryBlock = {
-                    val listArticle = articleRepoImpl.getHistoryArticleByIdV2(accountID)
+                    val listArticle = favoritesInteractor.getHistoryArticle(accountID)
                     if (listArticle.isEmpty()) {
                         _uiState.postValue(FavoritesState.EmptyList)
                     } else {
@@ -91,8 +91,8 @@ class FavoritesViewModel @Inject constructor(
     fun deleteFavorites(article: Article) {
         article.title?.let { title ->
             viewModelScope.launchJob(tryBlock = {
-                articleRepoImpl.deleteArticleByIdFavoritesV2(title, accountIdS)
-                val art = (articleRepoImpl.getLikeArticleByIdV2(accountIdS))
+                favoritesInteractor.deleteArticleFavorites(title, accountIdS)
+                val art = (favoritesInteractor.getLikeArticle(accountIdS))
                 val artModified = art.map { articleDb ->
                     articleDb.toArticle()
                 }.reversed()
@@ -117,8 +117,8 @@ class FavoritesViewModel @Inject constructor(
     fun deleteHistory(article: Article) {
         article.title?.let { title ->
             viewModelScope.launchJob(tryBlock = {
-                articleRepoImpl.deleteArticleByIdHistoryV2(title, accountIdS)
-                val art = (articleRepoImpl.getHistoryArticleByIdV2(accountIdS))
+                favoritesInteractor.deleteArticleHistory(title, accountIdS)
+                val art = (favoritesInteractor.getHistoryArticle(accountIdS))
                 listSave = art.map { articleDb ->
                     articleDb.toArticle()
                 }.toNewListArticleGroupByDate()
@@ -151,8 +151,8 @@ class FavoritesViewModel @Inject constructor(
 
     fun deleteGroupHistory(article: Article) {
         viewModelScope.launchJob(tryBlock = {
-            articleRepoImpl.deleteArticleByIdHistoryGroupV2(accountIdS, article.publishedAt)
-            val list = articleRepoImpl.getHistoryArticleByIdV2(accountIdS)
+            favoritesInteractor.deleteArticleHistoryGroup(accountIdS, article.publishedAt)
+            val list = favoritesInteractor.getHistoryArticle(accountIdS)
             listSave = list.map { articleDb ->
                 articleDb.toArticle()
             }.toNewListArticleGroupByDate()
