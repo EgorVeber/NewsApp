@@ -8,28 +8,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.FavoritesViewPagerScreen
-import ru.gb.veber.newsapi.common.screen.ProfileScreen
-import ru.gb.veber.newsapi.common.screen.SearchScreen
-import ru.gb.veber.newsapi.common.screen.SourcesScreen
-import ru.gb.veber.newsapi.common.screen.TopNewsViewPagerScreen
+import ru.gb.veber.newsapi.common.screen.*
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.data.mapper.newCountryDbEntity
 import ru.gb.veber.newsapi.data.mapper.toSourcesDbEntity
-import ru.gb.veber.newsapi.domain.repository.CountryRepo
-import ru.gb.veber.newsapi.domain.repository.NewsRepo
-import ru.gb.veber.newsapi.domain.repository.SourcesRepo
+import ru.gb.veber.newsapi.domain.interactor.MainInteractor
 import javax.inject.Inject
 
 class ActivityMainViewModel @Inject constructor(
-    private val newsRepoImpl: NewsRepo,
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
-    private val router: Router,
-    private val sourcesRepoImpl: SourcesRepo,
-    private val countryRepoImpl: CountryRepo,
+    private val mainInteractor: MainInteractor,
+    private val router: Router
 ) : ViewModel() {
 
     private val mutableFlow: MutableStateFlow<ViewMainState> =
@@ -41,51 +31,51 @@ class ActivityMainViewModel @Inject constructor(
     }
 
     fun openScreenNews() {
-        router.newRootScreen(TopNewsViewPagerScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(TopNewsViewPagerScreen(mainInteractor.getAccountID()))
         mutableFlow.value = ViewMainState.HideAllBehavior
     }
 
     fun openScreenSources() {
-        router.newRootScreen(SourcesScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(SourcesScreen(mainInteractor.getAccountID()))
         mutableFlow.value = ViewMainState.HideAllBehavior
     }
 
     fun openScreenProfile() {
-        router.newRootScreen(ProfileScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(ProfileScreen(mainInteractor.getAccountID()))
         mutableFlow.value = ViewMainState.HideAllBehavior
     }
 
     fun openScreenSearchNews() {
-        router.newRootScreen(SearchScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(SearchScreen(mainInteractor.getAccountID()))
         mutableFlow.value = ViewMainState.HideAllBehavior
     }
 
     fun openFavoritesScreen() {
-        router.newRootScreen(FavoritesViewPagerScreen(sharedPreferenceAccount.getAccountID()))
+        router.newRootScreen(FavoritesViewPagerScreen(mainInteractor.getAccountID()))
         mutableFlow.value = ViewMainState.HideAllBehavior
     }
 
     fun getAccountSettings() {
-        if (sharedPreferenceAccount.getAccountID() != ACCOUNT_ID_DEFAULT) {
+        if (mainInteractor.getAccountID() != ACCOUNT_ID_DEFAULT) {
             mutableFlow.value = ViewMainState.OnCreateSetIconTitleAccount(
-                sharedPreferenceAccount.getAccountLogin()
+                mainInteractor.getAccountLogin()
             )
         }
     }
 
     fun getCheckFirstStartApp() {
-        if (!sharedPreferenceAccount.getCheckFirstStartApp()) {
+        if (!mainInteractor.getCheckFirstStartApp()) {
             fillDataBase()
-            sharedPreferenceAccount.setCheckFirstStartApp()
+            mainInteractor.setCheckFirstStartApp()
         }
     }
 
     private fun fillDataBase() {
         viewModelScope.launchJob(tryBlock = {
 
-            val sourcesApi = newsRepoImpl.getSourcesV2(key = API_KEY_NEWS)
+            val sourcesApi = mainInteractor.getSourcesV2(API_KEY_NEWS)
 
-            val countryStringArray = sharedPreferenceAccount.getArrayCountry()
+            val countryStringArray = mainInteractor.getArrayCountry()
 
             for (source in sourcesApi.sources) {
                 countryStringArray.forEach { country ->
@@ -98,11 +88,11 @@ class ActivityMainViewModel @Inject constructor(
                 }
             }
 
-            countryRepoImpl.insertAllV2(countryStringArray.map { newCountry ->
+            mainInteractor.countryInsertAllV2(countryStringArray.map { newCountry ->
                 newCountryDbEntity(newCountry.key, newCountry.value)
             })
 
-            sourcesRepoImpl.insertAllV2(sourcesApi.sources.map { sourcesDTO ->
+            mainInteractor.sourcesInsertAllV2(sourcesApi.sources.map { sourcesDTO ->
                 sourcesDTO.toSourcesDbEntity()
             })
 
