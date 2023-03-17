@@ -6,12 +6,14 @@ import dagger.Provides
 import ru.gb.veber.newsapi.data.NewsDataBase
 import ru.gb.veber.newsapi.data.repository.AccountRepoImpl
 import ru.gb.veber.newsapi.data.repository.AccountSourcesRepoImpl
+import ru.gb.veber.newsapi.data.repository.ApiKeysRepositoryImpl
 import ru.gb.veber.newsapi.data.repository.ArticleRepoImpl
 import ru.gb.veber.newsapi.data.repository.CountryRepoImpl
 import ru.gb.veber.newsapi.data.repository.HistorySelectRepoImpl
 import ru.gb.veber.newsapi.data.repository.SourcesRepoImpl
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
+import ru.gb.veber.newsapi.domain.repository.ApiKeysRepository
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import ru.gb.veber.newsapi.domain.repository.CountryRepo
 import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
@@ -55,4 +57,9 @@ object DataBaseModule {
     @Provides
     fun provideCountryDao(database: NewsDataBase): CountryRepo =
         CountryRepoImpl(database.countryDao())
+
+    @Singleton
+    @Provides
+    fun provideApiKeysDao(database: NewsDataBase): ApiKeysRepository =
+        ApiKeysRepositoryImpl(database.apiKeysDao())
 }
