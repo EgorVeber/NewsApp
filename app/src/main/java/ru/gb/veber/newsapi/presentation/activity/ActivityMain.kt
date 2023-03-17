@@ -29,21 +29,6 @@ import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-interface OpenScreen {
-    fun openMainScreen()
-}
-
-interface EventLogoutAccountScreen {
-    fun bottomNavigationSetDefaultIcon()
-    fun bottomNavigationSetCurrentAccount(checkLogin: String)
-    fun bottomNavigationSetTitleCurrentAccount(checkLogin: String)
-}
-
-interface EventAddingBadges {
-    fun addBadge()
-    fun removeBadge()
-}
-
 interface EventShareLink {
     fun shareLink(url: String)
 }
