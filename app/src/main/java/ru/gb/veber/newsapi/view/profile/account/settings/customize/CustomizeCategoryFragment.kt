@@ -42,7 +42,9 @@ class CustomizeCategoryFragment() :
 
     override fun onInitView() {
         initRecycler()
-        initialize()
+        binding.backAccountScreen.setOnClickListener {
+            viewModel.backAccountScreen()
+        }
 
     }
 
@@ -60,12 +62,6 @@ class CustomizeCategoryFragment() :
         binding.recyclerView.apply {
             this.adapter = myAdapter
             this.layoutManager = LinearLayoutManager(requireContext())
-        }
-    }
-
-    private fun initialize() {
-        binding.backAccountScreen.setOnClickListener {
-            viewModel.backAccountScreen()
         }
     }
 
