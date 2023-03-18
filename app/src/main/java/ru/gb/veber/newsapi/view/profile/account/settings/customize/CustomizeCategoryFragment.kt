@@ -1,33 +1,24 @@
 package ru.gb.veber.newsapi.view.profile.account.settings.customize
 
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.gb.veber.newsapi.common.base.NewsFragment
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.CustomizeCategoryFragmentBinding
-import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.EventDraw
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.SimpleItemTouchHelperCallback
-import javax.inject.Inject
 
-class CustomizeCategoryFragment() : Fragment(), BackPressedListener {
+class CustomizeCategoryFragment() :
+    NewsFragment<CustomizeCategoryFragmentBinding, CustomizeCategoryViewModel>(
+        CustomizeCategoryFragmentBinding::inflate
+    ) {
 
-    private var _binding: CustomizeCategoryFragmentBinding? = null
-    private val binding get() = _binding!!
     private var mItemTouchHelper: ItemTouchHelper? = null
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val customizeCategoryViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[CustomizeCategoryViewModel::class.java]
-    }
+    private var accountID by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
 
     private val listener = object : EventDraw {
         override fun onStartDrag(holder: CustomizeCategoryAdapter.ItemViewHolder) {
@@ -42,56 +33,40 @@ class CustomizeCategoryFragment() : Fragment(), BackPressedListener {
 
     private val myAdapter = CustomizeCategoryAdapter(listener)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = CustomizeCategoryFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun getViewModelClass(): Class<CustomizeCategoryViewModel> =
+        CustomizeCategoryViewModel::class.java
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onInject() {
         App.instance.appComponent.inject(this)
+    }
+
+    override fun onInitView() {
         initRecycler()
-        initialize()
-        initViewModel()
+        binding.backAccountScreen.setOnClickListener {
+            viewModel.backAccountScreen()
+        }
 
-        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(myAdapter)
-        mItemTouchHelper = ItemTouchHelper(callback)
-        mItemTouchHelper!!.attachToRecyclerView(binding.recyclerView)
     }
 
-    override fun onBackPressedRouter(): Boolean {
-        return customizeCategoryViewModel.onBackPressedRouter()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onObserveData() {
+        viewModel.getLiveDataCategory()
+            .observe(viewLifecycleOwner) { listCategory ->
+                myAdapter.refreshCategory(listCategory)
+            }
     }
 
     private fun initRecycler() {
+        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(myAdapter)
+        mItemTouchHelper = ItemTouchHelper(callback)
+        mItemTouchHelper!!.attachToRecyclerView(binding.recyclerView)
         binding.recyclerView.apply {
             this.adapter = myAdapter
             this.layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
-    private fun initViewModel() {
-        customizeCategoryViewModel.getLiveDataCategory().observe(viewLifecycleOwner) { listCategory ->
-                myAdapter.refreshCategory(listCategory)
-        }
-    }
-
-    private fun initialize() {
-        binding.backAccountScreen.setOnClickListener {
-            customizeCategoryViewModel.backAccountScreen()
-        }
-    }
-
     companion object {
-        fun getInstance(bundle: Bundle) = CustomizeCategoryFragment().apply { arguments = bundle }
+        fun getInstance(accountID: Int) =
+            CustomizeCategoryFragment().apply { this.accountID = accountID }
     }
 }
