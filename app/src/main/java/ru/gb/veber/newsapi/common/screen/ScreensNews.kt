@@ -77,9 +77,7 @@ data class WebViewScreen(private val url: String) : FragmentScreen {
 
 data class EditAccountScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return EditAccountFragment.getInstance(Bundle().apply {
-            putInt(ACCOUNT_ID, accountId)
-        })
+        return EditAccountFragment.getInstance(accountId)
     }
 }
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
+import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
 import javax.inject.Inject
 
 /** Базовый фрагмент наследоватся не обязательно*/

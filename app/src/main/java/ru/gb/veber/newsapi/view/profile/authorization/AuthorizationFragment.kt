@@ -25,9 +25,9 @@ import ru.gb.veber.newsapi.common.extentions.showSnackBarError
 import ru.gb.veber.newsapi.common.utils.ColorUtils.getColor
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.activity.EventLogoutAccountScreen
-import ru.gb.veber.newsapi.view.activity.OpenScreen
+import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
+import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.activity.OpenScreen
 import javax.inject.Inject
 
 class AuthorizationFragment : Fragment(), BackPressedListener {
