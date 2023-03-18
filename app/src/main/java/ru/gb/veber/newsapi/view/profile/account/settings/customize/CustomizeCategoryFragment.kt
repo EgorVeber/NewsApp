@@ -9,7 +9,6 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.CustomizeCategoryFragmentBinding
-import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.EventDraw
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.SimpleItemTouchHelperCallback
 
