@@ -12,7 +12,7 @@ import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerViewMo
 import ru.gb.veber.newsapi.presentation.activity.ActivityMainViewModel
 import ru.gb.veber.newsapi.view.favorites.FavoritesViewModel
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerViewModel
-import ru.gb.veber.newsapi.view.profile.ProfileViewModel
+import ru.gb.veber.newsapi.presentation.profile.ProfileViewModel
 import ru.gb.veber.newsapi.view.profile.account.AccountViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountViewModel
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.CustomizeCategoryViewModel

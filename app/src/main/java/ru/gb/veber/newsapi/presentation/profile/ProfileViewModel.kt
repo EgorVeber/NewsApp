@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.profile
+package ru.gb.veber.newsapi.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import com.github.terrakok.cicerone.Router
