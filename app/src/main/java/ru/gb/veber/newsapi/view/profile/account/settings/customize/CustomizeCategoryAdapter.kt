@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.CustomizeCategoryItemTaskBinding
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.EventDraw
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.ItemTouchHelperAdapter
-import java.util.Collections
-import kotlin.collections.ArrayList
+import java.util.*
 
 class CustomizeCategoryAdapter(private val listener: EventDraw) :
     RecyclerView.Adapter<CustomizeCategoryAdapter.ItemViewHolder>(), ItemTouchHelperAdapter {
