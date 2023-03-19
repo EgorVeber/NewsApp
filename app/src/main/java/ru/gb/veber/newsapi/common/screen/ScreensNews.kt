@@ -8,7 +8,7 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
-import ru.gb.veber.newsapi.view.profile.ProfileFragment
+import ru.gb.veber.newsapi.presentation.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment

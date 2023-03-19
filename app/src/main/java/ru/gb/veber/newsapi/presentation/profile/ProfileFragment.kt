@@ -1,9 +1,10 @@
-package ru.gb.veber.newsapi.view.profile
+package ru.gb.veber.newsapi.presentation.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import javax.inject.Inject
 
@@ -11,6 +12,8 @@ class ProfileFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private var accountId by BundleInt(ACCOUNT_ID,0)
 
     private val profileViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[ProfileViewModel::class.java]
@@ -32,9 +35,7 @@ class ProfileFragment : Fragment() {
     companion object {
         fun getInstance(accountID: Int): ProfileFragment {
             return ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ACCOUNT_ID, accountID)
-                }
+                this.accountId = accountID
             }
         }
     }

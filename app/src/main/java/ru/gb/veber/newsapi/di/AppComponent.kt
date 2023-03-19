@@ -13,7 +13,7 @@ import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerFragme
 import ru.gb.veber.newsapi.presentation.activity.ActivityMain
 import ru.gb.veber.newsapi.view.favorites.FavoritesFragment
 import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
-import ru.gb.veber.newsapi.view.profile.ProfileFragment
+import ru.gb.veber.newsapi.presentation.profile.ProfileFragment
 import ru.gb.veber.newsapi.view.profile.account.AccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.view.profile.account.settings.customize.CustomizeCategoryFragment
