@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.profile.authorization
+package ru.gb.veber.newsapi.presentation.profile.authorization
 
 import android.os.Bundle
 import android.text.Spannable

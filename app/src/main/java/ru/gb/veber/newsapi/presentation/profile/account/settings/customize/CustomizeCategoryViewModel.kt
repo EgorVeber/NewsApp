@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.profile.account.settings.customize
+package ru.gb.veber.newsapi.presentation.profile.account.settings.customize
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

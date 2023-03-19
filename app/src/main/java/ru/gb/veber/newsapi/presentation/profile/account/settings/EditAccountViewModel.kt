@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.profile.account.settings
+package ru.gb.veber.newsapi.presentation.profile.account.settings
 
 import android.util.Log
 import androidx.lifecycle.LiveData

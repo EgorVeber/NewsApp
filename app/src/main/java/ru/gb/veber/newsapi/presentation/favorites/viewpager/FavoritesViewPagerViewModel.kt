@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.favorites.viewpager
+package ru.gb.veber.newsapi.presentation.favorites.viewpager
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

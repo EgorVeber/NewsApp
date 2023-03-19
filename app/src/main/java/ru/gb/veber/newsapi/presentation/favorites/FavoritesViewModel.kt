@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.favorites
+package ru.gb.veber.newsapi.presentation.favorites
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -18,8 +18,8 @@ import ru.gb.veber.newsapi.data.mapper.toArticle
 import ru.gb.veber.newsapi.data.mapper.toNewListArticleGroupByDate
 import ru.gb.veber.newsapi.domain.interactor.FavoritesInteractor
 import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
-import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter
 import javax.inject.Inject
 
 class FavoritesViewModel @Inject constructor(

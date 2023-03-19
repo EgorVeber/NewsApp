@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.favorites
+package ru.gb.veber.newsapi.presentation.favorites
 
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -26,10 +26,10 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.presentation.activity.EventShareLink
+import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
-import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 
 class FavoritesFragment :
     NewsFragment<FavotitesFragmentBinding, FavoritesViewModel>(FavotitesFragmentBinding::inflate),
