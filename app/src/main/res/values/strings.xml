@@ -71,7 +71,7 @@
     <string name="screen_settings">Screen settings</string>
     <string name="save_history">Save history</string>
     <string name="save_history_select">Save history Select</string>
-    <string name="customize_category">Customize Category</string>
+    <string name="customize_category">Customize category</string>
     <string name="show_favorites_sources_in_a_list">Show favorites sources in a list</string>
     <string name="notification">Notification</string>
     <string name="get_notification_firebase">Get Notification FireBase</string>
@@ -112,6 +112,7 @@
     <string name="notAvailable">Not yet available</string>
     <string name="error_load_news">Data loading error</string>
     <string name="error_load_default">Something went wrong, please try again later.</string>
-    <string name="errorCountryNotSelected">Сountry not selected</string>
+    <string name="errorCountryNotSelected">Country not selected</string>
     <string name="historyCanNotBeCleared">History can not be cleared</string>
+    <string name="categories_order">Categories order</string>
 </resources>

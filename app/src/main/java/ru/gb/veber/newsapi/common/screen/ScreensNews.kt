@@ -1,22 +1,20 @@
 package ru.gb.veber.newsapi.common.screen
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.presentation.account.AccountFragment
+import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerFragment
+import ru.gb.veber.newsapi.presentation.profile.ProfileFragment
+import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountFragment
+import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.CustomizeCategoryFragment
+import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment
+import ru.gb.veber.newsapi.presentation.search.SearchFragment
+import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
+import ru.gb.veber.newsapi.presentation.sources.FragmentSources
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerFragment
-import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerFragment
-import ru.gb.veber.newsapi.view.profile.ProfileFragment
-import ru.gb.veber.newsapi.view.profile.account.AccountFragment
-import ru.gb.veber.newsapi.view.profile.account.settings.CustomizeCategoryFragment
-import ru.gb.veber.newsapi.view.profile.account.settings.EditAccountFragment
-import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment
-import ru.gb.veber.newsapi.view.search.SearchFragment
-import ru.gb.veber.newsapi.view.search.searchnews.SearchNewsFragment
-import ru.gb.veber.newsapi.view.sources.FragmentSources
-import ru.gb.veber.newsapi.view.webview.WebViewFragment
+import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
 
 data class ProfileScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
@@ -77,15 +75,13 @@ data class WebViewScreen(private val url: String) : FragmentScreen {
 
 data class EditAccountScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return EditAccountFragment.getInstance(Bundle().apply {
-            putInt(ACCOUNT_ID, accountId)
-        })
+        return EditAccountFragment.getInstance(accountId)
     }
 }
 
 data class CustomizeCategoryScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return CustomizeCategoryFragment.getInstance()
+        return CustomizeCategoryFragment.getInstance(accountId)
     }
 }
 

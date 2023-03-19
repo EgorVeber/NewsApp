@@ -126,4 +126,13 @@
         <item>Published Date</item>
         <item>Popularity</item>
     </string-array>
+    <string-array name="newsCategory">
+        <item>General</item>
+        <item>Business</item>
+        <item>Entertainment</item>
+        <item>Health</item>
+        <item>Science</item>
+        <item>Sports</item>
+        <item>Technology</item>
+    </string-array>
 </resources>

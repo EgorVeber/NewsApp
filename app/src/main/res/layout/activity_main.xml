@@ -30,6 +30,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context=".view.activity.ActivityMain" />
+        tools:context=".presentation.activity.ActivityMain" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

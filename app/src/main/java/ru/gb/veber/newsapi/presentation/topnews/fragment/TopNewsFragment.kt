@@ -31,12 +31,12 @@ import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.presentation.activity.EventAddingBadges
+import ru.gb.veber.newsapi.presentation.activity.EventShareLink
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
-import ru.gb.veber.newsapi.view.activity.EventAddingBadges
-import ru.gb.veber.newsapi.view.activity.EventShareLink
 
 
 class TopNewsFragment :

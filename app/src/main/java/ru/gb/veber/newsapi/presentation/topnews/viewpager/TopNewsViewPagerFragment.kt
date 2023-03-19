@@ -12,6 +12,7 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsViewPagerFragmentBinding
+import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.BUSINESS
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.ENTERTAINMENT
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.GENERAL
@@ -19,7 +20,6 @@ import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapte
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SCIENCE
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SPORTS
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.TECHNOLOGY
-import ru.gb.veber.newsapi.view.activity.BackPressedListener
 import javax.inject.Inject
 
 class TopNewsViewPagerFragment : Fragment(),

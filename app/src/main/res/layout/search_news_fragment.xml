@@ -38,7 +38,7 @@
         android:textColor="@color/color_black"
         android:textSize="@dimen/text_size_title_search_view"
         android:textStyle="bold"
-        app:layout_behavior=".view.search.searchnews.BehaviorTitleSearch" />
+        app:layout_behavior=".presentation.searchnews.BehaviorTitleSearch" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allNewsRecycler"
@@ -48,7 +48,7 @@
         android:layout_marginBottom="@dimen/margin_10"
         android:padding="@dimen/padding_5"
         android:paddingBottom="?actionBarSize"
-        app:layout_behavior=".view.search.searchnews.BehaviorRecycler" />
+        app:layout_behavior=".presentation.searchnews.BehaviorRecycler" />
 
     <include
         android:id="@+id/behaviorInclude"
