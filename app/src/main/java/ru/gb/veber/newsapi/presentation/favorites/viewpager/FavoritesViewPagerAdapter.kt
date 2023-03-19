@@ -1,9 +1,9 @@
-package ru.gb.veber.newsapi.view.favorites.viewpager
+package ru.gb.veber.newsapi.presentation.favorites.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import ru.gb.veber.newsapi.view.favorites.FavoritesFragment
+import ru.gb.veber.newsapi.presentation.favorites.FavoritesFragment
 
 
 class FavoritesViewPagerAdapter(fragmentManager: FragmentActivity, private val accountID: Int) :

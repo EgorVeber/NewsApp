@@ -27,11 +27,11 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.presentation.activity.EventAddingBadges
+import ru.gb.veber.newsapi.presentation.activity.EventShareLink
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
-import ru.gb.veber.newsapi.presentation.activity.EventAddingBadges
-import ru.gb.veber.newsapi.presentation.activity.EventShareLink
 
 class SearchNewsFragment :
     NewsFragment<SearchNewsFragmentBinding, SearchNewsViewModel>(SearchNewsFragmentBinding::inflate),

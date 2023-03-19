@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.favorites.viewpager
+package ru.gb.veber.newsapi.presentation.favorites.viewpager
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,8 +13,8 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavoritesViewPagerFragmentBinding
 import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
-import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES_POSITION
-import ru.gb.veber.newsapi.view.favorites.viewpager.FavoritesViewPagerAdapter.Companion.HISTORY_POSITION
+import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES_POSITION
+import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter.Companion.HISTORY_POSITION
 import javax.inject.Inject
 
 class FavoritesViewPagerFragment : Fragment(),

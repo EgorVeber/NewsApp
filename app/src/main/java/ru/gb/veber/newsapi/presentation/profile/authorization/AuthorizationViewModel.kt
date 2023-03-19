@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.profile.authorization
+package ru.gb.veber.newsapi.presentation.profile.authorization
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -7,12 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import java.util.Date
 import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
 import ru.gb.veber.newsapi.common.extentions.LOGIN_PATTERN
 import ru.gb.veber.newsapi.common.extentions.PASSWORD_PATTERN
@@ -27,6 +23,7 @@ import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
 import ru.gb.veber.newsapi.domain.models.Account
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
+import java.util.*
 import javax.inject.Inject
 
 class AuthorizationViewModel @Inject constructor(

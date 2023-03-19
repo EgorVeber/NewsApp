@@ -1,7 +1,6 @@
-package ru.gb.veber.newsapi.view.profile.account.settings.customize.helper
+package ru.gb.veber.newsapi.presentation.profile.account.settings.customize.helper
 
 import android.graphics.Canvas
-import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.abs

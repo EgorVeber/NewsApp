@@ -8,7 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.*
+import ru.gb.veber.newsapi.common.screen.FavoritesViewPagerScreen
+import ru.gb.veber.newsapi.common.screen.ProfileScreen
+import ru.gb.veber.newsapi.common.screen.SearchScreen
+import ru.gb.veber.newsapi.common.screen.SourcesScreen
+import ru.gb.veber.newsapi.common.screen.TopNewsViewPagerScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.common.utils.ERROR_DB

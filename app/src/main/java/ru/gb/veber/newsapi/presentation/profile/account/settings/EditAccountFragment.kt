@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.profile.account.settings
+package ru.gb.veber.newsapi.presentation.profile.account.settings
 
 import android.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
@@ -16,10 +16,9 @@ import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
 import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
-import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
-import ru.gb.veber.newsapi.view.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
+import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
+import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
 
 class EditAccountFragment : NewsFragment<EditAccountFragmentBinding, EditAccountViewModel>(EditAccountFragmentBinding::inflate) {
 

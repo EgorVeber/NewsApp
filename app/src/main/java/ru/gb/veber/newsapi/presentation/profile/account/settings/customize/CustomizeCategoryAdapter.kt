@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.view.profile.account.settings.customize
+package ru.gb.veber.newsapi.presentation.profile.account.settings.customize
 
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -6,10 +6,9 @@ import android.view.ViewGroup
 import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.CustomizeCategoryItemTaskBinding
-import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.EventDraw
-import ru.gb.veber.newsapi.view.profile.account.settings.customize.helper.ItemTouchHelperAdapter
-import java.util.Collections
-import kotlin.collections.ArrayList
+import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.helper.EventDraw
+import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.helper.ItemTouchHelperAdapter
+import java.util.*
 
 class CustomizeCategoryAdapter(private val listener: EventDraw) :
     RecyclerView.Adapter<CustomizeCategoryAdapter.ItemViewHolder>(), ItemTouchHelperAdapter {
