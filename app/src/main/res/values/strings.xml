@@ -115,4 +115,9 @@
     <string name="errorCountryNotSelected">Country not selected</string>
     <string name="historyCanNotBeCleared">History can not be cleared</string>
     <string name="categories_order">Categories order</string>
+    <string name="add_key">Add Key</string>
+    <string name="get_key">Go to site</string>
+    <string name="empty_keys">No active keys</string>
+    <string name="input_key">Enter key</string>
+    <string name="keys_management">Keys management</string>
 </resources>

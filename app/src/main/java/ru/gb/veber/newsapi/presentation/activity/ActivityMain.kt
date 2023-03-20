@@ -21,6 +21,7 @@ import ru.gb.veber.newsapi.common.utils.DELAY_BACK_STACK
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
+import ru.gb.veber.newsapi.presentation.keymanagement.KeysManagementFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
@@ -100,7 +101,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
             }
         }
 
-        if (supportFragmentManager.fragments.last() !is SearchNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
+        if (supportFragmentManager.fragments.lastOrNull() !is KeysManagementFragment && supportFragmentManager.fragments.last() !is SearchNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
             supportFragmentManager.fragments.last() !is EditAccountFragment && supportFragmentManager.fragments.last() !is CustomizeCategoryFragment
         ) {
             binding.bottomNavigationView.selectedItemId = R.id.topNews

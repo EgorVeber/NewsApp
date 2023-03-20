@@ -93,5 +93,27 @@
     <dimen name="elevation">2dp</dimen>
     <dimen name="recyclerView_marginTop">8dp</dimen>
 
+    <dimen name="size_2">2dp</dimen>
+    <dimen name="size_3">3dp</dimen>
+    <dimen name="size_4">4dp</dimen>
+    <dimen name="size_6">6dp</dimen>
+    <dimen name="size_10">10dp</dimen>
+    <dimen name="size_20">20dp</dimen>
+    <dimen name="size_30">30dp</dimen>
+    <dimen name="size_56">56dp</dimen>
 
+    <dimen name="margin_4">4dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_15">15dp</dimen>
+    <dimen name="margin_22">22dp</dimen>
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_30">30dp</dimen>
+
+
+    <dimen name="space_5">5dp</dimen>
+    <dimen name="space_15">15dp</dimen>
+
+    <dimen name="span_16">16sp</dimen>
+    <dimen name="span_24">24sp</dimen>
+    <dimen name="corner_radius">10dp</dimen>
 </resources>

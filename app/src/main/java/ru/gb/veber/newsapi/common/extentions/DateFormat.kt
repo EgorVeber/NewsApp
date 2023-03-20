@@ -11,6 +11,7 @@ const val FORMAT_DATE = "yyyy-MM-dd"
 const val FORMAT_DATE_NEWS = "dd.MM.yyyy"
 const val FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm"
 const val FORMAT_DATE_DAY = "dd MMMM yyyy, HH:mm"
+const val FORMAT_KEYS = "dd-MM-yy HH:mm"
 const val TIME_ZONE = "UTC"
 
 //EXAMPLE ERROR
@@ -30,6 +31,7 @@ fun takeDate(count: Int): Date {
     return currentDate.time
 }
 
+fun Date.formatKeys(): String = SimpleDateFormat(FORMAT_KEYS, Locale.getDefault()).format(this)
 fun Date.formatHour(): String = SimpleDateFormat(FORMAT_HOUR, Locale.getDefault()).format(this)
 fun Date.formatDate(): String = SimpleDateFormat(FORMAT_DATE, Locale.getDefault()).format(this)
 fun Date.formatDateTime(): String =
@@ -54,6 +56,14 @@ fun stringFromDataNews(dateString: String) =
 fun String.checkLogin(): String {
     return if (this.length >= 7) {
         this.substring(0, 7)
+    } else {
+        this
+    }
+}
+
+fun String.subKey(): String {
+    return if (this.length >= 10) {
+        this.substring(0, 10)+"..."
     } else {
         this
     }
