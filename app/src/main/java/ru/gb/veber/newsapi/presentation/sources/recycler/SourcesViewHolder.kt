@@ -23,6 +23,7 @@ class SourcesViewHolder(
         country.text = item.country
         totalFavorites.text = item.totalFavorites.toString()
         totalHistory.text = item.totalHistory.toString()
+        groupAbout.visibility = View.GONE
 
         root.setOnClickListener {
             groupAbout.visibility = if (groupAbout.visibility == View.VISIBLE) View.GONE
