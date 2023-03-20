@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.presentation.sources.recycler
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.databinding.SourcesItemBinding
@@ -23,6 +24,10 @@ class SourcesViewHolder(
         totalFavorites.text = item.totalFavorites.toString()
         totalHistory.text = item.totalHistory.toString()
 
+        root.setOnClickListener {
+            groupAbout.visibility = if (groupAbout.visibility == View.VISIBLE) View.GONE
+            else View.VISIBLE
+        }
 
         openNewsSources.setOnClickListener {
             listener.newsClick(item.idSources, item.name)
@@ -32,7 +37,7 @@ class SourcesViewHolder(
             listener.openUrl(item.url)
         }
 
-        imageFavorites.setOnClickListener {
+        clickFavorites.setOnClickListener {
             listener.imageClick(item)
         }
     }

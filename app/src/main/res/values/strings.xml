@@ -10,6 +10,7 @@
     <string name="total_history">Total History:\u0020</string>
     <string name="total_favorites">Total Favorites:\u0020</string>
     <string name="total_sources">Total Sources:\u0020</string>
+    <string name="favorites">Favorites:\u0020</string>
 
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
