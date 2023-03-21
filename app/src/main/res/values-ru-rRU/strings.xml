@@ -114,4 +114,9 @@
     <string name="errorCountryNotSelected">Страна не выбрана</string>
     <string name="historyCanNotBeCleared">Очистить историю невозможно</string>
     <string name="categories_order">Порядок категорий</string>
+    <string name="add_key">Добавить ключ</string>
+    <string name="get_key">Перейти на сайт</string>
+    <string name="empty_keys">Нет активных ключей</string>
+    <string name="input_key">Введите ключ</string>
+    <string name="keys_management">Управление ключами</string>
 </resources>

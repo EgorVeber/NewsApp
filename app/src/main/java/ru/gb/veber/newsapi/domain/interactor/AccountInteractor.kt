@@ -1,5 +1,8 @@
 package ru.gb.veber.newsapi.domain.interactor
 
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.common.utils.API_KEY_EMPTY
 import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
@@ -62,12 +65,9 @@ class AccountInteractor
         return sharedPreferenceAccount.getThemePrefs()
     }
 
-    fun setAccountID(id: Int) {
-        return sharedPreferenceAccount.setAccountID(id)
+    fun accountLogout(){
+        sharedPreferenceAccount.setAccountID(ACCOUNT_ID_DEFAULT)
+        sharedPreferenceAccount.setAccountLogin(ACCOUNT_LOGIN_DEFAULT)
+        sharedPreferenceAccount.setActiveKey(API_KEY_EMPTY)
     }
-
-    fun setAccountLogin(login: String) {
-        return sharedPreferenceAccount.setAccountLogin(login)
-    }
-
 }

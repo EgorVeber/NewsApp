@@ -11,6 +11,7 @@ import ru.gb.veber.newsapi.presentation.account.AccountViewModel
 import ru.gb.veber.newsapi.presentation.activity.ActivityMainViewModel
 import ru.gb.veber.newsapi.presentation.favorites.FavoritesViewModel
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerViewModel
+import ru.gb.veber.newsapi.presentation.keymanagement.KeysManagementViewModel
 import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountViewModel
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.CustomizeCategoryViewModel
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationViewModel
@@ -92,5 +93,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CustomizeCategoryViewModel::class)
     internal abstract fun bindCustomizeCategoryViewModel(viewModel: CustomizeCategoryViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(KeysManagementViewModel::class)
+    internal abstract fun bindKeyManagementViewModel(viewModel: KeysManagementViewModel): ViewModel
 }
 

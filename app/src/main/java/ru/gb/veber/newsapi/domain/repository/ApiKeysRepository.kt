@@ -8,4 +8,6 @@ interface ApiKeysRepository {
     suspend fun deleteApiKeys(apiKeysModel: ApiKeysModel)
     suspend fun getApiKeys(accountId: Int): List<ApiKeysModel>
     suspend fun getActiveApiKeys(accountId: Int): ApiKeysModel
+    suspend fun activateApiKeysByKeyId(keyId: Int)
+    suspend fun deactivateApiKeysById(accountId: Int)
 }
