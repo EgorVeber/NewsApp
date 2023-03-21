@@ -6,6 +6,7 @@ import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.common.screen.AccountScreen
 import ru.gb.veber.newsapi.common.screen.AuthorizationScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import javax.inject.Inject
@@ -15,14 +16,14 @@ class ProfileFragment : Fragment() {
     @Inject
     lateinit var router: Router
 
-    private var accountId by BundleInt(ACCOUNT_ID,0)
+    private var accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         App.instance.appComponent.inject(this)
 
-        if (accountId != 0) {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
             router.replaceScreen(AccountScreen(accountId))
         } else {
             router.replaceScreen(AuthorizationScreen)
