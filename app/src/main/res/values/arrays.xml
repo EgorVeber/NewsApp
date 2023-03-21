@@ -135,4 +135,9 @@
         <item>Sports</item>
         <item>Technology</item>
     </string-array>
+    <string-array name="showType">
+        <item>Name Only</item>
+        <item>Briefly</item>
+        <item>Full</item>
+    </string-array>
 </resources>

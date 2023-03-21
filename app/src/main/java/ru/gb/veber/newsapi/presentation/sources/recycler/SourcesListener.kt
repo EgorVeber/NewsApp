@@ -6,4 +6,5 @@ interface SourcesListener {
     fun openUrl(url: String?)
     fun imageClick(source: Sources)
     fun newsClick(source: String?, name: String?)
+    fun focus(source: Sources, type: Int)
 }

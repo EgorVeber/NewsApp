@@ -42,6 +42,11 @@ const val KEY_THEME_DEFAULT = 1
 const val ALL_COUNTRY = "All Country"
 const val ALL_COUNTRY_VALUE = ""
 
+//FILTER Source
+const val FOCUS_NAME = 0
+const val FOCUS_BRIF = 1
+const val FOCUS_FULL = 1
+
 
 
 

@@ -27,7 +27,8 @@ class SourcesViewModel @Inject constructor(
     private val flow: LiveData<SourcesState> = mutableFlow
 
     private var allSources: MutableList<Sources> = mutableListOf()
-    private var likeSources: List<Sources> = mutableListOf()
+    private var focusedSources: MutableMap<String, Int> = mutableMapOf()
+    private var sourceFilter = ""
     private var accountId: Int = 0
 
     fun subscribe(accountId: Int): LiveData<SourcesState> {
@@ -41,7 +42,7 @@ class SourcesViewModel @Inject constructor(
             viewModelScope.launchJob(tryBlock = {
                 val listSources = sourceInteractor.getSourcesV2()
                 allSources = listSources
-                mutableFlow.postValue(SourcesState.SetSources(listSources))
+                sendSources(listSources)
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
@@ -54,7 +55,7 @@ class SourcesViewModel @Inject constructor(
                 like.map { sources ->
                     sources.liked = true
                 }
-                likeSources = like
+                //likeSources = like
 
                 for (j in like.size - 1 downTo 0) {
                     for (i in all.indices) {
@@ -72,8 +73,8 @@ class SourcesViewModel @Inject constructor(
                         }
                     }
                 }
-
-                mutableFlow.postValue(SourcesState.SetSources(all))
+                sendSources(all)
+                //mutableFlow.postValue(SourcesState.SetSources(all))
 
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
@@ -127,6 +128,38 @@ class SourcesViewModel @Inject constructor(
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
+    }
+    fun setFilter(filter: String) {
+        sourceFilter = if (spaceTest(filter)) ""
+        else filter
+        sendSources(allSources)
+    }
+
+    private fun spaceTest(text: String): Boolean {
+        val result = text.trim()
+        return result.isEmpty()
+    }
+
+    private fun filtered(list: List<Sources>):  List<Sources>{
+        return if (sourceFilter == "") list
+        else (list.filter { it.name?.contains(sourceFilter, ignoreCase = true) ?: false }) +
+                (list.filter { it.country?.contains(sourceFilter, ignoreCase = true) ?: false  })
+    }
+
+    fun focusOne(source: Sources, type: Int) {
+        focusedSources[source.idSources!!]=type
+    }
+
+    fun focusAll(type: Int) {
+        allSources.forEach { sources ->
+            focusOne(sources,type)
+        }
+        sendSources(allSources)
+    }
+
+    private fun sendSources(list: List<Sources>) {
+        val result = list.map { if (focusedSources[it.idSources] != null) it.copy(focusType = focusedSources[it.idSources]!!) else it }
+        mutableFlow.postValue(SourcesState.SetSources(filtered(result)))
     }
 
     override fun onBackPressedRouter(): Boolean {
