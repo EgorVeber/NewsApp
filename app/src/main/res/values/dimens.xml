@@ -100,6 +100,7 @@
     <dimen name="size_10">10dp</dimen>
     <dimen name="size_20">20dp</dimen>
     <dimen name="size_30">30dp</dimen>
+    <dimen name="size_36">36dp</dimen>
     <dimen name="size_56">56dp</dimen>
 
     <dimen name="margin_4">4dp</dimen>
@@ -116,4 +117,5 @@
     <dimen name="span_16">16sp</dimen>
     <dimen name="span_24">24sp</dimen>
     <dimen name="corner_radius">10dp</dimen>
+    <dimen name="corner_radius_16">16dp</dimen>
 </resources>

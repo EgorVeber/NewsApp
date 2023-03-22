@@ -16,7 +16,7 @@ import ru.gb.veber.newsapi.common.extentions.hide
 import ru.gb.veber.newsapi.common.extentions.loadGlideNot
 import ru.gb.veber.newsapi.common.extentions.observeFlow
 import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showSnackBarError
+import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.extentions.stringFromData
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
@@ -214,7 +214,7 @@ class SearchNewsFragment :
     }
 
     private fun successSaveSources() {
-        binding.root.showSnackBarError(getString(R.string.sourcesSaved), "", {})
+        this.showSnackBar(getString(R.string.sourcesSaved))
     }
 
     private fun setSpan(description: String) {

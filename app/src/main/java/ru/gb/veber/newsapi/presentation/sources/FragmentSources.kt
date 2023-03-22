@@ -7,6 +7,8 @@ import android.widget.AdapterView
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
+import ru.gb.veber.newsapi.common.extentions.observeFlow
+import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.extentions.showText
 import ru.gb.veber.newsapi.common.utils.*
 import ru.gb.veber.newsapi.core.App
@@ -54,10 +56,10 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
                 is SourcesViewModel.SourcesState.SetSources -> {
                     setSources(state.list)
                 }
-                SourcesViewModel.SourcesState.ShowToastLogIn -> {
-                    setLogin()
-                }
             }
+        }
+        viewModel.showMessageFlow.observeFlow(this){
+            setLogin()
         }
     }
 
@@ -88,7 +90,7 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
     }
 
     private fun setLogin() {
-        binding.root.showText(getString(R.string.loginAddToFavorites))
+        this.showSnackBar(getString(R.string.not_connection))
     }
 
     companion object {
