@@ -3,12 +3,12 @@ package ru.gb.veber.newsapi.presentation.profile.authorization
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
 import ru.gb.veber.newsapi.common.extentions.LOGIN_PATTERN
 import ru.gb.veber.newsapi.common.extentions.PASSWORD_PATTERN
@@ -18,23 +18,18 @@ import ru.gb.veber.newsapi.common.screen.AccountScreen
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
 import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
 import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
-import ru.gb.veber.newsapi.common.utils.API_KEY
 import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
+import ru.gb.veber.newsapi.domain.interactor.AuthorizationInteractor
 import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.domain.repository.AccountRepo
-import ru.gb.veber.newsapi.domain.repository.ApiKeysRepository
 import java.util.*
 import javax.inject.Inject
 
 class AuthorizationViewModel @Inject constructor(
     private val router: Router,
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
-    private val accountRepoImpl: AccountRepo,
-    private val apiKeysRepository: ApiKeysRepository,
-) : ViewModel() {
+    private val authorizationInteractor: AuthorizationInteractor
+) : NewsViewModel() {
 
     private val mutableFlow: MutableLiveData<AuthorizationViewState> = MutableLiveData()
     private val flow: LiveData<AuthorizationViewState> = mutableFlow
@@ -49,7 +44,7 @@ class AuthorizationViewModel @Inject constructor(
         return flow
     }
 
-    fun onBackPressedRouter(): Boolean {
+   override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
@@ -68,10 +63,10 @@ class AuthorizationViewModel @Inject constructor(
                 myCountry = ALL_COUNTRY,
                 countryCode = ALL_COUNTRY_VALUE
             )
-            accountRepoImpl.createAccountV2(accountDbEntity)
-            val account = accountRepoImpl.getAccountByUserNameV2(username)
+            authorizationInteractor.createAccountV2(accountDbEntity)
+            val account = authorizationInteractor.getAccountByUserNameV2(username)
             saveIdSharedPref(account)
-            sharedPreferenceAccount.setActiveKey(API_KEY_NEWS)//TODO убрать говнише
+            authorizationInteractor.setActiveKey(API_KEY_NEWS)//TODO убрать говнише
             logInState.emit(Pair(true, account.id))
 
         }, catchBlock = { error ->
@@ -82,12 +77,12 @@ class AuthorizationViewModel @Inject constructor(
 
     fun checkSignIn(userLogin: String, userPassword: String) {
         viewModelScope.launchJob(tryBlock = {
-            val account = accountRepoImpl.getAccountByUserNameV2(userLogin)
+            val account = authorizationInteractor.getAccountByUserNameV2(userLogin)
             if (account.password.contains(userPassword)) {
-                val apikeyModel = apiKeysRepository.getApiKeys(account.id).sortedBy { !it.actived }
+                val apikeyModel = authorizationInteractor.getApiKeys(account.id).sortedBy { !it.actived }
                 if (apikeyModel.isNotEmpty()) {
                     val apiKey = apikeyModel[0]
-                    if (apiKey.actived) sharedPreferenceAccount.setActiveKey(apikeyModel[0].keyApi)//TODO убрать говнише
+                    if (apiKey.actived) authorizationInteractor.setActiveKey(apikeyModel[0].keyApi)//TODO убрать говнише
                 }
                 signInState.emit(account.id)
                 saveIdSharedPref(account)
@@ -101,8 +96,8 @@ class AuthorizationViewModel @Inject constructor(
     }
 
     private fun saveIdSharedPref(account: Account) {
-        sharedPreferenceAccount.setAccountID(account.id)
-        sharedPreferenceAccount.setAccountLogin(account.userName.checkLogin())
+        authorizationInteractor.setAccountID(account.id)
+        authorizationInteractor.setAccountLogin(account.userName.checkLogin())
         mutableFlow.postValue(AuthorizationViewState.SetBottomNavigationIcon(account.userName.checkLogin())
         )
     }
