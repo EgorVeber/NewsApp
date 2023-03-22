@@ -55,7 +55,6 @@ class SourcesViewModel @Inject constructor(
                 like.map { sources ->
                     sources.liked = true
                 }
-                //likeSources = like
 
                 for (j in like.size - 1 downTo 0) {
                     for (i in all.indices) {
@@ -74,8 +73,6 @@ class SourcesViewModel @Inject constructor(
                     }
                 }
                 sendSources(all)
-                //mutableFlow.postValue(SourcesState.SetSources(all))
-
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
@@ -120,8 +117,7 @@ class SourcesViewModel @Inject constructor(
     }
 
     fun openAllNews(source: String?, name: String?) {
-        val history =
-            HistorySelect(0, accountID = accountId, sourcesId = source, sourcesName = name)
+        val history = HistorySelect(0, accountID = accountId, sourcesId = source, sourcesName = name)
         router.navigateTo(SearchNewsScreen(accountId = accountId, historySelect = history))
         viewModelScope.launchJob(tryBlock = {
             sourceInteractor.insertSelectV2(historyDbEntity = history.toHistorySelectDbEntity())
@@ -142,8 +138,8 @@ class SourcesViewModel @Inject constructor(
 
     private fun filtered(list: List<Sources>):  List<Sources>{
         return if (sourceFilter == "") list
-        else (list.filter { it.name?.contains(sourceFilter, ignoreCase = true) ?: false }) +
-                (list.filter { it.country?.contains(sourceFilter, ignoreCase = true) ?: false  })
+        else ((list.filter { it.name?.contains(sourceFilter, ignoreCase = true) ?: false }) +
+                (list.filter { it.country?.contains(sourceFilter, ignoreCase = true) ?: false })).toSet().toList()
     }
 
     fun focusOne(source: Sources, type: Int) {

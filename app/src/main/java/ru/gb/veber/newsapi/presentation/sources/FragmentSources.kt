@@ -67,7 +67,7 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
         binding.recyclerSources.adapter = sourcesAdapter
         binding.recyclerSources.itemAnimator = null
         binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())
-        binding.spinnerShowBy.setSelection(FOCUS_BRIF)
+        binding.spinnerShowBy.setSelection(FOCUS_BRIF, false)
         binding.spinnerShowBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {}
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
