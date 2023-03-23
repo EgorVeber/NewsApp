@@ -8,11 +8,11 @@ fun ApiKeysModel.toApiKeysEntity() =
         id = id,
         accountID = accountId,
         keyApi = keyApi,
-        actived = actived,
+        actived = if (actived) 1 else 0,
         firstRequest = firstRequest,
         lastRequest = lastRequest,
-        countRequest = countRequest,
-        countMax = countMax
+        countRequest = countRequest.toInt(),
+        countMax = countMax.toInt()
     )
 
 fun ApiKeysDbEntity.toApiKeysModel() =
@@ -20,9 +20,9 @@ fun ApiKeysDbEntity.toApiKeysModel() =
         id = id,
         accountId = accountID,
         keyApi = keyApi,
-        actived = actived,
+        actived = actived == 1,
         firstRequest = firstRequest,
         lastRequest = lastRequest,
-        countRequest = countRequest,
-        countMax = countMax
+        countRequest = countRequest.toString(),
+        countMax = countMax.toString()
     )

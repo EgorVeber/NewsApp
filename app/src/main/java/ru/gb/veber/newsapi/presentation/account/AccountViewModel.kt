@@ -10,6 +10,7 @@ import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.AuthorizationScreen
 import ru.gb.veber.newsapi.common.screen.CustomizeCategoryScreen
 import ru.gb.veber.newsapi.common.screen.EditAccountScreen
+import ru.gb.veber.newsapi.common.screen.KeyManagementScreen
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
@@ -74,8 +75,7 @@ class AccountViewModel @Inject constructor(
 
     fun logout() {
         router.replaceScreen(AuthorizationScreen)
-        accountInteractor.setAccountID(ACCOUNT_ID_DEFAULT)
-        accountInteractor.setAccountLogin(ACCOUNT_LOGIN_DEFAULT)
+        accountInteractor.accountLogout()
     }
 
     fun openScreenEditAccount() {
@@ -179,6 +179,11 @@ class AccountViewModel @Inject constructor(
     fun openScreenWebView(string: String) {
         router.navigateTo(WebViewScreen(string))
     }
+
+    fun openScrenKeysManagement(accountId: Int) {
+        router.navigateTo(KeyManagementScreen(accountId))
+    }
+
     sealed class AccountViewState {
         object Loading : AccountViewState()
         data class SetAccountInfo(val account: Account, val theme: Int) : AccountViewState()

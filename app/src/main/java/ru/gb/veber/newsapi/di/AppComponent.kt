@@ -12,6 +12,7 @@ import ru.gb.veber.newsapi.presentation.account.AccountFragment
 import ru.gb.veber.newsapi.presentation.activity.ActivityMain
 import ru.gb.veber.newsapi.presentation.favorites.FavoritesFragment
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerFragment
+import ru.gb.veber.newsapi.presentation.keymanagement.KeysManagementFragment
 import ru.gb.veber.newsapi.presentation.profile.ProfileFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.CustomizeCategoryFragment
@@ -50,4 +51,5 @@ interface AppComponent {
     fun inject(authorizationFragment: AuthorizationFragment)
     fun inject(topNewsViewPagerFragment:TopNewsViewPagerFragment)
     fun inject(customizeCategoryFragment: CustomizeCategoryFragment)
+    fun inject(keysManagementFragment: KeysManagementFragment)
 }

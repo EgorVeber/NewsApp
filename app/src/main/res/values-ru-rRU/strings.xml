@@ -116,4 +116,9 @@
     <string name="categories_order">Порядок категорий</string>
     <string name="show_by_helper">Режим отображения:</string>
     <string name="filter">Фильтр</string>
+    <string name="add_key">Добавить ключ</string>
+    <string name="get_key">Перейти на сайт</string>
+    <string name="empty_keys">Нет активных ключей</string>
+    <string name="input_key">Введите ключ</string>
+    <string name="keys_management">Управление ключами</string>
 </resources>

@@ -93,7 +93,9 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
         binding.aboutInformation.setOnClickListener { it.showText(getString(R.string.notAvailable)) }
         binding.privacyPolicy.setOnClickListener { viewModel.openScreenWebView(getString(R.string.team_site)) }
         binding.supportLinear.setOnClickListener { it.showText(getString(R.string.notAvailable)) }
-
+        binding.keysManagementLl.setOnClickListener {
+            viewModel.openScrenKeysManagement(accountId)
+        }
     }
 
     override fun onObserveData() {

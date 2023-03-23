@@ -23,7 +23,7 @@ data class ApiKeysDbEntity(
     @ColumnInfo(name = "key_api")
     var keyApi: String,
     @ColumnInfo(name = "actived")
-    var actived: Boolean,
+    var actived: Int,
     @ColumnInfo(name = "first_request")
     var firstRequest: String,
     @ColumnInfo(name = "last_request")

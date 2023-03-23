@@ -27,4 +27,12 @@ class ApiKeysRepositoryImpl(private val apiKeysDao: ApiKeysDao) : ApiKeysReposit
     override suspend fun getActiveApiKeys(accountId: Int): ApiKeysModel {
         return apiKeysDao.getActiveApiKeys(accountId).toApiKeysModel()
     }
+
+    override suspend fun activateApiKeysByKeyId(keyId: Int) {
+        apiKeysDao.activateApiKeysById(keyId)
+    }
+
+    override suspend fun deactivateApiKeysById(accountId: Int) {
+        apiKeysDao.deactivateApiKeysById(accountId)
+    }
 }
