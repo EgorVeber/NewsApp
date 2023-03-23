@@ -26,7 +26,6 @@ import ru.gb.veber.newsapi.presentation.activity.OpenScreen
 class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, AuthorizationViewModel>(
     AuthorizationFragmentBinding::inflate
 ) {
-
     private val constraintSetLogin = ConstraintSet()
     private val changeBounds = ChangeBounds().apply {
         duration = DURATION_REGISTER
@@ -39,6 +38,13 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     private var userRegisterPassword: String = ""
     private var userEmail: String = ""
 
+    override fun getViewModelClass(): Class<AuthorizationViewModel> {
+        return AuthorizationViewModel::class.java
+    }
+
+    override fun onInject() {
+        App.instance.appComponent.inject(this)
+    }
 
     override fun onInitView() {
 
@@ -430,13 +436,5 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
         fun getInstance(): AuthorizationFragment {
             return AuthorizationFragment()
         }
-    }
-
-    override fun getViewModelClass(): Class<AuthorizationViewModel> {
-        return AuthorizationViewModel::class.java
-    }
-
-    override fun onInject() {
-        App.instance.appComponent.inject(this)
     }
 }
