@@ -121,4 +121,5 @@
     <string name="empty_keys">Нет активных ключей</string>
     <string name="input_key">Введите ключ</string>
     <string name="keys_management">Управление ключами</string>
+    <string name="not_connection">Интернет соединение отсутствует. Включите интернет и при необходимости перезагрузите приложение.</string>
 </resources>

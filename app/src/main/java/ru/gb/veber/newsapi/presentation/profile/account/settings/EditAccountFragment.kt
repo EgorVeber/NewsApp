@@ -9,7 +9,7 @@ import ru.gb.veber.newsapi.common.extentions.LOGIN_STR
 import ru.gb.veber.newsapi.common.extentions.PASSWORD_STR
 import ru.gb.veber.newsapi.common.extentions.hide
 import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showSnackBarError
+import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.BundleInt
@@ -20,7 +20,8 @@ import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
 
-class EditAccountFragment : NewsFragment<EditAccountFragmentBinding, EditAccountViewModel>(EditAccountFragmentBinding::inflate) {
+class EditAccountFragment :
+    NewsFragment<EditAccountFragmentBinding, EditAccountViewModel>(EditAccountFragmentBinding::inflate) {
 
     private var userLogin: String = ""
     private var userPassword: String = ""
@@ -138,7 +139,7 @@ class EditAccountFragment : NewsFragment<EditAccountFragmentBinding, EditAccount
 
     private fun errorLoadingAccount() {
         binding.constrainEditInformation.show()
-        binding.root.showSnackBarError(getString(R.string.errorLoadingAccount), "", {})
+        this.showSnackBar(getString(R.string.errorLoadingAccount))
     }
 
     private fun passwordIsValidate(text: CharSequence?) {
@@ -184,18 +185,18 @@ class EditAccountFragment : NewsFragment<EditAccountFragmentBinding, EditAccount
     }
 
     private fun successUpdateAccount(userLogin: String) {
-        binding.root.showSnackBarError(getString(R.string.dataUpdated), "", {})
+        this.showSnackBar(getString(R.string.dataUpdated))
         viewModel.arrowBack()
         (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetTitleCurrentAccount(
             userLogin)
     }
 
     private fun errorUpdateAccount() {
-        binding.root.showSnackBarError(getString(R.string.unique_email_username), "", {})
+        this.showSnackBar(getString(R.string.unique_email_username))
     }
 
     private fun noChangeAccount() {
-        binding.root.showSnackBarError(getString(R.string.noChangeAccount), "", {})
+        this.showSnackBar(getString(R.string.noChangeAccount))
     }
 
     companion object {

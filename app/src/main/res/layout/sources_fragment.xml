@@ -19,8 +19,8 @@
             android:hint="@string/filter"
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:layout_marginStart="@dimen/margin_20"
-            android:layout_marginEnd="@dimen/margin_20" />
+            android:layout_marginVertical="@dimen/margin_10"
+            android:layout_marginHorizontal="@dimen/margin_20" />
 
         <LinearLayout
             android:layout_width="match_parent"

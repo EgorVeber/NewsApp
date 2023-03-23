@@ -7,7 +7,7 @@ import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
 import ru.gb.veber.newsapi.common.extentions.hide
 import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showSnackBarError
+import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.extentions.showText
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
@@ -194,19 +194,19 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
     @SuppressLint("SetTextI18n")
     fun clearHistory() {
         binding.totalHistoryText.text = getString(R.string.total_history) + " 0"
-        binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearHistory), "", {})
+        this.showSnackBar(getString(R.string.clearHistory))
     }
 
     @SuppressLint("SetTextI18n")
     fun clearFavorites() {
         binding.totalFavoritesText.text = getString(R.string.total_favorites) + " 0"
-        binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearFavorites), "", {})
+        this.showSnackBar(getString(R.string.clearFavorites))
     }
 
     @SuppressLint("SetTextI18n")
     fun clearSources() {
         binding.totalSourcesText.text = getString(R.string.total_sources) + " 0"
-        binding.nestedScrollAccount.showSnackBarError(getString(R.string.clearSources), "", {})
+        this.showSnackBar(getString(R.string.clearSources))
     }
 
     companion object {

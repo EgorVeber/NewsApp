@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
+import kotlinx.coroutines.flow.asSharedFlow
 import ru.gb.veber.newsapi.common.base.NewsViewModel
+import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.SearchNewsScreen
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
@@ -25,6 +27,9 @@ class SourcesViewModel @Inject constructor(
 
     private val mutableFlow: MutableLiveData<SourcesState> = MutableLiveData()
     private val flow: LiveData<SourcesState> = mutableFlow
+
+    private val showMessageState = SingleSharedFlow<Boolean>()
+    val showMessageFlow = showMessageState.asSharedFlow()
 
     private var allSources: MutableList<Sources> = mutableListOf()
     private var focusedSources: MutableMap<String, Int> = mutableMapOf()
@@ -112,7 +117,7 @@ class SourcesViewModel @Inject constructor(
             }
 
         } else {
-            mutableFlow.postValue(SourcesState.ShowToastLogIn)
+            showMessageState.tryEmit(true)
         }
     }
 
@@ -169,6 +174,5 @@ class SourcesViewModel @Inject constructor(
 
     sealed class SourcesState {
         data class SetSources(val list: List<Sources>) : SourcesState()
-        object ShowToastLogIn : SourcesState()
     }
 }

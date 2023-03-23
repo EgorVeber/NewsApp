@@ -95,7 +95,7 @@
             android:id="@+id/helperTextTF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/favorites"
+            android:text="@string/total_favorites"
             android:layout_marginStart="@dimen/margin_2"
             android:textColor="@color/color_black"
             android:textSize="@dimen/text_size_help_text_sources"
