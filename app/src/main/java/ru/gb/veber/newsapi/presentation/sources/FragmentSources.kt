@@ -1,13 +1,16 @@
 package ru.gb.veber.newsapi.presentation.sources
 
 import android.transition.TransitionManager
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.AdapterView
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
+import ru.gb.veber.newsapi.common.extentions.observeFlow
+import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.extentions.showText
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
+import ru.gb.veber.newsapi.common.utils.*
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Sources
@@ -18,6 +21,7 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
     SourcesFragmentBinding::inflate) {
 
     private var accountId: Int by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var lastFocusSelected = FOCUS_DEFAULT
     override fun getViewModelClass(): Class<SourcesViewModel> = SourcesViewModel::class.java
 
     override fun onInject() {
@@ -38,6 +42,10 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
         override fun newsClick(source: String?, name: String?) {
             viewModel.openAllNews(source, name)
         }
+
+        override fun focus(source: Sources, type: Int) {
+            viewModel.focusOne(source,type)
+        }
     }
 
     private val sourcesAdapter = FragmentSourcesAdapter(listener)
@@ -48,10 +56,10 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
                 is SourcesViewModel.SourcesState.SetSources -> {
                     setSources(state.list)
                 }
-                SourcesViewModel.SourcesState.ShowToastLogIn -> {
-                    setLogin()
-                }
             }
+        }
+        viewModel.showMessageFlow.observeFlow(this){
+            setLogin()
         }
     }
 
@@ -59,6 +67,21 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
         binding.recyclerSources.adapter = sourcesAdapter
         binding.recyclerSources.itemAnimator = null
         binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())
+        binding.spinnerShowBy.setSelection(FOCUS_DEFAULT, false)
+        binding.spinnerShowBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (lastFocusSelected != position) {
+                    lastFocusSelected = position
+                    viewModel.focusAll(position)
+                }
+            }
+
+        }
+        binding.filter.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) viewModel.setFilter(binding.filter.text.toString())
+            false
+        }
     }
 
     private fun setSources(list: List<Sources>) {
@@ -67,7 +90,7 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
     }
 
     private fun setLogin() {
-        binding.root.showText(getString(R.string.loginAddToFavorites))
+        this.showSnackBar(getString(R.string.not_connection))
     }
 
     companion object {

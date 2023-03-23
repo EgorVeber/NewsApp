@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:background="@drawable/snackbar_shape"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginVertical="@dimen/margin_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageViewShackBar"
+            android:layout_width="@dimen/size_36"
+            android:layout_height="@dimen/size_36"
+            android:layout_marginHorizontal="@dimen/margin_10"
+            android:background="@drawable/ic_info" />
+
+        <TextView
+            android:id="@+id/textSnachBar"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:textStyle="bold"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
+            tools:text="Данные не менялиь"
+            />
+    </LinearLayout>
+</merge>

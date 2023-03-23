@@ -6,6 +6,44 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/filter"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:layout_marginVertical="@dimen/margin_10"
+            android:layout_marginHorizontal="@dimen/margin_20" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_help_text_sources"
+                android:text="@string/show_by_helper"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinnerShowBy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/showType" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerSources"
         android:layout_width="match_parent"

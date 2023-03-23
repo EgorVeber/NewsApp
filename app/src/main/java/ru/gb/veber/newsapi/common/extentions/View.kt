@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.common.extentions
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
@@ -17,15 +19,16 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.NewsSnackBar
 
-fun View.showSnackBarError(
-    text: String,
-    actionText: String,
-    action: (View) -> Unit,
-    length: Int = Snackbar.LENGTH_LONG,
-) {
-    Snackbar.make(this, text, length)
-        .setAction(actionText, action).show()
+
+fun Fragment.showSnackBar(text: String, length: Int? = Snackbar.LENGTH_LONG) {
+    NewsSnackBar.make(this.requireActivity().findViewById(android.R.id.content), text, length)
+        .show()
+}
+
+fun Activity.showSnackBar(text: String, length: Int? = Snackbar.LENGTH_LONG) {
+    NewsSnackBar.make(this.findViewById(android.R.id.content), text, length).show()
 }
 
 fun View.showText(string: String) {

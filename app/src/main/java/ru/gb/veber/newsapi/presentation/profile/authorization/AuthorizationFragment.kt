@@ -16,7 +16,7 @@ import ru.gb.veber.newsapi.common.extentions.EMAIL_STR
 import ru.gb.veber.newsapi.common.extentions.LOGIN_STR
 import ru.gb.veber.newsapi.common.extentions.PASSWORD_STR
 import ru.gb.veber.newsapi.common.extentions.observeFlow
-import ru.gb.veber.newsapi.common.extentions.showSnackBarError
+import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.utils.ColorUtils.getColor
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
@@ -213,7 +213,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     private fun errorRegister() {
         binding.userNameRegisterTextInput.error = getString(R.string.check_login)
         binding.emailRegisterTextInput.error = getString(R.string.check_email)
-        binding.root.showSnackBarError(getString(R.string.unique_email_username), "", {})
+        this.showSnackBar(getString(R.string.unique_email_username))
     }
 
     private fun successSignIn(id: Int) {
@@ -221,7 +221,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     }
 
     private fun successRegister(id: Int) {
-        binding.root.showSnackBarError(getString(R.string.create_account), "", {})
+        this.showSnackBar(getString(R.string.create_account))
         viewModel.openScreenProfile(id)
     }
 

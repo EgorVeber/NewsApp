@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.common.utils
 
 //API NEWS
-const val API_KEY_NEWS = "a4ee7882ba1141308c7a345418cd8124"
+const val API_KEY_NEWS = "640d42b4cab3433dbf94d90504e44276"
 const val API_KEY = "apiKey"
 const val PAGE_SIZE = "pageSize"
 const val PAGE_GET_KEY = "https://newsapi.org/register"
@@ -45,6 +45,11 @@ const val KEY_THEME_DEFAULT = 1
 //FILTER COUNTRY
 const val ALL_COUNTRY = "All Country"
 const val ALL_COUNTRY_VALUE = ""
+
+//FILTER Source
+const val FOCUS_NAME = 0
+const val FOCUS_BRIF = 1
+const val FOCUS_DEFAULT = 1
 
 
 
