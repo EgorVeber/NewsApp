@@ -36,4 +36,5 @@ object NetworkModule {
         val url = request.url.newBuilder().addQueryParameter(PAGE_SIZE, PAGE_SIZE_COUNT).build()
         chain.proceed(request.newBuilder().url(url).build())
     }.build()
+
 }
