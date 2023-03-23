@@ -70,4 +70,5 @@ class AccountInteractor
         sharedPreferenceAccount.setAccountLogin(ACCOUNT_LOGIN_DEFAULT)
         sharedPreferenceAccount.setActiveKey(API_KEY_EMPTY)
     }
+
 }

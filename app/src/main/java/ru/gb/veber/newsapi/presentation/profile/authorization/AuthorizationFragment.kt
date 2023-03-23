@@ -1,22 +1,17 @@
 package ru.gb.veber.newsapi.presentation.profile.authorization
 
-import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
 import ru.gb.veber.newsapi.R
+import ru.gb.veber.newsapi.common.base.NewsFragment
 import ru.gb.veber.newsapi.common.extentions.EMAIL_STR
 import ru.gb.veber.newsapi.common.extentions.LOGIN_STR
 import ru.gb.veber.newsapi.common.extentions.PASSWORD_STR
@@ -25,16 +20,12 @@ import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.utils.ColorUtils.getColor
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
-import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
 import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.presentation.activity.OpenScreen
-import javax.inject.Inject
 
-class AuthorizationFragment : Fragment(), BackPressedListener {
-
-    private var _binding: AuthorizationFragmentBinding? = null
-    private val binding get() = _binding!!
-
+class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, AuthorizationViewModel>(
+    AuthorizationFragmentBinding::inflate
+) {
     private val constraintSetLogin = ConstraintSet()
     private val changeBounds = ChangeBounds().apply {
         duration = DURATION_REGISTER
@@ -47,55 +38,31 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
     private var userRegisterPassword: String = ""
     private var userEmail: String = ""
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val authorizationViewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[AuthorizationViewModel::class.java]
+    override fun getViewModelClass(): Class<AuthorizationViewModel> {
+        return AuthorizationViewModel::class.java
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = AuthorizationFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onInject() {
         App.instance.appComponent.inject(this)
-        init()
-        initViewModel()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onBackPressedRouter(): Boolean {
-        return authorizationViewModel.onBackPressedRouter()
-    }
-
-    private fun init() {
+    override fun onInitView() {
 
         setSpanRegulationsTv()
         constraintSetLogin.clone(binding.root)
         rxTextChangerValidation()
 
         binding.privacyPolicy.setOnClickListener {
-            authorizationViewModel.openScreenWebView(getString(R.string.team_site))
+            viewModel.openScreenWebView(getString(R.string.team_site))
         }
 
         binding.backMainScreen.setOnClickListener {
-            authorizationViewModel.openMain()
+            viewModel.openMain()
         }
 
         binding.changeRegisterButton.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.root, changeBounds)
-            authorizationViewModel.changeRegisterAnim()
+            viewModel.changeRegisterAnim()
             if (checkNullRegisterData()) {
                 binding.registerButton.alpha = ALFA_LOGIN_BUTTON
             }
@@ -103,7 +70,7 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
 
         binding.changeSignButton.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.root, changeBounds)
-            authorizationViewModel.changeLoginAnim()
+            viewModel.changeLoginAnim()
             if (checkNullSignUpData()) {
                 binding.signInButton.alpha = ALFA_LOGIN_BUTTON
             }
@@ -111,13 +78,13 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
 
         binding.signInButton.setOnClickListener {
             if (checkNullSignUpData()) {
-                authorizationViewModel.checkSignIn(userLogin, userPassword)
+                viewModel.checkSignIn(userLogin, userPassword)
             }
         }
 
         binding.registerButton.setOnClickListener {
             if (checkNullRegisterData()) {
-                authorizationViewModel.createAccount(
+                viewModel.createAccount(
                     userRegisterLogin,
                     userEmail,
                     userRegisterPassword
@@ -126,16 +93,16 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
         }
     }
 
-    private fun initViewModel() {
-        authorizationViewModel.logInFlow.observeFlow(this) { loginInfo ->
+    override fun onObserveData() {
+        viewModel.logInFlow.observeFlow(this) { loginInfo ->
             if (loginInfo.first) successRegister(loginInfo.second)
         }
 
-        authorizationViewModel.signInFlow.observeFlow(this) { accountId ->
+        viewModel.signInFlow.observeFlow(this) { accountId ->
             successSignIn(accountId)
         }
 
-        authorizationViewModel.subscribe().observe(viewLifecycleOwner) { state ->
+        viewModel.subscribe().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AuthorizationViewModel.AuthorizationViewState.EmailRegisterIsValidate -> {
                     emailRegisterIsValidate(state.email)
@@ -202,7 +169,7 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
             .filter { text -> text.toString().isNotEmpty() }
             .skip(6)
             .subscribe({ text ->
-                authorizationViewModel.passwordValidation(text)
+                viewModel.passwordValidation(text)
             }, {
             })
 
@@ -210,7 +177,7 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
             .filter { text -> text.toString().isNotEmpty() }
             .skip(4)
             .subscribe({ text ->
-                authorizationViewModel.loginValidation(text)
+                viewModel.loginValidation(text)
             }, {
             })
 
@@ -218,7 +185,7 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
             .filter { text -> text.toString().isNotEmpty() }
             .skip(6)
             .subscribe({ text ->
-                authorizationViewModel.passwordRegisterValidation(text)
+                viewModel.passwordRegisterValidation(text)
             }, {
             })
 
@@ -226,7 +193,7 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
             .filter { text -> text.toString().isNotEmpty() }
             .skip(4)
             .subscribe({ text ->
-                authorizationViewModel.loginRegisterValidation(text)
+                viewModel.loginRegisterValidation(text)
             }, {
             })
 
@@ -234,7 +201,7 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
             .filter { text -> text.toString().isNotEmpty() }
             .skip(5)
             .subscribe({ text ->
-                authorizationViewModel.emailRegisterValidation(text)
+                viewModel.emailRegisterValidation(text)
             }, {
             })
     }
@@ -250,12 +217,12 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
     }
 
     private fun successSignIn(id: Int) {
-        authorizationViewModel.openScreenProfile(id)
+        viewModel.openScreenProfile(id)
     }
 
     private fun successRegister(id: Int) {
         this.showSnackBar(getString(R.string.create_account))
-        authorizationViewModel.openScreenProfile(id)
+        viewModel.openScreenProfile(id)
     }
 
     private fun sendActivityOpenScreen() {
@@ -468,6 +435,7 @@ class AuthorizationFragment : Fragment(), BackPressedListener {
         const val SPAN_START_END_POLICY = 76
         fun getInstance(): AuthorizationFragment {
             return AuthorizationFragment()
+
         }
     }
 }
