@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="countryName">
+        <item>Аргентина</item>
+        <item>Австралия</item>
+        <item>Австрия</item>
+        <item>Бельгия</item>
+        <item>Бразилия</item>
+        <item>Болгария</item>
+        <item>Канада</item>
+        <item>Китай</item>
+        <item>Колумбия</item>
+        <item>Куба</item>
+        <item>Чешская Республика</item>
+        <item>Египет</item>
+        <item>Франция</item>
+        <item>Германия</item>
+        <item>Греция</item>
+        <item>Гонконг</item>
+        <item>Венгрия</item>
+        <item>Индия</item>
+        <item>Индонезия</item>
+        <item>Ирландия</item>
+        <item>Израиль</item>
+        <item>Италия</item>
+        <item>Япония</item>
+        <item>Латвия</item>
+        <item>Литва</item>
+        <item>Малайзия</item>
+        <item>Мексика</item>
+        <item>Марокко</item>
+        <item>Нидерланды</item>
+        <item>Новая Зеландия</item>
+        <item>Нигерия</item>
+        <item>Норвегия</item>
+        <item>Филипины</item>
+        <item>Польша</item>
+        <item>Португалия</item>
+        <item>Румыния</item>
+        <item>Россия</item>
+        <item>Саудовская Аравия</item>
+        <item>Сербия</item>
+        <item>Сингапур</item>
+        <item>Словакия</item>
+        <item>Словения</item>
+        <item>Южная Африка</item>
+        <item>Южная Корея</item>
+        <item>Швеция</item>
+        <item>Швейцария</item>
+        <item>Тайвань</item>
+        <item>Таиланд</item>
+        <item>Турция</item>
+        <item>Украина</item>
+        <item>ОАЭ</item>
+        <item>Великобритания</item>
+        <item>США</item>
+        <item>Венесуэлла</item>
+    </string-array>
+    <string-array name="searchInArray">
+        <item>Везде</item>
+        <item>Название</item>
+        <item>Описание</item>
+    </string-array>
+    <string-array name="sortBy">
+        <item>Дата публикации</item>
+        <item>Актуальности</item>
+        <item>Популярность</item>
+    </string-array>
+    <string-array name="sortBySources">
+        <item>Дата публикации</item>
+        <item>Популярность</item>
+    </string-array>
+    <string-array name="newsCategory">
+        <item>Общее</item>
+        <item>Бизнес</item>
+        <item>Развлечение</item>
+        <item>Здоровье</item>
+        <item>Наука</item>
+        <item>Спорт</item>
+        <item>Технологии</item>
+    </string-array>
+    <string-array name="showType">
+        <item>Только название</item>
+        <item>Сокращенно</item>
+        <item>Полностью</item>
+    </string-array>
+</resources>

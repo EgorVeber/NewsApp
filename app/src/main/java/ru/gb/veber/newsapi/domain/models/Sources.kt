@@ -1,5 +1,7 @@
 package ru.gb.veber.newsapi.domain.models
 
+import ru.gb.veber.newsapi.common.utils.FOCUS_DEFAULT
+
 data class Sources(
     val id: Int,
     val idSources: String? = "",
@@ -12,4 +14,5 @@ data class Sources(
     var liked: Boolean = false,
     var totalHistory: Int = 0,
     var totalFavorites: Int = 0,
+    var focusType: Int = FOCUS_DEFAULT
 )

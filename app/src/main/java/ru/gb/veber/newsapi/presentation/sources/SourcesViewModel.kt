@@ -27,7 +27,8 @@ class SourcesViewModel @Inject constructor(
     private val flow: LiveData<SourcesState> = mutableFlow
 
     private var allSources: MutableList<Sources> = mutableListOf()
-    private var likeSources: List<Sources> = mutableListOf()
+    private var focusedSources: MutableMap<String, Int> = mutableMapOf()
+    private var sourceFilter = ""
     private var accountId: Int = 0
 
     fun subscribe(accountId: Int): LiveData<SourcesState> {
@@ -41,7 +42,7 @@ class SourcesViewModel @Inject constructor(
             viewModelScope.launchJob(tryBlock = {
                 val listSources = sourceInteractor.getSourcesV2()
                 allSources = listSources
-                mutableFlow.postValue(SourcesState.SetSources(listSources))
+                sendSources(listSources)
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
@@ -54,7 +55,6 @@ class SourcesViewModel @Inject constructor(
                 like.map { sources ->
                     sources.liked = true
                 }
-                likeSources = like
 
                 for (j in like.size - 1 downTo 0) {
                     for (i in all.indices) {
@@ -72,9 +72,7 @@ class SourcesViewModel @Inject constructor(
                         }
                     }
                 }
-
-                mutableFlow.postValue(SourcesState.SetSources(all))
-
+                sendSources(all)
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
@@ -119,14 +117,49 @@ class SourcesViewModel @Inject constructor(
     }
 
     fun openAllNews(source: String?, name: String?) {
-        val history =
-            HistorySelect(0, accountID = accountId, sourcesId = source, sourcesName = name)
+        val history = HistorySelect(0, accountID = accountId, sourcesId = source, sourcesName = name)
         router.navigateTo(SearchNewsScreen(accountId = accountId, historySelect = history))
         viewModelScope.launchJob(tryBlock = {
             sourceInteractor.insertSelectV2(historyDbEntity = history.toHistorySelectDbEntity())
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
+    }
+    fun setFilter(filter: String) {
+        sourceFilter = if (spaceTest(filter)) "" else filter
+        sendSources(allSources)
+    }
+
+    private fun spaceTest(text: String): Boolean {
+        val result = text.trim()
+        return result.isEmpty()
+    }
+
+    private fun filtered(list: List<Sources>):  List<Sources>{
+        return if (sourceFilter == "") list
+        else {
+            val foundByNames = (list.filter { sources ->  sources.name?.contains(sourceFilter, ignoreCase = true) ?: false })
+            val foundByCountries = (list.filter { sources ->  sources.country?.contains(sourceFilter, ignoreCase = true) ?: false })
+            val result = ( foundByNames + foundByCountries ).toSet().toList()
+            result
+        }
+    }
+
+    fun focusOne(source: Sources, type: Int) {
+        focusedSources[source.idSources!!]=type
+    }
+
+    fun focusAll(type: Int) {
+        allSources.forEach { sources ->
+            focusOne(sources,type)
+        }
+        sendSources(allSources)
+    }
+
+    private fun sendSources(list: List<Sources>) {
+        val result = list.map { sources ->
+            if (focusedSources[sources.idSources] != null) sources.copy(focusType = focusedSources[sources.idSources]!!) else sources }
+        mutableFlow.postValue(SourcesState.SetSources(filtered(result)))
     }
 
     override fun onBackPressedRouter(): Boolean {
