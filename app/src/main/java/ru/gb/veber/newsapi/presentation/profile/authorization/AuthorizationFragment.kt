@@ -435,6 +435,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
         const val SPAN_START_END_POLICY = 76
         fun getInstance(): AuthorizationFragment {
             return AuthorizationFragment()
+
         }
     }
 }
