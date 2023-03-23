@@ -126,8 +126,7 @@ class SourcesViewModel @Inject constructor(
         })
     }
     fun setFilter(filter: String) {
-        sourceFilter = if (spaceTest(filter)) ""
-        else filter
+        sourceFilter = if (spaceTest(filter)) "" else filter
         sendSources(allSources)
     }
 
@@ -138,8 +137,12 @@ class SourcesViewModel @Inject constructor(
 
     private fun filtered(list: List<Sources>):  List<Sources>{
         return if (sourceFilter == "") list
-        else ((list.filter { it.name?.contains(sourceFilter, ignoreCase = true) ?: false }) +
-                (list.filter { it.country?.contains(sourceFilter, ignoreCase = true) ?: false })).toSet().toList()
+        else {
+            val foundByNames = (list.filter { sources ->  sources.name?.contains(sourceFilter, ignoreCase = true) ?: false })
+            val foundByCountries = (list.filter { sources ->  sources.country?.contains(sourceFilter, ignoreCase = true) ?: false })
+            val result = ( foundByNames + foundByCountries ).toSet().toList()
+            result
+        }
     }
 
     fun focusOne(source: Sources, type: Int) {
@@ -154,7 +157,8 @@ class SourcesViewModel @Inject constructor(
     }
 
     private fun sendSources(list: List<Sources>) {
-        val result = list.map { if (focusedSources[it.idSources] != null) it.copy(focusType = focusedSources[it.idSources]!!) else it }
+        val result = list.map { sources ->
+            if (focusedSources[sources.idSources] != null) sources.copy(focusType = focusedSources[sources.idSources]!!) else sources }
         mutableFlow.postValue(SourcesState.SetSources(filtered(result)))
     }
 

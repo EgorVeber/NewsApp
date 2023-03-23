@@ -8,10 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
 import ru.gb.veber.newsapi.common.extentions.showText
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.FOCUS_BRIF
+import ru.gb.veber.newsapi.common.utils.*
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SourcesFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Sources
@@ -22,6 +19,7 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
     SourcesFragmentBinding::inflate) {
 
     private var accountId: Int by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var lastFocusSelected = FOCUS_DEFAULT
     override fun getViewModelClass(): Class<SourcesViewModel> = SourcesViewModel::class.java
 
     override fun onInject() {
@@ -67,11 +65,14 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
         binding.recyclerSources.adapter = sourcesAdapter
         binding.recyclerSources.itemAnimator = null
         binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())
-        binding.spinnerShowBy.setSelection(FOCUS_BRIF, false)
+        binding.spinnerShowBy.setSelection(FOCUS_DEFAULT, false)
         binding.spinnerShowBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {}
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                viewModel.focusAll(position)
+                if (lastFocusSelected != position) {
+                    lastFocusSelected = position
+                    viewModel.focusAll(position)
+                }
             }
 
         }

@@ -116,7 +116,7 @@
     <string name="errorCountryNotSelected">Country not selected</string>
     <string name="historyCanNotBeCleared">History can not be cleared</string>
     <string name="categories_order">Categories order</string>
-    <string name="show_by_helper">Режим отображения:</string>
+    <string name="show_by_helper">Display mode:</string>
     <string name="filter">Filter</string>
     <string name="add_key">Add Key</string>
     <string name="get_key">Go to site</string>

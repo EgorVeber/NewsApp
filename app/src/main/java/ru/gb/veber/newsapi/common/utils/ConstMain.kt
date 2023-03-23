@@ -45,7 +45,7 @@ const val ALL_COUNTRY_VALUE = ""
 //FILTER Source
 const val FOCUS_NAME = 0
 const val FOCUS_BRIF = 1
-const val FOCUS_FULL = 1
+const val FOCUS_DEFAULT = 1
 
 
 

@@ -114,4 +114,6 @@
     <string name="errorCountryNotSelected">Страна не выбрана</string>
     <string name="historyCanNotBeCleared">Очистить историю невозможно</string>
     <string name="categories_order">Порядок категорий</string>
+    <string name="show_by_helper">Режим отображения:</string>
+    <string name="filter">Фильтр</string>
 </resources>
