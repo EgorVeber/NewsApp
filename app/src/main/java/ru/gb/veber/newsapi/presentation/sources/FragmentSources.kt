@@ -90,7 +90,7 @@ class FragmentSources : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
     }
 
     private fun setLogin() {
-        this.showSnackBar(getString(R.string.not_connection))
+        this.showSnackBar(getString(R.string.loginAddToFavorites))
     }
 
     companion object {
