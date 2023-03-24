@@ -37,10 +37,10 @@
             android:id="@+id/imageNews"
             android:layout_width="@dimen/image_view_size_default"
             android:layout_height="@dimen/image_view_size_default"
-            android:layout_marginBottom="@dimen/margin_12_dp"
             android:background="@drawable/image_still_loading"
             android:scaleType="fitXY"
             android:visibility="gone"
+            tools:visibility = "visible"
             app:layout_constraintBottom_toTopOf="@id/publishedAt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
