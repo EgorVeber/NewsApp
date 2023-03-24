@@ -9,20 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="@dimen/margin_5">
-
-        <TextView
-            android:id="@+id/publishedAt"
-            style="@style/sources_text"
-            android:paddingTop="@dimen/margin_12_dp"
-            android:layout_marginStart="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_5"
-            android:textColor="@color/color_primary_app"
-            android:textSize="@dimen/text_size_date_top_news"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="Date of publication" />
 
         <TextView
             android:id="@+id/viewedText"
@@ -37,26 +25,37 @@
             android:id="@+id/imageNews"
             android:layout_width="@dimen/image_view_size_default"
             android:layout_height="@dimen/image_view_size_default"
-            android:background="@drawable/image_still_loading"
             android:scaleType="fitXY"
-            android:visibility="gone"
-            tools:visibility = "visible"
-            app:layout_constraintBottom_toTopOf="@id/publishedAt"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/sources_text"
-            android:layout_marginStart="@dimen/margin_10"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textSize="@dimen/text_size_title_item_news"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@id/publishedAt"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageNews"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/imageNews"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageNews"
+            app:layout_constraintTop_toTopOf="@+id/imageNews">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/sources_text"
+                tools:text="News article"
+                android:layout_marginStart="@dimen/margin_10"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textSize="@dimen/text_size_title_item_news" />
+
+            <TextView
+                android:id="@+id/publishedAt"
+                style="@style/sources_text"
+                tools:text="Date of publication"
+                android:layout_marginStart="@dimen/margin_10"
+                android:layout_marginTop="@dimen/margin_5"
+                android:textColor="@color/color_primary_app"
+                android:textSize="@dimen/text_size_date_top_news" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

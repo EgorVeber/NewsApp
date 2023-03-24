@@ -14,22 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import coil.load
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.size.Scale
-import coil.transform.RoundedCornersTransformation
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.collapsed
-import ru.gb.veber.newsapi.common.extentions.expanded
-import ru.gb.veber.newsapi.common.extentions.formatDateDay
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.hideKeyboard
-import ru.gb.veber.newsapi.common.extentions.loadGlideNot
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.stringFromData
+import ru.gb.veber.newsapi.common.extentions.*
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
@@ -186,15 +174,7 @@ class TopNewsFragment :
 
     private fun clickNews(article: Article) {
         with(binding.behaviorInclude) {
-            imageViewAll.load(article.urlToImage) {
-                transformations(RoundedCornersTransformation(20f))
-                scale(Scale.FIT)
-                listener(
-                    onSuccess = { _, _ ->  /* do nothing */ },
-                    onError = { _: ImageRequest, _: ErrorResult ->
-                        imageViewAll.setBackgroundResource(R.drawable.no_image_big)
-                    })
-            }
+            imageViewAll.loadPicForTitle(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
             titleNews.text = article.title
             authorText.text = article.author

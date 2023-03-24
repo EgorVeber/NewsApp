@@ -6,27 +6,11 @@ import android.text.style.ImageSpan
 import android.transition.TransitionManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.load
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.size.Scale
-import coil.transform.RoundedCornersTransformation
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.collapsed
-import ru.gb.veber.newsapi.common.extentions.expanded
-import ru.gb.veber.newsapi.common.extentions.formatDateDay
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.loadGlideNot
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showText
-import ru.gb.veber.newsapi.common.extentions.stringFromData
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.BundleString
-import ru.gb.veber.newsapi.common.utils.PAGE
+import ru.gb.veber.newsapi.common.extentions.*
+import ru.gb.veber.newsapi.common.utils.*
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Article
@@ -105,15 +89,7 @@ class FavoritesFragment :
     private fun clickNews(article: Article) {
         bSheetB.expanded()
         with(binding.behaviorInclude) {
-            imageViewAll.load(article.urlToImage) {
-                transformations(RoundedCornersTransformation(20f))
-                scale(Scale.FIT)
-                listener(
-                    onSuccess = { _, _ ->  /* do nothing */ },
-                    onError = { _: ImageRequest, _: ErrorResult ->
-                        imageViewAll.setBackgroundResource(R.drawable.no_image_big)
-                    })
-            }
+            imageViewAll.loadPicForTitle(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
             titleNews.text = article.title
             authorText.text = article.author

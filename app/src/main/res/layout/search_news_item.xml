@@ -26,7 +26,6 @@
         android:layout_height="@dimen/image_size_search_default"
         android:layout_marginBottom="@dimen/margin_15_dp"
         android:scaleType="fitXY"
-        android:background="@drawable/image_still_loading"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
