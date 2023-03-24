@@ -5,10 +5,12 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.gb.veber.newsapi.BuildConfig
+import ru.gb.veber.newsapi.common.base.ServerInterceptor
 import ru.gb.veber.newsapi.common.utils.PAGE_SIZE
 import ru.gb.veber.newsapi.common.utils.PAGE_SIZE_COUNT
 import ru.gb.veber.newsapi.data.NewsApi
@@ -30,7 +32,8 @@ object NetworkModule {
     @Singleton
     @Provides
     fun client() = OkHttpClient.Builder()
-//        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        .addInterceptor(ServerInterceptor())
         .addInterceptor { chain ->
         val request = chain.request()
         val url = request.url.newBuilder().addQueryParameter(PAGE_SIZE, PAGE_SIZE_COUNT).build()
