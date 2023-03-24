@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.core.Single
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
 
 interface ArticleRepo {
+/*
     fun insertArticle(articleDbEntity: ArticleDbEntity): Completable
     fun updateArticle(articleDbEntity: ArticleDbEntity): Completable
     fun deleteArticle(articleDbEntity: ArticleDbEntity): Completable
@@ -19,6 +20,7 @@ interface ArticleRepo {
     fun deleteArticleByIdHistory(title: String, accountId: Int): Completable
     fun deleteArticleByIdHistoryGroup( accountId: Int,dateAdded:String): Completable
 
+*/
 
     suspend fun insertArticleV2(articleDbEntity: ArticleDbEntity)
     suspend fun updateArticleV2(articleDbEntity: ArticleDbEntity)

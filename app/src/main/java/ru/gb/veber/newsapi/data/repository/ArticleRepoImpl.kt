@@ -1,7 +1,9 @@
 package ru.gb.veber.newsapi.data.repository
 
+/*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+*/
 import ru.gb.veber.newsapi.common.extentions.subscribeDefault
 import ru.gb.veber.newsapi.data.models.room.dao.ArticleDao
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
@@ -9,6 +11,7 @@ import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 
 class ArticleRepoImpl(private val articleDao: ArticleDao) : ArticleRepo {
 
+/*
     override fun insertArticle(articleDbEntity: ArticleDbEntity): Completable {
         return articleDao.insertArticle(articleDbEntity).subscribeDefault()
     }
@@ -60,6 +63,7 @@ class ArticleRepoImpl(private val articleDao: ArticleDao) : ArticleRepo {
     override fun deleteArticleByIdHistoryGroup(accountId: Int, dateAdded: String): Completable {
         return articleDao.deleteArticleByIdHistoryGroup(accountId,dateAdded).subscribeDefault()
     }
+*/
 
     override suspend fun insertArticleV2(articleDbEntity: ArticleDbEntity) {
          articleDao.insertArticleV2(articleDbEntity)
