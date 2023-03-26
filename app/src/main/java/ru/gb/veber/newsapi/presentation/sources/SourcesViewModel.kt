@@ -71,7 +71,7 @@ class SourcesViewModel @Inject constructor(
                 }
                 all.forEach { sor ->
                     article.forEach { art ->
-                        if (sor.idSources == art.sourceId) {
+                        if (sor.idSources == art.source.id) {
                             if (art.isFavorites) sor.totalFavorites += 1
                             else sor.totalHistory += 1
                         }

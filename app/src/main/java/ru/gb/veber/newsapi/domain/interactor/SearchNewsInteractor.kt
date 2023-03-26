@@ -4,6 +4,7 @@ import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
 import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.domain.models.Sources
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
@@ -31,7 +32,7 @@ class SearchNewsInteractor @Inject constructor(
         return accountSourcesRepo.getLikeSourcesFromAccountV2(accountId)
     }
 
-    suspend fun getArticles(accountId: Int): List<ArticleDbEntity> {
+    suspend fun getArticles(accountId: Int): List<Article> {
         return articleRepo.getArticleByIdV2(accountId)
     }
 
@@ -39,8 +40,8 @@ class SearchNewsInteractor @Inject constructor(
         accountSourcesRepo.insertV2(accountSourcesDbEntity)
     }
 
-    suspend fun insertArticle(toArticleDbEntity: ArticleDbEntity) {
-        articleRepo.insertArticleV2(toArticleDbEntity)
+    suspend fun insertArticle(article: Article, accountId: Int) {
+        articleRepo.insertArticleV2(article, accountId)
     }
 
     suspend fun deleteArticleByIdFavoritesV2(toString: String, accountId: Int) {
