@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -57,6 +58,19 @@ fun View.hideKeyboard(): Boolean {
     } catch (ignored: RuntimeException) {
     }
     return false
+}
+
+fun Fragment.showKeyboard() {
+    requireActivity().showKeyboard()
+}
+
+fun Activity.showKeyboard() {
+    showKeyboard(currentFocus ?: View(this))
+}
+
+fun Context.showKeyboard(view: View) {
+    val imm: InputMethodManager = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
 }
 
 fun ImageView.loadGlide(url: String?) {

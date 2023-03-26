@@ -123,4 +123,6 @@
     <string name="input_key">Enter key</string>
     <string name="keys_management">Keys management</string>
     <string name="not_connection">There is no internet connection. Turn on the Internet and, if necessary, restart the application.</string>
+    <string name="search_view_title">Title Search</string>
+    <string name="error_search_key">Enter keyword</string>
 </resources>
