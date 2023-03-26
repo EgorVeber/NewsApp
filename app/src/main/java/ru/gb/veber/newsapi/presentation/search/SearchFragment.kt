@@ -95,7 +95,8 @@ class SearchFragment :
             if (checkBoxSearchSources.isChecked) {
                 if (binding.searchTextInput.editText?.text.isNullOrBlank()) searchButtonDeactive()
                 else searchButtonActive()
-            } else {
+            }
+            else {
                 if (binding.searchEdit.text.isNullOrBlank()) searchButtonDeactive()
                 else searchButtonActive()
             }
@@ -287,17 +288,15 @@ class SearchFragment :
         searchEdit.hideKeyboard()
         if (searchEdit.text?.isEmpty() == true) {
             searchButtonDeactive()
-            searchEdit.visibility = View.INVISIBLE
-        } else searchButtonActive()
+            searchEdit.visibility = View.INVISIBLE }
+        else searchButtonActive()
         searchEnotBlock.hide()
     }
 
     private fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) {
-                binding.searchTextInput.error = null
-            }
+            if (isAdded) { binding.searchTextInput.error = null }
         }, DURATION_ERROR_INPUT)
     }
 
@@ -305,18 +304,14 @@ class SearchFragment :
         searchViewActive()
         binding.searchEdit.error = getString(R.string.error_search_key)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) {
-                binding.searchEdit.error = null
-            }
+            if (isAdded) { binding.searchEdit.error = null }
         }, DURATION_ERROR_INPUT)
     }
 
     private fun errorDateInput() {
         binding.errorDateText.show()
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) {
-                binding.errorDateText.hide()
-            }
+            if (isAdded) { binding.errorDateText.hide() }
         }, DURATION_ERROR_INPUT)
     }
 
