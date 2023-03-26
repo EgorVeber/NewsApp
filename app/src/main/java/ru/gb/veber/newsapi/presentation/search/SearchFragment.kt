@@ -7,7 +7,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
-import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -17,11 +16,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
 import ru.gb.veber.newsapi.common.extentions.*
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
-import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
+import ru.gb.veber.newsapi.common.utils.*
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchFragmentBinding
 import ru.gb.veber.newsapi.domain.models.HistorySelect
@@ -73,8 +68,10 @@ class SearchFragment :
 
     override fun onInitView() = with(binding) {
         searchView.setOnClickListener { searchViewActive() }
-        searchView.setEndIconOnClickListener {searchEdit.text?.clear()
-            if (searchEnotBlock.visibility == View.GONE) searchViewDeactive() }
+        searchView.setEndIconOnClickListener {
+            searchEdit.text?.clear()
+            if (searchEnotBlock.visibility == View.GONE) searchViewDeactive()
+        }
         searchEnotBlock.setOnClickListener { searchViewDeactive() }
         searchEdit.setOnFocusChangeListener { _, b ->
             if (b) searchEnotBlock.show()
@@ -98,8 +95,7 @@ class SearchFragment :
             if (checkBoxSearchSources.isChecked) {
                 if (binding.searchTextInput.editText?.text.isNullOrBlank()) searchButtonDeactive()
                 else searchButtonActive()
-            }
-            else {
+            } else {
                 if (binding.searchEdit.text.isNullOrBlank()) searchButtonDeactive()
                 else searchButtonActive()
             }
@@ -110,24 +106,29 @@ class SearchFragment :
         }
         searchSourcesButton.setOnClickListener {
             if (checkBoxSearchSources.isChecked) {
-                var selectedItem = spinnerSortBySources.selectedItem.toString()
-                if (spinnerSortBySources.selectedItemPosition == 0) {
-                    selectedItem = ""
-                }
-                viewModel.openScreenAllNewsSources(dateInput, searchSpinnerCountry.text.toString(), selectedItem)
+
+                val selectedItem = if (spinnerSortBySources.selectedItemPosition == 0) ""
+                else spinnerSortBySources.selectedItem.toString()
+
+                viewModel.openScreenAllNewsSources(
+                    date = dateInput,
+                    sourcesName = searchSpinnerCountry.text.toString(),
+                    sortBy = selectedItem
+                )
             }
             else {
-                var searchIn = ""
-                var sortBy = PUBLISHER_AT
+                val searchIn = if (spinnerSearchIn.selectedItemPosition == 0) ""
+                else spinnerSearchIn.selectedItem.toString()
 
-                if (spinnerSortBy.selectedItemPosition != 0) {
-                    sortBy = spinnerSortBy.selectedItem.toString()
-                }
+                val sortBy = if (spinnerSortBy.selectedItemPosition != 0) PUBLISHER_AT
+                else spinnerSortBy.selectedItem.toString()
 
-                if (spinnerSearchIn.selectedItemPosition != 0) {
-                    searchIn = spinnerSearchIn.selectedItem.toString()
-                }
-                viewModel.openScreenAllNews(searchEdit.text.toString(), searchIn, sortBy, searchSpinnerCountry.text.toString())
+                viewModel.openScreenAllNews(
+                    keyWord = searchEdit.text.toString(),
+                    searchIn = searchIn,
+                    sortBy = sortBy,
+                    sourcesName = searchSpinnerCountry.text.toString()
+                )
             }
         }
         deleteHistoryAll.setOnClickListener {
@@ -197,7 +198,8 @@ class SearchFragment :
             start: Int,
             count: Int,
             after: Int,
-        ) { searchButtonDeactive()
+        ) {
+            searchButtonDeactive()
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -286,15 +288,16 @@ class SearchFragment :
         if (searchEdit.text?.isEmpty() == true) {
             searchButtonDeactive()
             searchEdit.visibility = View.INVISIBLE
-        }
-        else searchButtonActive()
+        } else searchButtonActive()
         searchEnotBlock.hide()
     }
 
     private fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) { binding.searchTextInput.error = null }
+            if (isAdded) {
+                binding.searchTextInput.error = null
+            }
         }, DURATION_ERROR_INPUT)
     }
 
@@ -302,7 +305,9 @@ class SearchFragment :
         searchViewActive()
         binding.searchEdit.error = getString(R.string.error_search_key)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) { binding.searchEdit.error = null }
+            if (isAdded) {
+                binding.searchEdit.error = null
+            }
         }, DURATION_ERROR_INPUT)
     }
 
