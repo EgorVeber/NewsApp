@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Single
+import ru.gb.veber.newsapi.common.SingleLiveData
 import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.common.extentions.formatDate
 import ru.gb.veber.newsapi.common.extentions.stringFromDataNews
@@ -31,7 +32,7 @@ class SearchViewModel @Inject constructor(
     private lateinit var likeSources: List<Sources>
     private var accountHistorySelect: Boolean = false
 
-    private val mutableFlow: MutableLiveData<SearchState> = MutableLiveData()
+    private val mutableFlow: SingleLiveData<SearchState> = SingleLiveData()
     private val flow: LiveData<SearchState> = mutableFlow
     private val mutableFlowVisibility: MutableLiveData<VisibilityState> = MutableLiveData()
     private val flowVisibility: LiveData<VisibilityState> = mutableFlowVisibility

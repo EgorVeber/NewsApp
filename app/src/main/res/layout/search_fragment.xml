@@ -25,9 +25,9 @@
         android:layout_marginStart="@dimen/margin_10"
         android:layout_marginTop="@dimen/margin_10"
         android:layout_marginEnd="@dimen/margin_10"
+        android:background="@drawable/search_view_background"
         android:paddingLeft="@dimen/padding_10"
         android:paddingRight="@dimen/padding_10"
-        android:background="@drawable/search_view_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/ic_baseline_search_24"
-            android:backgroundTint="@color/color_black"/>
+            android:backgroundTint="@color/color_black" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchView"
@@ -48,14 +48,14 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/searchEdit"
-                android:visibility="invisible"
-                android:layout_margin="@dimen/margin_5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_5"
+                android:hint="@string/searchNewsKey"
                 android:imeOptions="actionDone"
                 android:inputType="text"
-                android:hint="@string/searchNewsKey"
-                android:lines="1"/>
+                android:lines="1"
+                android:visibility="invisible" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -147,7 +147,7 @@
         android:id="@+id/groupHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="titleHistory,deleteHistoryAll,recyclerHistory,emptyHistory" />
+        app:constraint_referenced_ids="titleHistory,deleteHistoryAll,recyclerHistoryBlock,emptyHistory" />
 
     <TextView
         android:id="@+id/titleHistory"
@@ -177,15 +177,24 @@
         app:layout_constraintStart_toEndOf="@+id/titleHistory"
         app:layout_constraintTop_toTopOf="@+id/titleHistory" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerHistory"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/recyclerHistoryBlock"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_5"
         app:layout_constraintBottom_toTopOf="@id/searchSourcesButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleHistory" />
+        app:layout_constraintTop_toBottomOf="@+id/titleHistory">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/emptyHistory"
@@ -195,10 +204,10 @@
         android:textColor="@color/color_black"
         android:textSize="@dimen/empty_list_history"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/recyclerHistory"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerHistory"
-        app:layout_constraintStart_toStartOf="@+id/recyclerHistory"
-        app:layout_constraintTop_toTopOf="@+id/recyclerHistory" />
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerHistoryBlock"
+        app:layout_constraintEnd_toEndOf="@+id/recyclerHistoryBlock"
+        app:layout_constraintStart_toStartOf="@+id/recyclerHistoryBlock"
+        app:layout_constraintTop_toTopOf="@+id/recyclerHistoryBlock" />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkBoxSearchSources"
@@ -209,7 +218,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/titleFilter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/titleFilter" />
-
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinnerSortBySources"
@@ -251,21 +259,21 @@
         android:id="@+id/errorDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:singleLine="true"
         android:text="@string/invalid_date"
         android:textColor="@color/color_error_like"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/margin_10"
-        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constrainedWidth="true"
-        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintTop_toBottomOf="@+id/selectDate" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/searchSourcesButton"
         android:layout_width="0dp"
         android:layout_height="@dimen/height_size_button_default"
-        android:layout_marginBottom="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_5"
         android:alpha="0.5"
         android:backgroundTint="@color/color_primary_app"
         android:text="@string/search"
@@ -278,12 +286,12 @@
         android:id="@+id/search_enot_block"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
-        android:focusable="true"
         android:clickable="true"
-        app:layout_constraintTop_toBottomOf="@id/searchBlock"
-        app:layout_constraintStart_toStartOf="parent"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchBlock" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

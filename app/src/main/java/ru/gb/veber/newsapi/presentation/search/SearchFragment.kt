@@ -1,11 +1,13 @@
 package ru.gb.veber.newsapi.presentation.search
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
+import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -57,8 +59,19 @@ class SearchFragment :
         App.instance.appComponent.inject(this)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (!binding.searchEdit.text.isNullOrBlank()) {
+            binding.searchEdit.show()
+            binding.searchEdit.requestFocus()
+            binding.searchEdit.setText(binding.searchEdit.text.toString())
+            searchViewDeactive()
+        }
+        binding.searchTextInput.error = null
+        binding.searchEdit.error = null
+    }
+
     override fun onInitView() = with(binding) {
-        if (!searchEdit.text.isNullOrBlank()) searchEdit.show()
         searchView.setOnClickListener { searchViewActive() }
         searchView.setEndIconOnClickListener {searchEdit.text?.clear()
             if (searchEnotBlock.visibility == View.GONE) searchViewDeactive() }
@@ -82,6 +95,14 @@ class SearchFragment :
         recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
 
         checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
+            if (checkBoxSearchSources.isChecked) {
+                if (binding.searchTextInput.editText?.text.isNullOrBlank()) searchButtonDeactive()
+                else searchButtonActive()
+            }
+            else {
+                if (binding.searchEdit.text.isNullOrBlank()) searchButtonDeactive()
+                else searchButtonActive()
+            }
             viewModel.changeSearchCriteria(b)
         }
         selectDate.setOnClickListener {
@@ -192,7 +213,6 @@ class SearchFragment :
     private fun searchButtonDeactive() {
         binding.searchSourcesButton.alpha = 0.5F
     }
-
 
     private fun createDatePiker() {
         datePiker.setTitleText(getString(R.string.inputDateThirty))
