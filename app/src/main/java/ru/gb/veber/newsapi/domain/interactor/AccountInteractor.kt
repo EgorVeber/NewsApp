@@ -7,6 +7,7 @@ import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.domain.models.Sources
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
@@ -45,7 +46,7 @@ class AccountInteractor
         return articleRepoImpl.deleteArticleIsFavoriteByIdV2(accountId)
     }
 
-    suspend fun getArticleByIdV2(accountId: Int): List<ArticleDbEntity> {
+    suspend fun getArticleByIdV2(accountId: Int): List<Article> {
         return articleRepoImpl.getArticleByIdV2(accountId)
     }
 

@@ -225,7 +225,7 @@ class SearchNewsViewModel @Inject constructor(
                 article.isHistory = true
                 article.dateAdded = Date().formatDateTime()
                 viewModelScope.launchJob(tryBlock = {
-                    searchNewsInteractor.insertArticle(article.toArticleDbEntity(accountId))
+                    searchNewsInteractor.insertArticle(article, accountId)
                     articleListHistory.find { articleHistory -> articleHistory.title == article.title }
                         ?.isHistory = true
                     searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
@@ -252,10 +252,10 @@ class SearchNewsViewModel @Inject constructor(
     }
 
     private fun saveArticleLike(article: Article) {
-        val item = article.toArticleDbEntity(accountId)
+        val item = article
         item.isFavorites = true
         viewModelScope.launchJob(tryBlock = {
-            searchNewsInteractor.insertArticle(item)
+            searchNewsInteractor.insertArticle(item, accountId)
             articleListHistory.find { articleHistory -> articleHistory.title == article.title }
                 ?.isFavorites = true
             searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
