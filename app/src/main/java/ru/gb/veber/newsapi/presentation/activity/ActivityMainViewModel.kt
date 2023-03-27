@@ -7,8 +7,6 @@ import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.FavoritesViewPagerScreen
 import ru.gb.veber.newsapi.common.screen.ProfileScreen
@@ -18,8 +16,6 @@ import ru.gb.veber.newsapi.common.screen.TopNewsViewPagerScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.common.utils.ERROR_LOAD_NEWS
-import ru.gb.veber.newsapi.core.ConnectivityListener
 import ru.gb.veber.newsapi.data.mapper.newCountryDbEntity
 import ru.gb.veber.newsapi.data.mapper.toSourcesDbEntity
 import ru.gb.veber.newsapi.domain.interactor.MainInteractor
@@ -27,26 +23,12 @@ import javax.inject.Inject
 
 class ActivityMainViewModel @Inject constructor(
     private val mainInteractor: MainInteractor,
-    private val connectivityListener: ConnectivityListener,
-    private val router: Router,
+    private val router: Router
 ) : ViewModel() {
 
     private val mutableFlow: MutableStateFlow<ViewMainState> =
         MutableStateFlow(ViewMainState.StartedState)
     private val flow: StateFlow<ViewMainState> = mutableFlow
-
-    private val connectionState = SingleSharedFlow<Boolean>()
-    val connectionFlow = connectionState.asSharedFlow()
-
-    init {
-        viewModelScope.launchJob(tryBlock = {
-            connectivityListener.status().collect { statusNetwork ->
-                connectionState.emit(statusNetwork)
-            }
-        }, catchBlock = { error ->
-            Log.d(ERROR_LOAD_NEWS, error.toString())
-        })
-    }
 
     fun subscribe(): Flow<ViewMainState> {
         return flow

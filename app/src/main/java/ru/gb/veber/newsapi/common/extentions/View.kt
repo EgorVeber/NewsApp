@@ -33,7 +33,7 @@ fun Fragment.showSnackBar(text: String, length: Int? = Snackbar.LENGTH_LONG) {
 }
 
 fun Activity.showSnackBar(text: String, length: Int? = Snackbar.LENGTH_LONG) {
-     NewsSnackBar.make(this.findViewById(android.R.id.content), text, length).show()
+    NewsSnackBar.make(this.findViewById(android.R.id.content), text, length).show()
 }
 
 fun View.showText(string: String) {
