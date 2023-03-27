@@ -13,9 +13,6 @@ class SingleLiveData<T>: MutableLiveData<T>() {
 
 	@MainThread
 	override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-		if (hasActiveObservers()) {
-			Log.w("@@@", "Multiple observers registered.")
-		}
 		super.observe(owner) { t ->
 			if (mPending.compareAndSet(true, false)) observer.onChanged(t)
 		}
