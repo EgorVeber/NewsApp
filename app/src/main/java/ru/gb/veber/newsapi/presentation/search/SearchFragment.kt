@@ -67,6 +67,7 @@ class SearchFragment :
     }
 
     override fun onInitView() = with(binding) {
+        searchIcon.setOnClickListener { searchViewActive() }
         searchView.setOnClickListener { searchViewActive() }
         searchView.setEndIconOnClickListener {
             searchEdit.text?.clear()
@@ -121,7 +122,7 @@ class SearchFragment :
                 val searchIn = if (spinnerSearchIn.selectedItemPosition == 0) ""
                 else spinnerSearchIn.selectedItem.toString()
 
-                val sortBy = if (spinnerSortBy.selectedItemPosition != 0) PUBLISHER_AT
+                val sortBy = if (spinnerSortBy.selectedItemPosition == 0) PUBLISHER_AT
                 else spinnerSortBy.selectedItem.toString()
 
                 viewModel.openScreenAllNews(
