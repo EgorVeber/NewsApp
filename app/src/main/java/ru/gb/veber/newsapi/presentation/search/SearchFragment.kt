@@ -1,11 +1,12 @@
 package ru.gb.veber.newsapi.presentation.search
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.AdapterView
-import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -14,16 +15,8 @@ import androidx.transition.TransitionSet
 import com.google.android.material.datepicker.MaterialDatePicker
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.FORMAT_DATE_NEWS
-import ru.gb.veber.newsapi.common.extentions.TIME_ZONE
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.hideKeyboard
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
-import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
+import ru.gb.veber.newsapi.common.extentions.*
+import ru.gb.veber.newsapi.common.utils.*
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchFragmentBinding
 import ru.gb.veber.newsapi.domain.models.HistorySelect
@@ -51,33 +44,6 @@ class SearchFragment :
         }
     }
 
-    private val searchViewListener = object : SearchView.OnQueryTextListener {
-        override fun onQueryTextSubmit(query: String?): Boolean {
-            query?.let { keyWord ->
-                var searchIn = ""
-                var sortBy = PUBLISHER_AT
-
-                if (binding.spinnerSortBy.selectedItemPosition != 0) {
-                    sortBy = binding.spinnerSortBy.selectedItem.toString()
-                }
-
-                if (binding.spinnerSearchIn.selectedItemPosition != 0) {
-                    searchIn = binding.spinnerSearchIn.selectedItem.toString()
-                }
-                viewModel.openScreenAllNews(
-                    keyWord, searchIn, sortBy,
-                    binding.searchSpinnerCountry.text.toString()
-                )
-            }
-            binding.searchView.clearFocus()
-            return true
-        }
-
-        override fun onQueryTextChange(newText: String?): Boolean {
-            return true
-        }
-    }
-
     private val historySelectAdapter = HistorySelectAdapter(itemListener)
 
     override fun getViewModelClass(): Class<SearchViewModel> {
@@ -88,8 +54,33 @@ class SearchFragment :
         App.instance.appComponent.inject(this)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (!binding.searchEdit.text.isNullOrBlank()) {
+            binding.searchEdit.show()
+            binding.searchEdit.requestFocus()
+            binding.searchEdit.setText(binding.searchEdit.text.toString())
+            searchViewDeactive()
+        }
+        binding.searchTextInput.error = null
+        binding.searchEdit.error = null
+    }
+
     override fun onInitView() = with(binding) {
-        searchView.setOnQueryTextListener(searchViewListener)
+        searchIcon.setOnClickListener { searchViewActive() }
+        searchView.setOnClickListener { searchViewActive() }
+        searchView.setEndIconOnClickListener {
+            searchEdit.text?.clear()
+            if (searchEnotBlock.visibility == View.GONE) searchViewDeactive()
+        }
+        searchEnotBlock.setOnClickListener { searchViewDeactive() }
+        searchEdit.setOnFocusChangeListener { _, b ->
+            if (b) searchEnotBlock.show()
+        }
+        searchEdit.setOnEditorActionListener { _, _, _ ->
+            searchViewDeactive()
+            false
+        }
         with(searchSpinnerCountry) {
             threshold = 1
             onItemClickListener = listenerAdapter
@@ -102,21 +93,45 @@ class SearchFragment :
         recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
 
         checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
+            if (checkBoxSearchSources.isChecked) {
+                if (binding.searchTextInput.editText?.text.isNullOrBlank()) searchButtonDeactive()
+                else searchButtonActive()
+            }
+            else {
+                if (binding.searchEdit.text.isNullOrBlank()) searchButtonDeactive()
+                else searchButtonActive()
+            }
             viewModel.changeSearchCriteria(b)
         }
         selectDate.setOnClickListener {
             createDatePiker()
         }
         searchSourcesButton.setOnClickListener {
-            var selectedItem = spinnerSortBySources.selectedItem.toString()
-            if (spinnerSortBySources.selectedItemPosition == 0) {
-                selectedItem = ""
+            if (checkBoxSearchSources.isChecked) {
+
+                val selectedItem = if (spinnerSortBySources.selectedItemPosition == 0) ""
+                else spinnerSortBySources.selectedItem.toString()
+
+                viewModel.openScreenAllNewsSources(
+                    date = dateInput,
+                    sourcesName = searchSpinnerCountry.text.toString(),
+                    sortBy = selectedItem
+                )
             }
-            viewModel.openScreenAllNewsSources(
-                dateInput,
-                searchSpinnerCountry.text.toString(),
-                selectedItem
-            )
+            else {
+                val searchIn = if (spinnerSearchIn.selectedItemPosition == 0) ""
+                else spinnerSearchIn.selectedItem.toString()
+
+                val sortBy = if (spinnerSortBy.selectedItemPosition == 0) PUBLISHER_AT
+                else spinnerSortBy.selectedItem.toString()
+
+                viewModel.openScreenAllNews(
+                    keyWord = searchEdit.text.toString(),
+                    searchIn = searchIn,
+                    sortBy = sortBy,
+                    sourcesName = searchSpinnerCountry.text.toString()
+                )
+            }
         }
         deleteHistoryAll.setOnClickListener {
             viewModel.clearHistory()
@@ -146,6 +161,9 @@ class SearchFragment :
                 }
                 SearchViewModel.SearchState.SelectSources -> {
                     selectSources()
+                }
+                SearchViewModel.SearchState.EnterKeys -> {
+                    enterKeys()
                 }
                 SearchViewModel.SearchState.SourcesInShow -> {
                     sourcesInShow()
@@ -183,11 +201,21 @@ class SearchFragment :
             count: Int,
             after: Int,
         ) {
-            binding.searchSourcesButton.alpha = 0.5F
+            searchButtonDeactive()
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        override fun afterTextChanged(s: Editable?) {}
+        override fun afterTextChanged(s: Editable?) {
+            if (!s.isNullOrBlank()) searchButtonActive()
+        }
+    }
+
+    private fun searchButtonActive() {
+        binding.searchSourcesButton.alpha = 1F
+    }
+
+    private fun searchButtonDeactive() {
+        binding.searchSourcesButton.alpha = 0.5F
     }
 
     private fun createDatePiker() {
@@ -204,7 +232,6 @@ class SearchFragment :
                 }
             }
     }
-
 
     private fun pikerPositive(l: Long) {
         val outputDateFormat = SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).apply {
@@ -250,27 +277,47 @@ class SearchFragment :
         }
     }
 
+    private fun searchViewActive() = with(binding) {
+        searchEnotBlock.show()
+        searchEdit.show()
+        searchEdit.requestFocus()
+        showKeyboard()
+    }
+
+    private fun searchViewDeactive() = with(binding) {
+        searchEdit.clearFocus()
+        searchEdit.hideKeyboard()
+        if (searchEdit.text?.isEmpty() == true) {
+            searchButtonDeactive()
+            searchEdit.visibility = View.INVISIBLE }
+        else searchButtonActive()
+        searchEnotBlock.hide()
+    }
+
     private fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) {
-                binding.searchTextInput.error = null
-            }
+            if (isAdded) { binding.searchTextInput.error = null }
+        }, DURATION_ERROR_INPUT)
+    }
+
+    private fun enterKeys() {
+        searchViewActive()
+        binding.searchEdit.error = getString(R.string.error_search_key)
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (isAdded) { binding.searchEdit.error = null }
         }, DURATION_ERROR_INPUT)
     }
 
     private fun errorDateInput() {
         binding.errorDateText.show()
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) {
-                binding.errorDateText.hide()
-            }
+            if (isAdded) { binding.errorDateText.hide() }
         }, DURATION_ERROR_INPUT)
     }
 
     private val listenerAdapter = AdapterView.OnItemClickListener { _, _, _, _ ->
         binding.searchSpinnerCountry.hideKeyboard()
-        binding.searchSourcesButton.alpha = 1F
     }
 
     private fun emptyHistory() {
