@@ -2,7 +2,7 @@ package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder
 
 import android.view.View
 import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.loadGlide
+import ru.gb.veber.newsapi.common.extentions.loadPicForCard
 import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.databinding.FavoritesHistoryItemBinding
 import ru.gb.veber.newsapi.domain.models.Article
@@ -25,7 +25,7 @@ class FavoritesHistoryViewHolder(
         
         title.text = item.title
         publishedAt.text = item.publishedAtChange
-        imageNews.loadGlide(item.urlToImage)
+        imageNews.loadPicForCard(item.urlToImage)
 
         root.setOnClickListener {
             listener.clickNews(item)

@@ -17,14 +17,7 @@ import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.collapsed
-import ru.gb.veber.newsapi.common.extentions.expanded
-import ru.gb.veber.newsapi.common.extentions.formatDateDay
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.hideKeyboard
-import ru.gb.veber.newsapi.common.extentions.loadGlideNot
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.stringFromData
+import ru.gb.veber.newsapi.common.extentions.*
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
@@ -181,7 +174,7 @@ class TopNewsFragment :
 
     private fun clickNews(article: Article) {
         with(binding.behaviorInclude) {
-            imageViewAll.loadGlideNot(article.urlToImage)
+            imageViewAll.loadPicForTitle(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
             titleNews.text = article.title
             authorText.text = article.author
