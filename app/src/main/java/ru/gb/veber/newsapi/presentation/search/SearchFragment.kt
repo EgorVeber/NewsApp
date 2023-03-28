@@ -119,17 +119,19 @@ class SearchFragment :
                 )
             }
             else {
-                val searchIn = if (spinnerSearchIn.selectedItemPosition == 0) ""
-                else spinnerSearchIn.selectedItem.toString()
+                var searchIn = ""
+                var sortBy = PUBLISHER_AT
 
-                val sortBy = if (spinnerSortBy.selectedItemPosition == 0) PUBLISHER_AT
-                else spinnerSortBy.selectedItem.toString()
+                if (binding.spinnerSortBy.selectedItemPosition != 0) {
+                    sortBy = binding.spinnerSortBy.selectedItem.toString()
+                }
 
+                if (binding.spinnerSearchIn.selectedItemPosition != 0) {
+                    searchIn = binding.spinnerSearchIn.selectedItem.toString()
+                }
                 viewModel.openScreenAllNews(
-                    keyWord = searchEdit.text.toString(),
-                    searchIn = searchIn,
-                    sortBy = sortBy,
-                    sourcesName = searchSpinnerCountry.text.toString()
+                    binding.searchEdit.text.toString(), searchIn, sortBy,
+                    binding.searchSpinnerCountry.text.toString()
                 )
             }
         }

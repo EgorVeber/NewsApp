@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.common.utils
 
 //API NEWS
-const val API_KEY_NEWS = "640d42b4cab3433dbf94d90504e44276"
+const val API_KEY_NEWS = "33804c62820c4b94864ee739f17a8d08"
 const val API_KEY = "apiKey"
 const val PAGE_SIZE = "pageSize"
 const val PAGE_GET_KEY = "https://newsapi.org/register"
