@@ -21,8 +21,8 @@ class FavoritesHistoryViewHolder(
         deleteFavorites.visibility =
             if (itemViewType == VIEW_TYPE_HISTORY_NEWS) View.VISIBLE else View.GONE
 
-        if (item.isHistory || item.isFavorites) viewedText.show() else viewedText.hide()
-
+        viewedText.hide()
+        
         title.text = item.title
         publishedAt.text = item.publishedAtChange
         imageNews.loadGlide(item.urlToImage)
