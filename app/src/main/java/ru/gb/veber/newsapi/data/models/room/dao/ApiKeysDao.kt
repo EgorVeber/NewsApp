@@ -24,4 +24,10 @@ interface ApiKeysDao {
 
     @Query("Select * from api_keys where account_id =:accountId and actived = 'true'")
     suspend fun getActiveApiKeys(accountId: Int): ApiKeysDbEntity
+
+    @Query("Update api_keys set actived = 1  where id = :keyId")
+    suspend fun activateApiKeysById(keyId: Int)
+
+    @Query("Update api_keys set actived = 0  where account_id = :accountId")
+    suspend fun deactivateApiKeysById(accountId: Int)
 }

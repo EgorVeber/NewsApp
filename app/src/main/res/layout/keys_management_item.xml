@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/space_15"
+        android:paddingBottom="@dimen/space_15"
+        android:paddingStart="@dimen/space_5"
+        android:paddingEnd="@dimen/space_5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkBoxKey"
+                style="@style/Widget.App.CheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:textSize="@dimen/span_16"
+                tools:text="xeydhsrtai..." />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/lastRequestTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="5"
+            android:gravity="right"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/span_16"
+            tools:text="01.07.2023" />
+
+        <TextView
+            android:id="@+id/countKeyTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/span_16"
+            tools:text="60/100" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

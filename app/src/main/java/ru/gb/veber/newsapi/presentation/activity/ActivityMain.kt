@@ -1,8 +1,13 @@
 package ru.gb.veber.newsapi.presentation.activity
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -12,15 +17,18 @@ import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.flow.onEach
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.extentions.flowStarted
+import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.extentions.showText
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
 import ru.gb.veber.newsapi.common.utils.COUNTER_BACKSTACK
 import ru.gb.veber.newsapi.common.utils.COUNTER_BADGE
 import ru.gb.veber.newsapi.common.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.common.utils.DELAY_BACK_STACK
+import ru.gb.veber.newsapi.common.utils.isInternetAvailable
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
+import ru.gb.veber.newsapi.presentation.keymanagement.KeysManagementFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
@@ -28,6 +36,7 @@ import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 interface EventShareLink {
     fun shareLink(url: String)
@@ -100,7 +109,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
             }
         }
 
-        if (supportFragmentManager.fragments.last() !is SearchNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
+        if (supportFragmentManager.fragments.lastOrNull() !is KeysManagementFragment && supportFragmentManager.fragments.last() !is SearchNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
             supportFragmentManager.fragments.last() !is EditAccountFragment && supportFragmentManager.fragments.last() !is CustomizeCategoryFragment
         ) {
             binding.bottomNavigationView.selectedItemId = R.id.topNews
@@ -186,6 +195,10 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
                 ActivityMainViewModel.ViewMainState.StartedState -> {}
             }
         }.flowStarted(lifecycleScope)
+
+        activityMainViewModel.connectionFlow.onEach { statusNetwork ->
+            if (!statusNetwork) this.showSnackBar(getString(R.string.not_connection))
+        }.flowStarted(lifecycleScope)
     }
 
     private fun hideAllBehavior() {
@@ -226,6 +239,10 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
         binding.bottomNavigationView.selectedItemId = R.id.topNews
         binding.bottomNavigationView.setOnItemReselectedListener {
 
+        }
+
+        if (!isInternetAvailable(this)) {
+            this.showSnackBar(getString(R.string.not_connection))
         }
     }
 

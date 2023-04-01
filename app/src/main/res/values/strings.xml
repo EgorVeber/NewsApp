@@ -10,7 +10,7 @@
     <string name="total_history">Total History:\u0020</string>
     <string name="total_favorites">Total Favorites:\u0020</string>
     <string name="total_sources">Total Sources:\u0020</string>
-
+    <string name="favorites">Favorites:\u0020</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="readOn">Read on</string>
@@ -115,4 +115,14 @@
     <string name="errorCountryNotSelected">Country not selected</string>
     <string name="historyCanNotBeCleared">History can not be cleared</string>
     <string name="categories_order">Categories order</string>
+    <string name="show_by_helper">Display mode:</string>
+    <string name="filter">Filter</string>
+    <string name="add_key">Add Key</string>
+    <string name="get_key">Go to site</string>
+    <string name="empty_keys">No active keys</string>
+    <string name="input_key">Enter key</string>
+    <string name="keys_management">Keys management</string>
+    <string name="not_connection">There is no internet connection. Turn on the Internet and, if necessary, restart the application.</string>
+    <string name="search_view_title">Search in News</string>
+    <string name="error_search_key">Enter keyword</string>
 </resources>

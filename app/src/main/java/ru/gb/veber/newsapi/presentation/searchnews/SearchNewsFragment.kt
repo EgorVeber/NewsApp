@@ -9,20 +9,8 @@ import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.collapsed
-import ru.gb.veber.newsapi.common.extentions.expanded
-import ru.gb.veber.newsapi.common.extentions.formatDateDay
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.loadGlideNot
-import ru.gb.veber.newsapi.common.extentions.observeFlow
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showSnackBarError
-import ru.gb.veber.newsapi.common.extentions.stringFromData
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleHistorySelect
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.HISTORY_SELECT_BUNDLE
+import ru.gb.veber.newsapi.common.extentions.*
+import ru.gb.veber.newsapi.common.utils.*
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Article
@@ -163,7 +151,7 @@ class SearchNewsFragment :
     private fun clickNews(article: Article) {
 
         with(binding.behaviorInclude) {
-            imageViewAll.loadGlideNot(article.urlToImage)
+            imageViewAll.loadPicForTitle(article.urlToImage)
             dateNews.text = stringFromData(article.publishedAt).formatDateDay()
             titleNews.text = article.title
             authorText.text = article.author
@@ -214,7 +202,7 @@ class SearchNewsFragment :
     }
 
     private fun successSaveSources() {
-        binding.root.showSnackBarError(getString(R.string.sourcesSaved), "", {})
+        this.showSnackBar(getString(R.string.sourcesSaved))
     }
 
     private fun setSpan(description: String) {

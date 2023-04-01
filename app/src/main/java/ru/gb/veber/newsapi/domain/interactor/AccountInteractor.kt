@@ -1,9 +1,13 @@
 package ru.gb.veber.newsapi.domain.interactor
 
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.newsapi.common.utils.API_KEY_EMPTY
 import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.domain.models.Sources
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
@@ -42,7 +46,7 @@ class AccountInteractor
         return articleRepoImpl.deleteArticleIsFavoriteByIdV2(accountId)
     }
 
-    suspend fun getArticleByIdV2(accountId: Int): List<ArticleDbEntity> {
+    suspend fun getArticleByIdV2(accountId: Int): List<Article> {
         return articleRepoImpl.getArticleByIdV2(accountId)
     }
 
@@ -62,12 +66,10 @@ class AccountInteractor
         return sharedPreferenceAccount.getThemePrefs()
     }
 
-    fun setAccountID(id: Int) {
-        return sharedPreferenceAccount.setAccountID(id)
-    }
-
-    fun setAccountLogin(login: String) {
-        return sharedPreferenceAccount.setAccountLogin(login)
+    fun accountLogout(){
+        sharedPreferenceAccount.setAccountID(ACCOUNT_ID_DEFAULT)
+        sharedPreferenceAccount.setAccountLogin(ACCOUNT_LOGIN_DEFAULT)
+        sharedPreferenceAccount.setActiveKey(API_KEY_EMPTY)
     }
 
 }

@@ -3,9 +3,9 @@ package ru.gb.veber.newsapi.domain.interactor
 import ru.gb.veber.newsapi.data.SharedPreferenceAccount
 import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
 import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
-import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.CountryDbEntity
 import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import ru.gb.veber.newsapi.domain.repository.CountryRepo
@@ -31,8 +31,8 @@ class TopNewsInteractor @Inject constructor(
         accountRepoImpl.updateAccountV2(toAccountDbEntity)
     }
 
-    suspend fun insertArticleV2(articleDb: ArticleDbEntity) {
-        articleRepoImpl.insertArticleV2(articleDb)
+    suspend fun insertArticleV2(article: Article, accountId: Int) {
+        articleRepoImpl.insertArticleV2(article, accountId)
     }
 
     suspend fun deleteArticleByIdFavoritesV2(toString: String, accountId: Int) {
@@ -55,7 +55,7 @@ class TopNewsInteractor @Inject constructor(
         return newsRepoImpl.getTopicalHeadlinesCategoryCountryV2(category, country, key)
     }
 
-    suspend fun getArticleByIdV2(accountId: Int): List<ArticleDbEntity> {
+    suspend fun getArticleByIdV2(accountId: Int): List<Article> {
         return articleRepoImpl.getArticleByIdV2(accountId)
     }
 

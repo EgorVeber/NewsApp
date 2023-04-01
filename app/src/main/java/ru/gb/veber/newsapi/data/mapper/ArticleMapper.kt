@@ -80,6 +80,8 @@ fun ArticleDbEntity.toArticle(): Article {
         title = this.title,
         url = this.url,
         urlToImage = this.urlToImage,
+        isFavorites = this.isFavorites,
+        isHistory = this.isHistory,
         dateAdded = this.dateAdded
     )
 }

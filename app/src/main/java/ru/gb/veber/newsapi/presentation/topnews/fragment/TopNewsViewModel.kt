@@ -9,15 +9,9 @@ import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.common.extentions.formatDateTime
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
-import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
-import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.common.utils.ERROR_LOAD_NEWS
+import ru.gb.veber.newsapi.common.utils.*
 import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
 import ru.gb.veber.newsapi.data.mapper.toArticle
-import ru.gb.veber.newsapi.data.mapper.toArticleDbEntity
 import ru.gb.veber.newsapi.data.mapper.toArticleUI
 import ru.gb.veber.newsapi.data.mapper.toCountry
 import ru.gb.veber.newsapi.domain.interactor.TopNewsInteractor
@@ -162,7 +156,7 @@ class TopNewsViewModel @Inject constructor(
                 article.isHistory = true
                 article.dateAdded = Date().formatDateTime()
                 viewModelScope.launchJob(tryBlock = {
-                    topNewsInteractor.insertArticleV2(article.toArticleDbEntity(accountId))
+                    topNewsInteractor.insertArticleV2(article, accountId)
                     articleListHistory.find { articleHistory ->
                         articleHistory.title == article.title
                     }?.isHistory = true
@@ -175,11 +169,9 @@ class TopNewsViewModel @Inject constructor(
     }
 
     private fun saveArticleLike(article: Article) {
-        val articleDbEntity = article.toArticleDbEntity(accountId)
-        articleDbEntity.isFavorites = true
-
+        article.isFavorites = true
         viewModelScope.launchJob(tryBlock = {
-            topNewsInteractor.insertArticleV2(articleDbEntity)
+            topNewsInteractor.insertArticleV2(article,accountId)
             articleListHistory.find { articleHistory ->
                 articleHistory.title == article.title
             }?.isFavorites = true

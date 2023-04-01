@@ -1,6 +1,6 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
+import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import javax.inject.Inject
 
@@ -8,11 +8,11 @@ class FavoritesInteractor @Inject constructor(
     private val articleRepoImpl: ArticleRepo
 ) {
 
-    suspend fun getLikeArticle(accountId: Int): List<ArticleDbEntity> {
+    suspend fun getLikeArticle(accountId: Int): List<Article> {
         return articleRepoImpl.getLikeArticleByIdV2(accountId)
     }
 
-    suspend fun getHistoryArticle(accountId: Int): List<ArticleDbEntity> {
+    suspend fun getHistoryArticle(accountId: Int): List<Article> {
         return articleRepoImpl.getHistoryArticleByIdV2(accountId)
     }
 

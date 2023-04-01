@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/corner_radius_16" />
+            <solid android:color="@color/snackbar_color_v3"/>
+        </shape>
+    </item>
+</selector>

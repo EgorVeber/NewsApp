@@ -10,6 +10,8 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
+import ru.gb.veber.newsapi.common.utils.API_KEY_EMPTY
+import ru.gb.veber.newsapi.common.utils.API_KEY_KEY
 import ru.gb.veber.newsapi.common.utils.FILE_SETTINGS
 import ru.gb.veber.newsapi.common.utils.FIRST_START_APP
 import ru.gb.veber.newsapi.common.utils.KEY_THEME
@@ -105,6 +107,17 @@ object SharedPreferenceAccount {
 
     fun getArrayCategories(): Array<String> {
         return App.instance.applicationContext.resources.getStringArray(R.array.newsCategory)
+    }
+
+    fun setActiveKey(apiKey: String) {
+        App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,
+            Context.MODE_PRIVATE).edit().putString(API_KEY_KEY, apiKey).apply()
+    }
+
+    fun getActiveKey(): String {
+        return App.instance.applicationContext.getSharedPreferences(FILE_SETTINGS,
+            AppCompatActivity.MODE_PRIVATE).getString(API_KEY_KEY, API_KEY_EMPTY)
+            ?: API_KEY_EMPTY
     }
 }
 

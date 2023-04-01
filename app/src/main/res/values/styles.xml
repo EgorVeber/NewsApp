@@ -197,4 +197,12 @@
         <item name="behavior_peekHeight">0dp</item>
         <item name="layout_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior</item>
     </style>
+
+    <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckBox</item>
+    </style>
+
+    <style name="ThemeOverlay.App.CheckBox" parent="">
+        <item name="buttonTint">@color/color_primary_app</item>
+    </style>
 </resources>
