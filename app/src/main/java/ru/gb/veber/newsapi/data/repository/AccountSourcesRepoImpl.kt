@@ -39,7 +39,7 @@ class AccountSourcesRepoImpl(private val accountSourcesDao: AccountSourcesDao) :
 
     override suspend fun getLikeSourcesFromAccountV2(accountId: Int): List<Sources> {
         return accountSourcesDao.getLikeSourcesFromAccountV2(accountId).map { sourcesDb ->
-            sourcesDb.toSources()
+            sourcesDb.toSources().also { source -> source.liked = true }
         }
     }
 

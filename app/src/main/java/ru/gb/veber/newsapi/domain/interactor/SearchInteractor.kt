@@ -1,9 +1,11 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.data.mapper.toHistorySelect
+import ru.gb.veber.newsapi.data.mapper.toHistorySelectDbEntity
 import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
 import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.domain.models.Sources
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
@@ -17,31 +19,56 @@ class SearchInteractor @Inject constructor(
     private val sourcesRepo: SourcesRepo,
     private val accountSourcesRepo: AccountSourcesRepo,
 ) {
-    fun getAccountById(accountId: Int): Single<Account> {
-        return accountRepo.getAccountById(accountId)
+    suspend fun getAccountById(accountId: Int): Account {
+        return accountRepo.getAccountByIdV2(accountId)
     }
 
-    fun getLikeSourcesFromAccount(accountId: Int): Single<List<Sources>> {
-        return accountSourcesRepo.getLikeSourcesFromAccount(accountId)
+    suspend fun getSourcesAccount(accountId: Int, displayOnlySources: Boolean): List<Sources> {
+        val allSourcesList = sourcesRepo.getSourcesV2()
+
+        if (accountId == ACCOUNT_ID_DEFAULT) return allSourcesList
+
+        val likeSourcesList = getLikeSourcesFromAccount(accountId)
+
+        if (displayOnlySources && likeSourcesList.isNotEmpty()) {
+            return likeSourcesList
+        }
+
+        return changeSourcesListByLiked(likeSourcesList, allSourcesList)
     }
 
-    fun getSources(): Single<MutableList<Sources>> {
-        return sourcesRepo.getSources()
+    suspend fun getHistoryById(accountId: Int): List<HistorySelect> {
+        return historySelectRepo.getHistoryByIdV2(accountId).map { it.toHistorySelect() }.reversed()
     }
 
-    fun insertSelect(toHistorySelectDbEntity: HistorySelectDbEntity): Completable {
-        return historySelectRepo.insertSelect(toHistorySelectDbEntity)
+    suspend fun insertSelect(historySelect: HistorySelect) {
+        historySelectRepo.insertSelectV2(historySelect.toHistorySelectDbEntity())
     }
 
-    fun deleteSelectById(accountId: Int): Completable {
-        return historySelectRepo.deleteSelectById(accountId)
+    suspend fun deleteSelectById(accountId: Int) {
+        historySelectRepo.deleteSelectByIdV2(accountId)
     }
 
-    fun deleteSelect(toHistorySelectDbEntity: HistorySelectDbEntity): Completable {
-        return historySelectRepo.deleteSelect(toHistorySelectDbEntity)
+    suspend fun deleteSelect(historySelect: HistorySelect) {
+        historySelectRepo.deleteSelectV2(historySelect.toHistorySelectDbEntity())
     }
 
-    fun getHistoryById(accountId: Int): Single<List<HistorySelectDbEntity>> {
-        return historySelectRepo.getHistoryById(accountId)
+    private suspend fun getLikeSourcesFromAccount(accountId: Int): List<Sources> {
+        return accountSourcesRepo.getLikeSourcesFromAccountV2(accountId)
+    }
+
+    private fun changeSourcesListByLiked(
+        like: List<Sources>,
+        all: MutableList<Sources>,
+    ): MutableList<Sources> {
+        for (j in like.size - 1 downTo 0) {
+            for (i in all.indices) {
+                if (like[j].idSources == all[i].idSources) {
+                    all.removeAt(i)
+                    all.add(0, like[j])
+                }
+            }
+        }
+        return all
     }
 }

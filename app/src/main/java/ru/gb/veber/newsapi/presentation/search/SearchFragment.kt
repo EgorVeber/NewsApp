@@ -12,6 +12,7 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
+import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
@@ -36,11 +37,11 @@ class SearchFragment :
 
     private var itemListener = object : RecyclerListenerHistorySelect {
         override fun clickHistoryItem(historySelect: HistorySelect) {
-            viewModel.openScreenNewsHistory(historySelect)
+            viewModel.onClickHistoryItem(historySelect)
         }
 
         override fun deleteHistoryItem(historySelect: HistorySelect) {
-            viewModel.deleteHistory(historySelect)
+            viewModel.onClickHistoryIconDelete(historySelect)
         }
     }
 
@@ -83,7 +84,9 @@ class SearchFragment :
         }
         with(searchSpinnerCountry) {
             threshold = 1
-            onItemClickListener = listenerAdapter
+            onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
+                binding.searchSpinnerCountry.hideKeyboard()
+            }
             setOnClickListener {
                 showDropDown()
             }
@@ -92,33 +95,31 @@ class SearchFragment :
         recyclerHistory.adapter = historySelectAdapter
         recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
 
-        checkBoxSearchSources.setOnCheckedChangeListener { _, b ->
+        checkBoxSearchSources.setOnCheckedChangeListener { _, cheked ->
             if (checkBoxSearchSources.isChecked) {
                 if (binding.searchTextInput.editText?.text.isNullOrBlank()) searchButtonDeactive()
                 else searchButtonActive()
-            }
-            else {
+            } else {
                 if (binding.searchEdit.text.isNullOrBlank()) searchButtonDeactive()
                 else searchButtonActive()
             }
-            viewModel.changeSearchCriteria(b)
+            viewModel.changeSearchCriteria(cheked)
         }
-        selectDate.setOnClickListener {
-            createDatePiker()
-        }
+
+        selectDate.setOnClickListener { createDatePiker() }
+
         searchSourcesButton.setOnClickListener {
             if (checkBoxSearchSources.isChecked) {
 
                 val selectedItem = if (spinnerSortBySources.selectedItemPosition == 0) ""
                 else spinnerSortBySources.selectedItem.toString()
 
-                viewModel.openScreenAllNewsSources(
+                viewModel.onClickSearchSources(
                     date = dateInput,
                     sourcesName = searchSpinnerCountry.text.toString(),
                     sortBy = selectedItem
                 )
-            }
-            else {
+            } else {
                 var searchIn = ""
                 var sortBy = PUBLISHER_AT
 
@@ -129,29 +130,29 @@ class SearchFragment :
                 if (binding.spinnerSearchIn.selectedItemPosition != 0) {
                     searchIn = binding.spinnerSearchIn.selectedItem.toString()
                 }
-                viewModel.openScreenAllNews(
+                viewModel.onClickSearch(
                     binding.searchEdit.text.toString(), searchIn, sortBy,
                     binding.searchSpinnerCountry.text.toString()
                 )
             }
         }
         deleteHistoryAll.setOnClickListener {
-            viewModel.clearHistory()
+            viewModel.onClickHistoryDelete()
         }
     }
 
     override fun onObserveData() {
-        viewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
+
+        viewModel.dataStateFlow.observeFlow(this) { dataState ->
+            when (dataState) {
+                is SearchViewModel.DataState.SetHistorySelect -> setHistory(dataState.historySelect)
+                is SearchViewModel.DataState.SetSources -> setSources(dataState.sources)
+            }
+        }
+
+        viewModel.searchViewFlow.observeFlow(this) { state ->
             when (state) {
-                is SearchViewModel.SearchState.PikerPositive -> {
-                    pikerPositive(state.l)
-                }
-                is SearchViewModel.SearchState.SetHistory -> {
-                    setHistory(state.list)
-                }
-                is SearchViewModel.SearchState.SetSources -> {
-                    setSources(state.list)
-                }
+                is SearchViewModel.SearchState.SetDay -> pikerPositive(state.dateDay)
                 SearchViewModel.SearchState.SearchInShow -> {
                     searchInShow()
                 }
@@ -170,26 +171,27 @@ class SearchFragment :
                 SearchViewModel.SearchState.SourcesInShow -> {
                     sourcesInShow()
                 }
+                SearchViewModel.SearchState.Started -> {}
             }
         }
-        viewModel.subscribeVisibility().observe(viewLifecycleOwner) { state ->
+        viewModel.historyStateFlow.observeFlow(this) { state ->
             when (state) {
-                SearchViewModel.VisibilityState.EmptyHistory -> {
-                    emptyHistory()
+                SearchViewModel.HistoryState.StatusTextHistoryShow -> {
+                    statusTextHistoryShow()
                 }
-                SearchViewModel.VisibilityState.HideEmptyList -> {
-                    hideEmptyList()
+                SearchViewModel.HistoryState.StatusTextHistoryHide -> {
+                    statusTextHistoryHide()
                 }
-                SearchViewModel.VisibilityState.HideSelectHistory -> {
+                SearchViewModel.HistoryState.HideSelectHistory -> {
                     hideSelectHistory()
                 }
+                SearchViewModel.HistoryState.Started -> {}
             }
         }
     }
 
-    override fun onStartAction() {
-        viewModel.getSources()
-        viewModel.getHistorySelect()
+    override fun onViewInited() {
+        viewModel.onViewInited(accountId)
     }
 
     private fun setHistory(list: List<HistorySelect>) {
@@ -230,16 +232,12 @@ class SearchFragment :
                 }
                 it.addOnNegativeButtonClickListener {
                     viewModel.pikerNegative()
-
                 }
             }
     }
 
-    private fun pikerPositive(l: Long) {
-        val outputDateFormat = SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).apply {
-            timeZone = TimeZone.getTimeZone(TIME_ZONE)
-        }
-        dateInput = outputDateFormat.format(l)
+    private fun pikerPositive(dateDay: String) {
+        dateInput = dateDay
         binding.selectDate.text = dateInput
     }
 
@@ -291,15 +289,17 @@ class SearchFragment :
         searchEdit.hideKeyboard()
         if (searchEdit.text?.isEmpty() == true) {
             searchButtonDeactive()
-            searchEdit.visibility = View.INVISIBLE }
-        else searchButtonActive()
+            searchEdit.visibility = View.INVISIBLE
+        } else searchButtonActive()
         searchEnotBlock.hide()
     }
 
     private fun selectSources() {
         binding.searchTextInput.error = getString(R.string.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) { binding.searchTextInput.error = null }
+            if (isAdded) {
+                binding.searchTextInput.error = null
+            }
         }, DURATION_ERROR_INPUT)
     }
 
@@ -307,27 +307,27 @@ class SearchFragment :
         searchViewActive()
         binding.searchEdit.error = getString(R.string.error_search_key)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) { binding.searchEdit.error = null }
+            if (isAdded) {
+                binding.searchEdit.error = null
+            }
         }, DURATION_ERROR_INPUT)
     }
 
     private fun errorDateInput() {
         binding.errorDateText.show()
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isAdded) { binding.errorDateText.hide() }
+            if (isAdded) {
+                binding.errorDateText.hide()
+            }
         }, DURATION_ERROR_INPUT)
     }
 
-    private val listenerAdapter = AdapterView.OnItemClickListener { _, _, _, _ ->
-        binding.searchSpinnerCountry.hideKeyboard()
+    private fun statusTextHistoryShow() {
+        binding.statusTextHistory.show()
     }
 
-    private fun emptyHistory() {
-        binding.emptyHistory.show()
-    }
-
-    private fun hideEmptyList() {
-        binding.emptyHistory.hide()
+    private fun statusTextHistoryHide() {
+        binding.statusTextHistory.hide()
     }
 
     companion object {

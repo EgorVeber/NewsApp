@@ -16,7 +16,7 @@ class SourceInteractor
     private val accountSourcesRepoImpl: AccountSourcesRepo,
     private val sourcesRepoImpl: SourcesRepo,
     private val articleRepoImpl: ArticleRepo,
-    private val historySelectRepoImpl: HistorySelectRepo
+    private val historySelectRepoImpl: HistorySelectRepo,
 ) {
     suspend fun getSourcesV2(): MutableList<Sources> {
         return sourcesRepoImpl.getSourcesV2()
@@ -35,11 +35,12 @@ class SourceInteractor
     }
 
     suspend fun insertV2(
-        accountSourcesDbEntity: AccountSourcesDbEntity) {
+        accountSourcesDbEntity: AccountSourcesDbEntity,
+    ) {
         accountSourcesRepoImpl.insertV2(accountSourcesDbEntity)
     }
 
-    suspend fun insertSelectV2(historyDbEntity: HistorySelectDbEntity){
-            historySelectRepoImpl.insertSelectV2(historyDbEntity)
+    suspend fun insertSelectV2(historyDbEntity: HistorySelectDbEntity) {
+        historySelectRepoImpl.insertSelectV2(historyDbEntity)
     }
 }

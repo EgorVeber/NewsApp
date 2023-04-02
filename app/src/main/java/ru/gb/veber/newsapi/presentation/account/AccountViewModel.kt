@@ -135,7 +135,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             accountInteractor.deleteSourcesV2(accountId)
             mutableState.postValue(AccountViewState.ClearSources)
-        }, catchBlock = {error ->
+        }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
     }
@@ -165,7 +165,7 @@ class AccountViewModel @Inject constructor(
         accountMain.saveSelectHistory = checked
         viewModelScope.launchJob(tryBlock = {
             accountInteractor.updateAccountV2(accountMain.toAccountDbEntity())
-        }, catchBlock = {error ->
+        }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
     }
@@ -192,7 +192,7 @@ class AccountViewModel @Inject constructor(
             val title: String,
             val message: String,
             val positive: String,
-            val onClick: () -> Unit
+            val onClick: () -> Unit,
         ) : AccountViewState()
 
         object ClearHistory : AccountViewState()

@@ -57,9 +57,6 @@ class SourcesViewModel @Inject constructor(
                 val like = sourceInteractor.getLikeSourcesFromAccountV2(accountId = accountId)
                 val article = sourceInteractor.getArticleByIdV2(accountId = accountId)
                 allSources = all
-                like.map { sources ->
-                    sources.liked = true
-                }
 
                 for (j in like.size - 1 downTo 0) {
                     for (i in all.indices) {

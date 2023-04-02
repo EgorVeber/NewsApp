@@ -1,26 +1,26 @@
 package ru.gb.veber.newsapi.presentation.search
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.common.SingleLiveData
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.common.extentions.formatDate
-import ru.gb.veber.newsapi.common.extentions.stringFromDataNews
+import ru.gb.veber.newsapi.common.extentions.isValidatePeriod
+import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.extentions.stringFromDataPiker
-import ru.gb.veber.newsapi.common.extentions.takeDate
+import ru.gb.veber.newsapi.common.extentions.toStringDate
 import ru.gb.veber.newsapi.common.screen.SearchNewsScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
-import ru.gb.veber.newsapi.data.mapper.toHistorySelect
-import ru.gb.veber.newsapi.data.mapper.toHistorySelectDbEntity
 import ru.gb.veber.newsapi.domain.interactor.SearchInteractor
 import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.domain.models.Sources
-import java.util.*
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
@@ -28,257 +28,220 @@ class SearchViewModel @Inject constructor(
     private val searchInteractor: SearchInteractor,
 ) : NewsViewModel() {
 
-    private lateinit var allSources: MutableList<Sources>
-    private lateinit var likeSources: List<Sources>
-    private var accountHistorySelect: Boolean = false
+    private lateinit var allSources: List<Sources>
 
-    private val mutableFlow: SingleLiveData<SearchState> = SingleLiveData()
-    private val flow: LiveData<SearchState> = mutableFlow
-    private val mutableFlowVisibility: MutableLiveData<VisibilityState> = MutableLiveData()
-    private val flowVisibility: LiveData<VisibilityState> = mutableFlowVisibility
-    private var accountId: Int = 0
+    private val searchViewState = MutableStateFlow<SearchState>(SearchState.Started)
+    internal val searchViewFlow = searchViewState.asStateFlow()
 
-    fun subscribe(accountId: Int): LiveData<SearchState> {
-        this.accountId = accountId
-        return flow
-    }
+    private val historyStateContainer = MutableStateFlow<HistoryState>(HistoryState.Started)
+    internal val historyStateFlow = historyStateContainer.asStateFlow()
 
-    fun subscribeVisibility(): LiveData<VisibilityState> {
-        return flowVisibility
-    }
+    private val dataState = MutableSharedFlow<DataState>(replay = 2)
+    internal val dataStateFlow = dataState.asSharedFlow()
+
+    private var accountId: Int = ACCOUNT_ID_DEFAULT
+    private var saveHistory: Boolean = false
+    private var displayOnlySources: Boolean = false
 
     override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
-    private fun isAuthorized()= (accountId == ACCOUNT_ID_DEFAULT)
 
-    fun getSources() {
-        if (isAuthorized()) {
-            mutableFlowVisibility.value = VisibilityState.HideSelectHistory
 
-            searchInteractor.getSources().subscribe({
-                allSources = it
-                mutableFlow.value = SearchState.SetSources(it)
-            }, {
-                it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-            })
+    fun onViewInited(accountId: Int) {
+        this.accountId = accountId
+        getHistorySelect()
+        viewModelScope.launchJob(tryBlock = {
+            getAccountInfo(accountId)
+            getSources()
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.toString())
+        })
+    }
+
+    fun changeSearchCriteria(cheked: Boolean) {
+        if (!cheked) {
+            searchViewState.tryEmit(SearchState.SearchInShow)
         } else {
-            Single.zip(
-                searchInteractor.getSources(),
-                searchInteractor.getLikeSourcesFromAccount(accountId),
-                searchInteractor.getAccountById(accountId)
-            ) { all, like, account ->
-
-                accountHistorySelect = account.saveSelectHistory
-                allSources = all
-                like.map { it.liked = true }
-                likeSources = like
-
-                if (account.displayOnlySources && like.isNotEmpty()) {
-                    likeSources = like
-                    return@zip like
-                }
-                if (like.isEmpty()) {
-                    return@zip all
-                    
-                } else {
-                    for (j in like.size - 1 downTo 0) {
-                        for (i in all.indices) {
-                            if (like[j].idSources == all[i].idSources) {
-                                all.removeAt(i)
-                                all.add(0, like[j].also { it.liked = true })
-                            }
-                        }
-                    }
-                    all
-                }
-            }.subscribe({
-                mutableFlow.value = SearchState.SetSources(it)
-            }, {
-                it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-            })
+            searchViewState.tryEmit(SearchState.SourcesInShow)
         }
     }
 
-    fun changeSearchCriteria(b: Boolean) {
-        if (!b) {
-            mutableFlow.value = SearchState.SearchInShow
-        } else {
-            mutableFlow.value = SearchState.SourcesInShow
-        }
-    }
-
-    fun openScreenAllNewsSources(
+    fun onClickSearchSources(
         date: String,
         sourcesName: String,
         sortBy: String,
     ) {
-        if (sourcesName.isEmpty() || !allSources.map { it.name }.contains(sourcesName)) {
-            mutableFlow.value = SearchState.SelectSources
-        } else {
-            if (!checkDate(date)) {
-                mutableFlow.value = SearchState.ErrorDateInput
-            } else {
-                val sourcesId = allSources.find { it.name == sourcesName }?.idSources
-                if (date == NOT_INPUT_DATE) {
-                    val x = HistorySelect(
-                        0, accountID = accountId,
-                        sourcesId = sourcesId,
-                        sortBySources = sortBy,
-                        sourcesName = sourcesName,
-                    )
-                    router.navigateTo(SearchNewsScreen(accountId, x))
+        if (containsByName(sourcesName)) {
+            if (date.isValidatePeriod()) {
+                val sourcesId = getIdByNameIfEmpty(sourcesName)
 
-                    if (accountHistorySelect) {
-                        searchInteractor.insertSelect(x.toHistorySelectDbEntity())
-                            .subscribe({}, {
-                                it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-                            })
-                    }
-                } else {
-                    val x = HistorySelect(
-                        0, accountID = accountId,
-                        sourcesId = sourcesId,
-                        sortBySources = sortBy,
-                        sourcesName = sourcesName,
-                        dateSources = stringFromDataPiker(date).formatDate()
-                    )
+                val historySelect = createHistorySelect(
+                    sourcesId = sourcesId,
+                    sortBySources = sortBy,
+                    sourcesName = sourcesName,
+                    dateSources = if (date != NOT_INPUT_DATE) stringFromDataPiker(date).formatDate() else "")
 
-                    router.navigateTo(SearchNewsScreen(accountId, x))
-                    if (accountHistorySelect) {
-                        searchInteractor.insertSelect(x.toHistorySelectDbEntity())
-                            .subscribe({}, {
-                                it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-                            })
-                    }
-                }
-            }
-        }
+                router.navigateTo(SearchNewsScreen(accountId, historySelect))
+                saveHistorySelect(historySelect)
+
+            } else searchViewState.tryEmit(SearchState.ErrorDateInput)
+        } else searchViewState.tryEmit(SearchState.SelectSources)
     }
 
-    fun openScreenAllNews(
-        keyWord: String,
-        searchIn: String,
-        sortBy: String,
-        sourcesName: String,
-    ) {
-        if (keyWord.isEmpty()) {
-            mutableFlow.value = SearchState.EnterKeys
-        } else {
-            if (sourcesName.isEmpty()) {
-                val x = HistorySelect(
-                    id = 0,
-                    accountID = accountId,
-                    keyWord = keyWord,
-                    searchIn = searchIn,
-                    sortByKeyWord = sortBy
-                )
-
-                router.navigateTo(SearchNewsScreen(accountId, x))
-                if (accountHistorySelect) {
-                    searchInteractor.insertSelect(x.toHistorySelectDbEntity()).subscribe({}, {
-                        it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-                    })
-                }
-            } else {
-                if (!allSources.map { it.name }.contains(sourcesName)) {
-                    mutableFlow.value = SearchState.SelectSources
-                } else {
-                    val sourcesId = allSources.find { it.name == sourcesName }?.idSources
-
-                    val x = HistorySelect(
-                        id = 0,
-                        accountID = accountId,
+    fun onClickSearch(keyWord: String, searchIn: String, sortBy: String, sourcesName: String) {
+        if (keyWord.isNotEmpty()) {
+            val historySelect: HistorySelect
+            if (sourcesName.isNotEmpty()) {
+                if (containsByName(sourcesName)) {
+                    val sourcesId = getIdByNameIfEmpty(sourcesName)
+                    historySelect = createHistorySelect(
                         keyWord = keyWord,
                         searchIn = searchIn,
                         sortByKeyWord = sortBy,
                         sourcesId = sourcesId,
-                        sourcesName = sourcesName
+                        sourcesName = sourcesName,
                     )
-                    router.navigateTo(SearchNewsScreen(accountId, x))
-
-                    if (accountHistorySelect) {
-                        searchInteractor.insertSelect(x.toHistorySelectDbEntity())
-                            .subscribe({}, {
-                                it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-                            })
-                    }
+                } else {
+                    searchViewState.tryEmit(SearchState.SelectSources)
+                    return
                 }
+            } else {
+                historySelect = createHistorySelect(
+                    keyWord = keyWord,
+                    searchIn = searchIn,
+                    sortByKeyWord = sortBy)
+            }
+            router.navigateTo(SearchNewsScreen(accountId, historySelect))
+            saveHistorySelect(historySelect)
+        } else {
+            searchViewState.tryEmit(SearchState.EnterKeys)
+        }
+    }
+
+    fun onClickHistoryDelete() {
+        viewModelScope.launchJob(tryBlock = {
+            searchInteractor.deleteSelectById(accountId)
+            dataState.emit(DataState.SetHistorySelect(listOf()))
+            historyStateContainer.update { HistoryState.StatusTextHistoryShow }
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.toString())
+        })
+    }
+
+    fun onClickHistoryIconDelete(historySelect: HistorySelect) {
+        viewModelScope.launchJob(tryBlock = {
+            searchInteractor.deleteSelect(historySelect)
+            getHistorySelect()
+        }, catchBlock = { error ->
+            Log.d(ERROR_DB, error.toString())
+        })
+    }
+
+    fun onClickHistoryItem(historySelect: HistorySelect) {
+        router.navigateTo(SearchNewsScreen(accountId, historySelect))
+    }
+
+    fun pikerPositive(timeMillis: Long) {
+        searchViewState.tryEmit(SearchState.SetDay(timeMillis.toStringDate()))
+    }
+
+    fun pikerNegative() {
+        searchViewState.tryEmit(SearchState.PikerNegative)
+    }
+
+    private fun getHistorySelect() {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            viewModelScope.launchJob(tryBlock = {
+                val historySelectList = searchInteractor.getHistoryById(accountId)
+
+                if (historySelectList.isEmpty()) {
+                    historyStateContainer.update { HistoryState.StatusTextHistoryShow }
+                } else {
+                    historyStateContainer.update { HistoryState.StatusTextHistoryHide }
+                }
+
+                dataState.emit(DataState.SetHistorySelect(historySelectList))
+
+            }, catchBlock = { error ->
+                Log.d(ERROR_DB, error.toString())
+            })
+        } else historyStateContainer.value = HistoryState.HideSelectHistory
+    }
+
+    private suspend fun getAccountInfo(accountId: Int) {
+        if (accountId != ACCOUNT_ID_DEFAULT) {
+            searchInteractor.getAccountById(accountId).also { account ->
+                saveHistory = account.saveSelectHistory
+                displayOnlySources = account.displayOnlySources
             }
         }
     }
 
-    fun pikerPositive(timeMillis: Long) {
-        mutableFlow.value = SearchState.PikerPositive(timeMillis)
+    private suspend fun getSources() {
+        allSources = searchInteractor.getSourcesAccount(accountId, displayOnlySources)
+        dataState.emit(DataState.SetSources(allSources))
     }
 
-    fun pikerNegative() {
-        mutableFlow.value = SearchState.PikerNegative
-    }
-
-    fun getHistorySelect() {
-        if (accountId != ACCOUNT_ID_DEFAULT) {
-            searchInteractor.getHistoryById(accountId)
-                .subscribe({ listSelectDbEntity ->
-                    if (listSelectDbEntity.isEmpty()) {
-                        mutableFlow.value = SearchState.SetHistory(listOf())
-                        mutableFlowVisibility.value = VisibilityState.EmptyHistory
-                    } else {
-                        mutableFlowVisibility.value = VisibilityState.HideEmptyList
-                        mutableFlow.value =
-                            SearchState.SetHistory(listSelectDbEntity.map { historySelectDbEntity ->
-                                historySelectDbEntity.toHistorySelect()
-                            }.reversed())
-                    }
-                }, {
-                    it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-                })
+    private fun saveHistorySelect(historySelect: HistorySelect) {
+        if (saveHistory) {
+            viewModelScope.launchJob(tryBlock = {
+                searchInteractor.insertSelect(historySelect)
+            }, catchBlock = { error ->
+                Log.d(ERROR_DB, error.toString())
+            })
         }
     }
 
-    fun openScreenNewsHistory(historySelect: HistorySelect) {
-        router.navigateTo(SearchNewsScreen(accountId, historySelect))
+    private fun createHistorySelect(
+        keyWord: String? = "",
+        searchIn: String? = "",
+        sortByKeyWord: String? = "",
+        sortBySources: String? = "",
+        sourcesId: String? = "",
+        dateSources: String? = "",
+        sourcesName: String? = "",
+    ) = HistorySelect(id = 0,
+        accountID = accountId,
+        keyWord = keyWord,
+        searchIn = searchIn,
+        sortByKeyWord = sortByKeyWord,
+        sortBySources = sortBySources,
+        sourcesId = sourcesId,
+        dateSources = dateSources,
+        sourcesName = sourcesName)
+
+    private fun getIdByNameIfEmpty(sourcesName: String): String {
+        return allSources.find { sources ->
+            sources.name == sourcesName
+        }?.idSources ?: allSources[0].idSources ?: ""
     }
 
-    fun clearHistory() {
-        searchInteractor.deleteSelectById(accountId).subscribe({
-            mutableFlow.value = SearchState.SetHistory(listOf())
-            mutableFlowVisibility.value = VisibilityState.EmptyHistory
-        }, {
-            it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-        })
-    }
-
-    fun deleteHistory(historySelect: HistorySelect) {
-        searchInteractor.deleteSelect(historySelect.toHistorySelectDbEntity()).subscribe({
-            getHistorySelect()
-        }, {
-            it.localizedMessage?.let { it1 -> Log.d(ERROR_DB, it1) }
-        })
-    }
-
-    private fun checkDate(date: String): Boolean {
-        if (date == NOT_INPUT_DATE) {
-            return true
-        }
-        return !(stringFromDataNews(date) > Date() || stringFromDataNews(date) <= takeDate(-30))
+    private fun containsByName(sourcesName: String): Boolean {
+        return allSources.map { it.name }.contains(sourcesName)
     }
 
     sealed class SearchState {
-        data class SetSources(val list: List<Sources>) : SearchState()
-        data class SetHistory(val list: List<HistorySelect>) : SearchState()
-        data class PikerPositive(val l: Long) : SearchState()
+        data class SetDay(val dateDay: String) : SearchState()
         object SearchInShow : SearchState()
         object PikerNegative : SearchState()
         object SelectSources : SearchState()
         object EnterKeys : SearchState()
         object ErrorDateInput : SearchState()
         object SourcesInShow : SearchState()
+        object Started : SearchState()
     }
-    sealed class VisibilityState {
-        object HideSelectHistory : VisibilityState()
-        object EmptyHistory : VisibilityState()
-        object HideEmptyList : VisibilityState()
+
+    sealed class HistoryState {
+        object HideSelectHistory : HistoryState()
+        object StatusTextHistoryShow : HistoryState()
+        object StatusTextHistoryHide : HistoryState()
+        object Started : HistoryState()
+    }
+
+    sealed class DataState {
+        data class SetSources(val sources: List<Sources>) : DataState()
+        data class SetHistorySelect(val historySelect: List<HistorySelect>) : DataState()
     }
 }

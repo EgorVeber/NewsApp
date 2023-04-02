@@ -82,7 +82,7 @@ class KeysManagementFragment :
         }
     }
 
-    override fun onStartAction() {
+    override fun onViewInited() {
         viewModel.getKeys(accountId)
     }
 

@@ -49,7 +49,7 @@ abstract class NewsFragment<T : ViewBinding, ViewModel : NewsViewModel>(
         onInitViewModel()
         onInitView()
         onObserveData()
-        onStartAction()
+        onViewInited()
     }
 
     protected open fun onInitView() {}
@@ -60,7 +60,7 @@ abstract class NewsFragment<T : ViewBinding, ViewModel : NewsViewModel>(
 
     protected open fun onObserveData() {}
 
-    protected open fun onStartAction() {}
+    protected open fun onViewInited() {}
 
 
     override fun onDestroyView() {
