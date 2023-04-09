@@ -111,7 +111,7 @@ class SearchNewsFragment :
         }
     }
 
-    override fun onStartAction() {
+    override fun onViewInited() {
         viewModel.getAccountSettings(historySelect)
     }
 

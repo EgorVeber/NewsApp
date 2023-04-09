@@ -74,7 +74,7 @@ class FavoritesFragment :
         viewModel.uiState.observe(viewLifecycleOwner, ::handleState)
     }
 
-    override fun onStartAction() {
+    override fun onViewInited() {
         viewModel.getAccountArticle(accountID, tagPage)
     }
 

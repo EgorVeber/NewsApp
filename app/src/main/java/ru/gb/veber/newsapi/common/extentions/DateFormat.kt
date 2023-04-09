@@ -1,5 +1,9 @@
 package ru.gb.veber.newsapi.common.extentions
 
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.MAX_PERIOD_DAY_NEWS
+import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
+import ru.gb.veber.newsapi.domain.models.Sources
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -49,8 +53,21 @@ fun stringFromDataTime(dateString: String) =
 fun stringFromDataPiker(dateString: String) =
     SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).parse(dateString) ?: Date()
 
-fun stringFromDataNews(dateString: String) =
+fun stringFromDataNews(dateString: String): Date =
     SimpleDateFormat(FORMAT_DATE_NEWS, Locale.getDefault()).parse(dateString) ?: Date()
+
+fun String.isValidatePeriod(): Boolean {
+    if (this == NOT_INPUT_DATE) return true
+    return !(stringFromDataNews(this) > Date()
+            || stringFromDataNews(this) <= takeDate(MAX_PERIOD_DAY_NEWS))
+}
+
+fun Long.toStringDate(formatR: String? = FORMAT_DATE_NEWS ): String {
+    SimpleDateFormat(formatR, Locale.getDefault()).also {
+        it.timeZone = TimeZone.getTimeZone(TIME_ZONE)
+        return it.format(this)
+    }
+}
 
 
 fun String.checkLogin(): String {
@@ -63,7 +80,7 @@ fun String.checkLogin(): String {
 
 fun String.subKey(): String {
     return if (this.length >= 10) {
-        this.substring(0, 10)+"..."
+        this.substring(0, 10) + "..."
     } else {
         this
     }

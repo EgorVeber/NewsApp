@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.presentation.webview
 
+import android.annotation.SuppressLint
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
 import ru.gb.veber.newsapi.common.base.NewsFragment
@@ -29,10 +30,12 @@ class WebViewFragment :
         App.instance.appComponent.inject(this)
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onInitView() {
         with(binding.webNews) {
             webViewClient = mWebViewClient
             webChromeClient = WebChromeClient()
+            settings.javaScriptEnabled = true
             settings.builtInZoomControls = true
             settings.displayZoomControls = false
             clearHistory()
