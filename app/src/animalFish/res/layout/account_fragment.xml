@@ -686,7 +686,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/margin_5"
-                        android:text="О приложении(main layout)"
+                        android:text="О приложении(fishDebug v1)"
                         android:textColor="@color/color_black"
                         android:textSize="16sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>

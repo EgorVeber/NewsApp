@@ -39,6 +39,22 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    flavorDimensions "animals"
+    productFlavors {
+        animalHorse {
+            dimension "animals"
+            versionNameSuffix 'ver_name_suf_house'
+        }
+        animalFish {
+            dimension "animals"
+            versionNameSuffix 'ver_name_suf_fish'
+        }
+        emptyFlavors {
+            dimension "animals"
+            versionNameSuffix 'ver_name_suf_emptyFlavors'
+        }
+    }
 }
 
 apply from: "../dependencies.gradle"

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary_app">#64DD17</color>
+    <color name="color_error_like">#f44336</color>
+    <color name="color_sources_background_image">#77000000</color>
+    <color name="color_tab_item_foreground">#99000000</color>
+    <color name="color_splash_screen_background">#2c73e8</color>
+    <color name="color_icon_tint">#747272</color>
+    <color name="color_search_view_background">#eeeeee</color>
+    <color name="color_published_at_search_news">#757575</color>
+    <color name="helper_text_app">#757575</color>
+    <color name="color_black">#FF000000</color>
+    <color name="color_white">#FFFFFFFF</color>
+    <color name="color_title_search">#DD000000</color>
+    <color name="color_background_behavior_image">#f6f6fa</color>
+    <color name="static_green">#4AB868</color>
+    <color name="separator">#66313131</color>
+    <color name="shack_bar_color">#0377BE</color>
+    <color name="separator_color">#dce1eb</color>
+    <color name="snackbar_color_v1">#488dd2</color>
+    <color name="snackbar_color_v2">#589ada</color>
+    <color name="snackbar_color_v3">#3f87d0</color>
+    <color name="text_color_snackbar">#CCFFFFFF</color>
+</resources>

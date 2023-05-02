@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorAllNews"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/progressBarAllNews"
+        style="@style/progressBarDefault" />
+
+    <TextView
+        android:id="@+id/statusTextList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_20"
+        android:text="@string/empty_list"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/text_size_status_text_search"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/backMainScreenImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/titleSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/text_size_title_search_view"
+        android:textStyle="bold"
+        app:layout_behavior=".presentation.searchnews.BehaviorTitleSearch" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allNewsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_10"
+        android:padding="@dimen/padding_5"
+        android:paddingBottom="?actionBarSize"
+        app:layout_behavior=".presentation.searchnews.BehaviorRecycler" />
+
+    <include
+        android:id="@+id/behaviorInclude"
+        layout="@layout/news_behavior" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

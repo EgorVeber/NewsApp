@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <item android:drawable="@color/color_splash_screen_background" />
+
+    <item
+        android:width="200dp"
+        android:height="60dp"
+        android:gravity="center">
+        <bitmap
+            android:gravity="fill"
+            android:src="@drawable/news_api_logo"
+            android:mipMap="true"/>
+    </item>
+</layer-list>
