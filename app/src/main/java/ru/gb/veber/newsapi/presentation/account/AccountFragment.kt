@@ -96,6 +96,9 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
         binding.keysManagementLl.setOnClickListener {
             viewModel.openScrenKeysManagement(accountId)
         }
+        binding.fileLl.setOnClickListener {
+            viewModel.onClickFileItem(accountId)
+        }
     }
 
     override fun onObserveData() {

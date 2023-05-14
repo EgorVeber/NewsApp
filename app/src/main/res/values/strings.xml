@@ -79,6 +79,7 @@
     <string name="about_the_application">About the application</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="technical_support">Technical support</string>
+    <string name="file_screen">Экран Файлов</string>
     <string name="delete_account">Delete account</string>
     <string name="clearSources">Clear Sources</string>
     <string name="empty_list">Empty List</string>
