@@ -78,6 +78,7 @@
     <string name="about_the_application">О приложении</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
     <string name="technical_support">Техническая поддержка</string>
+    <string name="file_screen">File Screen</string>
     <string name="delete_account">Удалить аккаунт</string>
     <string name="clearSources">Удалить источник</string>
     <string name="empty_list">Нет новостей</string>

@@ -10,6 +10,7 @@ import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.AuthorizationScreen
 import ru.gb.veber.newsapi.common.screen.CustomizeCategoryScreen
 import ru.gb.veber.newsapi.common.screen.EditAccountScreen
+import ru.gb.veber.newsapi.common.screen.FileScreen
 import ru.gb.veber.newsapi.common.screen.KeyManagementScreen
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
@@ -182,6 +183,10 @@ class AccountViewModel @Inject constructor(
 
     fun openScrenKeysManagement(accountId: Int) {
         router.navigateTo(KeyManagementScreen(accountId))
+    }
+
+    fun onClickFileItem(accountId: Int) {
+        router.navigateTo(FileScreen(accountId))
     }
 
     sealed class AccountViewState {
