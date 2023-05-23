@@ -17,6 +17,7 @@ import ru.gb.veber.newsapi.presentation.profile.ProfileFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment
+import ru.gb.veber.newsapi.presentation.profile.file.FileFragment
 import ru.gb.veber.newsapi.presentation.search.SearchFragment
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.presentation.sources.FragmentSources
@@ -52,4 +53,5 @@ interface AppComponent {
     fun inject(topNewsViewPagerFragment:TopNewsViewPagerFragment)
     fun inject(customizeCategoryFragment: CustomizeCategoryFragment)
     fun inject(keysManagementFragment: KeysManagementFragment)
+    fun inject(fileFragment: FileFragment)
 }

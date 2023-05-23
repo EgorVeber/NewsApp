@@ -1,8 +1,11 @@
 package ru.gb.veber.newsapi.common
 
 import android.content.Context
+import android.graphics.Canvas
 import android.util.AttributeSet
+import android.view.DragEvent
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.ContentViewCallback
 import ru.gb.veber.newsapi.R

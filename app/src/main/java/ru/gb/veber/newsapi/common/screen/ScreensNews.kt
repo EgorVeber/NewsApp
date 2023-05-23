@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import ru.gb.veber.newsapi.domain.models.HistorySelect
 import ru.gb.veber.newsapi.presentation.account.AccountFragment
+import ru.gb.veber.newsapi.presentation.customview.FigureFragment
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.presentation.profile.ProfileFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountFragment
@@ -32,6 +33,12 @@ data class AccountScreen(private val accountId: Int) : FragmentScreen {
 object AuthorizationScreen : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
         return AuthorizationFragment.getInstance()
+    }
+}
+
+object FigureScreen : FragmentScreen {
+    override fun createFragment(factory: FragmentFactory): Fragment {
+        return FigureFragment()
     }
 }
 

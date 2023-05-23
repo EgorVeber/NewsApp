@@ -8,19 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.databinding.FileFragmentBinding
+import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStreamReader
+import javax.inject.Inject
 
-class FileFragment : Fragment(R.layout.file_fragment) {
+class FileFragment : Fragment(R.layout.file_fragment), BackPressedListener {
+
+    @Inject
+    lateinit var router: Router
 
     private var accountID by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
 
@@ -126,5 +132,10 @@ class FileFragment : Fragment(R.layout.file_fragment) {
             val bytes = binding.editTextFile.text.toString().toByteArray()
             it.write(bytes)
         }
+    }
+
+    override fun onBackPressedRouter(): Boolean {
+        router.exit()
+        return false
     }
 }

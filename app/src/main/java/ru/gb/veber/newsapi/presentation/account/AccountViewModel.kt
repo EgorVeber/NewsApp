@@ -189,6 +189,10 @@ class AccountViewModel @Inject constructor(
         router.navigateTo(FileScreen(accountId))
     }
 
+    fun onClickFigureItem() {
+        router.navigateTo(ru.gb.veber.newsapi.common.screen.FigureScreen)
+    }
+
     sealed class AccountViewState {
         object Loading : AccountViewState()
         data class SetAccountInfo(val account: Account, val theme: Int) : AccountViewState()

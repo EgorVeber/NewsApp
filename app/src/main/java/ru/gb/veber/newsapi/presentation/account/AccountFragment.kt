@@ -99,6 +99,9 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
         binding.fileLl.setOnClickListener {
             viewModel.onClickFileItem(accountId)
         }
+        binding.figureLl.setOnClickListener {
+            viewModel.onClickFigureItem()
+        }
     }
 
     override fun onObserveData() {
