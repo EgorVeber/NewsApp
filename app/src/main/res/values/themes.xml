@@ -18,6 +18,7 @@
         <item name="colorControlActivated">@color/color_primary_app</item>
         <item name="materialCalendarTheme">@style/ThemeOverlay.App.DatePicker</item>
     </style>
+
     <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/color_black</item>
         <item name="colorPrimaryVariant">@color/color_black</item>

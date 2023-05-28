@@ -33,5 +33,17 @@
             android:textColor="@color/color_white"
             tools:text="Данные не менялиь"
             />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:theme="@style/cardViewDefault"
+            android:textStyle="bold"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
+            tools:text="Данные не менялиь"
+            />
     </LinearLayout>
 </merge>

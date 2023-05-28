@@ -96,6 +96,16 @@
             android:lines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <ru.gb.veber.newsapi.presentation.customview.gantt.GantView
+        android:id="@+id/gant"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/saveChangeAccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveChangeAccount"
         android:layout_width="0dp"

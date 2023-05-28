@@ -1,17 +1,14 @@
-package ru.gb.veber.newsapi.presentation.customview
+package ru.gb.veber.newsapi.presentation.customview.figure
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.NinePatch
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import android.graphics.Rect
-import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.graphics.applyCanvas
@@ -29,7 +26,6 @@ class FigurePorterDuffView @JvmOverloads constructor(
         color = Color.GREEN
         xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
     }
-
 
     private val paintCustom2 = Paint().apply {
         color = Color.RED
@@ -52,7 +48,6 @@ class FigurePorterDuffView @JvmOverloads constructor(
         lineTo(300f,300f)
         close()
     }
-
 
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {

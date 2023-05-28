@@ -21,4 +21,9 @@
     <color name="snackbar_color_v2">#589ada</color>
     <color name="snackbar_color_v3">#3f87d0</color>
     <color name="text_color_snackbar">#CCFFFFFF</color>
+    <!--region Gant-->
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_300">#E0E0E0</color>
+    <color name="grey_500">#9E9E9E</color>
+    <!--endregion-->
 </resources>

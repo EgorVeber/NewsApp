@@ -1,6 +1,8 @@
 package ru.gb.veber.newsapi.presentation.profile.account.settings
 
+import android.os.Build
 import android.transition.TransitionManager
+import androidx.annotation.RequiresApi
 import com.jakewharton.rxbinding.widget.RxTextView
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
@@ -17,8 +19,10 @@ import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
 import ru.gb.veber.newsapi.domain.models.Account
 import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.customview.gantt.Task
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
+import java.time.LocalDate
 
 class EditAccountFragment :
     NewsFragment<EditAccountFragmentBinding, EditAccountViewModel>(EditAccountFragmentBinding::inflate) {
@@ -35,6 +39,7 @@ class EditAccountFragment :
         App.instance.appComponent.inject(this)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onInitView() {
         initRxTextChangerValidation()
         binding.backAccountScreen.setOnClickListener {
@@ -50,6 +55,37 @@ class EditAccountFragment :
                 )
             }
         }
+
+        val now = LocalDate.now()
+        binding.gant.setTasks(
+            listOf(
+                Task(
+                    name = "Task 1",
+                    dateStart = now.minusMonths(1),
+                    dateEnd = now
+                ),
+                Task(
+                    name = "Task 2 long name",
+                    dateStart = now.minusWeeks(2),
+                    dateEnd = now.plusWeeks(1)
+                ),
+                Task(
+                    name = "Task 3",
+                    dateStart = now.minusMonths(2),
+                    dateEnd = now.plusMonths(2)
+                ),
+                Task(
+                    name = "Some Task 4",
+                    dateStart = now.plusWeeks(2),
+                    dateEnd = now.plusMonths(2).plusWeeks(1)
+                ),
+                Task(
+                    name = "Task 5",
+                    dateStart = now.minusMonths(2).minusWeeks(1),
+                    dateEnd = now.plusWeeks(1)
+                )
+            )
+        )
     }
 
     override fun onObserveData() {

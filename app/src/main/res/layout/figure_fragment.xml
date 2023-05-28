@@ -5,18 +5,58 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <ru.gb.veber.newsapi.presentation.customview.FigureView
+    <ru.gb.veber.newsapi.presentation.customview.figure.FigureView
+        android:id="@+id/figureView"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ru.gb.veber.newsapi.presentation.customview.FigurePorterDuffView
+    <ru.gb.veber.newsapi.presentation.customview.figure.FigurePorterDuffView
+        android:id="@+id/figurePorterDuffView"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="110dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/figureView" />
+
+    <ru.gb.veber.newsapi.presentation.customview.viewgroup.CustomViewGroup
+        android:id="@+id/customViewGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/figurePorterDuffView"
+        app:verticalOffset="20dp">
+
+        <TextView
+            android:id="@+id/qwe"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:text="Вам привет от Android Broadcast и до"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/hjk"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:text="20:10"
+            android:textSize="16sp"
+            app:flow_horizontalBias="1" />
+    </ru.gb.veber.newsapi.presentation.customview.viewgroup.CustomViewGroup>
+
+    <ru.gb.veber.newsapi.presentation.customview.viewgroup.CustomViewGroupAndText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customViewGroup" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

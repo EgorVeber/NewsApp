@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.ContentViewCallback
+import com.google.android.material.textfield.TextInputLayout
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.databinding.SnackbarViewBinding
 
@@ -26,6 +27,7 @@ class SnackBarView @JvmOverloads constructor(
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.snackbar_view, this, true)
         binding = SnackbarViewBinding.bind(this)
+
     }
 
     fun setText(text: String) {

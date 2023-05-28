@@ -1,4 +1,4 @@
-package ru.gb.veber.newsapi.presentation.customview
+package ru.gb.veber.newsapi.presentation.customview.figure
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -57,6 +57,9 @@ class FigureView @JvmOverloads constructor(
 
         canvas.drawPoint(width / 2f, height / 2f, paintRed)
 
+        canvas.translate(100f,100f,)
+        canvas.rotate(45f)
+        canvas.scale(2f,2f,)
         canvas.drawRect(20f,20f,100f, 100f,paintRed)
         canvas.drawRoundRect(width.toFloat(),height.toFloat(),width / 2f, height / 2f,40f,40f,paintRed)
 
@@ -64,6 +67,7 @@ class FigureView @JvmOverloads constructor(
         canvas.drawArc(oval2,90f,270f,true,paintGreen)
 
         canvas.drawText("http://developer.alexanderklimov.ru/android", 20f, 200f, paintText)
+
     }
 
     override fun dispatchDraw(canvas: Canvas?) {

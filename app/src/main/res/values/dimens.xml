@@ -118,4 +118,12 @@
     <dimen name="span_24">24sp</dimen>
     <dimen name="corner_radius">10dp</dimen>
     <dimen name="corner_radius_16">16dp</dimen>
+
+
+
+    <dimen name="gant_period_width">100dp</dimen>
+    <dimen name="gant_row_height">48dp</dimen>
+    <dimen name="gant_separator_width">1dp</dimen>
+
+    <dimen name="gant_period_name_text_size">14sp</dimen>
 </resources>

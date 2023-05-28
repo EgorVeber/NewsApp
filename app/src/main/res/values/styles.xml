@@ -117,11 +117,11 @@
         <item name="colorControlActivated">@color/color_primary_app</item>
         <item name="colorControlHighlight">@color/color_primary_app</item>
     </style>
-
-
+    
     <style name="MyAutoCompleteTextViewStyle" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
         <item name="android:popupBackground">@color/color_black</item>
+        <item name="materialThemeOverlay">@color/color_black</item>
         <item name="android:background">?attr/editTextBackground</item>
         <item name="android:textColor">?attr/editTextColor</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>

@@ -1,9 +1,5 @@
 package ru.gb.veber.newsapi.presentation.customview
 
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.Paint
-
 object Theory {
 //Получаем канвас для рисования
 //    init {
@@ -46,4 +42,27 @@ object Theory {
 
 // Porter duff - способ наолжения одного на другое
 // path надоб инструкций для рисования
+
+
+
+// Matrix- сушность для трансформации
+// Translate сдвиг
+// Rotate  поворот
+// Skew  наклон
+// SetTranslate порядок приенения в начало конец и с стиранием предыдущих
+
+//Анимации
+//ObjectAnimator  и ValueAnimator значени 0 -1 например
+// AnimatorSet
+
+//Настройки  Листнеры конец начало каждый тик
+//мод начало конца анимации , duration длительность количество повторов
+// addUpdateListener каждый тик. addListener отслеживание начала конца повтора
+
+//Сущности
+//Interpolator Evaluator // как анимации идет оностительно прогресса.  0 1 интерполятор
+
+//MotionEvent touch точи получаем координаты и action
+
+
 }
