@@ -3,7 +3,7 @@ package ru.gb.veber.newsapi.di.moduls
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ru.gb.veber.newsapi.data.NewsDataBase
+import ru.gb.veber.newsapi.data.database.NewsDataBase
 import ru.gb.veber.newsapi.data.repository.AccountRepoImpl
 import ru.gb.veber.newsapi.data.repository.AccountSourcesRepoImpl
 import ru.gb.veber.newsapi.data.repository.ApiKeysRepositoryImpl

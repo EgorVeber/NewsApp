@@ -9,7 +9,7 @@ import ru.gb.veber.newsapi.databinding.HistoryArticleHeaderBinding
 import ru.gb.veber.newsapi.databinding.SearchNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
 import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
-import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder.Companion.VIEW_TYPE_HISTORY_HEADER
@@ -27,7 +27,7 @@ class TopNewsAdapter(
     var listener: TopNewsListener,
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
-    var articles: List<Article> = listOf()
+    var articleModels: List<ArticleUiModel> = listOf()
         set(value) {
             var diffUtil = TopNewsDiffUtil(field, value)
             val diffResult = DiffUtil.calculateDiff(diffUtil)
@@ -72,13 +72,13 @@ class TopNewsAdapter(
         }
     }
 
-    override fun getItemCount() = articles.size
+    override fun getItemCount() = articleModels.size
 
     override fun getItemViewType(position: Int): Int {
-        return articles[position].viewType
+        return articleModels[position].viewType
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(articles[position])
+        holder.bind(articleModels[position])
     }
 }

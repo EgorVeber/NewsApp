@@ -7,8 +7,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import coil.load
 import coil.request.ErrorResult
@@ -26,7 +26,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.NewsSnackBar
+import ru.gb.veber.newsapi.core.App
 
+//TODO подумать над функцией и разбить все функции
+fun Fragment.getAppComponent() = App.instance.appComponent
 
 fun Fragment.showSnackBar(text: String, length: Int? = Snackbar.LENGTH_LONG) {
     NewsSnackBar.make(this.requireActivity().findViewById(android.R.id.content), text, length)
@@ -34,7 +37,7 @@ fun Fragment.showSnackBar(text: String, length: Int? = Snackbar.LENGTH_LONG) {
 }
 
 fun Activity.showSnackBar(text: String, length: Int? = Snackbar.LENGTH_LONG) {
-     NewsSnackBar.make(this.findViewById(android.R.id.content), text, length).show()
+    NewsSnackBar.make(this.findViewById(android.R.id.content), text, length).show()
 }
 
 fun View.showText(string: String) {
@@ -74,9 +77,11 @@ fun Activity.showKeyboard() {
 }
 
 fun Context.showKeyboard(view: View) {
-    val imm: InputMethodManager = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    val imm: InputMethodManager =
+        this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
 }
+
 
 fun ImageView.loadGlide(url: String?) {
     Glide.with(context).load(url)
@@ -138,6 +143,9 @@ fun ImageView.loadWithFailure(
         )
     }
 }
+
+fun getAppContext(): Context = App.instance.applicationContext
+fun getStringByResId(@StringRes resId: Int) = getAppContext().getString(resId)
 
 fun ImageView.setCoinImage(image: Int, cornerRadius: Float = 25f) {
     load(image) {

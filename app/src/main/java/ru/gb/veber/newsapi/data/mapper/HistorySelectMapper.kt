@@ -1,10 +1,10 @@
 package ru.gb.veber.newsapi.data.mapper
 
-import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
-import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.data.database.entity.HistorySelectEntity
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 
-fun HistorySelectDbEntity.toHistorySelect(): HistorySelect {
-    return HistorySelect(
+fun HistorySelectEntity.toHistorySelect(): HistorySelectModel {
+    return HistorySelectModel(
         id = this.id,
         accountID = this.accountID,
         keyWord = this.keyWord,

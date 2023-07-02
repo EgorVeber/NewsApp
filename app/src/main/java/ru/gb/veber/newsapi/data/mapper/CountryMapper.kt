@@ -1,9 +1,10 @@
 package ru.gb.veber.newsapi.data.mapper
 
-import ru.gb.veber.newsapi.data.models.room.entity.CountryDbEntity
-import ru.gb.veber.newsapi.domain.models.Country
+import ru.gb.veber.newsapi.data.database.entity.CountryEntity
+import ru.gb.veber.newsapi.domain.models.CountryModel
 
-fun CountryDbEntity.toCountry(): Country {
-    return Country(this.id, this.isoThree)
-}
+fun CountryEntity.toCountry(): CountryModel = CountryModel(id = id, code = isoThree)
+
+fun CountryModel.toCountryEntity(): CountryEntity = CountryEntity(id = id, isoThree = code)
+
 

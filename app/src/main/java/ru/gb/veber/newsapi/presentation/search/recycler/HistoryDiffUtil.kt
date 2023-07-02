@@ -1,11 +1,11 @@
 package ru.gb.veber.newsapi.presentation.search.recycler
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 
 class HistoryDiffUtil(
-    private val oldItems: List<HistorySelect>,
-    private val newItems: List<HistorySelect>,
+    private val oldItems: List<HistorySelectModel>,
+    private val newItems: List<HistorySelectModel>,
 ) : DiffUtil.Callback() {
     override fun getOldListSize() = oldItems.size
 

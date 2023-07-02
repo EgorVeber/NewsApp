@@ -2,6 +2,7 @@ package ru.gb.veber.newsapi.common.base
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ abstract class NewsFragment<T : ViewBinding, ViewModel : NewsViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("CurrentScreen",this.javaClass.simpleName)
         onInitViewModel()
         onInitView()
         onObserveData()

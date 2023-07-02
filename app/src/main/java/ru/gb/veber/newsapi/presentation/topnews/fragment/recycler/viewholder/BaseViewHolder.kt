@@ -2,10 +2,10 @@ package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 
 abstract class BaseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    abstract fun bind(item: Article)
+    abstract fun bind(item: ArticleUiModel)
 
     companion object {
         const val VIEW_TYPE_TOP_NEWS = 0

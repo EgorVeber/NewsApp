@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.KeysManagementItemBinding
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
-import ru.gb.veber.newsapi.domain.models.Sources
-import ru.gb.veber.newsapi.presentation.sources.recycler.SourcesDiffUtil
 
 class KeysManagementAdapter(
     var listener: KeysListener,

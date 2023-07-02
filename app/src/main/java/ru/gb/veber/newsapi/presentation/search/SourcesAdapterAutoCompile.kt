@@ -10,15 +10,15 @@ import android.widget.Filter
 import ru.gb.veber.newsapi.common.extentions.hide
 import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.databinding.SelectSourcesAutocompileBinding
-import ru.gb.veber.newsapi.domain.models.Sources
-import java.util.*
+import ru.gb.veber.newsapi.domain.models.SourcesModel
+import java.util.Locale
 
 class SourcesAdapterAutoCompile(
     context: Context,
-    countryList: List<Sources>,
-) : ArrayAdapter<Sources>(context, 0, countryList) {
+    countryList: List<SourcesModel>,
+) : ArrayAdapter<SourcesModel>(context, 0, countryList) {
 
-    var countryListFull: List<Sources>
+    var countryListFull: List<SourcesModel>
 
     init {
         countryListFull = ArrayList(countryList)
@@ -54,7 +54,7 @@ class SourcesAdapterAutoCompile(
     private val countryFilter: Filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             val results = FilterResults()
-            val suggestions: MutableList<Sources> = ArrayList()
+            val suggestions: MutableList<SourcesModel> = ArrayList()
             if (constraint == null || constraint.isEmpty()) {
                 suggestions.addAll(countryListFull)
             } else {
@@ -73,12 +73,12 @@ class SourcesAdapterAutoCompile(
 
         override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
             clear()
-            addAll(p1?.values as List<Sources>)
+            addAll(p1?.values as List<SourcesModel>)
             notifyDataSetChanged()
         }
 
         override fun convertResultToString(resultValue: Any): CharSequence {
-            return (resultValue as Sources).name.toString()
+            return (resultValue as SourcesModel).name.toString()
         }
     }
 }

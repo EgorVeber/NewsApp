@@ -1,20 +1,16 @@
 package ru.gb.veber.newsapi.presentation.activity
 
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
-import io.reactivex.rxjava3.core.Completable
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.extentions.flowStarted
 import ru.gb.veber.newsapi.common.extentions.showSnackBar
@@ -26,7 +22,7 @@ import ru.gb.veber.newsapi.common.utils.ColorUtils.getDrawableRes
 import ru.gb.veber.newsapi.common.utils.DELAY_BACK_STACK
 import ru.gb.veber.newsapi.common.utils.isInternetAvailable
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.data.SharedPreferenceAccount
+import ru.gb.veber.newsapi.data.AccountDataSource
 import ru.gb.veber.newsapi.databinding.ActivityMainBinding
 import ru.gb.veber.newsapi.presentation.keymanagement.KeysManagementFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountFragment
@@ -34,7 +30,6 @@ import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.Custo
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -50,7 +45,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
     private var counterBadge = COUNTER_BADGE
 
     @Inject
-    lateinit var sharedPreferenceAccount: SharedPreferenceAccount
+    lateinit var sharedPreferenceAccount: AccountDataSource
 
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
@@ -126,12 +121,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
         }
 
         backStack = 0
-        Completable.create {
-            it.onComplete()
-        }.delay(DELAY_BACK_STACK, TimeUnit.MILLISECONDS).subscribe({
-            backStack = 1
-        }, {
-        })
+        this.launchDelay(DELAY_BACK_STACK) { backStack = 1 }
     }
 
     override fun openMainScreen() {
@@ -183,15 +173,19 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
                 ActivityMainViewModel.ViewMainState.CompletableInsertSources -> {
                     completableInsertSources()
                 }
+
                 ActivityMainViewModel.ViewMainState.ErrorSourcesDownload -> {
                     errorSourcesDownload()
                 }
+
                 ActivityMainViewModel.ViewMainState.HideAllBehavior -> {
                     hideAllBehavior()
                 }
+
                 is ActivityMainViewModel.ViewMainState.OnCreateSetIconTitleAccount -> {
                     onCreateSetIconTitleAccount(state.accountLogin)
                 }
+
                 ActivityMainViewModel.ViewMainState.StartedState -> {}
             }
         }.flowStarted(lifecycleScope)
@@ -215,12 +209,15 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
                 R.id.topNews -> {
                     activityMainViewModel.openScreenNews()
                 }
+
                 R.id.searchNews -> {
                     activityMainViewModel.openScreenSearchNews()
                 }
+
                 R.id.actionSources -> {
                     activityMainViewModel.openScreenSources()
                 }
+
                 R.id.favoritesNews -> {
                     activityMainViewModel.openFavoritesScreen()
                     val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
@@ -230,6 +227,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
                         binding.bottomNavigationView.removeBadge(R.id.favoritesNews)
                     }
                 }
+
                 R.id.actionProfile -> {
                     activityMainViewModel.openScreenProfile()
                 }
@@ -269,5 +267,12 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
 
         val shareIntent = Intent.createChooser(sendIntent, null)
         startActivity(shareIntent)
+    }
+}
+
+fun AppCompatActivity.launchDelay(delay: Long, action: () -> Unit) {
+    this.lifecycleScope.launch {
+        delay(delay)
+        action()
     }
 }

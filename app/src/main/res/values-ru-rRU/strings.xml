@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">NewsAPI</string>
     <string name="terms_of_user_register">Нажимая Зарегистрироваться или Войти Вы соглашаетесь с Пользовательским соглашением и Правилами комментирования</string>
-    <string name="team_site"><![CDATA[https://mservices.ria.ru/docs/get/article?project=ria.ru&lang=rus&article_id=1748006692]]></string>
+    <string name="team_site"><![CDATA[https://mservices.ria.ru/docs/get/articleModel?project=ria.ru&lang=rus&article_id=1748006692]]></string>
     <string name="error_input_email">Неверный формат</string>
     <string name="select_country">Выберете страну</string>
     <string name="back">Вернуться</string>
@@ -58,7 +58,7 @@
     <string name="menuTop">Категории</string>
     <string name="menuFavorites">Избранное</string>
     <string name="menuProfile">Профиль</string>
-    <string name="account">Аккаунт</string>
+    <string name="accountModel">Аккаунт</string>
     <string name="edit_information">Редактировать данные профиля</string>
     <string name="requests_per_day">Запросов в день</string>
     <string name="_60_100">60 из 100</string>

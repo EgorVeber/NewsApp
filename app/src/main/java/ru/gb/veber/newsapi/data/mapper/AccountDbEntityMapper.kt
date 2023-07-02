@@ -1,19 +1,19 @@
 package ru.gb.veber.newsapi.data.mapper
 
-import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
-import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.data.database.entity.AccountEntity
+import ru.gb.veber.newsapi.domain.models.AccountModel
 
-fun Account.toAccountDbEntity(): AccountDbEntity {
-    return AccountDbEntity(
-        id = this.id,
-        userName = this.userName,
-        email = this.email,
-        createdAt = this.createdAt,
-        password = this.password,
-        saveHistory = this.saveHistory,
-        saveSelectHistory = this.saveSelectHistory,
-        displayOnlySources = this.displayOnlySources,
-        myCountry = this.myCountry,
-        countryCode = this.countryCode
+fun AccountModel.toAccountDbEntity(): AccountEntity {
+    return AccountEntity(
+        id = id,
+        userName = userName,
+        email = email,
+        createdAt = createdAt,
+        password = password,
+        saveHistory = saveHistory,
+        saveSelectHistory = saveSelectHistory,
+        displayOnlySources = displayOnlySources,
+        myCountry = myCountry,
+        countryCode = countryCode
     )
 }

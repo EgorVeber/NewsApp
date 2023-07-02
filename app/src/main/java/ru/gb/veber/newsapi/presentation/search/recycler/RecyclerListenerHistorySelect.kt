@@ -1,8 +1,8 @@
 package ru.gb.veber.newsapi.presentation.search.recycler
 
-import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 
 interface RecyclerListenerHistorySelect {
-    fun clickHistoryItem(historySelect: HistorySelect)
-    fun deleteHistoryItem(historySelect: HistorySelect)
+    fun clickHistoryItem(historySelectModel: HistorySelectModel)
+    fun deleteHistoryItem(historySelectModel: HistorySelectModel)
 }

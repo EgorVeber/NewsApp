@@ -1,11 +1,11 @@
 package ru.gb.veber.newsapi.domain.repository
 
 
-import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 
 interface HistorySelectRepo {
-    suspend fun insertSelectV2(historyDbEntity: HistorySelectDbEntity)
-    suspend fun deleteSelectV2(historyDbEntity: HistorySelectDbEntity)
-    suspend fun getHistoryByIdV2(accountId: Int): List<HistorySelectDbEntity>
-    suspend fun deleteSelectByIdV2(accountIdPresenter: Int)
+    suspend fun insertSelect(historyDbEntity: HistorySelectModel)
+    suspend fun deleteSelect(historyDbEntity: HistorySelectModel)
+    suspend fun getHistoryById(accountId: Int): List<HistorySelectModel>
+    suspend fun deleteSelectById(accountIdPresenter: Int)
 }

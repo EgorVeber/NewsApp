@@ -4,13 +4,13 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.common.extentions.hide
 import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.databinding.HistorySelectItemBinding
-import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 
 class HistorySelectViewHolder(
     private val binding: HistorySelectItemBinding,
     var listener: RecyclerListenerHistorySelect,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: HistorySelect) = with(binding) {
+    fun bind(item: HistorySelectModel) = with(binding) {
 
         root.setOnClickListener {
             listener.clickHistoryItem(item)

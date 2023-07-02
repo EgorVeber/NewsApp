@@ -13,11 +13,10 @@ import ru.gb.veber.newsapi.common.screen.SearchNewsScreen
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.data.mapper.toHistorySelectDbEntity
-import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
 import ru.gb.veber.newsapi.domain.interactor.SourceInteractor
-import ru.gb.veber.newsapi.domain.models.HistorySelect
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.AccountSourcesModel
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 import javax.inject.Inject
 
 class SourcesViewModel @Inject constructor(
@@ -31,7 +30,7 @@ class SourcesViewModel @Inject constructor(
     private val showMessageState = SingleSharedFlow<Boolean>()
     val showMessageFlow = showMessageState.asSharedFlow()
 
-    private var allSources: MutableList<Sources> = mutableListOf()
+    private var allSources: MutableList<SourcesModel> = mutableListOf()
     private var focusedSources: MutableMap<String, Int> = mutableMapOf()
     private var sourceFilter = ""
     private var accountId: Int = 0
@@ -45,7 +44,7 @@ class SourcesViewModel @Inject constructor(
     fun getSources(accountId: Int) {
         if (accountId == ACCOUNT_ID_DEFAULT) {
             viewModelScope.launchJob(tryBlock = {
-                val listSources = sourceInteractor.getSourcesV2()
+                val listSources = sourceInteractor.getSources()
                 allSources = listSources
                 sendSources(listSources)
             }, catchBlock = { error ->
@@ -53,9 +52,9 @@ class SourcesViewModel @Inject constructor(
             })
         } else {
             viewModelScope.launchJob(tryBlock = {
-                val all = sourceInteractor.getSourcesV2()
-                val like = sourceInteractor.getLikeSourcesFromAccountV2(accountId = accountId)
-                val article = sourceInteractor.getArticleByIdV2(accountId = accountId)
+                val all = sourceInteractor.getSources()
+                val like = sourceInteractor.getLikeSourcesFromAccount(accountId = accountId)
+                val article = sourceInteractor.getArticleById(accountId = accountId)
                 allSources = all
 
                 for (j in like.size - 1 downTo 0) {
@@ -68,7 +67,7 @@ class SourcesViewModel @Inject constructor(
                 }
                 all.forEach { sor ->
                     article.forEach { art ->
-                        if (sor.idSources == art.source.id) {
+                        if (sor.idSources == art.sourceModel.id) {
                             if (art.isFavorites) sor.totalFavorites += 1
                             else sor.totalHistory += 1
                         }
@@ -85,13 +84,13 @@ class SourcesViewModel @Inject constructor(
         router.navigateTo(WebViewScreen(url))
     }
 
-    fun imageClick(source: Sources) {
+    fun imageClick(source: SourcesModel) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             if (source.liked) {
                 source.liked = false
 
                 viewModelScope.launchJob(tryBlock = {
-                    sourceInteractor.deleteSourcesLikeV2(
+                    sourceInteractor.deleteSourcesLike(
                         accountId = accountId,
                         sourcesId = source.id
                     )
@@ -102,9 +101,10 @@ class SourcesViewModel @Inject constructor(
             } else {
                 source.liked = true
                 viewModelScope.launchJob(tryBlock = {
-                    sourceInteractor.insertV2(
-                        accountSourcesDbEntity = AccountSourcesDbEntity(
-                            accountId, source.id
+                    sourceInteractor.insert(
+                        accountSourcesModel = AccountSourcesModel(
+                            accountId,
+                            source.id
                         )
                     )
                     getSources(accountId)
@@ -119,14 +119,15 @@ class SourcesViewModel @Inject constructor(
     }
 
     fun openAllNews(source: String?, name: String?) {
-        val history = HistorySelect(0, accountID = accountId, sourcesId = source, sourcesName = name)
-        router.navigateTo(SearchNewsScreen(accountId = accountId, historySelect = history))
+        val historySelect = HistorySelectModel(0, accountID = accountId, sourcesId = source, sourcesName = name)
+        router.navigateTo(SearchNewsScreen(accountId = accountId, historySelectModel = historySelect))
         viewModelScope.launchJob(tryBlock = {
-            sourceInteractor.insertSelectV2(historyDbEntity = history.toHistorySelectDbEntity())
+            sourceInteractor.insertSelect(historySelect)
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
     }
+
     fun setFilter(filter: String) {
         sourceFilter = if (spaceTest(filter)) "" else filter
         sendSources(allSources)
@@ -137,30 +138,35 @@ class SourcesViewModel @Inject constructor(
         return result.isEmpty()
     }
 
-    private fun filtered(list: List<Sources>):  List<Sources>{
+    private fun filtered(list: List<SourcesModel>): List<SourcesModel> {
         return if (sourceFilter == "") list
         else {
-            val foundByNames = (list.filter { sources ->  sources.name?.contains(sourceFilter, ignoreCase = true) ?: false })
-            val foundByCountries = (list.filter { sources ->  sources.country?.contains(sourceFilter, ignoreCase = true) ?: false })
-            val result = ( foundByNames + foundByCountries ).toSet().toList()
+            val foundByNames = (list.filter { sources ->
+                sources.name?.contains(sourceFilter, ignoreCase = true) ?: false
+            })
+            val foundByCountries = (list.filter { sources ->
+                sources.country?.contains(sourceFilter, ignoreCase = true) ?: false
+            })
+            val result = (foundByNames + foundByCountries).toSet().toList()
             result
         }
     }
 
-    fun focusOne(source: Sources, type: Int) {
-        focusedSources[source.idSources!!]=type
+    fun focusOne(source: SourcesModel, type: Int) {
+        focusedSources[source.idSources!!] = type
     }
 
     fun focusAll(type: Int) {
         allSources.forEach { sources ->
-            focusOne(sources,type)
+            focusOne(sources, type)
         }
         sendSources(allSources)
     }
 
-    private fun sendSources(list: List<Sources>) {
+    private fun sendSources(list: List<SourcesModel>) {
         val result = list.map { sources ->
-            if (focusedSources[sources.idSources] != null) sources.copy(focusType = focusedSources[sources.idSources]!!) else sources }
+            if (focusedSources[sources.idSources] != null) sources.copy(focusType = focusedSources[sources.idSources]!!) else sources
+        }
         mutableFlow.postValue(SourcesState.SetSources(filtered(result)))
     }
 
@@ -170,6 +176,6 @@ class SourcesViewModel @Inject constructor(
     }
 
     sealed class SourcesState {
-        data class SetSources(val list: List<Sources>) : SourcesState()
+        data class SetSources(val list: List<SourcesModel>) : SourcesState()
     }
 }
