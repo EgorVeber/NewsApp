@@ -1,16 +1,16 @@
 package ru.gb.veber.newsapi.domain.repository
 
-import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.domain.models.ArticleModel
 
 interface ArticleRepo {
-    suspend fun insertArticleV2(article: Article, accountId: Int)
-    suspend fun updateArticleV2(article: Article, accountId: Int)
-    suspend fun deleteArticleV2(article: Article, accountId: Int)
+    suspend fun insertArticleV2(articleModel: ArticleModel, accountId: Int)
+    suspend fun updateArticleV2(articleModel: ArticleModel, accountId: Int)
+    suspend fun deleteArticleV2(articleModel: ArticleModel, accountId: Int)
     suspend fun deleteAllArticleV2()
-    suspend fun getHistoryArticleByIdV2(accountId: Int): List<Article>
-    suspend fun getLikeArticleByIdV2(accountId: Int): List<Article>
-    suspend fun getLastArticleV2(): Article
-    suspend fun getArticleByIdV2(accountId: Int): List<Article>
+    suspend fun getHistoryArticleByIdV2(accountId: Int): List<ArticleModel>
+    suspend fun getLikeArticleByIdV2(accountId: Int): List<ArticleModel>
+    suspend fun getLastArticleV2(): ArticleModel
+    suspend fun getArticleByIdV2(accountId: Int): List<ArticleModel>
     suspend fun deleteArticleIsFavoriteByIdV2(accountId: Int)
     suspend fun deleteArticleIsHistoryByIdV2(accountId: Int)
     suspend fun deleteArticleByIdFavoritesV2(title: String, accountId: Int)

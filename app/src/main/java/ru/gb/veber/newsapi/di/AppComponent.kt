@@ -19,7 +19,7 @@ import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.Custo
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment
 import ru.gb.veber.newsapi.presentation.search.SearchFragment
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
-import ru.gb.veber.newsapi.presentation.sources.FragmentSources
+import ru.gb.veber.newsapi.presentation.sources.SourcesFragment
 import ru.gb.veber.newsapi.presentation.topnews.fragment.TopNewsFragment
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
@@ -44,12 +44,12 @@ interface AppComponent {
     fun inject(profileFragment: ProfileFragment)
     fun inject(topNewsFragment: TopNewsFragment)
     fun inject(searchNewsFragment: SearchNewsFragment)
-    fun inject(fragmentSources: FragmentSources)
+    fun inject(sourcesFragment: SourcesFragment)
     fun inject(webViewFragment: WebViewFragment)
     fun inject(editAccountFragment: EditAccountFragment)
     fun inject(favoritesViewPagerFragment: FavoritesViewPagerFragment)
     fun inject(authorizationFragment: AuthorizationFragment)
-    fun inject(topNewsViewPagerFragment:TopNewsViewPagerFragment)
+    fun inject(topNewsViewPagerFragment: TopNewsViewPagerFragment)
     fun inject(customizeCategoryFragment: CustomizeCategoryFragment)
     fun inject(keysManagementFragment: KeysManagementFragment)
 }

@@ -3,7 +3,7 @@ package ru.gb.veber.newsapi.di.moduls
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import ru.gb.veber.newsapi.core.ConnectivityListener
+import ru.gb.veber.newsapi.common.ConnectivityListener
 import javax.inject.Singleton
 
 @Module

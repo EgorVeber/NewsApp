@@ -1,11 +1,9 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
-import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
-import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.domain.models.Article
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.AccountModel
+import ru.gb.veber.newsapi.domain.models.AccountSourcesModel
+import ru.gb.veber.newsapi.domain.models.ArticleModel
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
@@ -20,31 +18,31 @@ class SearchNewsInteractor @Inject constructor(
     private val articleRepo: ArticleRepo,
     private val newsRepo: NewsRepo,
 ) {
-    suspend fun getAccount(accountId: Int): Account {
+    suspend fun getAccount(accountId: Int): AccountModel {
         return accountRepo.getAccountByIdV2(accountId)
     }
 
-    suspend fun getSources(): List<Sources> {
-        return sourcesRepo.getSourcesV2()
+    suspend fun getSources(): List<SourcesModel> {
+        return sourcesRepo.getSources()
     }
 
-    suspend fun getLikeSources(accountId: Int): List<Sources> {
-        return accountSourcesRepo.getLikeSourcesFromAccountV2(accountId)
+    suspend fun getLikeSources(accountId: Int): List<SourcesModel> {
+        return accountSourcesRepo.getLikeSources(accountId)
     }
 
-    suspend fun getArticles(accountId: Int): List<Article> {
+    suspend fun getArticles(accountId: Int): List<ArticleModel> {
         return articleRepo.getArticleByIdV2(accountId)
     }
 
-    suspend fun insertSource(accountSourcesDbEntity: AccountSourcesDbEntity) {
-        accountSourcesRepo.insertV2(accountSourcesDbEntity)
+    suspend fun insertSource(accountSourcesModel: AccountSourcesModel) {
+        accountSourcesRepo.insert(accountSourcesModel)
     }
 
-    suspend fun insertArticle(article: Article, accountId: Int) {
-        articleRepo.insertArticleV2(article, accountId)
+    suspend fun insertArticle(articleModel: ArticleModel, accountId: Int) {
+        articleRepo.insertArticleV2(articleModel, accountId)
     }
 
-    suspend fun deleteArticleByIdFavoritesV2(toString: String, accountId: Int) {
+    suspend fun deleteArticleByIdFavorites(toString: String, accountId: Int) {
         articleRepo.deleteArticleByIdFavoritesV2(toString, accountId)
     }
 
@@ -56,14 +54,13 @@ class SearchNewsInteractor @Inject constructor(
         from: String?,
         to: String?,
         key: String,
-    ): ArticlesDTO {
-        return newsRepo.getEverythingKeyWordSearchInSourcesV2(
-            sources,
-            q,
-            searchIn,
-            sortBy,
-            from,
-            to,
-            key)
-    }
+    ): List<ArticleModel> = newsRepo.getEverythingKeyWordSearchInSourcesV2(
+        sources,
+        q,
+        searchIn,
+        sortBy,
+        from,
+        to,
+        key
+    ).articles
 }

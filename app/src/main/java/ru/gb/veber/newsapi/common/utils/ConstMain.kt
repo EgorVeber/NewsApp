@@ -41,13 +41,12 @@ const val DURATION_ERROR_INPUT = 2000L
 const val KEY_THEME = "KEY_THEME"
 const val KEY_THEME_DARK = 0
 const val KEY_THEME_DEFAULT = 1
-const val MAX_PERIOD_DAY_NEWS = -30
 
 //FILTER COUNTRY
 const val ALL_COUNTRY = "All Country"
 const val ALL_COUNTRY_VALUE = ""
 
-//FILTER Source
+//FILTER SourceModel
 const val FOCUS_NAME = 0
 const val FOCUS_BRIF = 1
 const val FOCUS_DEFAULT = 1

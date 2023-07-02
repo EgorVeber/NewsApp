@@ -5,13 +5,14 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.gb.veber.newsapi.BuildConfig
 import ru.gb.veber.newsapi.common.utils.PAGE_SIZE
 import ru.gb.veber.newsapi.common.utils.PAGE_SIZE_COUNT
-import ru.gb.veber.newsapi.data.NewsApi
+import ru.gb.veber.newsapi.data.NewsService
 import javax.inject.Singleton
 
 @Module
@@ -19,18 +20,18 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideNewsApi(client: OkHttpClient): NewsApi =
+    fun provideNewsApi(client: OkHttpClient): NewsService =
         Retrofit.Builder().baseUrl(BuildConfig.NEWS_BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .build().create(NewsApi::class.java)
+            .build().create(NewsService::class.java)
 
     @Singleton
     @Provides
     fun client() = OkHttpClient.Builder()
-//        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .addInterceptor { chain ->
         val request = chain.request()
         val url = request.url.newBuilder().addQueryParameter(PAGE_SIZE, PAGE_SIZE_COUNT).build()

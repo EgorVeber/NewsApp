@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">NewsAPI</string>
     <string name="terms_of_user_register">Click Register or LoginYou agree to the User Agreement and Commenting Rules.</string>
-    <string name="team_site"><![CDATA[https://mservices.ria.ru/docs/get/article?project=ria.ru&lang=rus&article_id=1748006692]]></string>
+    <string name="team_site">https://ria.ru/docs/about/privacy_policy.html</string>
     <string name="error_input_email">Wrong format</string>
     <string name="select_country">Select country</string>
     <string name="back">back</string>
@@ -25,19 +25,19 @@
     <string name="check_email">Check your email</string>
     <string name="unique_email_username">Email and username must be unique</string>
     <string name="invalid_password">Invalid password</string>
-    <string name="deleteAccount">Delete account</string>
+    <string name="deleteAccount">Delete accountModel</string>
     <string name="delete_favorites">Delete favorites</string>
     <string name="delete_history">Delete history</string>
     <string name="delete_sources">Delete sources</string>
     <string name="confirm_logout">Confirm logout</string>
-    <string name="warning_account">You will not be able to recover your account</string>
+    <string name="warning_account">You will not be able to recover your accountModel</string>
     <string name="warning_favorites">You will not be able to recover your favorites</string>
     <string name="warning_history">You will not be able to recover your history</string>
     <string name="warning_sources">You will not be able to recover your sources</string>
     <string name="warning_logout">Are you sure you want to logout?</string>
     <string name="clearHistory">Clear history</string>
     <string name="clearFavorites">Clear Favorites</string>
-    <string name="errorLoadingAccount">Error loading account</string>
+    <string name="errorLoadingAccount">Error loading accountModel</string>
     <string name="noChangeAccount">No change Account</string>
     <string name="dataUpdated">Data updated</string>
     <string name="inputDateThirty">No later than 30 days</string>
@@ -59,7 +59,7 @@
     <string name="menuTop">Top</string>
     <string name="menuFavorites">Favorites</string>
     <string name="menuProfile">Profile</string>
-    <string name="account">Account</string>
+    <string name="accountModel">Account</string>
     <string name="edit_information">Edit Information</string>
     <string name="requests_per_day">Requests per day</string>
     <string name="_60_100">60 из 100</string>
@@ -80,7 +80,7 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="technical_support">Technical support</string>
     <string name="file_screen">Экран Файлов</string>
-    <string name="delete_account">Delete account</string>
+    <string name="delete_account">Delete accountModel</string>
     <string name="clearSources">Clear Sources</string>
     <string name="empty_list">Empty List</string>
     <string name="save_sources">Save Sources</string>

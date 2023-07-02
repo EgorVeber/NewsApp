@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import ru.gb.veber.newsapi.common.ConnectivityListener
 import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.FavoritesViewPagerScreen
@@ -19,10 +20,9 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.common.utils.ERROR_LOAD_NEWS
-import ru.gb.veber.newsapi.core.ConnectivityListener
-import ru.gb.veber.newsapi.data.mapper.newCountryDbEntity
-import ru.gb.veber.newsapi.data.mapper.toSourcesDbEntity
 import ru.gb.veber.newsapi.domain.interactor.MainInteractor
+import ru.gb.veber.newsapi.domain.models.CountryModel
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 import javax.inject.Inject
 
 class ActivityMainViewModel @Inject constructor(
@@ -95,11 +95,11 @@ class ActivityMainViewModel @Inject constructor(
     private fun fillDataBase() {
         viewModelScope.launchJob(tryBlock = {
 
-            val sourcesApi = mainInteractor.getSourcesV2(API_KEY_NEWS)
+            val sourcesList: List<SourcesModel> = mainInteractor.getSources(API_KEY_NEWS)
 
             val countryStringArray = mainInteractor.getArrayCountry()
 
-            for (source in sourcesApi.sources) {
+            for (source in sourcesList) {
                 countryStringArray.forEach { country ->
                     if (source.country == country.value) {
                         source.country = country.key
@@ -110,13 +110,11 @@ class ActivityMainViewModel @Inject constructor(
                 }
             }
 
-            mainInteractor.countryInsertAllV2(countryStringArray.map { newCountry ->
-                newCountryDbEntity(newCountry.key, newCountry.value)
+            mainInteractor.countryInsertAll(countryStringArray.map { newCountry ->
+                CountryModel(newCountry.key, newCountry.value)
             })
 
-            mainInteractor.sourcesInsertAllV2(sourcesApi.sources.map { sourcesDTO ->
-                sourcesDTO.toSourcesDbEntity()
-            })
+            mainInteractor.sourcesInsertAll(sourcesList)
 
             mutableFlow.value = ViewMainState.CompletableInsertSources
 

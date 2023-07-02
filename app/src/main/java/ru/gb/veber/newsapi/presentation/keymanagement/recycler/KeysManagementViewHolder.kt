@@ -2,7 +2,6 @@ package ru.gb.veber.newsapi.presentation.keymanagement.recycler
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.common.extentions.subKey
 import ru.gb.veber.newsapi.databinding.KeysManagementItemBinding
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
 
@@ -21,6 +20,14 @@ class KeysManagementViewHolder(
 
         checkBoxKey.setOnCheckedChangeListener { view, cheked ->
             if (view.isPressed) listener.checkBoxClick(apiKeyModel)
+        }
+    }
+
+    private fun String.subKey(): String {
+        return if (this.length >= 10) {
+            substring(0, 10) + "..."
+        } else {
+            this
         }
     }
 }

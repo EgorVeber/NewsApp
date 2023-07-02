@@ -1,107 +1,44 @@
 package ru.gb.veber.newsapi.data.repository
 
-import io.reactivex.rxjava3.core.Single
-import ru.gb.veber.newsapi.common.extentions.subscribeDefault
-import ru.gb.veber.newsapi.data.NewsApi
-import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
-import ru.gb.veber.newsapi.data.models.network.SourcesRequestDTO
+import ru.gb.veber.newsapi.data.NewsService
+import ru.gb.veber.newsapi.data.mapper.toArticleBaseModel
+import ru.gb.veber.newsapi.data.mapper.toSourcesBaseModel
+import ru.gb.veber.newsapi.domain.models.ArticlesBaseModel
+import ru.gb.veber.newsapi.domain.models.SourcesBaseModel
 import ru.gb.veber.newsapi.domain.repository.NewsRepo
 
-class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
-
-    //TOP_HEADLINES
-    override fun getTopicalHeadlinesCountryCategoryKeyword(
-        country: String,
-        category: String,
-        keyWord: String,
-        key: String,
-    ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCountryCategoryKeyword(country, category, keyWord, key)
-            .subscribeDefault()
-
-    override fun getTopicalHeadlinesCategoryCountry(
-        category: String,
-        country: String?,
-        key: String,
-    ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesCategoryCountry(category, country, key).subscribeDefault()
-
-
-    override fun getTopicalHeadlinesSourcesKeyWord(
-        keyWord: String,
-        sources: String,
-        key: String,
-    ): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesSourcesKeyWord(keyWord, sources, key).subscribeDefault()
-
-
-    override fun getTopicalHeadlinesSources(sources: String, key: String): Single<ArticlesDTO> =
-        newsApi.getTopicalHeadlinesSources(sources, key).subscribeDefault()
-
-
-    //Everything
-    override fun getEverythingKeyWordSearchIn(
-        q: String,
-        searchIn: String?,
-        language: String?,
-        sortBy: String?,
-        from: String?,
-        to: String?,
-        key: String,
-    ): Single<ArticlesDTO> =
-        newsApi.getEverythingKeyWordSearchIn(q, searchIn, language, sortBy, from, to, key)
-            .subscribeDefault()
-
-
-    override fun getEverythingKeyWordSearchInSources(
-        sources: String?,
-        q: String?,
-        searchIn: String?,
-        sortBy: String?,
-        from: String?,
-        to: String?,
-        key: String,
-    ): Single<ArticlesDTO> =
-        newsApi.getEverythingKeyWordSearchInSources(sources, q, searchIn, sortBy, from, to, key)
-            .subscribeDefault()
-
-    //TOP_HEADLINES_SOURCES
-    override fun getSources(
-        category: String?,
-        language: String?,
-        country: String?,
-        key: String,
-    ): Single<SourcesRequestDTO> =
-        newsApi.getSources(category, language, country, key).subscribeDefault()
-
+class NewsRepoImpl(private val newsService: NewsService) : NewsRepo {
 
     override suspend fun getTopicalHeadlinesCountryCategoryKeywordV2(
         country: String,
         category: String,
         keyWord: String,
         key: String,
-    ): ArticlesDTO =
-        newsApi.getTopicalHeadlinesCountryCategoryKeywordV2(country, category, keyWord, key)
-
+    ): ArticlesBaseModel =
+        newsService.getTopicalHeadlinesCountryCategoryKeywordV2(country, category, keyWord, key)
+            .toArticleBaseModel()
 
     override suspend fun getTopicalHeadlinesCategoryCountryV2(
         category: String,
         country: String?,
         key: String,
-    ): ArticlesDTO =
-        newsApi.getTopicalHeadlinesCategoryCountryV2(category, country, key)
+    ): ArticlesBaseModel =
+        newsService.getTopicalHeadlinesCategoryCountryV2(category, country, key).toArticleBaseModel()
 
 
     override suspend fun getTopicalHeadlinesSourcesKeyWordV2(
         keyWord: String,
         sources: String,
         key: String,
-    ): ArticlesDTO =
-        newsApi.getTopicalHeadlinesSourcesKeyWordV2(keyWord, sources, key)
+    ): ArticlesBaseModel =
+        newsService.getTopicalHeadlinesSourcesKeyWordV2(keyWord, sources, key).toArticleBaseModel()
 
 
-    override suspend fun getTopicalHeadlinesSourcesV2(sources: String, key: String): ArticlesDTO =
-        newsApi.getTopicalHeadlinesSourcesV2(sources, key)
+    override suspend fun getTopicalHeadlinesSourcesV2(
+        sources: String,
+        key: String,
+    ): ArticlesBaseModel =
+        newsService.getTopicalHeadlinesSourcesV2(sources, key).toArticleBaseModel()
 
     override suspend fun getEverythingKeyWordSearchInV2(
         q: String,
@@ -111,8 +48,9 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         from: String?,
         to: String?,
         key: String,
-    ): ArticlesDTO =
-        newsApi.getEverythingKeyWordSearchInV2(q, searchIn, language, sortBy, from, to, key)
+    ): ArticlesBaseModel =
+        newsService.getEverythingKeyWordSearchInV2(q, searchIn, language, sortBy, from, to, key)
+            .toArticleBaseModel()
 
 
     override suspend fun getEverythingKeyWordSearchInSourcesV2(
@@ -123,14 +61,15 @@ class NewsRepoImpl(private val newsApi: NewsApi) : NewsRepo {
         from: String?,
         to: String?,
         key: String,
-    ): ArticlesDTO =
-        newsApi.getEverythingKeyWordSearchInSourcesV2(sources, q, searchIn, sortBy, from, to, key)
+    ): ArticlesBaseModel =
+        newsService.getEverythingKeyWordSearchInSourcesV2(sources, q, searchIn, sortBy, from, to, key)
+            .toArticleBaseModel()
 
     override suspend fun getSourcesV2(
         category: String?,
         language: String?,
         country: String?,
         key: String,
-    ): SourcesRequestDTO =
-        newsApi.getSourcesV2(category, language, country, key)
+    ): SourcesBaseModel =
+        newsService.getSourcesV2(category, language, country, key).toSourcesBaseModel()
 }

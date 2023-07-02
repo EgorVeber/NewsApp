@@ -9,18 +9,19 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.formatDate
-import ru.gb.veber.newsapi.common.extentions.isValidatePeriod
+import ru.gb.veber.newsapi.common.extentions.DateFormatter
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.formatDate
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.stringFromDataPiker
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringDate
 import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.extentions.stringFromDataPiker
-import ru.gb.veber.newsapi.common.extentions.toStringDate
 import ru.gb.veber.newsapi.common.screen.SearchNewsScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
 import ru.gb.veber.newsapi.domain.interactor.SearchInteractor
-import ru.gb.veber.newsapi.domain.models.HistorySelect
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
+import ru.gb.veber.newsapi.domain.models.SourcesModel
+import java.util.Date
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
@@ -28,7 +29,7 @@ class SearchViewModel @Inject constructor(
     private val searchInteractor: SearchInteractor,
 ) : NewsViewModel() {
 
-    private lateinit var allSources: List<Sources>
+    private lateinit var allSources: List<SourcesModel>
 
     private val searchViewState = MutableStateFlow<SearchState>(SearchState.Started)
     internal val searchViewFlow = searchViewState.asStateFlow()
@@ -81,7 +82,8 @@ class SearchViewModel @Inject constructor(
                     sourcesId = sourcesId,
                     sortBySources = sortBy,
                     sourcesName = sourcesName,
-                    dateSources = if (date != NOT_INPUT_DATE) stringFromDataPiker(date).formatDate() else "")
+                    dateSources = if (date != NOT_INPUT_DATE) stringFromDataPiker(date).formatDate() else ""
+                )
 
                 router.navigateTo(SearchNewsScreen(accountId, historySelect))
                 saveHistorySelect(historySelect)
@@ -92,11 +94,11 @@ class SearchViewModel @Inject constructor(
 
     fun onClickSearch(keyWord: String, searchIn: String, sortBy: String, sourcesName: String) {
         if (keyWord.isNotEmpty()) {
-            val historySelect: HistorySelect
+            val historySelectModel: HistorySelectModel
             if (sourcesName.isNotEmpty()) {
                 if (containsByName(sourcesName)) {
                     val sourcesId = getIdByNameIfEmpty(sourcesName)
-                    historySelect = createHistorySelect(
+                    historySelectModel = createHistorySelect(
                         keyWord = keyWord,
                         searchIn = searchIn,
                         sortByKeyWord = sortBy,
@@ -108,13 +110,14 @@ class SearchViewModel @Inject constructor(
                     return
                 }
             } else {
-                historySelect = createHistorySelect(
+                historySelectModel = createHistorySelect(
                     keyWord = keyWord,
                     searchIn = searchIn,
-                    sortByKeyWord = sortBy)
+                    sortByKeyWord = sortBy
+                )
             }
-            router.navigateTo(SearchNewsScreen(accountId, historySelect))
-            saveHistorySelect(historySelect)
+            router.navigateTo(SearchNewsScreen(accountId, historySelectModel))
+            saveHistorySelect(historySelectModel)
         } else {
             searchViewState.tryEmit(SearchState.EnterKeys)
         }
@@ -130,17 +133,17 @@ class SearchViewModel @Inject constructor(
         })
     }
 
-    fun onClickHistoryIconDelete(historySelect: HistorySelect) {
+    fun onClickHistoryIconDelete(historySelectModel: HistorySelectModel) {
         viewModelScope.launchJob(tryBlock = {
-            searchInteractor.deleteSelect(historySelect)
+            searchInteractor.deleteSelect(historySelectModel)
             getHistorySelect()
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.toString())
         })
     }
 
-    fun onClickHistoryItem(historySelect: HistorySelect) {
-        router.navigateTo(SearchNewsScreen(accountId, historySelect))
+    fun onClickHistoryItem(historySelectModel: HistorySelectModel) {
+        router.navigateTo(SearchNewsScreen(accountId, historySelectModel))
     }
 
     fun pikerPositive(timeMillis: Long) {
@@ -184,10 +187,10 @@ class SearchViewModel @Inject constructor(
         dataState.emit(DataState.SetSources(allSources))
     }
 
-    private fun saveHistorySelect(historySelect: HistorySelect) {
+    private fun saveHistorySelect(historySelectModel: HistorySelectModel) {
         if (saveHistory) {
             viewModelScope.launchJob(tryBlock = {
-                searchInteractor.insertSelect(historySelect)
+                searchInteractor.insertSelect(historySelectModel)
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.toString())
             })
@@ -202,7 +205,8 @@ class SearchViewModel @Inject constructor(
         sourcesId: String? = "",
         dateSources: String? = "",
         sourcesName: String? = "",
-    ) = HistorySelect(id = 0,
+    ) = HistorySelectModel(
+        id = 0,
         accountID = accountId,
         keyWord = keyWord,
         searchIn = searchIn,
@@ -210,7 +214,8 @@ class SearchViewModel @Inject constructor(
         sortBySources = sortBySources,
         sourcesId = sourcesId,
         dateSources = dateSources,
-        sourcesName = sourcesName)
+        sourcesName = sourcesName
+    )
 
     private fun getIdByNameIfEmpty(sourcesName: String): String {
         return allSources.find { sources ->
@@ -220,6 +225,14 @@ class SearchViewModel @Inject constructor(
 
     private fun containsByName(sourcesName: String): Boolean {
         return allSources.map { it.name }.contains(sourcesName)
+    }
+
+    private fun String.isValidatePeriod(): Boolean {
+        if (this == NOT_INPUT_DATE) return true
+        return !(DateFormatter.stringFromDataNews(this) > Date()
+                || DateFormatter.stringFromDataNews(this) <= DateFormatter.takeDate(
+            MAX_PERIOD_DAY_NEWS
+        ))
     }
 
     sealed class SearchState {
@@ -241,7 +254,11 @@ class SearchViewModel @Inject constructor(
     }
 
     sealed class DataState {
-        data class SetSources(val sources: List<Sources>) : DataState()
-        data class SetHistorySelect(val historySelect: List<HistorySelect>) : DataState()
+        data class SetSources(val sources: List<SourcesModel>) : DataState()
+        data class SetHistorySelect(val historySelectModel: List<HistorySelectModel>) : DataState()
+    }
+
+    companion object{
+        const val MAX_PERIOD_DAY_NEWS = -30
     }
 }

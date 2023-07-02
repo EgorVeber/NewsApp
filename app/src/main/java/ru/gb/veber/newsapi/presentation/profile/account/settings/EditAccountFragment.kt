@@ -4,9 +4,9 @@ import android.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.EMAIL_STR
-import ru.gb.veber.newsapi.common.extentions.LOGIN_STR
-import ru.gb.veber.newsapi.common.extentions.PASSWORD_STR
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.EMAIL_EXAMPLE
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.LOGIN_EXAMPLE
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.PASSWORD_EXAMPLE
 import ru.gb.veber.newsapi.common.extentions.hide
 import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.common.extentions.showSnackBar
@@ -15,7 +15,7 @@ import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
-import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
@@ -74,7 +74,7 @@ class EditAccountFragment :
                     loginNotValidate()
                 }
                 is EditAccountViewModel.EditAccountState.SetAccountDate -> {
-                    setAccountDate(state.account)
+                    setAccountDate(state.accountModel)
                 }
                 is EditAccountViewModel.EditAccountState.SuccessUpdateAccount -> {
                     successUpdateAccount(state.userLogin)
@@ -122,14 +122,14 @@ class EditAccountFragment :
         return userLogin != "" && userPassword != "" && userEmail != ""
     }
 
-    private fun setAccountDate(account: Account) {
+    private fun setAccountDate(accountModel: AccountModel) {
         TransitionManager.beginDelayedTransition(binding.root)
-        userLogin = account.userName
-        userEmail = account.email
-        userPassword = account.password
-        binding.userNameChange.editText?.setText(account.userName)
-        binding.emailChange.editText?.setText(account.email)
-        binding.passwordChange.editText?.setText(account.password)
+        userLogin = accountModel.userName
+        userEmail = accountModel.email
+        userPassword = accountModel.password
+        binding.userNameChange.editText?.setText(accountModel.userName)
+        binding.emailChange.editText?.setText(accountModel.email)
+        binding.passwordChange.editText?.setText(accountModel.password)
         binding.constrainEditInformation.show()
     }
 
@@ -152,7 +152,7 @@ class EditAccountFragment :
 
     private fun passwordNotValidate() {
         userPassword = ""
-        binding.passwordChange.error = getString(R.string.error_input_email) + "($PASSWORD_STR)"
+        binding.passwordChange.error = getString(R.string.error_input_email) + "($PASSWORD_EXAMPLE)"
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -165,7 +165,7 @@ class EditAccountFragment :
     }
 
     private fun loginNotValidate() {
-        binding.userNameChange.error = getString(R.string.error_input_email) + "($LOGIN_STR)"
+        binding.userNameChange.error = getString(R.string.error_input_email) + "($LOGIN_EXAMPLE)"
         userLogin = ""
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -180,7 +180,7 @@ class EditAccountFragment :
 
     private fun emailRegisterNotValidate() {
         userEmail = ""
-        binding.emailChange.error = getString(R.string.error_input_email) + "($EMAIL_STR)"
+        binding.emailChange.error = getString(R.string.error_input_email) + "($EMAIL_EXAMPLE)"
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 

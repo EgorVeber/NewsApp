@@ -1,10 +1,9 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
-import ru.gb.veber.newsapi.data.models.room.entity.ArticleDbEntity
-import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
-import ru.gb.veber.newsapi.domain.models.Article
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.AccountSourcesModel
+import ru.gb.veber.newsapi.domain.models.ArticleModel
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
@@ -18,29 +17,27 @@ class SourceInteractor
     private val articleRepoImpl: ArticleRepo,
     private val historySelectRepoImpl: HistorySelectRepo,
 ) {
-    suspend fun getSourcesV2(): MutableList<Sources> {
-        return sourcesRepoImpl.getSourcesV2()
+    suspend fun getSources(): MutableList<SourcesModel> {
+        return sourcesRepoImpl.getSources().toMutableList()
     }
 
-    suspend fun getLikeSourcesFromAccountV2(accountId: Int): List<Sources> {
-        return accountSourcesRepoImpl.getLikeSourcesFromAccountV2(accountId)
+    suspend fun getLikeSourcesFromAccount(accountId: Int): List<SourcesModel> {
+        return accountSourcesRepoImpl.getLikeSources(accountId)
     }
 
-    suspend fun getArticleByIdV2(accountId: Int): List<Article> {
+    suspend fun getArticleById(accountId: Int): List<ArticleModel> {
         return articleRepoImpl.getArticleByIdV2(accountId)
     }
 
-    suspend fun deleteSourcesLikeV2(accountId: Int, sourcesId: Int) {
+    suspend fun deleteSourcesLike(accountId: Int, sourcesId: Int) {
         accountSourcesRepoImpl.deleteSourcesLikeV2(accountId, sourcesId)
     }
 
-    suspend fun insertV2(
-        accountSourcesDbEntity: AccountSourcesDbEntity,
-    ) {
-        accountSourcesRepoImpl.insertV2(accountSourcesDbEntity)
+    suspend fun insert(accountSourcesModel: AccountSourcesModel) {
+        accountSourcesRepoImpl.insert(accountSourcesModel)
     }
 
-    suspend fun insertSelectV2(historyDbEntity: HistorySelectDbEntity) {
-        historySelectRepoImpl.insertSelectV2(historyDbEntity)
+    suspend fun insertSelect(historySelectModel: HistorySelectModel) {
+        historySelectRepoImpl.insertSelect(historySelectModel)
     }
 }

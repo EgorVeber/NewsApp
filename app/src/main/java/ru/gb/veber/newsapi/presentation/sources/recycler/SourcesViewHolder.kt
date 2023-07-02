@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.presentation.sources.recycler
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.extentions.hide
@@ -8,7 +7,7 @@ import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.common.utils.FOCUS_BRIF
 import ru.gb.veber.newsapi.common.utils.FOCUS_NAME
 import ru.gb.veber.newsapi.databinding.SourcesItemBinding
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 
 class SourcesViewHolder(
     private val binding: SourcesItemBinding,
@@ -39,7 +38,7 @@ class SourcesViewHolder(
         helperTextTF.show()
     }
 
-    private fun itemState(item: Sources) {
+    private fun itemState(item: SourcesModel) {
         when (item.focusType) {
             FOCUS_NAME -> { hideDesc(); hideSubs(); }
             FOCUS_BRIF -> { hideDesc(); showSubs(); }
@@ -47,7 +46,7 @@ class SourcesViewHolder(
         }
     }
 
-    fun bind(item: Sources) = with(binding) {
+    fun bind(item: SourcesModel) = with(binding) {
 
         if (item.liked) imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
         else imageFavorites.setImageResource(R.drawable.ic_favorite_36)

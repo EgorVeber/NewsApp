@@ -1,24 +1,23 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.SharedPreferenceAccount
-import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
-import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.data.AccountDataSource
+import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.ApiKeysRepository
 import javax.inject.Inject
 
 class AuthorizationInteractor @Inject constructor(
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
+    private val sharedPreferenceAccount: AccountDataSource,
     private val accountRepo: AccountRepo,
     private val apiKeysRepository: ApiKeysRepository,
 ) {
 
-    suspend fun createAccountV2(accountDbEntity: AccountDbEntity) {
-        return accountRepo.createAccountV2(accountDbEntity)
+    suspend fun createAccount(accountModel: AccountModel) {
+        return accountRepo.createAccount(accountModel)
     }
 
-    suspend fun getAccountByUserNameV2(userName: String): Account {
+    suspend fun getAccountByUserNameV2(userName: String): AccountModel {
         return accountRepo.getAccountByUserNameV2(userName)
     }
 

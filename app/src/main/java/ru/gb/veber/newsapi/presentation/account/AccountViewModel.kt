@@ -14,13 +14,11 @@ import ru.gb.veber.newsapi.common.screen.FileScreen
 import ru.gb.veber.newsapi.common.screen.KeyManagementScreen
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.common.utils.KEY_THEME_DARK
 import ru.gb.veber.newsapi.common.utils.KEY_THEME_DEFAULT
-import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
 import ru.gb.veber.newsapi.domain.interactor.AccountInteractor
-import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.AccountModel
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
@@ -32,7 +30,7 @@ class AccountViewModel @Inject constructor(
     private val flow: LiveData<AccountViewState> = mutableState
 
     private var accountId: Int = ACCOUNT_ID_DEFAULT
-    private lateinit var accountMain: Account
+    private lateinit var accountModelMain: AccountModel
 
     fun subscribe(accountId: Int): LiveData<AccountViewState> {
         this.accountId = accountId
@@ -51,7 +49,7 @@ class AccountViewModel @Inject constructor(
             val account = accountInteractor.getAccountByIdV2(accountId)
             val articles = accountInteractor.getArticleByIdV2(accountId)
             val listSources = accountInteractor.getLikeSourcesFromAccountV2(accountId)
-            accountMain = account
+            accountModelMain = account
             account.totalFavorites = articles.filter { article ->
                 article.isFavorites
             }.size.toString()
@@ -152,10 +150,10 @@ class AccountViewModel @Inject constructor(
     }
 
     fun updateAccountShowListFavorite(b: Boolean) {
-        accountMain?.let { account ->
+        accountModelMain?.let { account ->
             account.displayOnlySources = b
             viewModelScope.launchJob(tryBlock = {
-                accountInteractor.updateAccountV2(account.toAccountDbEntity())
+                accountInteractor.updateAccount(account)
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
@@ -163,9 +161,9 @@ class AccountViewModel @Inject constructor(
     }
 
     fun updateAccountSaveHistorySelect(checked: Boolean) {
-        accountMain.saveSelectHistory = checked
+        accountModelMain.saveSelectHistory = checked
         viewModelScope.launchJob(tryBlock = {
-            accountInteractor.updateAccountV2(accountMain.toAccountDbEntity())
+            accountInteractor.updateAccount(accountModelMain)
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
@@ -191,7 +189,7 @@ class AccountViewModel @Inject constructor(
 
     sealed class AccountViewState {
         object Loading : AccountViewState()
-        data class SetAccountInfo(val account: Account, val theme: Int) : AccountViewState()
+        data class SetAccountInfo(val accountModel: AccountModel, val theme: Int) : AccountViewState()
         object SetBottomNavigationIcon : AccountViewState()
         data class AccountDialog(
             val title: String,

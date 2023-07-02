@@ -1,11 +1,11 @@
 package ru.gb.veber.newsapi.presentation.sources.recycler
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 
 class SourcesDiffUtil(
-    private val oldItems: List<Sources>,
-    private val newItems: List<Sources>,
+    private val oldItems: List<SourcesModel>,
+    private val newItems: List<SourcesModel>,
 ) : DiffUtil.Callback() {
     override fun getOldListSize() = oldItems.size
 

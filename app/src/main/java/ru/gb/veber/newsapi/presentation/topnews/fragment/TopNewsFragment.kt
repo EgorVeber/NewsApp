@@ -17,15 +17,22 @@ import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.*
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.formatDateDay
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.stringFromData
+import ru.gb.veber.newsapi.common.extentions.collapsed
+import ru.gb.veber.newsapi.common.extentions.expanded
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.hideKeyboard
+import ru.gb.veber.newsapi.common.extentions.loadPicForTitle
+import ru.gb.veber.newsapi.common.extentions.show
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
-import ru.gb.veber.newsapi.domain.models.Article
 import ru.gb.veber.newsapi.presentation.activity.EventAddingBadges
 import ru.gb.veber.newsapi.presentation.activity.EventShareLink
+import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.EventTopNews
@@ -103,13 +110,13 @@ class TopNewsFragment :
             .observe(viewLifecycleOwner) { state ->
                 when (state) {
                     is TopNewsViewModel.TopNewsState.UpdateListNews -> {
-                        updateListNews(newListNews = state.articleListHistory)
+                        updateListNews(newListNews = state.articleModelListHistory)
                     }
                     is TopNewsViewModel.TopNewsState.ClickNews -> {
-                        clickNews(article = state.article)
+                        clickNews(articleUiModel = state.articleModel)
                     }
                     is TopNewsViewModel.TopNewsState.SetNews -> {
-                        setNews(listNews = state.articles)
+                        setNews(listNews = state.articleModels)
                     }
                     is TopNewsViewModel.TopNewsState.SetCountry -> {
                         setCountry(countryList = state.listCountry, startIndex = state.index)
@@ -160,38 +167,38 @@ class TopNewsFragment :
             }
     }
 
-    private fun setNews(listNews: List<Article>) {
+    private fun setNews(listNews: List<ArticleUiModel>) {
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
         TransitionManager.beginDelayedTransition(binding.root)
-        newsAdapter.articles = listNews
+        newsAdapter.articleModels = listNews
         viewModel.getCountry()
     }
 
-    private fun updateListNews(newListNews: MutableList<Article>) {
-        newsAdapter.articles = newListNews
+    private fun updateListNews(newListNews: MutableList<ArticleUiModel>) {
+        newsAdapter.articleModels = newListNews
     }
 
-    private fun clickNews(article: Article) {
+    private fun clickNews(articleUiModel: ArticleUiModel) {
         with(binding.behaviorInclude) {
-            imageViewAll.loadPicForTitle(article.urlToImage)
-            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
-            titleNews.text = article.title
-            authorText.text = article.author
-            sourceText.text = article.source.name
-            setSpanDescription(article)
+            imageViewAll.loadPicForTitle(articleUiModel.urlToImage)
+            dateNews.text = stringFromData(articleUiModel.publishedAt).formatDateDay()
+            titleNews.text = articleUiModel.title
+            authorText.text = articleUiModel.author
+            sourceText.text = articleUiModel.sourceModel.name
+            setSpanDescription(articleUiModel)
         }
 
         binding.behaviorInclude.descriptionNews.setOnClickListener {
-            viewModel.openScreenWebView(article.url)
+            viewModel.openScreenWebView(articleUiModel.url)
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
-            viewModel.clickImageFavorites(article)
+            viewModel.clickImageFavorites(articleUiModel)
         }
 
         binding.behaviorInclude.imageShare.setOnClickListener {
-            (requireActivity() as EventShareLink).shareLink(article.url)
+            (requireActivity() as EventShareLink).shareLink(articleUiModel.url)
         }
     }
 
@@ -202,8 +209,8 @@ class TopNewsFragment :
             .toString(), false)
     }
 
-    private fun setSpanDescription(article: Article) {
-        SpannableStringBuilder(article.description).also { span ->
+    private fun setSpanDescription(articleModel: ArticleUiModel) {
+        SpannableStringBuilder(articleModel.description).also { span ->
             span.setSpan(
                 ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
                 span.length - 1,

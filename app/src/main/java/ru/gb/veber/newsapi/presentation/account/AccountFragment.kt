@@ -15,7 +15,7 @@ import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
 import ru.gb.veber.newsapi.databinding.ConfirmDialogBinding
-import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
 
 class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
@@ -105,7 +105,7 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
         viewModel.subscribe(accountId).observe(viewLifecycleOwner) { state ->
             when (state) {
                 is AccountViewModel.AccountViewState.SetAccountInfo -> {
-                    setAccountInfo(account = state.account, themePrefs = state.theme)
+                    setAccountInfo(accountModel = state.accountModel, themePrefs = state.theme)
                 }
                 is AccountViewModel.AccountViewState.AccountDialog -> {
                     showDialog(
@@ -149,15 +149,15 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
     }
 
     @SuppressLint("SetTextI18n")
-    fun setAccountInfo(account: Account, themePrefs: Int) {
-        binding.userName.text = account.userName
-        binding.userEmail.text = account.email
-        binding.totalFavoritesText.text = getString(R.string.total_favorites) + account.totalFavorites
-        binding.totalHistoryText.text = getString(R.string.total_history) + account.totalHistory
-        binding.totalSourcesText.text = getString(R.string.total_sources) + account.totalSources
-        binding.saveHistorySwitch.isChecked = account.saveHistory
-        binding.saveHistorySelectSwitch.isChecked = account.saveSelectHistory
-        binding.showFavorites.isChecked = account.displayOnlySources
+    fun setAccountInfo(accountModel: AccountModel, themePrefs: Int) {
+        binding.userName.text = accountModel.userName
+        binding.userEmail.text = accountModel.email
+        binding.totalFavoritesText.text = getString(R.string.total_favorites) + accountModel.totalFavorites
+        binding.totalHistoryText.text = getString(R.string.total_history) + accountModel.totalHistory
+        binding.totalSourcesText.text = getString(R.string.total_sources) + accountModel.totalSources
+        binding.saveHistorySwitch.isChecked = accountModel.saveHistory
+        binding.saveHistorySelectSwitch.isChecked = accountModel.saveSelectHistory
+        binding.showFavorites.isChecked = accountModel.displayOnlySources
         binding.switchDarkTheme.isChecked = themePrefs != R.style.Theme_NewsAPI
         TransitionManager.beginDelayedTransition(binding.root)
         binding.nestedScrollAccount.show()

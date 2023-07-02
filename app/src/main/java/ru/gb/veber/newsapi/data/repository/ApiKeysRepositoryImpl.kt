@@ -1,8 +1,8 @@
 package ru.gb.veber.newsapi.data.repository
 
+import ru.gb.veber.newsapi.data.database.dao.ApiKeysDao
 import ru.gb.veber.newsapi.data.mapper.toApiKeysEntity
 import ru.gb.veber.newsapi.data.mapper.toApiKeysModel
-import ru.gb.veber.newsapi.data.models.room.dao.ApiKeysDao
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
 import ru.gb.veber.newsapi.domain.repository.ApiKeysRepository
 
