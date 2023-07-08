@@ -1,10 +1,10 @@
 package ru.gb.veber.newsapi.data.mapper
 
-import ru.gb.veber.newsapi.data.models.room.entity.ApiKeysDbEntity
+import ru.gb.veber.newsapi.data.database.entity.ApiKeysEntity
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
 
 fun ApiKeysModel.toApiKeysEntity() =
-    ApiKeysDbEntity(
+    ApiKeysEntity(
         id = id,
         accountID = accountId,
         keyApi = keyApi,
@@ -15,7 +15,7 @@ fun ApiKeysModel.toApiKeysEntity() =
         countMax = countMax.toInt()
     )
 
-fun ApiKeysDbEntity.toApiKeysModel() =
+fun ApiKeysEntity.toApiKeysModel() =
     ApiKeysModel(
         id = id,
         accountId = accountID,

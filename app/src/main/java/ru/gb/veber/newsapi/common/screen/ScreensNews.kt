@@ -3,7 +3,7 @@ package ru.gb.veber.newsapi.common.screen
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 import ru.gb.veber.newsapi.presentation.account.AccountFragment
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerFragment
 import ru.gb.veber.newsapi.presentation.profile.ProfileFragment
@@ -13,7 +13,7 @@ import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragm
 import ru.gb.veber.newsapi.presentation.profile.file.FileFragment
 import ru.gb.veber.newsapi.presentation.search.SearchFragment
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
-import ru.gb.veber.newsapi.presentation.sources.FragmentSources
+import ru.gb.veber.newsapi.presentation.sources.SourcesFragment
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerFragment
 import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
 
@@ -38,7 +38,7 @@ object AuthorizationScreen : FragmentScreen {
 
 data class SourcesScreen(private val accountId: Int) : FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return FragmentSources.getInstance(accountId)
+        return SourcesFragment.getInstance(accountId)
     }
 }
 
@@ -55,10 +55,10 @@ data class FavoritesViewPagerScreen(private val accountId: Int) : FragmentScreen
 }
 
 
-data class SearchNewsScreen(private val accountId: Int, private val historySelect: HistorySelect) :
+data class SearchNewsScreen(private val accountId: Int, private val historySelectModel: HistorySelectModel) :
     FragmentScreen {
     override fun createFragment(factory: FragmentFactory): Fragment {
-        return SearchNewsFragment.getInstance(accountId, historySelect)
+        return SearchNewsFragment.getInstance(accountId, historySelectModel)
     }
 }
 

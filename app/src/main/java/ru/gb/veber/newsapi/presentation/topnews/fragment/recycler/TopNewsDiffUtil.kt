@@ -1,11 +1,11 @@
 package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 
 class TopNewsDiffUtil(
-    private val oldItems: List<Article>,
-    private val newItems: List<Article>,
+    private val oldItems: List<ArticleUiModel>,
+    private val newItems: List<ArticleUiModel>,
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize() = oldItems.size

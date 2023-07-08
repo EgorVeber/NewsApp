@@ -12,20 +12,25 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.*
-import ru.gb.veber.newsapi.common.utils.*
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.hideKeyboard
+import ru.gb.veber.newsapi.common.extentions.observeFlow
+import ru.gb.veber.newsapi.common.extentions.show
+import ru.gb.veber.newsapi.common.extentions.showKeyboard
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.BundleInt
+import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
+import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchFragmentBinding
-import ru.gb.veber.newsapi.domain.models.HistorySelect
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 import ru.gb.veber.newsapi.presentation.search.recycler.HistorySelectAdapter
 import ru.gb.veber.newsapi.presentation.search.recycler.RecyclerListenerHistorySelect
-import java.text.SimpleDateFormat
-import java.util.*
 
 class SearchFragment :
     NewsFragment<SearchFragmentBinding, SearchViewModel>(SearchFragmentBinding::inflate) {
@@ -36,12 +41,12 @@ class SearchFragment :
     private var accountId: Int by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
 
     private var itemListener = object : RecyclerListenerHistorySelect {
-        override fun clickHistoryItem(historySelect: HistorySelect) {
-            viewModel.onClickHistoryItem(historySelect)
+        override fun clickHistoryItem(historySelectModel: HistorySelectModel) {
+            viewModel.onClickHistoryItem(historySelectModel)
         }
 
-        override fun deleteHistoryItem(historySelect: HistorySelect) {
-            viewModel.onClickHistoryIconDelete(historySelect)
+        override fun deleteHistoryItem(historySelectModel: HistorySelectModel) {
+            viewModel.onClickHistoryIconDelete(historySelectModel)
         }
     }
 
@@ -145,7 +150,7 @@ class SearchFragment :
 
         viewModel.dataStateFlow.observeFlow(this) { dataState ->
             when (dataState) {
-                is SearchViewModel.DataState.SetHistorySelect -> setHistory(dataState.historySelect)
+                is SearchViewModel.DataState.SetHistorySelect -> setHistory(dataState.historySelectModel)
                 is SearchViewModel.DataState.SetSources -> setSources(dataState.sources)
             }
         }
@@ -194,8 +199,8 @@ class SearchFragment :
         viewModel.onViewInited(accountId)
     }
 
-    private fun setHistory(list: List<HistorySelect>) {
-        historySelectAdapter.historySelectList = list
+    private fun setHistory(list: List<HistorySelectModel>) {
+        historySelectAdapter.historySelectModelList = list
     }
 
     private val searchSpinnerCountryTextWatcher = object : TextWatcher {
@@ -246,7 +251,7 @@ class SearchFragment :
         binding.selectDate.text = getString(R.string.selectDatePiker)
     }
 
-    private fun setSources(sources: List<Sources>) = with(binding) {
+    private fun setSources(sources: List<SourcesModel>) = with(binding) {
         adapter = SourcesAdapterAutoCompile(requireContext(), sources)
         searchSpinnerCountry.setAdapter(adapter)
     }

@@ -12,23 +12,23 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import ru.gb.veber.newsapi.common.base.NewsViewModel
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateDefault
 import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
-import ru.gb.veber.newsapi.common.extentions.formatDateTime
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.data.mapper.toArticle
-import ru.gb.veber.newsapi.data.mapper.toArticleDbEntity
-import ru.gb.veber.newsapi.data.mapper.toArticleUI
-import ru.gb.veber.newsapi.data.models.room.entity.AccountSourcesDbEntity
 import ru.gb.veber.newsapi.domain.interactor.SearchNewsInteractor
-import ru.gb.veber.newsapi.domain.models.Article
-import ru.gb.veber.newsapi.domain.models.HistorySelect
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.AccountSourcesModel
+import ru.gb.veber.newsapi.domain.models.ArticleModel
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
+import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.newsapi.presentation.mapper.toArticleModel
+import ru.gb.veber.newsapi.presentation.mapper.toArticleUiModel
+import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 class SearchNewsViewModel @Inject constructor(
@@ -37,15 +37,19 @@ class SearchNewsViewModel @Inject constructor(
 ) : NewsViewModel() {
 
     private val searchNewsState: MutableSharedFlow<SearchNewsState> =
-        MutableSharedFlow(replay = 2,
+        MutableSharedFlow(
+            replay = 2,
             extraBufferCapacity = 2,
-            onBufferOverflow = BufferOverflow.SUSPEND)
+            onBufferOverflow = BufferOverflow.SUSPEND
+        )
     private val searchNewsFlow: SharedFlow<SearchNewsState> = searchNewsState.asSharedFlow()
 
-    private val articleDataState: MutableSharedFlow<Article> = MutableSharedFlow(replay = 1,
+    private val articleModelDataState: MutableSharedFlow<ArticleUiModel> = MutableSharedFlow(
+        replay = 1,
         extraBufferCapacity = 0,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    val articleDataFlow: SharedFlow<Article> = articleDataState.asSharedFlow()
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val articleModelDataFlow: SharedFlow<ArticleUiModel> = articleModelDataState.asSharedFlow()
 
     private val imageLikeState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val imageLikeFlow: StateFlow<Boolean> = imageLikeState.asStateFlow()
@@ -58,9 +62,9 @@ class SearchNewsViewModel @Inject constructor(
 
     private var saveHistory = false
 
-    private var articleListHistory: MutableList<Article> = mutableListOf()
-    private var likeSources: MutableList<Sources> = mutableListOf()
-    private var allSources: List<Sources> = listOf()
+    private var articleModelListHistory: MutableList<ArticleUiModel> = mutableListOf()
+    private var likeSources: MutableList<SourcesModel> = mutableListOf()
+    private var allSources: List<SourcesModel> = listOf()
 
     private var sourcesID: Int = 0
     private val bag = CompositeDisposable()
@@ -90,7 +94,7 @@ class SearchNewsViewModel @Inject constructor(
         return true
     }
 
-    fun getAccountSettings(historySelect: HistorySelect) {
+    fun getAccountSettings(historySelectModel: HistorySelectModel) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             viewModelScope.launchJob(tryBlock = {
                 searchNewsInteractor.getAccount(accountId).also { account ->
@@ -108,42 +112,44 @@ class SearchNewsViewModel @Inject constructor(
         } else {
             searchNewsState.tryEmit(SearchNewsState.HideFavorites)
         }
-        getNews(historySelect)
+        getNews(historySelectModel)
     }
 
-    fun setOnClickImageFavorites(article: Article) {
-        if (article.isFavorites) {
+    fun setOnClickImageFavorites(articleModel: ArticleUiModel) {
+        if (articleModel.isFavorites) {
             imageLikeState.tryEmit(false)
             searchNewsState.tryEmit(SearchNewsState.RemoveBadge)
-            deleteFavorites(article)
-            article.isFavorites = false
+            deleteFavorites(articleModel)
+            articleModel.isFavorites = false
 
         } else {
             searchNewsState.tryEmit(SearchNewsState.AddBadge)
             imageLikeState.tryEmit(true)
-            saveArticleLike(article)
-            article.isFavorites = true
+            saveArticleLike(articleModel)
+            articleModel.isFavorites = true
         }
     }
 
-    fun clickNews(article: Article) {
+    fun clickNews(articleModel: ArticleUiModel) {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             val isLikeSources =
-                likeSources.find { sources -> sources.idSources == article.source.id }?.id ?: 0
+                likeSources.find { sources -> sources.idSources == articleModel.sourceModel.id }?.id
+                    ?: 0
             sourcesID =
-                allSources.find { sources -> sources.idSources == article.source.id }?.id ?: 0
+                allSources.find { sources -> sources.idSources == articleModel.sourceModel.id }?.id
+                    ?: 0
 
             if (isLikeSources != 0 || sourcesID == 0) {
                 saveSourcesState.tryEmit(false)
             } else {
                 saveSourcesState.tryEmit(true)
             }
-            saveArticle(article)
+            saveArticle(articleModel)
         }
 
-        articleDataState.tryEmit(article)
+        articleModelDataState.tryEmit(articleModel)
 
-        if (article.isFavorites) {
+        if (articleModel.isFavorites) {
             imageLikeState.tryEmit(true)
         } else {
             imageLikeState.tryEmit(false)
@@ -153,7 +159,7 @@ class SearchNewsViewModel @Inject constructor(
 
     fun saveSources() {
         viewModelScope.launchJob(tryBlock = {
-            searchNewsInteractor.insertSource(AccountSourcesDbEntity(accountId, sourcesID))
+            searchNewsInteractor.insertSource(AccountSourcesModel(accountId, sourcesID))
             showMessageState.emit(true)
             saveSourcesState.emit(false)
             getSourcesLike()
@@ -162,30 +168,26 @@ class SearchNewsViewModel @Inject constructor(
         })
     }
 
-    private fun getNews(historySelect: HistorySelect) {
+    private fun getNews(historySelectModel: HistorySelectModel) {
+        //TODO унести в домайн
         viewModelScope.launchJob(tryBlock = {
-            searchNewsState.tryEmit(SearchNewsState.SetTitle(historySelect))
-            val articlesDto = searchNewsInteractor.getNews(
-                sources = historySelect.sourcesId,
-                q = historySelect.keyWord,
-                searchIn = historySelect.searchIn,
-                sortBy = if (!historySelect.keyWord.isNullOrEmpty()) historySelect.sortByKeyWord else historySelect.sortBySources,
-                from = historySelect.dateSources,
-                to = historySelect.dateSources,
+            searchNewsState.tryEmit(SearchNewsState.SetTitle(historySelectModel))
+            val articlesList: List<ArticleModel> = searchNewsInteractor.getNews(
+                sources = historySelectModel.sourcesId,
+                q = historySelectModel.keyWord,
+                searchIn = historySelectModel.searchIn,
+                sortBy = if (!historySelectModel.keyWord.isNullOrEmpty()) historySelectModel.sortByKeyWord else historySelectModel.sortBySources,
+                from = historySelectModel.dateSources,
+                to = historySelectModel.dateSources,
                 key = API_KEY_NEWS
             )
 
-            val articlesUi = articlesDto.articles.map { articleDto ->
-                articleDto.toArticle()
-            }.map { article ->
-                article.toArticleUI()
-                article.viewType = BaseViewHolder.VIEW_TYPE_SEARCH_NEWS
-                article
-            }
+            val articlesUiList: List<ArticleUiModel> =
+                articlesList.map { article -> article.toArticleUiModel(viewType = BaseViewHolder.VIEW_TYPE_SEARCH_NEWS) }
 
             val articlesDb = searchNewsInteractor.getArticles(accountId)
             articlesDb.forEach { art ->
-                articlesUi.forEach { new ->
+                articlesUiList.forEach { new ->
                     if (art.title == new.title) {
                         if (art.isFavorites) {
                             new.isFavorites = true
@@ -196,12 +198,13 @@ class SearchNewsViewModel @Inject constructor(
                     }
                 }
             }
-            if (articlesUi.isEmpty()) {
+
+            if (articlesUiList.isEmpty()) {
                 searchNewsState.tryEmit(SearchNewsState.EmptyList)
             } else {
-                checkUpdateList(articlesUi.toMutableList()) {
-                    articleListHistory = articlesUi.toMutableList()
-                    searchNewsState.tryEmit(SearchNewsState.SetNews(articleListHistory))
+                checkUpdateList(articlesUiList) {
+                    articleModelListHistory = articlesUiList.toMutableList()
+                    searchNewsState.tryEmit(SearchNewsState.SetNews(articleModelListHistory))
                 }
             }
         }, catchBlock = { error ->
@@ -212,23 +215,23 @@ class SearchNewsViewModel @Inject constructor(
         })
     }
 
-    private fun checkUpdateList(newList: MutableList<Article>, action: () -> Unit) {
-        if (articleListHistory != newList) {
-            action()//избыточно но может будет переисользоватся поэтому оставил.
+    private fun checkUpdateList(newList: List<ArticleUiModel>, action: () -> Unit) {
+        if (articleModelListHistory != newList) {
+            action()
         }
     }
 
-    private fun saveArticle(article: Article) {
+    private fun saveArticle(articleModel: ArticleUiModel) {
         if (saveHistory) {
-            val checkSaved = !article.isFavorites && !article.isHistory
+            val checkSaved = !articleModel.isFavorites && !articleModel.isHistory
             if (checkSaved) {
-                article.isHistory = true
-                article.dateAdded = Date().formatDateTime()
+                articleModel.isHistory = true
+                articleModel.dateAdded = Date().toStringFormatDateDefault()
                 viewModelScope.launchJob(tryBlock = {
-                    searchNewsInteractor.insertArticle(article, accountId)
-                    articleListHistory.find { articleHistory -> articleHistory.title == article.title }
+                    searchNewsInteractor.insertArticle(articleModel.toArticleModel(), accountId)
+                    articleModelListHistory.find { articleHistory -> articleHistory.title == articleModel.title }
                         ?.isHistory = true
-                    searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
+                    searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleModelListHistory))
                 }, catchBlock = { error ->
                     Log.d(ERROR_DB, error.localizedMessage)
                 })
@@ -236,29 +239,31 @@ class SearchNewsViewModel @Inject constructor(
         }
     }
 
-    private fun deleteFavorites(article: Article) {
-        article.isFavorites = false
+    private fun deleteFavorites(articleModel: ArticleUiModel) {
+        articleModel.isFavorites = false
         viewModelScope.launchJob(tryBlock = {
 
-            searchNewsInteractor.deleteArticleByIdFavoritesV2(article.title.toString(), accountId)
+            searchNewsInteractor.deleteArticleByIdFavorites(
+                articleModel.title,
+                accountId
+            )
 
-            articleListHistory.find { articleHistory -> articleHistory.title == article.title }
+            articleModelListHistory.find { articleHistory -> articleHistory.title == articleModel.title }
                 ?.isFavorites = false
 
-            searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
+            searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleModelListHistory))
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
-    private fun saveArticleLike(article: Article) {
-        val item = article
-        item.isFavorites = true
+    private fun saveArticleLike(articleModel: ArticleUiModel) {
+        articleModel.isFavorites = true
         viewModelScope.launchJob(tryBlock = {
-            searchNewsInteractor.insertArticle(item, accountId)
-            articleListHistory.find { articleHistory -> articleHistory.title == article.title }
+            searchNewsInteractor.insertArticle(articleModel.toArticleModel(), accountId)
+            articleModelListHistory.find { articleHistory -> articleHistory.title == articleModel.title }
                 ?.isFavorites = true
-            searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleListHistory))
+            searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleModelListHistory))
 
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
@@ -282,9 +287,9 @@ class SearchNewsViewModel @Inject constructor(
     }
 
     sealed class SearchNewsState {
-        data class SetNews(val list: List<Article>) : SearchNewsState()
-        data class ChangeNews(val articleListHistory: List<Article>) : SearchNewsState()
-        data class SetTitle(val historySelect: HistorySelect) : SearchNewsState()
+        data class SetNews(val list: List<ArticleUiModel>) : SearchNewsState()
+        data class ChangeNews(val articleModelListHistory: List<ArticleUiModel>) : SearchNewsState()
+        data class SetTitle(val historySelectModel: HistorySelectModel) : SearchNewsState()
         object EmptyList : SearchNewsState()
         object HideFavorites : SearchNewsState()
         object HideProgress : SearchNewsState()

@@ -1,12 +1,9 @@
 package ru.gb.veber.newsapi.domain.interactor
 
 import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.data.mapper.toHistorySelect
-import ru.gb.veber.newsapi.data.mapper.toHistorySelectDbEntity
-import ru.gb.veber.newsapi.data.models.room.entity.HistorySelectDbEntity
-import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.domain.models.HistorySelect
-import ru.gb.veber.newsapi.domain.models.Sources
+import ru.gb.veber.newsapi.domain.models.AccountModel
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
 import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
@@ -19,12 +16,12 @@ class SearchInteractor @Inject constructor(
     private val sourcesRepo: SourcesRepo,
     private val accountSourcesRepo: AccountSourcesRepo,
 ) {
-    suspend fun getAccountById(accountId: Int): Account {
+    suspend fun getAccountById(accountId: Int): AccountModel {
         return accountRepo.getAccountByIdV2(accountId)
     }
 
-    suspend fun getSourcesAccount(accountId: Int, displayOnlySources: Boolean): List<Sources> {
-        val allSourcesList = sourcesRepo.getSourcesV2()
+    suspend fun getSourcesAccount(accountId: Int, displayOnlySources: Boolean): List<SourcesModel> {
+        val allSourcesList = sourcesRepo.getSources()
 
         if (accountId == ACCOUNT_ID_DEFAULT) return allSourcesList
 
@@ -34,33 +31,33 @@ class SearchInteractor @Inject constructor(
             return likeSourcesList
         }
 
-        return changeSourcesListByLiked(likeSourcesList, allSourcesList)
+        return changeSourcesListByLiked(likeSourcesList, allSourcesList.toMutableList())
     }
 
-    suspend fun getHistoryById(accountId: Int): List<HistorySelect> {
-        return historySelectRepo.getHistoryByIdV2(accountId).map { it.toHistorySelect() }.reversed()
+    suspend fun getHistoryById(accountId: Int): List<HistorySelectModel> {
+        return historySelectRepo.getHistoryById(accountId).reversed()
     }
 
-    suspend fun insertSelect(historySelect: HistorySelect) {
-        historySelectRepo.insertSelectV2(historySelect.toHistorySelectDbEntity())
+    suspend fun insertSelect(historySelectModel: HistorySelectModel) {
+        historySelectRepo.insertSelect(historySelectModel)
     }
 
     suspend fun deleteSelectById(accountId: Int) {
-        historySelectRepo.deleteSelectByIdV2(accountId)
+        historySelectRepo.deleteSelectById(accountId)
     }
 
-    suspend fun deleteSelect(historySelect: HistorySelect) {
-        historySelectRepo.deleteSelectV2(historySelect.toHistorySelectDbEntity())
+    suspend fun deleteSelect(historySelectModel: HistorySelectModel) {
+        historySelectRepo.deleteSelect(historySelectModel)
     }
 
-    private suspend fun getLikeSourcesFromAccount(accountId: Int): List<Sources> {
-        return accountSourcesRepo.getLikeSourcesFromAccountV2(accountId)
+    private suspend fun getLikeSourcesFromAccount(accountId: Int): List<SourcesModel> {
+        return accountSourcesRepo.getLikeSources(accountId)
     }
 
     private fun changeSourcesListByLiked(
-        like: List<Sources>,
-        all: MutableList<Sources>,
-    ): MutableList<Sources> {
+        like: List<SourcesModel>,
+        all: MutableList<SourcesModel>,
+    ): MutableList<SourcesModel> {
         for (j in like.size - 1 downTo 0) {
             for (i in all.indices) {
                 if (like[j].idSources == all[i].idSources) {

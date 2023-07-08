@@ -6,20 +6,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.formatDateTime
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.toFormatDateDayMouthYearHoursMinutes
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateYearMonthDay
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.*
-import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
-import ru.gb.veber.newsapi.data.mapper.toArticle
-import ru.gb.veber.newsapi.data.mapper.toArticleUI
-import ru.gb.veber.newsapi.data.mapper.toCountry
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
+import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
+import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
+import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.common.utils.ERROR_LOAD_NEWS
 import ru.gb.veber.newsapi.domain.interactor.TopNewsInteractor
-import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.domain.models.Article
-import ru.gb.veber.newsapi.domain.models.Country
+import ru.gb.veber.newsapi.domain.models.AccountModel
+import ru.gb.veber.newsapi.domain.models.CountryModel
+import ru.gb.veber.newsapi.presentation.mapper.toArticleModel
+import ru.gb.veber.newsapi.presentation.mapper.toArticleUiModel
+import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 class TopNewsViewModel @Inject constructor(
@@ -30,14 +34,14 @@ class TopNewsViewModel @Inject constructor(
     private val mutableFlow: MutableLiveData<TopNewsState> = MutableLiveData()
     private val flow: LiveData<TopNewsState> = mutableFlow
 
-    private lateinit var account: Account
+    private lateinit var accountModel: AccountModel
     private var accountId: Int = 0
 
     private var saveHistory = false
     private var filterFlag = false
 
-    private var articleListHistory: MutableList<Article> = mutableListOf()
-    private var listCountry: MutableList<Country> = mutableListOf()
+    private var articleModelListHistory: MutableList<ArticleUiModel> = mutableListOf()
+    private var listCountryModel: MutableList<CountryModel> = mutableListOf()
 
     fun subscribe(accountId: Int, categoryKey: String): LiveData<TopNewsState> {
         this.accountId = accountId
@@ -46,30 +50,34 @@ class TopNewsViewModel @Inject constructor(
         return flow
     }
 
-    fun clickNews(article: Article) {
+    fun clickNews(articleModel: ArticleUiModel) {
         if (!filterFlag) {
             if (accountId != ACCOUNT_ID_DEFAULT) {
-                saveArticle(article)
+                saveArticle(articleModel)
             }
-            mutableFlow.value = TopNewsState.ClickNews(article = article)
-            if (article.isFavorites) mutableFlow.value = TopNewsState.FavoritesImageViewSetLike
+//            articleModel.apply {
+//                publishedAtUi = publishedAtUi.toFormatDateDayMouthYearHoursMinutes()
+//            }
+            mutableFlow.value = TopNewsState.ClickNews(articleModel)
+
+            if (articleModel.isFavorites) mutableFlow.value = TopNewsState.FavoritesImageViewSetLike
             else mutableFlow.value = TopNewsState.FavoritesImageViewSetDislike
             mutableFlow.value = TopNewsState.HideFilterButton
             mutableFlow.value = TopNewsState.BottomSheetExpanded
         }
     }
 
-    fun clickImageFavorites(article: Article) {
-        if (article.isFavorites) {
+    fun clickImageFavorites(articleModel: ArticleUiModel) {
+        if (articleModel.isFavorites) {
             mutableFlow.value = TopNewsState.FavoritesImageViewSetDislike
             mutableFlow.value = TopNewsState.EventNavigationBarRemoveBadgeFavorites
-            deleteFavorites(article)
-            article.isFavorites = false
+            deleteFavorites(articleModel)
+            articleModel.isFavorites = false
         } else {
             mutableFlow.value = TopNewsState.EventNavigationBarAddBadgeFavorites
             mutableFlow.value = TopNewsState.FavoritesImageViewSetLike
-            saveArticleLike(article)
-            article.isFavorites = true
+            saveArticleLike(articleModel)
+            articleModel.isFavorites = true
         }
     }
 
@@ -87,11 +95,11 @@ class TopNewsViewModel @Inject constructor(
             mutableFlow.value = TopNewsState.ShowFilterHideRecycler
             filterFlag = !filterFlag
         } else {
-            if (country.isEmpty() || !listCountry.map { itemCountry -> itemCountry.id }
+            if (country.isEmpty() || !listCountryModel.map { itemCountry -> itemCountry.id }
                     .contains(country)) {
                 mutableFlow.value = TopNewsState.ErrorSelectCountry
             } else {
-                val countryCode = listCountry.find { listCountry ->
+                val countryCode = listCountryModel.find { listCountry ->
                     listCountry.id == country
                 }?.code ?: ALL_COUNTRY_VALUE
 
@@ -99,11 +107,11 @@ class TopNewsViewModel @Inject constructor(
                 topNewsInteractor.setAccountCountry(country)
 
                 if (accountId != ACCOUNT_ID_DEFAULT) {
-                    account.myCountry = country
-                    account.countryCode = countryCode
+                    accountModel.myCountry = country
+                    accountModel.countryCode = countryCode
 
                     viewModelScope.launchJob(tryBlock = {
-                        topNewsInteractor.updateAccountV2(account.toAccountDbEntity())
+                        topNewsInteractor.updateAccount(accountModel)
                     }, catchBlock = { error ->
                         Log.d(ERROR_DB, error.localizedMessage)
                     }, finallyBlock = {
@@ -117,7 +125,7 @@ class TopNewsViewModel @Inject constructor(
     }
 
     fun closeFilter(country: String) {
-        if (country.isEmpty() || !listCountry.map { itemCountry -> itemCountry.id }
+        if (country.isEmpty() || !listCountryModel.map { itemCountry -> itemCountry.id }
                 .contains(country)) {
             mutableFlow.value = TopNewsState.ErrorSelectCountry
         } else {
@@ -132,13 +140,10 @@ class TopNewsViewModel @Inject constructor(
 
     fun getCountry() {
         viewModelScope.launchJob(tryBlock = {
-            var listCountryDbEntity = topNewsInteractor.getCountryV2()
-            listCountry = listCountryDbEntity.map { countryDbEntity ->
-                countryDbEntity.toCountry()
-            } as MutableList<Country>
-            listCountry.add(0, Country(ALL_COUNTRY, ALL_COUNTRY_VALUE))
+            listCountryModel = topNewsInteractor.getCountry().toMutableList()
+            listCountryModel.add(0, CountryModel(ALL_COUNTRY, ALL_COUNTRY_VALUE))
             val list: MutableList<String> =
-                listCountry.map { country -> country.id }.sortedBy { country -> country }
+                listCountryModel.map { country -> country.id }.sortedBy { country -> country }
                     .toMutableList()
             var index = list.indexOf(topNewsInteractor.getAccountCountry())
             if (index == -1) {
@@ -150,17 +155,17 @@ class TopNewsViewModel @Inject constructor(
         })
     }
 
-    private fun saveArticle(article: Article) {
+    private fun saveArticle(articleUiModel: ArticleUiModel) {
         if (saveHistory) {
-            if (!article.isFavorites && !article.isHistory) {
-                article.isHistory = true
-                article.dateAdded = Date().formatDateTime()
+            if (!articleUiModel.isFavorites && !articleUiModel.isHistory) {
+                articleUiModel.isHistory = true
+                articleUiModel.dateAdded = Date().toStringFormatDateYearMonthDay()
                 viewModelScope.launchJob(tryBlock = {
-                    topNewsInteractor.insertArticleV2(article, accountId)
-                    articleListHistory.find { articleHistory ->
-                        articleHistory.title == article.title
+                    topNewsInteractor.insertArticle(articleUiModel.toArticleModel(), accountId)
+                    articleModelListHistory.find { articleHistory ->
+                        articleHistory.title == articleUiModel.title
                     }?.isHistory = true
-                    mutableFlow.postValue(TopNewsState.UpdateListNews(articleListHistory))
+                    mutableFlow.postValue(TopNewsState.UpdateListNews(articleModelListHistory))
                 }, catchBlock = { error ->
                     Log.d(ERROR_DB, error.localizedMessage)
                 })
@@ -168,28 +173,28 @@ class TopNewsViewModel @Inject constructor(
         }
     }
 
-    private fun saveArticleLike(article: Article) {
-        article.isFavorites = true
+    private fun saveArticleLike(articleModel: ArticleUiModel) {
+        articleModel.isFavorites = true
         viewModelScope.launchJob(tryBlock = {
-            topNewsInteractor.insertArticleV2(article,accountId)
-            articleListHistory.find { articleHistory ->
-                articleHistory.title == article.title
+            topNewsInteractor.insertArticle(articleModel.toArticleModel(), accountId)
+            articleModelListHistory.find { articleHistory ->
+                articleHistory.title == articleModel.title
             }?.isFavorites = true
 
-            mutableFlow.postValue(TopNewsState.UpdateListNews(articleListHistory))
+            mutableFlow.postValue(TopNewsState.UpdateListNews(articleModelListHistory))
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
     }
 
-    private fun deleteFavorites(article: Article) {
-        article.isFavorites = false
+    private fun deleteFavorites(articleModel: ArticleUiModel) {
+        articleModel.isFavorites = false
         viewModelScope.launchJob(tryBlock = {
-            topNewsInteractor.deleteArticleByIdFavoritesV2(article.title.toString(), accountId)
-            articleListHistory.find { articleHistory ->
-                articleHistory.title == article.title
+            topNewsInteractor.deleteArticleByIdFavoritesV2(articleModel.title.toString(), accountId)
+            articleModelListHistory.find { articleHistory ->
+                articleHistory.title == articleModel.title
             }?.isFavorites = false
-            mutableFlow.postValue(TopNewsState.UpdateListNews(articleListHistory))
+            mutableFlow.postValue(TopNewsState.UpdateListNews(articleModelListHistory))
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
         })
@@ -198,8 +203,8 @@ class TopNewsViewModel @Inject constructor(
     private fun getAccountSettings() {
         if (accountId != ACCOUNT_ID_DEFAULT) {
             viewModelScope.launchJob(tryBlock = {
-                account = topNewsInteractor.getAccountByIdV2(accountId)
-                saveHistory = account.saveHistory
+                accountModel = topNewsInteractor.getAccount(accountId)
+                saveHistory = accountModel.saveHistory
             }, catchBlock = { error ->
                 Log.d(ERROR_DB, error.localizedMessage)
             })
@@ -211,43 +216,20 @@ class TopNewsViewModel @Inject constructor(
     private fun loadNews(category: String) {
         val countryCode = topNewsInteractor.getAccountCountryCode()
         viewModelScope.launchJob(tryBlock = {
-            var newsDto = topNewsInteractor.getTopicalHeadlinesCategoryCountryV2(
-                category = category,
-                country = countryCode,
-                key = API_KEY_NEWS
-            )
-
-            val newsUI =
-                newsDto.articles.map { articleDto -> articleDto.toArticle() }.also { list ->
-                    list.map { article ->
-                        article.toArticleUI()
+            val articlesUiList: List<ArticleUiModel> =
+                topNewsInteractor.getNews(category, countryCode, API_KEY_NEWS, accountId)
+                    .map { it.toArticleUiModel() }.apply {
+                        this[0].viewType = BaseViewHolder.VIEW_TYPE_TOP_NEWS_HEADER
                     }
-                }
-            if (accountId != ACCOUNT_ID_DEFAULT) {
-                var articles = topNewsInteractor.getArticleByIdV2(accountId)
-                articles.forEach { art ->
-                    newsUI.forEach { new ->
-                        if (art.title == new.title) {
-                            if (art.isFavorites) {
-                                new.isFavorites = true
-                            }
-                            if (art.isHistory) {
-                                new.isHistory = true
-                            }
-                        }
-                    }
-                }
-            }
-            newsUI.also { listArticle ->
-                listArticle[0].viewType = BaseViewHolder.VIEW_TYPE_TOP_NEWS_HEADER
-            }
 
-            if (newsUI.isEmpty()) {
+            if (articlesUiList.isEmpty()) {
                 mutableFlow.postValue(TopNewsState.EmptyListLoadNews)
-            } else {
-                articleListHistory = newsUI.toMutableList()
-                mutableFlow.postValue(TopNewsState.SetNews(newsUI))
+                return@launchJob
             }
+
+            articleModelListHistory = articlesUiList.toMutableList()
+            mutableFlow.postValue(TopNewsState.SetNews(articlesUiList))
+
         }, catchBlock = { error ->
             mutableFlow.postValue(TopNewsState.ErrorLoadNews)
             Log.d(ERROR_LOAD_NEWS, error.localizedMessage)
@@ -255,10 +237,11 @@ class TopNewsViewModel @Inject constructor(
     }
 
     sealed class TopNewsState {
-        data class ClickNews(var article: Article) : TopNewsState()
-        data class SetNews(var articles: List<Article>) : TopNewsState()
+        data class ClickNews(var articleModel: ArticleUiModel) : TopNewsState()
+        data class SetNews(var articleModels: List<ArticleUiModel>) : TopNewsState()
         data class SetCountry(var listCountry: List<String>, var index: Int) : TopNewsState()
-        data class UpdateListNews(var articleListHistory: MutableList<Article>) : TopNewsState()
+        data class UpdateListNews(var articleModelListHistory: MutableList<ArticleUiModel>) :
+            TopNewsState()
 
         object ErrorLoadNews : TopNewsState()
         object EmptyListLoadNews : TopNewsState()
@@ -274,8 +257,8 @@ class TopNewsViewModel @Inject constructor(
         object FavoritesImageViewSetDislike : TopNewsState()
         object BottomSheetExpanded : TopNewsState()
 
-        object EventNavigationBarAddBadgeFavorites : TopNewsState()//SkipStrategy activityEvent
-        object EventNavigationBarRemoveBadgeFavorites : TopNewsState()//SkipStrategy activityEvent
+        object EventNavigationBarAddBadgeFavorites : TopNewsState()
+        object EventNavigationBarRemoveBadgeFavorites : TopNewsState()
         object EventUpdateViewPager : TopNewsState()
     }
 }

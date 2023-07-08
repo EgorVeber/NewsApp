@@ -12,9 +12,9 @@ import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.EMAIL_STR
-import ru.gb.veber.newsapi.common.extentions.LOGIN_STR
-import ru.gb.veber.newsapi.common.extentions.PASSWORD_STR
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.EMAIL_EXAMPLE
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.LOGIN_EXAMPLE
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.PASSWORD_EXAMPLE
 import ru.gb.veber.newsapi.common.extentions.observeFlow
 import ru.gb.veber.newsapi.common.extentions.showSnackBar
 import ru.gb.veber.newsapi.common.utils.ColorUtils.getColor
@@ -246,7 +246,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     }
 
     private fun loginNotValidate() {
-        binding.userNameTextInput.error = getString(R.string.error_input_email) + "($LOGIN_STR)"
+        binding.userNameTextInput.error = getString(R.string.error_input_email) + "($LOGIN_EXAMPLE)"
         userLogin = ""
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -262,7 +262,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     private fun passwordNotValidate(password: CharSequence?) {
         userPassword = ""
         binding.passwordTextInput.error =
-            getString(R.string.error_input_email) + "($PASSWORD_STR)"
+            getString(R.string.error_input_email) + "($PASSWORD_EXAMPLE)"
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -276,7 +276,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
 
     private fun loginRegisterNotValidate() {
         binding.userNameRegisterTextInput.error =
-            getString(R.string.error_input_email) + "($LOGIN_STR)"
+            getString(R.string.error_input_email) + "($LOGIN_EXAMPLE)"
         userRegisterLogin = ""
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -292,7 +292,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     private fun passwordRegisterNotValidate(password: CharSequence?) {
         userRegisterPassword = ""
         binding.passwordRegisterTextInput.error =
-            getString(R.string.error_input_email) + "($PASSWORD_STR)"
+            getString(R.string.error_input_email) + "($PASSWORD_EXAMPLE)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -307,7 +307,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     private fun emailRegisterNotValidate() {
         userEmail = ""
         binding.emailRegisterTextInput.error =
-            getString(R.string.error_input_email) + "($EMAIL_STR)"
+            getString(R.string.error_input_email) + "($EMAIL_EXAMPLE)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 

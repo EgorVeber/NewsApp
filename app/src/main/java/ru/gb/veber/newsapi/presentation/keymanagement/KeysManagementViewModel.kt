@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.formatKeys
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateDayMonthYearHourMinutes
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.domain.interactor.KeysManagementInteractor
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 class KeysManagementViewModel @Inject constructor(
@@ -53,8 +53,8 @@ class KeysManagementViewModel @Inject constructor(
             val apiKeysModel = ApiKeysModel(
                 accountId = accountId,
                 keyApi = key,
-                firstRequest = Date().formatKeys(),
-                lastRequest = Date().formatKeys())
+                firstRequest = Date().toStringFormatDateDayMonthYearHourMinutes(),
+                lastRequest = Date().toStringFormatDateDayMonthYearHourMinutes())
 
             val keys = keysManagementInteractor.addKeys(apiKeysModel)
             keysManagementState.update { KeysManagementState.SetKeys(keys) }

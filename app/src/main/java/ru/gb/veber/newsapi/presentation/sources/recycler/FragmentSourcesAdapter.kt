@@ -1,20 +1,17 @@
-package ru.gb.veber.newsapi.view.sources
+package ru.gb.veber.newsapi.presentation.sources.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.gb.veber.newsapi.databinding.SourcesItemBinding
-import ru.gb.veber.newsapi.domain.models.Sources
-import ru.gb.veber.newsapi.presentation.sources.recycler.SourcesDiffUtil
-import ru.gb.veber.newsapi.presentation.sources.recycler.SourcesListener
-import ru.gb.veber.newsapi.presentation.sources.recycler.SourcesViewHolder
+import ru.gb.veber.newsapi.domain.models.SourcesModel
 
 class FragmentSourcesAdapter(
     var listener: SourcesListener,
 ) : RecyclerView.Adapter<SourcesViewHolder>() {
 
-    var sources: List<Sources> = emptyList()
+    var sources: List<SourcesModel> = emptyList()
         set(value) {
             var diffUtil = SourcesDiffUtil(field, value)
             var diffResult = DiffUtil.calculateDiff(diffUtil)

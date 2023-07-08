@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
-import ru.gb.veber.newsapi.common.extentions.LOGIN_PATTERN
-import ru.gb.veber.newsapi.common.extentions.PASSWORD_PATTERN
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.EMAIL_PATTERN
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.LOGIN_PATTERN
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.PASSWORD_PATTERN
 import ru.gb.veber.newsapi.common.extentions.checkLogin
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.screen.AccountScreen
@@ -20,15 +20,14 @@ import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
 import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
 import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
 import ru.gb.veber.newsapi.domain.interactor.AuthorizationInteractor
-import ru.gb.veber.newsapi.domain.models.Account
-import java.util.*
+import ru.gb.veber.newsapi.domain.models.AccountModel
+import java.util.Date
 import javax.inject.Inject
 
 class AuthorizationViewModel @Inject constructor(
     private val router: Router,
-    private val authorizationInteractor: AuthorizationInteractor
+    private val authorizationInteractor: AuthorizationInteractor,
 ) : NewsViewModel() {
 
     private val mutableFlow: MutableLiveData<AuthorizationViewState> = MutableLiveData()
@@ -44,26 +43,14 @@ class AuthorizationViewModel @Inject constructor(
         return flow
     }
 
-   override fun onBackPressedRouter(): Boolean {
+    override fun onBackPressedRouter(): Boolean {
         router.exit()
         return true
     }
 
     fun createAccount(username: String, email: String, password: String) {
         viewModelScope.launchJob(tryBlock = {
-            val accountDbEntity = AccountDbEntity(
-                0,
-                username,
-                password,
-                email,
-                Date().toString(),
-                saveHistory = true,
-                saveSelectHistory = true,
-                displayOnlySources = false,
-                myCountry = ALL_COUNTRY,
-                countryCode = ALL_COUNTRY_VALUE
-            )
-            authorizationInteractor.createAccountV2(accountDbEntity)
+            authorizationInteractor.createAccount(getNewAccount(username, password, email))
             val account = authorizationInteractor.getAccountByUserNameV2(username)
             saveIdSharedPref(account)
             authorizationInteractor.setActiveKey(API_KEY_NEWS)//TODO убрать говнише
@@ -79,7 +66,8 @@ class AuthorizationViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             val account = authorizationInteractor.getAccountByUserNameV2(userLogin)
             if (account.password.contains(userPassword)) {
-                val apikeyModel = authorizationInteractor.getApiKeys(account.id).sortedBy { !it.actived }
+                val apikeyModel =
+                    authorizationInteractor.getApiKeys(account.id).sortedBy { !it.actived }
                 if (apikeyModel.isNotEmpty()) {
                     val apiKey = apikeyModel[0]
                     if (apiKey.actived) authorizationInteractor.setActiveKey(apikeyModel[0].keyApi)//TODO убрать говнише
@@ -95,10 +83,11 @@ class AuthorizationViewModel @Inject constructor(
         })
     }
 
-    private fun saveIdSharedPref(account: Account) {
-        authorizationInteractor.setAccountID(account.id)
-        authorizationInteractor.setAccountLogin(account.userName.checkLogin())
-        mutableFlow.postValue(AuthorizationViewState.SetBottomNavigationIcon(account.userName.checkLogin())
+    private fun saveIdSharedPref(accountModel: AccountModel) {
+        authorizationInteractor.setAccountID(accountModel.id)
+        authorizationInteractor.setAccountLogin(accountModel.userName.checkLogin())
+        mutableFlow.postValue(
+            AuthorizationViewState.SetBottomNavigationIcon(accountModel.userName.checkLogin())
         )
     }
 
@@ -161,6 +150,24 @@ class AuthorizationViewModel @Inject constructor(
             mutableFlow.value = AuthorizationViewState.EmailRegisterNotValidate
         }
     }
+
+    private fun getNewAccount(
+        username: String,
+        password: String,
+        email: String,
+    ): AccountModel =
+        AccountModel(
+            id = 0,
+            userName = username,
+            password = password,
+            email = email,
+            createdAt = Date().toString(),
+            saveHistory = true,
+            saveSelectHistory = true,
+            displayOnlySources = false,
+            myCountry = ALL_COUNTRY,
+            countryCode = ALL_COUNTRY_VALUE
+        )
 
     sealed class AuthorizationViewState {
         data class LoginIsValidate(val charSequence: CharSequence?) : AuthorizationViewState()

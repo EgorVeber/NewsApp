@@ -1,11 +1,10 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.SharedPreferenceAccount
-import ru.gb.veber.newsapi.data.models.network.ArticlesDTO
-import ru.gb.veber.newsapi.data.models.room.entity.AccountDbEntity
-import ru.gb.veber.newsapi.data.models.room.entity.CountryDbEntity
-import ru.gb.veber.newsapi.domain.models.Account
-import ru.gb.veber.newsapi.domain.models.Article
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.data.AccountDataSource
+import ru.gb.veber.newsapi.domain.models.AccountModel
+import ru.gb.veber.newsapi.domain.models.ArticleModel
+import ru.gb.veber.newsapi.domain.models.CountryModel
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import ru.gb.veber.newsapi.domain.repository.CountryRepo
@@ -13,7 +12,7 @@ import ru.gb.veber.newsapi.domain.repository.NewsRepo
 import javax.inject.Inject
 
 class TopNewsInteractor @Inject constructor(
-    private val sharedPreferenceAccount: SharedPreferenceAccount,
+    private val sharedPreferenceAccount: AccountDataSource,
     private val newsRepoImpl: NewsRepo,
     private val articleRepoImpl: ArticleRepo,
     private val accountRepoImpl: AccountRepo,
@@ -27,19 +26,19 @@ class TopNewsInteractor @Inject constructor(
         sharedPreferenceAccount.setAccountCountry(country)
     }
 
-    suspend fun updateAccountV2(toAccountDbEntity: AccountDbEntity) {
-        accountRepoImpl.updateAccountV2(toAccountDbEntity)
+    suspend fun updateAccount(accountModel: AccountModel) {
+        accountRepoImpl.updateAccount(accountModel)
     }
 
-    suspend fun insertArticleV2(article: Article, accountId: Int) {
-        articleRepoImpl.insertArticleV2(article, accountId)
+    suspend fun insertArticle(articleModel: ArticleModel, accountId: Int) {
+        articleRepoImpl.insertArticle(articleModel, accountId)
     }
 
     suspend fun deleteArticleByIdFavoritesV2(toString: String, accountId: Int) {
         articleRepoImpl.deleteArticleByIdFavoritesV2(toString, accountId)
     }
 
-    suspend fun getAccountByIdV2(accountId: Int): Account {
+    suspend fun getAccount(accountId: Int): AccountModel {
         return accountRepoImpl.getAccountByIdV2(accountId)
     }
 
@@ -47,21 +46,44 @@ class TopNewsInteractor @Inject constructor(
         return sharedPreferenceAccount.getAccountCountryCode()
     }
 
-    suspend fun getTopicalHeadlinesCategoryCountryV2(
+    suspend fun getArticleById(accountId: Int): List<ArticleModel> =
+        articleRepoImpl.getArticleByIdV2(accountId)
+
+    suspend fun getCountry(): List<CountryModel> = countryRepoImpl.getCountry()
+
+    suspend fun getNews(
+        category: String,
+        countryCode: String,
+        key: String,
+        accountId: Int,
+    ): List<ArticleModel> {
+        val articlesApi = getTopicalHeadlinesCategoryCountry(category, countryCode, key)
+        if (accountId == ACCOUNT_ID_DEFAULT) return articlesApi
+
+        val articlesHistory = getArticleById(accountId)
+
+        articlesHistory.forEach { articleHistory ->
+            articlesApi.forEach { articleApi ->
+                if (articleHistory.title == articleApi.title) {
+                    if (articleHistory.isFavorites) {
+                        articleApi.isFavorites = true
+                    }
+                    if (articleHistory.isHistory) {
+                        articleApi.isHistory = true
+                    }
+                }
+            }
+        }
+
+        return articlesApi
+    }
+
+    private suspend fun getTopicalHeadlinesCategoryCountry(
         category: String,
         country: String,
         key: String,
-    ): ArticlesDTO {
-        return newsRepoImpl.getTopicalHeadlinesCategoryCountryV2(category, country, key)
-    }
-
-    suspend fun getArticleByIdV2(accountId: Int): List<Article> {
-        return articleRepoImpl.getArticleByIdV2(accountId)
-    }
-
-    suspend fun getCountryV2(): List<CountryDbEntity> {
-        return countryRepoImpl.getCountryV2()
-    }
+    ): List<ArticleModel> =
+        newsRepoImpl.getTopicalHeadlinesCategoryCountryV2(category, country, key).articles
 
     fun getAccountCountry(): String {
         return sharedPreferenceAccount.getAccountCountry()

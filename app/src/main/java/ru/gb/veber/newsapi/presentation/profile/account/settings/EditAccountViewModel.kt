@@ -6,15 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.EMAIL_PATTERN
-import ru.gb.veber.newsapi.common.extentions.LOGIN_PATTERN
-import ru.gb.veber.newsapi.common.extentions.PASSWORD_PATTERN
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.EMAIL_PATTERN
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.LOGIN_PATTERN
+import ru.gb.veber.newsapi.common.extentions.AuthPattern.PASSWORD_PATTERN
 import ru.gb.veber.newsapi.common.extentions.checkLogin
 import ru.gb.veber.newsapi.common.extentions.launchJob
 import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.data.mapper.toAccountDbEntity
 import ru.gb.veber.newsapi.domain.interactor.EditAccountInteractor
-import ru.gb.veber.newsapi.domain.models.Account
+import ru.gb.veber.newsapi.domain.models.AccountModel
 import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(
@@ -25,7 +24,7 @@ class EditAccountViewModel @Inject constructor(
     private val mutableFlow: MutableLiveData<EditAccountState> = MutableLiveData()
     private val flow: LiveData<EditAccountState> = mutableFlow
 
-    private lateinit var account: Account
+    private lateinit var accountModel: AccountModel
 
     fun subscribe(accountId: Int): LiveData<EditAccountState> {
         getAccountDataBase(accountId)
@@ -33,15 +32,15 @@ class EditAccountViewModel @Inject constructor(
     }
 
     fun checkSaveAccount(userLogin: String, userPassword: String, userEmail: String) {
-        if (account.userName == userLogin && account.email == userEmail && account.password == userPassword) {
+        if (accountModel.userName == userLogin && accountModel.email == userEmail && accountModel.password == userPassword) {
             mutableFlow.value = EditAccountState.NoChangeAccount
         } else {
-            account.email = userEmail
-            account.userName = userLogin
-            account.password = userPassword
+            accountModel.email = userEmail
+            accountModel.userName = userLogin
+            accountModel.password = userPassword
             viewModelScope.launchJob(tryBlock = {
-                editAccountInteractor.updateAccount(account.toAccountDbEntity(), account.userName.checkLogin())
-                mutableFlow.postValue(EditAccountState.SuccessUpdateAccount(account.userName.checkLogin()))
+                editAccountInteractor.updateAccount(accountModel, accountModel.userName.checkLogin())
+                mutableFlow.postValue(EditAccountState.SuccessUpdateAccount(accountModel.userName.checkLogin()))
             }, catchBlock = { error ->
                 mutableFlow.postValue(EditAccountState.ErrorUpdateAccount)
                 Log.d(ERROR_DB, error.localizedMessage)
@@ -86,8 +85,8 @@ class EditAccountViewModel @Inject constructor(
         mutableFlow.value = EditAccountState.Loading
         viewModelScope.launchJob(tryBlock = {
             val accountDb = editAccountInteractor.getAccount(accountId)
-            account = accountDb
-            mutableFlow.postValue(EditAccountState.SetAccountDate(account))
+            accountModel = accountDb
+            mutableFlow.postValue(EditAccountState.SetAccountDate(accountModel))
         }, catchBlock = { error ->
             Log.d(ERROR_DB, error.localizedMessage)
             mutableFlow.postValue(EditAccountState.ErrorLoadingAccount)
@@ -95,7 +94,7 @@ class EditAccountViewModel @Inject constructor(
     }
 
     sealed class EditAccountState {
-        data class SetAccountDate(val account: Account) : EditAccountState()
+        data class SetAccountDate(val accountModel: AccountModel) : EditAccountState()
         object Loading : EditAccountState()
         object ErrorLoadingAccount : EditAccountState()
         data class PasswordIsValidate(val text: CharSequence?) : EditAccountState()

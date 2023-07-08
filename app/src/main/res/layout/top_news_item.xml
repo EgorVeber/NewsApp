@@ -42,7 +42,7 @@
             <TextView
                 android:id="@+id/title"
                 style="@style/sources_text"
-                tools:text="News article"
+                tools:text="News articleModel"
                 android:layout_marginStart="@dimen/margin_10"
                 android:ellipsize="end"
                 android:maxLines="3"

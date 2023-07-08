@@ -9,14 +9,25 @@ import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ru.gb.veber.newsapi.R
 import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.*
-import ru.gb.veber.newsapi.common.utils.*
+import ru.gb.veber.newsapi.common.extentions.DateFormatter.toFormatDateDayMouthYearHoursMinutes
+import ru.gb.veber.newsapi.common.extentions.collapsed
+import ru.gb.veber.newsapi.common.extentions.expanded
+import ru.gb.veber.newsapi.common.extentions.hide
+import ru.gb.veber.newsapi.common.extentions.loadPicForTitle
+import ru.gb.veber.newsapi.common.extentions.observeFlow
+import ru.gb.veber.newsapi.common.extentions.show
+import ru.gb.veber.newsapi.common.extentions.showSnackBar
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
+import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.utils.BundleHistorySelect
+import ru.gb.veber.newsapi.common.utils.BundleInt
+import ru.gb.veber.newsapi.common.utils.HISTORY_SELECT_BUNDLE
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
-import ru.gb.veber.newsapi.domain.models.Article
-import ru.gb.veber.newsapi.domain.models.HistorySelect
+import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 import ru.gb.veber.newsapi.presentation.activity.EventAddingBadges
 import ru.gb.veber.newsapi.presentation.activity.EventShareLink
+import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
@@ -60,7 +71,7 @@ class SearchNewsFragment :
     }
 
     override fun onObserveData() {
-        viewModel.articleDataFlow.observeFlow(this) {
+        viewModel.articleModelDataFlow.observeFlow(this) {
             clickNews(it)
         }
 
@@ -81,15 +92,19 @@ class SearchNewsFragment :
                 is SearchNewsViewModel.SearchNewsState.SetNews -> {
                     setNews(state.list)
                 }
+
                 is SearchNewsViewModel.SearchNewsState.ChangeNews -> {
-                    changeNews(state.articleListHistory)
+                    changeNews(state.articleModelListHistory)
                 }
+
                 is SearchNewsViewModel.SearchNewsState.SetTitle -> {
-                    setTitle(state.historySelect)
+                    setTitle(state.historySelectModel)
                 }
+
                 SearchNewsViewModel.SearchNewsState.EmptyList -> {
                     emptyList()
                 }
+
                 SearchNewsViewModel.SearchNewsState.HideFavorites -> {
                     hideFavorites()
                 }
@@ -97,12 +112,15 @@ class SearchNewsFragment :
                 SearchNewsViewModel.SearchNewsState.AddBadge -> {
                     addBadge()
                 }
+
                 SearchNewsViewModel.SearchNewsState.RemoveBadge -> {
                     removeBadge()
                 }
+
                 SearchNewsViewModel.SearchNewsState.SheetExpanded -> {
                     sheetExpanded()
                 }
+
                 SearchNewsViewModel.SearchNewsState.StartedState -> {}
                 SearchNewsViewModel.SearchNewsState.HideProgress -> {
                     hideProgress()
@@ -115,21 +133,21 @@ class SearchNewsFragment :
         viewModel.getAccountSettings(historySelect)
     }
 
-    private fun setTitle(historySelect: HistorySelect) {
-        val keyWord = historySelect.keyWord
-        val sourcesId = historySelect.sourcesName
+    private fun setTitle(historySelectModel: HistorySelectModel) {
+        val keyWord = historySelectModel.keyWord
+        val sourcesId = historySelectModel.sourcesName
         val sortType =
-            if (!historySelect.keyWord.isNullOrEmpty()) historySelect.sortByKeyWord
-            else historySelect.sortBySources
-        val dateSources = historySelect.dateSources
+            if (!historySelectModel.keyWord.isNullOrEmpty()) historySelectModel.sortByKeyWord
+            else historySelectModel.sortBySources
+        val dateSources = historySelectModel.dateSources
         val text = "$keyWord $sourcesId $sortType $dateSources"
 
         binding.titleSearch.text = text
     }
 
-    private fun setNews(articles: List<Article>) {
+    private fun setNews(articleModels: List<ArticleUiModel>) {
         TransitionManager.beginDelayedTransition(binding.root)
-        newsAdapter.articles = articles
+        newsAdapter.articleModels = articleModels
         binding.progressBarAllNews.hide()
         binding.allNewsRecycler.show()
     }
@@ -138,8 +156,8 @@ class SearchNewsFragment :
         binding.progressBarAllNews.hide()
     }
 
-    private fun changeNews(articleListHistory: List<Article>) {
-        newsAdapter.articles = articleListHistory
+    private fun changeNews(articleModelListHistory: List<ArticleUiModel>) {
+        newsAdapter.articleModels = articleModelListHistory
     }
 
     private fun emptyList() {
@@ -148,27 +166,27 @@ class SearchNewsFragment :
         binding.statusTextList.show()
     }
 
-    private fun clickNews(article: Article) {
+    private fun clickNews(articleModel: ArticleUiModel) {
 
         with(binding.behaviorInclude) {
-            imageViewAll.loadPicForTitle(article.urlToImage)
-            dateNews.text = stringFromData(article.publishedAt).formatDateDay()
-            titleNews.text = article.title
-            authorText.text = article.author
-            sourceText.text = article.source.name
-            setSpan(article.description.toString())
+            imageViewAll.loadPicForTitle(articleModel.urlToImage)
+            dateNews.text = articleModel.publishedAt.toFormatDateDayMouthYearHoursMinutes()
+            titleNews.text = articleModel.title
+            authorText.text = articleModel.author
+            sourceText.text = articleModel.sourceModel.name
+            setSpan(articleModel.description)
         }
 
-        binding.behaviorInclude.descriptionNews.setOnClickListener { view ->
-            viewModel.openScreenWebView(article.url)
+        binding.behaviorInclude.descriptionNews.setOnClickListener {
+            viewModel.openScreenWebView(articleModel.url)
         }
 
         binding.behaviorInclude.imageFavorites.setOnClickListener {
-            viewModel.setOnClickImageFavorites(article)
+            viewModel.setOnClickImageFavorites(articleModel)
         }
 
         binding.behaviorInclude.imageShare.setOnClickListener {
-            (requireActivity() as EventShareLink).shareLink(article.url)
+            (requireActivity() as EventShareLink).shareLink(articleModel.url)
         }
 
     }
@@ -225,11 +243,11 @@ class SearchNewsFragment :
     companion object {
         fun getInstance(
             accountId: Int,
-            historySelect: HistorySelect,
+            historySelectModel: HistorySelectModel,
         ): SearchNewsFragment {
             return SearchNewsFragment().apply {
                 this.accountId = accountId
-                this.historySelect = historySelect
+                this.historySelect = historySelectModel
             }
         }
     }
