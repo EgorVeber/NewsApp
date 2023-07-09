@@ -29,7 +29,7 @@ class TopNewsAdapter(
 
     var articleModels: List<ArticleUiModel> = listOf()
         set(value) {
-            var diffUtil = TopNewsDiffUtil(field, value)
+            val diffUtil = TopNewsDiffUtil(field, value)
             val diffResult = DiffUtil.calculateDiff(diffUtil)
             field = value
             diffResult.dispatchUpdatesTo(this)

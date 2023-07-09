@@ -23,7 +23,7 @@ class ArticleRepoImpl(private val articleDao: ArticleDao) : ArticleRepo {
         articleDao.deleteAllArticleV2()
     }
 
-    override suspend fun getHistoryArticleByIdV2(accountId: Int): List<ArticleModel> {
+    override suspend fun getHistoryArticleById(accountId: Int): List<ArticleModel> {
         return articleDao.getHistoryArticleByIdV2(accountId)
             .map { articleDbEntity -> articleDbEntity.toArticleModel() }
     }
@@ -50,15 +50,15 @@ class ArticleRepoImpl(private val articleDao: ArticleDao) : ArticleRepo {
         articleDao.deleteArticleIsHistoryByIdV2(accountId)
     }
 
-    override suspend fun deleteArticleByIdFavoritesV2(titile: String, accountId: Int) {
+    override suspend fun deleteArticleByIdFavorites(titile: String, accountId: Int) {
         articleDao.deleteArticleByIdFavoritesV2(titile, accountId)
     }
 
-    override suspend fun deleteArticleByIdHistoryV2(title: String, accountId: Int) {
+    override suspend fun deleteArticleByIdHistory(title: String, accountId: Int) {
         articleDao.deleteArticleByIdHistoryV2(title, accountId)
     }
 
-    override suspend fun deleteArticleByIdHistoryGroupV2(accountId: Int, dateAdded: String) {
+    override suspend fun deleteArticleByIdHistoryGroup(accountId: Int, dateAdded: String) {
         articleDao.deleteArticleByIdHistoryGroupV2(accountId, dateAdded)
     }
 }

@@ -6,6 +6,7 @@ import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -199,7 +200,6 @@ class TopNewsFragment :
     private fun clickNews(articleUiModel: ArticleUiModel) {
         with(binding.behaviorInclude) {
             imageViewAll.loadPicForTitle(articleUiModel.urlToImage)
-            //Перепроверить
             dateNews.text = articleUiModel.publishedAt.toFormatDateDayMouthYearHoursMinutes()
             titleNews.text = articleUiModel.title
             authorText.text = articleUiModel.author

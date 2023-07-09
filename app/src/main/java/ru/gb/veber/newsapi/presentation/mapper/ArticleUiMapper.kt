@@ -27,11 +27,10 @@ fun ArticleUiModel.toArticleModel(): ArticleModel =
         isHistory = isHistory,
         isFavorites = isFavorites,
         dateAdded = dateAdded,
-        showHistory = showHistory,
     )
 
 fun ArticleModel.toArticleUiModel(
-    changeDateFormat: Boolean = false,
+    noChangeDateFormat: Boolean = false,
     viewType: Int = BaseViewHolder.VIEW_TYPE_TOP_NEWS,
 ): ArticleUiModel {
     //TODO Подумать про стринг провайдер или что то со строками придумать константы ?
@@ -42,15 +41,16 @@ fun ArticleModel.toArticleUiModel(
         id = id,
         author = author.ifEmpty { anonymousOnStr },
         description = if (description.isEmpty()) "$readOnStr ${sourceModel.name}" else "$description.",
-        publishedAt = publishedAt.toFormatDateDefault(),
-        publishedAtUi = if (changeDateFormat) publishedAt else getDayPublishing(publishedAt),
+        publishedAt = if (noChangeDateFormat) publishedAt else publishedAt.toFormatDateDefault(),
+        publishedAtUi = if (noChangeDateFormat) publishedAt else getDayPublishing(publishedAt),
         sourceModel = sourceModel,
         title = title.ifEmpty { publishedAt },
         url = url,
         urlToImage = urlToImage,
         viewType = viewType,
         isHistory = isHistory,
-        dateAdded =  dateAdded
+        isFavorites = isFavorites,
+        dateAdded = dateAdded
     )
 }
 

@@ -43,7 +43,7 @@ class SearchNewsInteractor @Inject constructor(
     }
 
     suspend fun deleteArticleByIdFavorites(toString: String, accountId: Int) {
-        articleRepo.deleteArticleByIdFavoritesV2(toString, accountId)
+        articleRepo.deleteArticleByIdFavorites(toString, accountId)
     }
 
     suspend fun getNews(
