@@ -27,7 +27,7 @@ import ru.gb.veber.ui_common.API_KEY_NEWS
 import ru.gb.veber.ui_common.TAG_DB_ERROR
 import ru.gb.veber.ui_common.coroutine.SingleSharedFlow
 import ru.gb.veber.ui_common.coroutine.launchJob
-import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateDefault
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateYearMonthDay
 import java.util.Date
 import javax.inject.Inject
 
@@ -226,7 +226,7 @@ class SearchNewsViewModel @Inject constructor(
             val checkSaved = !articleModel.isFavorites && !articleModel.isHistory
             if (checkSaved) {
                 articleModel.isHistory = true
-                articleModel.dateAdded = Date().toStringFormatDateDefault()
+                articleModel.dateAdded = Date().toStringFormatDateYearMonthDay()
                 viewModelScope.launchJob(tryBlock = {
                     searchNewsInteractor.insertArticle(articleModel.toArticleModel(), accountId)
                     articleModelListHistory.find { articleHistory -> articleHistory.title == articleModel.title }

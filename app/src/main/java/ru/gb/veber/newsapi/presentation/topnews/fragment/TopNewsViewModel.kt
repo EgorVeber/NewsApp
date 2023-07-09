@@ -51,12 +51,7 @@ class TopNewsViewModel @Inject constructor(
 
     fun clickNews(articleModel: ArticleUiModel) {
         if (!filterFlag) {
-            if (accountId != ACCOUNT_ID_DEFAULT) {
-                saveArticle(articleModel)
-            }
-//            articleModel.apply {
-//                publishedAtUi = publishedAtUi.toFormatDateDayMouthYearHoursMinutes()
-//            }
+            saveArticle(articleModel)
             mutableFlow.value = TopNewsState.ClickNews(articleModel)
 
             if (articleModel.isFavorites) mutableFlow.value = TopNewsState.FavoritesImageViewSetLike
@@ -155,6 +150,7 @@ class TopNewsViewModel @Inject constructor(
     }
 
     private fun saveArticle(articleUiModel: ArticleUiModel) {
+        if (accountId == ACCOUNT_ID_DEFAULT) return
         if (saveHistory) {
             if (!articleUiModel.isFavorites && !articleUiModel.isHistory) {
                 articleUiModel.isHistory = true

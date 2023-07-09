@@ -15,6 +15,7 @@ fun ArticleResponse.toArticleModel(): ArticleModel {
         title = title.orEmpty(),
         url = url.orEmpty(),
         urlToImage = urlToImage.orEmpty(),
+        dateAdded = "",
     )
 }
 

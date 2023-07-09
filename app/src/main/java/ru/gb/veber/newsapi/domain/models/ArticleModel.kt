@@ -1,8 +1,5 @@
 package ru.gb.veber.newsapi.domain.models
 
-import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateDefault
-import java.util.Date
-
 data class ArticleModel(
     var id: Int,// TODO понять нужно или нект
     var author: String,
@@ -14,7 +11,6 @@ data class ArticleModel(
     var urlToImage: String,
     var isHistory: Boolean = false,
     var isFavorites: Boolean = false,
-    // TODO Убрать из домена сеттить в Ui
-    var dateAdded: String = Date().toStringFormatDateDefault(),
+    var dateAdded: String,
     var showHistory: Boolean = true,
 )
