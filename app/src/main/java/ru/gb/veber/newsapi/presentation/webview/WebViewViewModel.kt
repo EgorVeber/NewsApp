@@ -4,7 +4,7 @@ import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.gb.veber.newsapi.common.base.NewsViewModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
 import javax.inject.Inject
 
 class WebViewViewModel @Inject constructor(

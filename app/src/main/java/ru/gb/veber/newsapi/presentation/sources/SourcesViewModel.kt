@@ -6,17 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.asSharedFlow
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.SearchNewsScreen
-import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.core.SearchNewsScreen
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.domain.interactor.SourceInteractor
 import ru.gb.veber.newsapi.domain.models.AccountSourcesModel
 import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.coroutine.SingleSharedFlow
+import ru.gb.veber.ui_common.coroutine.launchJob
 import javax.inject.Inject
 
 class SourcesViewModel @Inject constructor(
@@ -48,7 +48,7 @@ class SourcesViewModel @Inject constructor(
                 allSources = listSources
                 sendSources(listSources)
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
+                Log.d(TAG_DB_ERROR, error.localizedMessage)
             })
         } else {
             viewModelScope.launchJob(tryBlock = {
@@ -75,7 +75,7 @@ class SourcesViewModel @Inject constructor(
                 }
                 sendSources(all)
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
+                Log.d(TAG_DB_ERROR, error.localizedMessage)
             })
         }
     }
@@ -96,7 +96,7 @@ class SourcesViewModel @Inject constructor(
                     )
                     getSources(accountId)
                 }, catchBlock = { error ->
-                    Log.d(ERROR_DB, error.localizedMessage)
+                    Log.d(TAG_DB_ERROR, error.localizedMessage)
                 })
             } else {
                 source.liked = true
@@ -109,7 +109,7 @@ class SourcesViewModel @Inject constructor(
                     )
                     getSources(accountId)
                 }, catchBlock = { error ->
-                    Log.d(ERROR_DB, error.localizedMessage)
+                    Log.d(TAG_DB_ERROR, error.localizedMessage)
                 })
             }
 
@@ -124,7 +124,7 @@ class SourcesViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             sourceInteractor.insertSelect(historySelect)
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 

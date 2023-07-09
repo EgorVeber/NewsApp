@@ -3,25 +3,26 @@ package ru.gb.veber.newsapi.presentation.account
 import android.annotation.SuppressLint
 import android.transition.TransitionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showSnackBar
-import ru.gb.veber.newsapi.common.extentions.showText
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
+import ru.gb.veber.newsapi.common.UiCoreStrings
+import ru.gb.veber.newsapi.common.UiCoreStyle
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.AccountFragmentBinding
-import ru.gb.veber.newsapi.databinding.ConfirmDialogBinding
 import ru.gb.veber.newsapi.domain.models.AccountModel
-import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_common.showText
+import ru.gb.veber.ui_common.utils.BundleInt
+import ru.gb.veber.ui_core.databinding.AccountFragmentBinding
+import ru.gb.veber.ui_core.databinding.ConfirmDialogBinding
+import ru.gb.veber.ui_core.extentions.showSnackBar
 
 class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
     (AccountFragmentBinding::inflate) {
 
-    private var accountId: Int by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var accountId: Int by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
     override fun getViewModelClass(): Class<AccountViewModel> = AccountViewModel::class.java
 
     override fun onInject() {
@@ -31,45 +32,45 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
     override fun onInitView() {
         binding.deleteAccount.setOnClickListener {
             viewModel.setStateShowDialog(
-                title = getString(R.string.deleteAccount),
-                message = getString(R.string.warning_account),
-                positive = getString(R.string.delete)
+                title = getString(UiCoreStrings.deleteAccount),
+                message = getString(UiCoreStrings.warning_account),
+                positive = getString(UiCoreStrings.delete)
             ) {
                 viewModel.deleteAccount()
             }
         }
         binding.totalHistory.setOnClickListener {
             viewModel.setStateShowDialog(
-                title = getString(R.string.delete_history),
-                message = getString(R.string.warning_history),
-                positive = getString(R.string.delete)
+                title = getString(UiCoreStrings.delete_history),
+                message = getString(UiCoreStrings.warning_history),
+                positive = getString(UiCoreStrings.delete)
             ) {
                 viewModel.clearHistory()
             }
         }
         binding.totalFavorites.setOnClickListener {
             viewModel.setStateShowDialog(
-                title = getString(R.string.delete_favorites),
-                message = getString(R.string.warning_favorites),
-                positive = getString(R.string.delete)
+                title = getString(UiCoreStrings.delete_favorites),
+                message = getString(UiCoreStrings.warning_favorites),
+                positive = getString(UiCoreStrings.delete)
             ) {
                 viewModel.clearFavorites()
             }
         }
         binding.totalSources.setOnClickListener {
             viewModel.setStateShowDialog(
-                title = getString(R.string.delete_sources),
-                message = getString(R.string.warning_sources),
-                positive = getString(R.string.delete)
+                title = getString(UiCoreStrings.delete_sources),
+                message = getString(UiCoreStrings.warning_sources),
+                positive = getString(UiCoreStrings.delete)
             ) {
                 viewModel.clearSources()
             }
         }
         binding.logout.setOnClickListener {
             viewModel.setStateShowDialog(
-                title = getString(R.string.confirm_logout),
-                message = getString(R.string.warning_logout),
-                positive = getString(R.string.logout)
+                title = getString(UiCoreStrings.confirm_logout),
+                message = getString(UiCoreStrings.warning_logout),
+                positive = getString(UiCoreStrings.logout)
             ) {
                 viewModel.logout()
                 viewModel.setStateSetBottomNavigationIcon()
@@ -86,13 +87,14 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
             viewModel.updateAccountShowListFavorite(b)
         }
         binding.switchDarkTheme.setOnClickListener { viewModel.setTheme(binding.switchDarkTheme.isChecked) }
-        binding.fontSize.setOnClickListener { it.showText(getString(R.string.notAvailable)) }
-        binding.imageUpload.setOnClickListener { it.showText(getString(R.string.notAvailable)) }
+        binding.fontSize.setOnClickListener { it.showText(getString(UiCoreStrings.notAvailable)) }
+        binding.imageUpload.setOnClickListener { it.showText(getString(UiCoreStrings.notAvailable)) }
         binding.customizeCategory.setOnClickListener { viewModel.openScreenCustomizeCategory() }
-        binding.notificationFirebase.setOnClickListener { it.showText(getString(R.string.notAvailable)) }
-        binding.aboutInformation.setOnClickListener { it.showText(getString(R.string.notAvailable)) }
-        binding.privacyPolicy.setOnClickListener { viewModel.openScreenWebView(getString(R.string.team_site)) }
-        binding.supportLinear.setOnClickListener { it.showText(getString(R.string.notAvailable)) }
+        binding.notificationFirebase.setOnClickListener { it.showText(getString(UiCoreStrings.notAvailable)) }
+        binding.aboutInformation.setOnClickListener { it.showText(getString(UiCoreStrings.notAvailable)) }
+        binding.privacyPolicy.setOnClickListener { viewModel.openScreenWebView(getString(
+            UiCoreStrings.team_site)) }
+        binding.supportLinear.setOnClickListener { it.showText(getString(UiCoreStrings.notAvailable)) }
         binding.keysManagementLl.setOnClickListener {
             viewModel.openScrenKeysManagement(accountId)
         }
@@ -141,7 +143,7 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
     }
 
     private fun toastDelete() {
-        binding.root.showText(getString(R.string.textDelete))
+        binding.root.showText(getString(UiCoreStrings.textDelete))
     }
 
     private fun recreateTheme() {
@@ -152,13 +154,13 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
     fun setAccountInfo(accountModel: AccountModel, themePrefs: Int) {
         binding.userName.text = accountModel.userName
         binding.userEmail.text = accountModel.email
-        binding.totalFavoritesText.text = getString(R.string.total_favorites) + accountModel.totalFavorites
-        binding.totalHistoryText.text = getString(R.string.total_history) + accountModel.totalHistory
-        binding.totalSourcesText.text = getString(R.string.total_sources) + accountModel.totalSources
+        binding.totalFavoritesText.text = getString(UiCoreStrings.total_favorites) + accountModel.totalFavorites
+        binding.totalHistoryText.text = getString(UiCoreStrings.total_history) + accountModel.totalHistory
+        binding.totalSourcesText.text = getString(UiCoreStrings.total_sources) + accountModel.totalSources
         binding.saveHistorySwitch.isChecked = accountModel.saveHistory
         binding.saveHistorySelectSwitch.isChecked = accountModel.saveSelectHistory
         binding.showFavorites.isChecked = accountModel.displayOnlySources
-        binding.switchDarkTheme.isChecked = themePrefs != R.style.Theme_NewsAPI
+        binding.switchDarkTheme.isChecked = themePrefs != UiCoreStyle.Theme_NewsAPI
         TransitionManager.beginDelayedTransition(binding.root)
         binding.nestedScrollAccount.show()
     }
@@ -196,20 +198,20 @@ class AccountFragment : NewsFragment<AccountFragmentBinding, AccountViewModel>
 
     @SuppressLint("SetTextI18n")
     fun clearHistory() {
-        binding.totalHistoryText.text = getString(R.string.total_history) + " 0"
-        this.showSnackBar(getString(R.string.clearHistory))
+        binding.totalHistoryText.text = getString(UiCoreStrings.total_history) + " 0"
+        showSnackBar(getString(UiCoreStrings.clearHistory))
     }
 
     @SuppressLint("SetTextI18n")
     fun clearFavorites() {
-        binding.totalFavoritesText.text = getString(R.string.total_favorites) + " 0"
-        this.showSnackBar(getString(R.string.clearFavorites))
+        binding.totalFavoritesText.text = getString(UiCoreStrings.total_favorites) + " 0"
+        showSnackBar(getString(UiCoreStrings.clearFavorites))
     }
 
     @SuppressLint("SetTextI18n")
     fun clearSources() {
-        binding.totalSourcesText.text = getString(R.string.total_sources) + " 0"
-        this.showSnackBar(getString(R.string.clearSources))
+        binding.totalSourcesText.text = getString(UiCoreStrings.total_sources) + " 0"
+        showSnackBar(getString(UiCoreStrings.clearSources))
     }
 
     companion object {

@@ -13,24 +13,24 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.datepicker.MaterialDatePicker
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.hideKeyboard
-import ru.gb.veber.newsapi.common.extentions.observeFlow
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showKeyboard
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
-import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.SearchFragmentBinding
 import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
 import ru.gb.veber.newsapi.presentation.search.recycler.HistorySelectAdapter
 import ru.gb.veber.newsapi.presentation.search.recycler.RecyclerListenerHistorySelect
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.DURATION_ERROR_INPUT
+import ru.gb.veber.ui_common.NOT_INPUT_DATE
+import ru.gb.veber.ui_common.coroutine.observeFlow
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.hideKeyboard
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_common.showKeyboard
+import ru.gb.veber.ui_common.utils.BundleInt
+import ru.gb.veber.ui_core.databinding.SearchFragmentBinding
 
 class SearchFragment :
     NewsFragment<SearchFragmentBinding, SearchViewModel>(SearchFragmentBinding::inflate) {
@@ -38,7 +38,7 @@ class SearchFragment :
     private lateinit var adapter: SourcesAdapterAutoCompile
     private var dateInput: String = NOT_INPUT_DATE
     private var datePiker = MaterialDatePicker.Builder.datePicker()
-    private var accountId: Int by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var accountId: Int by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
 
     private var itemListener = object : RecyclerListenerHistorySelect {
         override fun clickHistoryItem(historySelectModel: HistorySelectModel) {
@@ -228,7 +228,7 @@ class SearchFragment :
     }
 
     private fun createDatePiker() {
-        datePiker.setTitleText(getString(R.string.inputDateThirty))
+        datePiker.setTitleText(getString(UiCoreStrings.inputDateThirty))
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .build().also {
                 it.show(requireActivity().supportFragmentManager, TAG_DATE_PIKER)
@@ -248,7 +248,7 @@ class SearchFragment :
 
     private fun pikerNegative() {
         dateInput = NOT_INPUT_DATE
-        binding.selectDate.text = getString(R.string.selectDatePiker)
+        binding.selectDate.text = getString(UiCoreStrings.selectDatePiker)
     }
 
     private fun setSources(sources: List<SourcesModel>) = with(binding) {
@@ -300,7 +300,7 @@ class SearchFragment :
     }
 
     private fun selectSources() {
-        binding.searchTextInput.error = getString(R.string.errorSelectSources)
+        binding.searchTextInput.error = getString(UiCoreStrings.errorSelectSources)
         Handler(Looper.getMainLooper()).postDelayed({
             if (isAdded) {
                 binding.searchTextInput.error = null
@@ -310,7 +310,7 @@ class SearchFragment :
 
     private fun enterKeys() {
         searchViewActive()
-        binding.searchEdit.error = getString(R.string.error_search_key)
+        binding.searchEdit.error = getString(UiCoreStrings.error_search_key)
         Handler(Looper.getMainLooper()).postDelayed({
             if (isAdded) {
                 binding.searchEdit.error = null

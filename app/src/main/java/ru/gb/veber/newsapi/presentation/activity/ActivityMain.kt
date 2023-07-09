@@ -1,6 +1,10 @@
 package ru.gb.veber.newsapi.presentation.activity
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -8,34 +12,31 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.extentions.flowStarted
-import ru.gb.veber.newsapi.common.extentions.showSnackBar
-import ru.gb.veber.newsapi.common.extentions.showText
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
-import ru.gb.veber.newsapi.common.utils.COUNTER_BACKSTACK
-import ru.gb.veber.newsapi.common.utils.COUNTER_BADGE
-import ru.gb.veber.newsapi.common.utils.ColorUtils.getDrawableRes
-import ru.gb.veber.newsapi.common.utils.DELAY_BACK_STACK
-import ru.gb.veber.newsapi.common.utils.isInternetAvailable
+import ru.gb.veber.newsapi.common.PrefsAccountHelper
+import ru.gb.veber.newsapi.common.UiCoreDrawable
+import ru.gb.veber.newsapi.common.UiCoreId
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.data.AccountDataSource
-import ru.gb.veber.newsapi.databinding.ActivityMainBinding
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.BackPressedListener
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventAddingBadges
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventShareLink
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.OpenScreen
 import ru.gb.veber.newsapi.presentation.keymanagement.KeysManagementFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.EditAccountFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.CustomizeCategoryFragment
 import ru.gb.veber.newsapi.presentation.searchnews.SearchNewsFragment
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.webview.WebViewFragment
+import ru.gb.veber.ui_common.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.ui_common.coroutine.flowStarted
+import ru.gb.veber.ui_common.coroutine.launchDelay
+import ru.gb.veber.ui_common.showText
+import ru.gb.veber.ui_common.utils.ColorUtils.getDrawableRes
+import ru.gb.veber.ui_core.databinding.ActivityMainBinding
+import ru.gb.veber.ui_core.extentions.showSnackBar
 import javax.inject.Inject
-
-
-interface EventShareLink {
-    fun shareLink(url: String)
-}
 
 class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
     EventAddingBadges, EventShareLink {
@@ -45,12 +46,12 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
     private var counterBadge = COUNTER_BADGE
 
     @Inject
-    lateinit var sharedPreferenceAccount: AccountDataSource
+    lateinit var sharedPreferenceAccount: PrefsAccountHelper
 
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
 
-    private val navigator = AppNavigator(this, R.id.fragmentContainerMain)
+    private val navigator = AppNavigator(this, UiCoreId.fragmentContainerMain)
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -107,11 +108,11 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
         if (supportFragmentManager.fragments.lastOrNull() !is KeysManagementFragment && supportFragmentManager.fragments.last() !is SearchNewsFragment && supportFragmentManager.fragments.last() !is WebViewFragment &&
             supportFragmentManager.fragments.last() !is EditAccountFragment && supportFragmentManager.fragments.last() !is CustomizeCategoryFragment
         ) {
-            binding.bottomNavigationView.selectedItemId = R.id.topNews
+            binding.bottomNavigationView.selectedItemId = UiCoreId.topNews
         }
 
         if (supportFragmentManager.backStackEntryCount == 0 && backStack != 0) {
-            Toast.makeText(this, getString(R.string.press_again), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(UiCoreStrings.press_again), Toast.LENGTH_SHORT).show()
         } else {
             supportFragmentManager.fragments.forEach { fragment ->
                 if (fragment is BackPressedListener && fragment.onBackPressedRouter()) {
@@ -121,33 +122,33 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
         }
 
         backStack = 0
-        this.launchDelay(DELAY_BACK_STACK) { backStack = 1 }
+        launchDelay(DELAY_BACK_STACK) { backStack = 1 }
     }
 
     override fun openMainScreen() {
-        binding.bottomNavigationView.selectedItemId = R.id.topNews
+        binding.bottomNavigationView.selectedItemId = UiCoreId.topNews
     }
 
     override fun bottomNavigationSetDefaultIcon() {
-        var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
+        val item = binding.bottomNavigationView.menu.findItem(UiCoreId.actionProfile)
         item.title = ACCOUNT_LOGIN_DEFAULT
-        item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_add_alt_1_24)
+        item.icon = getDrawableRes(UiCoreDrawable.ic_baseline_person_add_alt_1_24)
     }
 
     override fun bottomNavigationSetCurrentAccount(checkLogin: String) {
-        var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
+        val item = binding.bottomNavigationView.menu.findItem(UiCoreId.actionProfile)
         item.title = checkLogin
-        item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_24)
+        item.icon = getDrawableRes(UiCoreDrawable.ic_baseline_person_24)
     }
 
     override fun bottomNavigationSetTitleCurrentAccount(checkLogin: String) {
-        var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
+        val item = binding.bottomNavigationView.menu.findItem(UiCoreId.actionProfile)
         item.title = checkLogin
     }
 
     override fun addBadge() {
         counterBadge += 1
-        var badge = binding.bottomNavigationView.getOrCreateBadge(R.id.favoritesNews)
+        val badge = binding.bottomNavigationView.getOrCreateBadge(UiCoreId.favoritesNews)
         badge.isVisible = true
         badge.number = counterBadge
     }
@@ -156,12 +157,12 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
         counterBadge--
         if (counterBadge <= 0) {
             counterBadge = 0
-            val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
+            val badgeDrawable = binding.bottomNavigationView.getBadge(UiCoreId.favoritesNews)
             if (badgeDrawable != null) {
-                binding.bottomNavigationView.removeBadge(R.id.favoritesNews)
+                binding.bottomNavigationView.removeBadge(UiCoreId.favoritesNews)
             }
         } else {
-            var badge = binding.bottomNavigationView.getOrCreateBadge(R.id.favoritesNews)
+            val badge = binding.bottomNavigationView.getOrCreateBadge(UiCoreId.favoritesNews)
             badge.isVisible = true
             badge.number = counterBadge
         }
@@ -191,7 +192,7 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
         }.flowStarted(lifecycleScope)
 
         activityMainViewModel.connectionFlow.onEach { statusNetwork ->
-            if (!statusNetwork) this.showSnackBar(getString(R.string.not_connection))
+            if (!statusNetwork) this.showSnackBar(getString(UiCoreStrings.not_connection))
         }.flowStarted(lifecycleScope)
     }
 
@@ -206,56 +207,55 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
     private fun init() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.topNews -> {
+                UiCoreId.topNews -> {
                     activityMainViewModel.openScreenNews()
                 }
 
-                R.id.searchNews -> {
+                UiCoreId.searchNews -> {
                     activityMainViewModel.openScreenSearchNews()
                 }
 
-                R.id.actionSources -> {
+                UiCoreId.actionSources -> {
                     activityMainViewModel.openScreenSources()
                 }
-
-                R.id.favoritesNews -> {
+                UiCoreId.favoritesNews -> {
                     activityMainViewModel.openFavoritesScreen()
-                    val badgeDrawable = binding.bottomNavigationView.getBadge(R.id.favoritesNews)
+                    val badgeDrawable = binding.bottomNavigationView.getBadge(UiCoreId.favoritesNews)
                     if (badgeDrawable != null) {
                         badgeDrawable.number = 0
                         counterBadge = 0
-                        binding.bottomNavigationView.removeBadge(R.id.favoritesNews)
+                        binding.bottomNavigationView.removeBadge(UiCoreId.favoritesNews)
                     }
                 }
 
-                R.id.actionProfile -> {
+                UiCoreId.actionProfile -> {
                     activityMainViewModel.openScreenProfile()
                 }
             }
             true
         }
-        binding.bottomNavigationView.selectedItemId = R.id.topNews
+        binding.bottomNavigationView.selectedItemId = UiCoreId.topNews
         binding.bottomNavigationView.setOnItemReselectedListener {
 
         }
 
         if (!isInternetAvailable(this)) {
-            this.showSnackBar(getString(R.string.not_connection))
+            this.showSnackBar(getString(UiCoreStrings.not_connection))
         }
     }
 
     private fun onCreateSetIconTitleAccount(accountLogin: String) {
-        var item = binding.bottomNavigationView.menu.findItem(R.id.actionProfile)
+        val item = binding.bottomNavigationView.menu.findItem(UiCoreId.actionProfile)
         item.title = accountLogin
-        item.icon = this.getDrawableRes(R.drawable.ic_baseline_person_24)
+        item.icon = getDrawableRes(UiCoreDrawable.ic_baseline_person_24)
     }
 
     private fun completableInsertSources() {
-        Toast.makeText(this, getString(R.string.source_loaded), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(UiCoreStrings.source_loaded), Toast.LENGTH_SHORT).show()
     }
 
     private fun errorSourcesDownload() {
-        binding.root.showText(getString(R.string.error_sources_download))
+        binding.root.showText(getString(UiCoreStrings.error_sources_download))
     }
 
     override fun shareLink(url: String) {
@@ -268,11 +268,41 @@ class ActivityMain : AppCompatActivity(), OpenScreen, EventLogoutAccountScreen,
         val shareIntent = Intent.createChooser(sendIntent, null)
         startActivity(shareIntent)
     }
-}
 
-fun AppCompatActivity.launchDelay(delay: Long, action: () -> Unit) {
-    this.lifecycleScope.launch {
-        delay(delay)
-        action()
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        var result = false
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val actNw =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            result = when {
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.run {
+                connectivityManager.activeNetworkInfo?.run {
+                    result = when (type) {
+                        ConnectivityManager.TYPE_WIFI -> true
+                        ConnectivityManager.TYPE_MOBILE -> true
+                        ConnectivityManager.TYPE_ETHERNET -> true
+                        else -> false
+                    }
+                }
+            }
+        }
+
+        return result
+    }
+
+    companion object {
+        private const val COUNTER_BADGE = 0
+        private const val COUNTER_BACKSTACK = 1
+        const val DELAY_BACK_STACK = 2000L
     }
 }

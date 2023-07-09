@@ -1,7 +1,6 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.data.AccountDataSource
+import ru.gb.veber.newsapi.common.PrefsAccountHelper
 import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.domain.models.ArticleModel
 import ru.gb.veber.newsapi.domain.models.CountryModel
@@ -9,10 +8,11 @@ import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
 import ru.gb.veber.newsapi.domain.repository.CountryRepo
 import ru.gb.veber.newsapi.domain.repository.NewsRepo
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
 import javax.inject.Inject
 
 class TopNewsInteractor @Inject constructor(
-    private val sharedPreferenceAccount: AccountDataSource,
+    private val sharedPreferenceAccount: PrefsAccountHelper,
     private val newsRepoImpl: NewsRepo,
     private val articleRepoImpl: ArticleRepo,
     private val accountRepoImpl: AccountRepo,

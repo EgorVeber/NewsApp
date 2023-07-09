@@ -7,30 +7,29 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.TransitionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toFormatDateDayMouthYearHoursMinutes
-import ru.gb.veber.newsapi.common.extentions.collapsed
-import ru.gb.veber.newsapi.common.extentions.expanded
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.loadPicForTitle
-import ru.gb.veber.newsapi.common.extentions.observeFlow
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showSnackBar
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleHistorySelect
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.HISTORY_SELECT_BUNDLE
+import ru.gb.veber.newsapi.common.UiCoreDrawable
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.SearchNewsFragmentBinding
 import ru.gb.veber.newsapi.domain.models.HistorySelectModel
-import ru.gb.veber.newsapi.presentation.activity.EventAddingBadges
-import ru.gb.veber.newsapi.presentation.activity.EventShareLink
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventAddingBadges
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventShareLink
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.collapsed
+import ru.gb.veber.ui_common.coroutine.observeFlow
+import ru.gb.veber.ui_common.expanded
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_common.utils.BundleInt
+import ru.gb.veber.ui_common.utils.DateFormatter.toFormatDateDayMouthYearHoursMinutes
+import ru.gb.veber.ui_core.databinding.SearchNewsFragmentBinding
+import ru.gb.veber.ui_core.extentions.loadPicForTitle
+import ru.gb.veber.ui_core.extentions.showSnackBar
 
 class SearchNewsFragment :
     NewsFragment<SearchNewsFragmentBinding, SearchNewsViewModel>(SearchNewsFragmentBinding::inflate),
@@ -43,7 +42,7 @@ class SearchNewsFragment :
     private val newsAdapter = TopNewsAdapter(itemListener)
 
     private var historySelect by BundleHistorySelect(HISTORY_SELECT_BUNDLE)
-    private var accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var accountId by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
 
     override fun getStateBehavior(): Int {
         return bSheetB.state
@@ -204,11 +203,11 @@ class SearchNewsFragment :
     }
 
     private fun setLikeResourcesActive() {
-        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+        binding.behaviorInclude.imageFavorites.setImageResource(UiCoreDrawable.ic_favorite_36_active)
     }
 
     private fun setLikeResourcesNegative() {
-        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+        binding.behaviorInclude.imageFavorites.setImageResource(UiCoreDrawable.ic_favorite_36)
     }
 
     private fun addBadge() {
@@ -220,13 +219,13 @@ class SearchNewsFragment :
     }
 
     private fun successSaveSources() {
-        this.showSnackBar(getString(R.string.sourcesSaved))
+        this.showSnackBar(getString(UiCoreStrings.sourcesSaved))
     }
 
     private fun setSpan(description: String) {
         SpannableStringBuilder(description).also { span ->
             span.setSpan(
-                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+                ImageSpan(requireContext(), UiCoreDrawable.ic_baseline_open_in_new_24),
                 span.length - 1,
                 span.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
@@ -241,6 +240,8 @@ class SearchNewsFragment :
     }
 
     companion object {
+        private const val HISTORY_SELECT_BUNDLE = "HISTORY_SELECT_BUNDLE"
+
         fun getInstance(
             accountId: Int,
             historySelectModel: HistorySelectModel,
@@ -251,5 +252,4 @@ class SearchNewsFragment :
             }
         }
     }
-
 }

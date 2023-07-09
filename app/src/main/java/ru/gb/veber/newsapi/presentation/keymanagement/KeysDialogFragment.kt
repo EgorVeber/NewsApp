@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
-import ru.gb.veber.newsapi.databinding.AddKeysDialogFragmentBinding
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.presentation.keymanagement.KeysManagementFragment.Companion.RESULT_KEY_DATA
 import ru.gb.veber.newsapi.presentation.keymanagement.KeysManagementFragment.Companion.RESULT_KEY_LISTENER
+import ru.gb.veber.ui_common.DURATION_ERROR_INPUT
+import ru.gb.veber.ui_core.databinding.AddKeysDialogFragmentBinding
 
 class KeysDialogFragment : BottomSheetDialogFragment() {
 
@@ -48,11 +48,9 @@ class KeysDialogFragment : BottomSheetDialogFragment() {
                 setFragmentResult(RESULT_KEY_LISTENER, bundleOf(RESULT_KEY_DATA to key))
                 dismiss()
             } else {
-                binding.keyTL.error = getString(R.string.error_input_email)
+                binding.keyTL.error = getString(UiCoreStrings.error_input_email)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    if (isAdded) {
-                        binding.keyTL.error = null
-                    }
+                    if (isAdded) binding.keyTL.error = null
                 }, DURATION_ERROR_INPUT)
             }
         }

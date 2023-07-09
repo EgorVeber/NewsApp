@@ -1,20 +1,20 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_LOGIN_DEFAULT
-import ru.gb.veber.newsapi.common.utils.API_KEY_EMPTY
-import ru.gb.veber.newsapi.data.AccountDataSource
+import ru.gb.veber.newsapi.common.PrefsAccountHelper
 import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.domain.models.ArticleModel
 import ru.gb.veber.newsapi.domain.models.SourcesModel
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
 import ru.gb.veber.newsapi.domain.repository.ArticleRepo
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.ACCOUNT_LOGIN_DEFAULT
+import ru.gb.veber.ui_common.API_KEY_EMPTY
 import javax.inject.Inject
 
 class AccountInteractor
 @Inject constructor(
-    private val sharedPreferenceAccount: AccountDataSource,
+    private val sharedPreferenceAccount: PrefsAccountHelper,
     private val accountRepoImpl: AccountRepo,
     private val articleRepoImpl: ArticleRepo,
     private val accountSourcesRepoImpl: AccountSourcesRepo,
@@ -69,5 +69,4 @@ class AccountInteractor
         sharedPreferenceAccount.setAccountLogin(ACCOUNT_LOGIN_DEFAULT)
         sharedPreferenceAccount.setActiveKey(API_KEY_EMPTY)
     }
-
 }

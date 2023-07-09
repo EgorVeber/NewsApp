@@ -3,13 +3,13 @@ package ru.gb.veber.newsapi.presentation.webview
 import android.annotation.SuppressLint
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.observeFlow
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.utils.BundleString
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.WebViewFragmentBinding
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
+import ru.gb.veber.ui_common.coroutine.observeFlow
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_common.utils.BundleString
+import ru.gb.veber.ui_core.databinding.WebViewFragmentBinding
 
 class WebViewFragment :
     NewsFragment<WebViewFragmentBinding, WebViewViewModel>(WebViewFragmentBinding::inflate) {

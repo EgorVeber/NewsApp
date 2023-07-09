@@ -3,14 +3,14 @@ package ru.gb.veber.newsapi.presentation.profile.account.settings.customize
 import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.CustomizeCategoryFragmentBinding
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.helper.EventDraw
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.helper.SimpleItemTouchHelperCallback
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.utils.BundleInt
+import ru.gb.veber.ui_core.databinding.CustomizeCategoryFragmentBinding
 
 class CustomizeCategoryFragment() :
     NewsFragment<CustomizeCategoryFragmentBinding, CustomizeCategoryViewModel>(
@@ -18,7 +18,7 @@ class CustomizeCategoryFragment() :
     ) {
 
     private var mItemTouchHelper: ItemTouchHelper? = null
-    private var accountID by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var accountID by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
 
     private val listener = object : EventDraw {
         override fun onStartDrag(holder: CustomizeCategoryAdapter.ItemViewHolder) {
@@ -28,7 +28,6 @@ class CustomizeCategoryFragment() :
         override fun setNewList(dataList: MutableList<Category>) {
             Log.d("NewList", "setNewList() called with: dataList = $dataList")
         }
-
     }
 
     private val myAdapter = CustomizeCategoryAdapter(listener)

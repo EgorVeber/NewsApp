@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.databinding.SelectSourcesAutocompileBinding
 import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_core.databinding.SelectSourcesAutocompileBinding
 import java.util.Locale
 
 class SourcesAdapterAutoCompile(

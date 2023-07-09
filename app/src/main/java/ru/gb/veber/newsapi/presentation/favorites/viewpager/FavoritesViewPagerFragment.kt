@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.FavoritesViewPagerFragmentBinding
-import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.BackPressedListener
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES_POSITION
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter.Companion.HISTORY_POSITION
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_core.databinding.FavoritesViewPagerFragmentBinding
 import javax.inject.Inject
 
 class FavoritesViewPagerFragment : Fragment(),
@@ -42,7 +42,7 @@ class FavoritesViewPagerFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
-        initialization(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        initialization(arguments?.getInt(BUNDLE_ACCOUNT_ID_KEY) ?: ACCOUNT_ID_DEFAULT)
         initViewModel()
     }
 
@@ -55,9 +55,9 @@ class FavoritesViewPagerFragment : Fragment(),
         ) { tab, position ->
             when (position) {
                 FAVORITES_POSITION -> {
-                    tab.text = getString(R.string.favoritesLike)
+                    tab.text = getString(UiCoreStrings.favoritesLike)
                 }
-                HISTORY_POSITION -> tab.text = getString(R.string.favoritesHistory)
+                HISTORY_POSITION -> tab.text = getString(UiCoreStrings.favoritesHistory)
             }
         }.attach()
     }
@@ -85,7 +85,7 @@ class FavoritesViewPagerFragment : Fragment(),
         fun getInstance(accountID: Int): FavoritesViewPagerFragment {
             return FavoritesViewPagerFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ACCOUNT_ID, accountID)
+                    putInt(BUNDLE_ACCOUNT_ID_KEY, accountID)
                 }
             }
         }

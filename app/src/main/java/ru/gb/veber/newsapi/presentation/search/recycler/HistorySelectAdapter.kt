@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.databinding.HistorySelectItemBinding
 import ru.gb.veber.newsapi.domain.models.HistorySelectModel
+import ru.gb.veber.ui_core.databinding.HistorySelectItemBinding
 
 class HistorySelectAdapter(
     var listener: RecyclerListenerHistorySelect,
@@ -20,10 +20,12 @@ class HistorySelectAdapter(
         }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistorySelectViewHolder {
-        return HistorySelectViewHolder(HistorySelectItemBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false), listener)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        HistorySelectViewHolder(
+            HistorySelectItemBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            ), listener
+        )
 
     override fun getItemCount() = historySelectModelList.size
 

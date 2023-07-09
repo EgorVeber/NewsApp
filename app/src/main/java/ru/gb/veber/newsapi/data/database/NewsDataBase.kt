@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import ru.gb.veber.newsapi.common.utils.DATABASE_NAME
 import ru.gb.veber.newsapi.data.database.dao.AccountSourcesDao
 import ru.gb.veber.newsapi.data.database.dao.AccountsDao
 import ru.gb.veber.newsapi.data.database.dao.ApiKeysDao
@@ -42,6 +41,7 @@ abstract class NewsDataBase : RoomDatabase() {
     abstract fun apiKeysDao(): ApiKeysDao
 
     companion object {
+        private const val DATABASE_NAME = "news.db"
         fun createDb(context: Context): NewsDataBase {
             return Room.databaseBuilder(context, NewsDataBase::class.java, DATABASE_NAME).build()
         }

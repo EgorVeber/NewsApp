@@ -8,20 +8,20 @@ import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.EMAIL_PATTERN
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.LOGIN_PATTERN
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.common.extentions.checkLogin
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.AccountScreen
-import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
-import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
-import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.core.AccountScreen
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.domain.interactor.AuthorizationInteractor
 import ru.gb.veber.newsapi.domain.models.AccountModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
+import ru.gb.veber.ui_common.ALL_COUNTRY
+import ru.gb.veber.ui_common.ALL_COUNTRY_VALUE
+import ru.gb.veber.ui_common.API_KEY_NEWS
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.coroutine.launchJob
+import ru.gb.veber.ui_common.getCutLogin
+import ru.gb.veber.ui_common.utils.AuthPattern.EMAIL_PATTERN
+import ru.gb.veber.ui_common.utils.AuthPattern.LOGIN_PATTERN
+import ru.gb.veber.ui_common.utils.AuthPattern.PASSWORD_PATTERN
 import java.util.Date
 import javax.inject.Inject
 
@@ -58,7 +58,7 @@ class AuthorizationViewModel @Inject constructor(
 
         }, catchBlock = { error ->
             mutableFlow.postValue(AuthorizationViewState.ErrorRegister)
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -78,16 +78,16 @@ class AuthorizationViewModel @Inject constructor(
                 mutableFlow.postValue(AuthorizationViewState.ErrorSignIn)
             }
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
             mutableFlow.postValue(AuthorizationViewState.EmptyAccount)
         })
     }
 
     private fun saveIdSharedPref(accountModel: AccountModel) {
         authorizationInteractor.setAccountID(accountModel.id)
-        authorizationInteractor.setAccountLogin(accountModel.userName.checkLogin())
+        authorizationInteractor.setAccountLogin(accountModel.userName.getCutLogin())
         mutableFlow.postValue(
-            AuthorizationViewState.SetBottomNavigationIcon(accountModel.userName.checkLogin())
+            AuthorizationViewState.SetBottomNavigationIcon(accountModel.userName.getCutLogin())
         )
     }
 

@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.databinding.SourcesItemBinding
 import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.ui_core.databinding.SourcesItemBinding
 
 class FragmentSourcesAdapter(
     var listener: SourcesListener,

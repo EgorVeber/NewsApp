@@ -5,20 +5,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.AuthorizationScreen
-import ru.gb.veber.newsapi.common.screen.CustomizeCategoryScreen
-import ru.gb.veber.newsapi.common.screen.EditAccountScreen
-import ru.gb.veber.newsapi.common.screen.FileScreen
-import ru.gb.veber.newsapi.common.screen.KeyManagementScreen
-import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.common.utils.KEY_THEME_DARK
-import ru.gb.veber.newsapi.common.utils.KEY_THEME_DEFAULT
+import ru.gb.veber.newsapi.core.AuthorizationScreen
+import ru.gb.veber.newsapi.core.CustomizeCategoryScreen
+import ru.gb.veber.newsapi.core.EditAccountScreen
+import ru.gb.veber.newsapi.core.FileScreen
+import ru.gb.veber.newsapi.core.KeyManagementScreen
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.domain.interactor.AccountInteractor
 import ru.gb.veber.newsapi.domain.models.AccountModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.KEY_THEME_DARK
+import ru.gb.veber.ui_common.KEY_THEME_DEFAULT
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.coroutine.launchJob
 import javax.inject.Inject
 
 class AccountViewModel @Inject constructor(
@@ -68,7 +68,7 @@ class AccountViewModel @Inject constructor(
             )
 
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -93,7 +93,7 @@ class AccountViewModel @Inject constructor(
                 logout()
                 mutableState.postValue(AccountViewState.SetBottomNavigationIcon)
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
+                Log.d(TAG_DB_ERROR, error.localizedMessage)
             })
         }
     }
@@ -117,7 +117,7 @@ class AccountViewModel @Inject constructor(
             accountInteractor.deleteArticleIsHistoryByIdV2(accountId)
             mutableState.postValue(AccountViewState.ClearHistory)
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -126,7 +126,7 @@ class AccountViewModel @Inject constructor(
             accountInteractor.deleteArticleIsFavoriteByIdV2(accountId)
             mutableState.postValue(AccountViewState.ClearFavorites)
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -135,7 +135,7 @@ class AccountViewModel @Inject constructor(
             accountInteractor.deleteSourcesV2(accountId)
             mutableState.postValue(AccountViewState.ClearSources)
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -144,7 +144,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             accountInteractor.updateAccountByIdV2(accountId, checked)
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
 
         })
     }
@@ -155,7 +155,7 @@ class AccountViewModel @Inject constructor(
             viewModelScope.launchJob(tryBlock = {
                 accountInteractor.updateAccount(account)
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
+                Log.d(TAG_DB_ERROR, error.localizedMessage)
             })
         }
     }
@@ -165,7 +165,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             accountInteractor.updateAccount(accountModelMain)
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 

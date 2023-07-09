@@ -8,21 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.extentions.showSnackBar
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.databinding.FileFragmentBinding
+import ru.gb.veber.newsapi.common.UiCoreLayout
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.utils.BundleInt
+import ru.gb.veber.ui_core.databinding.FileFragmentBinding
+import ru.gb.veber.ui_core.extentions.showSnackBar
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 
-class FileFragment : Fragment(R.layout.file_fragment) {
+class FileFragment : Fragment(UiCoreLayout.file_fragment) {
 
-    private var accountID by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var accountID by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
 
     private val openLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->

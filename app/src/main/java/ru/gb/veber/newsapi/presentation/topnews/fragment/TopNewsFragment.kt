@@ -15,28 +15,28 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toFormatDateDayMouthYearHoursMinutes
-import ru.gb.veber.newsapi.common.extentions.collapsed
-import ru.gb.veber.newsapi.common.extentions.expanded
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.hideKeyboard
-import ru.gb.veber.newsapi.common.extentions.loadPicForTitle
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.DURATION_ERROR_INPUT
+import ru.gb.veber.newsapi.common.UiCoreDrawable
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.TopNewsFragmentBinding
-import ru.gb.veber.newsapi.presentation.activity.EventAddingBadges
-import ru.gb.veber.newsapi.presentation.activity.EventShareLink
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventAddingBadges
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventShareLink
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.EventTopNews
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.CATEGORY_GENERAL
-
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.DURATION_ERROR_INPUT
+import ru.gb.veber.ui_common.collapsed
+import ru.gb.veber.ui_common.expanded
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.hideKeyboard
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_common.utils.DateFormatter.toFormatDateDayMouthYearHoursMinutes
+import ru.gb.veber.ui_core.databinding.TopNewsFragmentBinding
+import ru.gb.veber.ui_core.extentions.loadPicForTitle
 
 class TopNewsFragment :
     NewsFragment<TopNewsFragmentBinding, TopNewsViewModel>(TopNewsFragmentBinding::inflate),
@@ -97,13 +97,14 @@ class TopNewsFragment :
             viewModel.closeFilter(country = binding.countryAutoComplete.text.toString())
         }
 
+
         bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
         bSheetB.addBottomSheetCallback(callBackBehavior)
     }
 
 
     override fun onObserveData() {
-        val accountId = arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT
+        val accountId = arguments?.getInt(BUNDLE_ACCOUNT_ID_KEY) ?: ACCOUNT_ID_DEFAULT
         val categoryKey = arguments?.getString(CATEGORY_KEY) ?: CATEGORY_GENERAL
         viewModel.subscribe(accountId = accountId, categoryKey = categoryKey)
             .observe(viewLifecycleOwner) { state ->
@@ -111,54 +112,71 @@ class TopNewsFragment :
                     is TopNewsViewModel.TopNewsState.UpdateListNews -> {
                         updateListNews(newListNews = state.articleModelListHistory)
                     }
+
                     is TopNewsViewModel.TopNewsState.ClickNews -> {
                         clickNews(articleUiModel = state.articleModel)
                     }
+
                     is TopNewsViewModel.TopNewsState.SetNews -> {
                         setNews(listNews = state.articleModels)
                     }
+
                     is TopNewsViewModel.TopNewsState.SetCountry -> {
                         setCountry(countryList = state.listCountry, startIndex = state.index)
                     }
+
                     TopNewsViewModel.TopNewsState.BottomSheetExpanded -> {
                         bottomSheetExpanded()
                     }
+
                     TopNewsViewModel.TopNewsState.EmptyListLoadNews -> {
                         emptyListLoadNews()
                     }
+
                     TopNewsViewModel.TopNewsState.ErrorLoadNews -> {
                         errorLoadNews()
                     }
+
                     TopNewsViewModel.TopNewsState.ErrorSelectCountry -> {
                         errorSelectCountry()
                     }
+
                     TopNewsViewModel.TopNewsState.EventNavigationBarAddBadgeFavorites -> {
                         eventNavigationBarAddBadgeFavorites()
                     }
+
                     TopNewsViewModel.TopNewsState.EventNavigationBarRemoveBadgeFavorites -> {
                         eventNavigationBarRemoveBadgeFavorites()
                     }
+
                     TopNewsViewModel.TopNewsState.EventUpdateViewPager -> {
                         eventUpdateViewPager()
                     }
+
                     TopNewsViewModel.TopNewsState.FavoritesImageViewSetDislike -> {
                         favoritesImageViewSetDislike()
                     }
+
                     TopNewsViewModel.TopNewsState.FavoritesImageViewSetLike -> {
                         favoritesImageViewSetLike()
                     }
+
                     TopNewsViewModel.TopNewsState.HideFavoritesImageView -> {
                         hideFavoritesImageView()
                     }
+
                     TopNewsViewModel.TopNewsState.HideFilterButton -> {
                         hideFilterButton()
                     }
+
                     TopNewsViewModel.TopNewsState.HideFilterShowRecycler -> {
                         hideFilterShowRecycler()
                     }
+
                     TopNewsViewModel.TopNewsState.ShowFilterButton -> {
                         showFilterButton()
                     }
+
                     TopNewsViewModel.TopNewsState.ShowFilterHideRecycler -> {
                         showFilterHideRecycler()
                     }
@@ -203,16 +221,22 @@ class TopNewsFragment :
     }
 
     private fun setCountry(countryList: List<String>, startIndex: Int) {
-        binding.countryAutoComplete.setAdapter(ArrayAdapter(requireContext(),
-            android.R.layout.simple_list_item_1, countryList))
-        binding.countryAutoComplete.setText(binding.countryAutoComplete.adapter.getItem(startIndex)
-            .toString(), false)
+        binding.countryAutoComplete.setAdapter(
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_list_item_1, countryList
+            )
+        )
+        binding.countryAutoComplete.setText(
+            binding.countryAutoComplete.adapter.getItem(startIndex)
+                .toString(), false
+        )
     }
 
     private fun setSpanDescription(articleModel: ArticleUiModel) {
         SpannableStringBuilder(articleModel.description).also { span ->
             span.setSpan(
-                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+                ImageSpan(requireContext(), UiCoreDrawable.ic_baseline_open_in_new_24),
                 span.length - 1,
                 span.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
@@ -230,7 +254,7 @@ class TopNewsFragment :
             TransitionManager.beginDelayedTransition(binding.root, transition)
 
             binding.recyclerNews.alpha = ALFA_FILTER_HIDE
-            binding.filterButton.setImageResource(R.drawable.check_icon)
+            binding.filterButton.setImageResource(UiCoreDrawable.check_icon)
             binding.countryTextInput.show()
             binding.closeFilter.show()
         }
@@ -243,7 +267,7 @@ class TopNewsFragment :
     private fun hideFilterShowRecycler() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.recyclerNews.alpha = ALFA_FILTER_SHOW
-        binding.filterButton.setImageResource(R.drawable.filter_icon)
+        binding.filterButton.setImageResource(UiCoreDrawable.filter_icon)
         binding.countryTextInput.hide()
         binding.closeFilter.hide()
     }
@@ -257,11 +281,11 @@ class TopNewsFragment :
     }
 
     private fun favoritesImageViewSetLike() {
-        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
+        binding.behaviorInclude.imageFavorites.setImageResource(UiCoreDrawable.ic_favorite_36_active)
     }
 
     private fun favoritesImageViewSetDislike() {
-        binding.behaviorInclude.imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+        binding.behaviorInclude.imageFavorites.setImageResource(UiCoreDrawable.ic_favorite_36)
     }
 
     private fun bottomSheetExpanded() {
@@ -272,12 +296,12 @@ class TopNewsFragment :
         binding.progressBarTopNews.hide()
         binding.recyclerNews.show()
         binding.statusTextList.show()
-        binding.statusTextList.text = getString(R.string.error_load_news)
+        binding.statusTextList.text = getString(UiCoreStrings.error_load_news)
     }
 
 
     private fun errorSelectCountry() {
-        binding.countryTextInput.error = getString(R.string.errorCountryNotSelected)
+        binding.countryTextInput.error = getString(UiCoreStrings.errorCountryNotSelected)
         Handler(Looper.getMainLooper()).postDelayed({
             binding.countryTextInput.error = null
         }, DURATION_ERROR_INPUT)
@@ -315,7 +339,7 @@ class TopNewsFragment :
             TopNewsFragment().apply {
                 arguments = Bundle().apply {
                     putString(CATEGORY_KEY, category)
-                    putInt(ACCOUNT_ID, accountId)
+                    putInt(BUNDLE_ACCOUNT_ID_KEY, accountId)
                 }
             }
     }

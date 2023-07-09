@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "NewsAPI"
 include ':app'
+include ':ui_common'
+include ':ui_core'

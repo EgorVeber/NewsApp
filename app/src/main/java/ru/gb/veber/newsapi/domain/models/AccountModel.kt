@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.domain.models
 
-import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
-import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
+import ru.gb.veber.ui_common.ALL_COUNTRY
+import ru.gb.veber.ui_common.ALL_COUNTRY_VALUE
 
 data class AccountModel(
     val id: Int,

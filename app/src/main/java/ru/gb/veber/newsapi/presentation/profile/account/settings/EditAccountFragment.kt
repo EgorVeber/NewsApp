@@ -2,23 +2,23 @@ package ru.gb.veber.newsapi.presentation.profile.account.settings
 
 import android.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.EMAIL_EXAMPLE
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.LOGIN_EXAMPLE
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.PASSWORD_EXAMPLE
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showSnackBar
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.EditAccountFragmentBinding
 import ru.gb.veber.newsapi.domain.models.AccountModel
-import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_HALF_LOGIN_BUTTON
 import ru.gb.veber.newsapi.presentation.profile.authorization.AuthorizationFragment.Companion.ALFA_LOGIN_BUTTON
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_common.utils.AuthPattern.EMAIL_EXAMPLE
+import ru.gb.veber.ui_common.utils.AuthPattern.LOGIN_EXAMPLE
+import ru.gb.veber.ui_common.utils.AuthPattern.PASSWORD_EXAMPLE
+import ru.gb.veber.ui_common.utils.BundleInt
+import ru.gb.veber.ui_core.databinding.EditAccountFragmentBinding
+import ru.gb.veber.ui_core.extentions.showSnackBar
 
 class EditAccountFragment :
     NewsFragment<EditAccountFragmentBinding, EditAccountViewModel>(EditAccountFragmentBinding::inflate) {
@@ -27,7 +27,7 @@ class EditAccountFragment :
     private var userPassword: String = ""
     private var userEmail: String = ""
 
-    private var accountId by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var accountId by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
 
     override fun getViewModelClass(): Class<EditAccountViewModel> = EditAccountViewModel::class.java
 
@@ -139,7 +139,7 @@ class EditAccountFragment :
 
     private fun errorLoadingAccount() {
         binding.constrainEditInformation.show()
-        this.showSnackBar(getString(R.string.errorLoadingAccount))
+        this.showSnackBar(getString(UiCoreStrings.errorLoadingAccount))
     }
 
     private fun passwordIsValidate(text: CharSequence?) {
@@ -152,7 +152,7 @@ class EditAccountFragment :
 
     private fun passwordNotValidate() {
         userPassword = ""
-        binding.passwordChange.error = getString(R.string.error_input_email) + "($PASSWORD_EXAMPLE)"
+        binding.passwordChange.error = getString(UiCoreStrings.error_input_email) + "($PASSWORD_EXAMPLE)"
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -165,7 +165,7 @@ class EditAccountFragment :
     }
 
     private fun loginNotValidate() {
-        binding.userNameChange.error = getString(R.string.error_input_email) + "($LOGIN_EXAMPLE)"
+        binding.userNameChange.error = getString(UiCoreStrings.error_input_email) + "($LOGIN_EXAMPLE)"
         userLogin = ""
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -180,23 +180,23 @@ class EditAccountFragment :
 
     private fun emailRegisterNotValidate() {
         userEmail = ""
-        binding.emailChange.error = getString(R.string.error_input_email) + "($EMAIL_EXAMPLE)"
+        binding.emailChange.error = getString(UiCoreStrings.error_input_email) + "($EMAIL_EXAMPLE)"
         binding.saveChangeAccount.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     private fun successUpdateAccount(userLogin: String) {
-        this.showSnackBar(getString(R.string.dataUpdated))
+        this.showSnackBar(getString(UiCoreStrings.dataUpdated))
         viewModel.arrowBack()
         (requireActivity() as EventLogoutAccountScreen).bottomNavigationSetTitleCurrentAccount(
             userLogin)
     }
 
     private fun errorUpdateAccount() {
-        this.showSnackBar(getString(R.string.unique_email_username))
+        this.showSnackBar(getString(UiCoreStrings.unique_email_username))
     }
 
     private fun noChangeAccount() {
-        this.showSnackBar(getString(R.string.noChangeAccount))
+        this.showSnackBar(getString(UiCoreStrings.noChangeAccount))
     }
 
     companion object {

@@ -3,8 +3,8 @@ package ru.gb.veber.newsapi.presentation.profile.account.settings.customize
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.common.base.NewsViewModel
 import ru.gb.veber.newsapi.domain.interactor.CustomizeCategoryInteractor
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
 import javax.inject.Inject
 
 class CustomizeCategoryViewModel @Inject constructor(
