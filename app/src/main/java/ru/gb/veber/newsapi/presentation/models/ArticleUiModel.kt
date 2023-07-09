@@ -1,8 +1,6 @@
 package ru.gb.veber.newsapi.presentation.models
 
 import ru.gb.veber.newsapi.domain.models.SourceModel
-import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateYearMonthDay
-import java.util.Date
 
 data class ArticleUiModel(
     var id: Int,
@@ -14,10 +12,9 @@ data class ArticleUiModel(
     var title: String,
     var url: String,
     var urlToImage: String,
-    //TODO ViewType не должен утекать в domain
     var viewType: Int = 0,
     var isHistory: Boolean = false,
     var isFavorites: Boolean = false,
-    var dateAdded: String = Date().toStringFormatDateYearMonthDay(),
+    var dateAdded: String,
     var showHistory: Boolean = true,
 )

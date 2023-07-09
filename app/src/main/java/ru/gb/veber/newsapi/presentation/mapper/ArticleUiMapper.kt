@@ -49,7 +49,8 @@ fun ArticleModel.toArticleUiModel(
         url = url,
         urlToImage = urlToImage,
         viewType = viewType,
-        isHistory = isHistory
+        isHistory = isHistory,
+        dateAdded =  dateAdded
     )
 }
 
