@@ -1,11 +1,11 @@
 package ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder
 
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.loadPicForTitle
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_core.databinding.TopNewsItemHeaderBinding
+import ru.gb.veber.ui_core.extentions.loadPicForTitle
 
 class NewsHeaderViewHolder(
     private val binding: TopNewsItemHeaderBinding,

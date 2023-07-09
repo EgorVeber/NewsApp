@@ -1,6 +1,6 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.AccountDataSource
+import ru.gb.veber.newsapi.common.PrefsAccountHelper
 import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
@@ -8,7 +8,7 @@ import ru.gb.veber.newsapi.domain.repository.ApiKeysRepository
 import javax.inject.Inject
 
 class AuthorizationInteractor @Inject constructor(
-    private val sharedPreferenceAccount: AccountDataSource,
+    private val sharedPreferenceAccount: PrefsAccountHelper,
     private val accountRepo: AccountRepo,
     private val apiKeysRepository: ApiKeysRepository,
 ) {

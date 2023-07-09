@@ -1,6 +1,6 @@
 package ru.gb.veber.newsapi.domain.models
 
-import ru.gb.veber.newsapi.common.utils.FOCUS_DEFAULT
+import ru.gb.veber.newsapi.presentation.sources.SourcesFragment.Companion.FOCUS_DEFAULT
 
 data class SourcesModel(
     val id: Int,

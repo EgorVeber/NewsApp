@@ -1,13 +1,13 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.AccountDataSource
+import ru.gb.veber.newsapi.common.PrefsAccountHelper
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
 import ru.gb.veber.newsapi.domain.repository.ApiKeysRepository
 import javax.inject.Inject
 
 class KeysManagementInteractor @Inject constructor(
     private val apiKeysRepository: ApiKeysRepository,
-    private val sharedPrefs: AccountDataSource,
+    private val sharedPrefs: PrefsAccountHelper,
 ) {
     suspend fun getKeys(accountId: Int): List<ApiKeysModel> {
         return apiKeysRepository.getApiKeys(accountId)

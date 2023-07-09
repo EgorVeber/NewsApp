@@ -1,13 +1,14 @@
 package ru.gb.veber.newsapi.presentation.profile.account.settings.customize
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.databinding.CustomizeCategoryItemTaskBinding
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.helper.EventDraw
 import ru.gb.veber.newsapi.presentation.profile.account.settings.customize.helper.ItemTouchHelperAdapter
+import ru.gb.veber.ui_core.databinding.CustomizeCategoryItemTaskBinding
 import java.util.Collections
 
 class CustomizeCategoryAdapter(private val listener: EventDraw) :
@@ -41,6 +42,7 @@ class CustomizeCategoryAdapter(private val listener: EventDraw) :
     inner class ItemViewHolder(private val binding: CustomizeCategoryItemTaskBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("ClickableViewAccessibility")
         fun bind(data: Category) {
             binding.categoryText.text = data.category
             binding.hamburgerCustom.setOnTouchListener {_, motionEvent ->

@@ -5,17 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toFormatDateDefault
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.domain.interactor.FavoritesInteractor
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter
 import ru.gb.veber.newsapi.presentation.mapper.toArticleUiModel
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.coroutine.launchJob
+import ru.gb.veber.ui_common.utils.DateFormatter.toFormatDateDefault
 import javax.inject.Inject
 
 class FavoritesViewModel @Inject constructor(
@@ -53,7 +53,7 @@ class FavoritesViewModel @Inject constructor(
                     }
                 },
                     catchBlock = { error ->
-                        error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+                        error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
                     }
                 )
             } else {
@@ -74,7 +74,7 @@ class FavoritesViewModel @Inject constructor(
                     }
                 }, catchBlock = { error ->
                     error.localizedMessage?.let {
-                        Log.d(ERROR_DB, it)
+                        Log.d(TAG_DB_ERROR, it)
                     }
                 })
             }
@@ -100,7 +100,7 @@ class FavoritesViewModel @Inject constructor(
                     FavoritesState.SetSources(artModifiedList)
                 )
             }, catchBlock = { error ->
-                error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+                error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
             })
         }
     }
@@ -122,7 +122,7 @@ class FavoritesViewModel @Inject constructor(
                 }
                 _uiState.postValue(FavoritesState.SetSources(listSave))
             }, catchBlock = { error ->
-                error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+                error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
             })
         }
     }
@@ -169,7 +169,7 @@ class FavoritesViewModel @Inject constructor(
         }, catchBlock = { error ->
             error.localizedMessage?.let {
                 _uiState.postValue(FavoritesState.ErrorDeleteGroup)
-                Log.d(ERROR_DB, it)
+                Log.d(TAG_DB_ERROR, it)
             }
         })
     }

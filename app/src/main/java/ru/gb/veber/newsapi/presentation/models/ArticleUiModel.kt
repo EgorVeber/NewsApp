@@ -1,8 +1,7 @@
 package ru.gb.veber.newsapi.presentation.models
 
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateDefault
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateYearMonthDay
 import ru.gb.veber.newsapi.domain.models.SourceModel
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateYearMonthDay
 import java.util.Date
 
 data class ArticleUiModel(

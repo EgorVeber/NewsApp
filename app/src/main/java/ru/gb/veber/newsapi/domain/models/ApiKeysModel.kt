@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.domain.models
 
-import ru.gb.veber.newsapi.common.utils.CREATE_KEYS_COUNT
 
 data class ApiKeysModel(
     val id: Int = 0,
@@ -11,4 +10,8 @@ data class ApiKeysModel(
     var lastRequest: String,
     var countRequest: String = CREATE_KEYS_COUNT,
     var countMax: String = CREATE_KEYS_COUNT,
-)
+) {
+    companion object {
+        private const val CREATE_KEYS_COUNT = "100"
+    }
+}

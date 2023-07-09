@@ -6,12 +6,12 @@ import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateDayMonthYearHourMinutes
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.domain.interactor.KeysManagementInteractor
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.coroutine.launchJob
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateDayMonthYearHourMinutes
 import java.util.Date
 import javax.inject.Inject
 
@@ -44,7 +44,7 @@ class KeysManagementViewModel @Inject constructor(
             }
 
         }, catchBlock = { error ->
-            error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+            error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
         })
     }
 
@@ -59,7 +59,7 @@ class KeysManagementViewModel @Inject constructor(
             val keys = keysManagementInteractor.addKeys(apiKeysModel)
             keysManagementState.update { KeysManagementState.SetKeys(keys) }
         }, catchBlock = { error ->
-            error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+            error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
         })
     }
 
@@ -68,7 +68,7 @@ class KeysManagementViewModel @Inject constructor(
             val keys = keysManagementInteractor.setNewKey(apiKeyModel)
             keysManagementState.update { KeysManagementState.SetKeys(keys) }
         }, catchBlock = { error ->
-            error.localizedMessage?.let { Log.d(ERROR_DB, it) }
+            error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
         })
     }
 

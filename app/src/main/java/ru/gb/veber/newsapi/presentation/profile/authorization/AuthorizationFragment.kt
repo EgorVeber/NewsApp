@@ -10,18 +10,20 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding.widget.RxTextView
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.EMAIL_EXAMPLE
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.LOGIN_EXAMPLE
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.PASSWORD_EXAMPLE
-import ru.gb.veber.newsapi.common.extentions.observeFlow
-import ru.gb.veber.newsapi.common.extentions.showSnackBar
-import ru.gb.veber.newsapi.common.utils.ColorUtils.getColor
+import ru.gb.veber.newsapi.common.UiCoreColor
+import ru.gb.veber.newsapi.common.UiCoreId
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.AuthorizationFragmentBinding
-import ru.gb.veber.newsapi.presentation.activity.EventLogoutAccountScreen
-import ru.gb.veber.newsapi.presentation.activity.OpenScreen
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventLogoutAccountScreen
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.OpenScreen
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
+import ru.gb.veber.ui_common.coroutine.observeFlow
+import ru.gb.veber.ui_common.utils.AuthPattern.EMAIL_EXAMPLE
+import ru.gb.veber.ui_common.utils.AuthPattern.LOGIN_EXAMPLE
+import ru.gb.veber.ui_common.utils.AuthPattern.PASSWORD_EXAMPLE
+import ru.gb.veber.ui_common.utils.ColorUtils.getColor
+import ru.gb.veber.ui_core.databinding.AuthorizationFragmentBinding
+import ru.gb.veber.ui_core.extentions.showSnackBar
 
 class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, AuthorizationViewModel>(
     AuthorizationFragmentBinding::inflate
@@ -53,7 +55,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
         rxTextChangerValidation()
 
         binding.privacyPolicy.setOnClickListener {
-            viewModel.openScreenWebView(getString(R.string.team_site))
+            viewModel.openScreenWebView(getString(UiCoreStrings.team_site))
         }
 
         binding.backMainScreen.setOnClickListener {
@@ -107,36 +109,47 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
                 is AuthorizationViewModel.AuthorizationViewState.EmailRegisterIsValidate -> {
                     emailRegisterIsValidate(state.email)
                 }
+
                 is AuthorizationViewModel.AuthorizationViewState.LoginIsValidate -> {
                     loginIsValidate(state.charSequence)
                 }
+
                 is AuthorizationViewModel.AuthorizationViewState.LoginRegisterIsValidate -> {
                     loginRegisterIsValidate(state.login)
                 }
+
                 is AuthorizationViewModel.AuthorizationViewState.PasswordIsValidate -> {
                     passwordIsValidate(state.password)
                 }
+
                 is AuthorizationViewModel.AuthorizationViewState.PasswordNotValidate -> {
                     passwordNotValidate(state.password)
                 }
+
                 is AuthorizationViewModel.AuthorizationViewState.PasswordRegisterIsValidate -> {
                     passwordRegisterIsValidate(state.password)
                 }
+
                 is AuthorizationViewModel.AuthorizationViewState.PasswordRegisterNotValidate -> {
                     passwordRegisterNotValidate(state.password)
                 }
+
                 is AuthorizationViewModel.AuthorizationViewState.SetBottomNavigationIcon -> {
                     setBottomNavigationIcon(state.checkLogin)
                 }
+
                 AuthorizationViewModel.AuthorizationViewState.EmailRegisterNotValidate -> {
                     emailRegisterNotValidate()
                 }
+
                 AuthorizationViewModel.AuthorizationViewState.EmptyAccount -> {
                     emptyAccount()
                 }
+
                 AuthorizationViewModel.AuthorizationViewState.ErrorRegister -> {
                     errorRegister()
                 }
+
                 AuthorizationViewModel.AuthorizationViewState.ErrorSignIn -> {
                     errorSignIn()
                 }
@@ -156,6 +169,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
                 AuthorizationViewModel.AuthorizationViewState.SetLoginAnim -> {
                     setLoginAnim()
                 }
+
                 AuthorizationViewModel.AuthorizationViewState.SetRegisterAnim -> {
                     setRegisterAnim()
                 }
@@ -207,13 +221,13 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     }
 
     private fun errorSignIn() {
-        binding.passwordTextInput.error = getString(R.string.invalid_password)
+        binding.passwordTextInput.error = getString(UiCoreStrings.invalid_password)
     }
 
     private fun errorRegister() {
-        binding.userNameRegisterTextInput.error = getString(R.string.check_login)
-        binding.emailRegisterTextInput.error = getString(R.string.check_email)
-        this.showSnackBar(getString(R.string.unique_email_username))
+        binding.userNameRegisterTextInput.error = getString(UiCoreStrings.check_login)
+        binding.emailRegisterTextInput.error = getString(UiCoreStrings.check_email)
+        this.showSnackBar(getString(UiCoreStrings.unique_email_username))
     }
 
     private fun successSignIn(id: Int) {
@@ -221,7 +235,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     }
 
     private fun successRegister(id: Int) {
-        this.showSnackBar(getString(R.string.create_account))
+        this.showSnackBar(getString(UiCoreStrings.create_account))
         viewModel.openScreenProfile(id)
     }
 
@@ -230,7 +244,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     }
 
     private fun emptyAccount() {
-        binding.userNameTextInput.error = getString(R.string.user_none)
+        binding.userNameTextInput.error = getString(UiCoreStrings.user_none)
     }
 
     private fun setBottomNavigationIcon(checkLogin: String) {
@@ -246,7 +260,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     }
 
     private fun loginNotValidate() {
-        binding.userNameTextInput.error = getString(R.string.error_input_email) + "($LOGIN_EXAMPLE)"
+        binding.userNameTextInput.error = getString(UiCoreStrings.error_input_email) + "($LOGIN_EXAMPLE)"
         userLogin = ""
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -262,7 +276,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     private fun passwordNotValidate(password: CharSequence?) {
         userPassword = ""
         binding.passwordTextInput.error =
-            getString(R.string.error_input_email) + "($PASSWORD_EXAMPLE)"
+            getString(UiCoreStrings.error_input_email) + "($PASSWORD_EXAMPLE)"
         binding.signInButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -276,7 +290,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
 
     private fun loginRegisterNotValidate() {
         binding.userNameRegisterTextInput.error =
-            getString(R.string.error_input_email) + "($LOGIN_EXAMPLE)"
+            getString(UiCoreStrings.error_input_email) + "($LOGIN_EXAMPLE)"
         userRegisterLogin = ""
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
@@ -292,7 +306,7 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     private fun passwordRegisterNotValidate(password: CharSequence?) {
         userRegisterPassword = ""
         binding.passwordRegisterTextInput.error =
-            getString(R.string.error_input_email) + "($PASSWORD_EXAMPLE)"
+            getString(UiCoreStrings.error_input_email) + "($PASSWORD_EXAMPLE)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
@@ -307,83 +321,82 @@ class AuthorizationFragment : NewsFragment<AuthorizationFragmentBinding, Authori
     private fun emailRegisterNotValidate() {
         userEmail = ""
         binding.emailRegisterTextInput.error =
-            getString(R.string.error_input_email) + "($EMAIL_EXAMPLE)"
+            getString(UiCoreStrings.error_input_email) + "($EMAIL_EXAMPLE)"
         binding.registerButton.alpha = ALFA_HALF_LOGIN_BUTTON
     }
 
     private fun setRegisterAnim() {
-        constraintSetLogin.clear(R.id.userNameTextInput, ConstraintSet.END)
-        constraintSetLogin.clear(R.id.userNameTextInput, ConstraintSet.START)
+        constraintSetLogin.clear(UiCoreId.userNameTextInput, ConstraintSet.END)
+        constraintSetLogin.clear(UiCoreId.userNameTextInput, ConstraintSet.START)
         constraintSetLogin.connect(
-            R.id.userNameTextInput,
+            UiCoreId.userNameTextInput,
             ConstraintSet.START,
-            R.id.constraintLayoutSet,
+            UiCoreId.constraintLayoutSet,
             ConstraintSet.END
         )
         constraintSetLogin.applyTo(binding.root)
 
         constraintSetLogin.connect(
-            R.id.userNameRegisterTextInput,
+            UiCoreId.userNameRegisterTextInput,
             ConstraintSet.START,
-            R.id.constraintLayoutSet,
+            UiCoreId.constraintLayoutSet,
             ConstraintSet.START
         )
         constraintSetLogin.connect(
-            R.id.userNameRegisterTextInput,
+            UiCoreId.userNameRegisterTextInput,
             ConstraintSet.END,
-            R.id.constraintLayoutSet,
+            UiCoreId.constraintLayoutSet,
             ConstraintSet.END
         )
         constraintSetLogin.applyTo(binding.root)
 
-        constraintSetLogin.clear(R.id.privacyPolicy, ConstraintSet.TOP)
+        constraintSetLogin.clear(UiCoreId.privacyPolicy, ConstraintSet.TOP)
         constraintSetLogin.connect(
-            R.id.privacyPolicy,
+            UiCoreId.privacyPolicy,
             ConstraintSet.TOP,
-            R.id.changeSignButton,
+            UiCoreId.changeSignButton,
             ConstraintSet.BOTTOM
         )
         constraintSetLogin.applyTo(binding.root)
     }
 
     private fun setLoginAnim() {
-        constraintSetLogin.clear(R.id.userNameRegisterTextInput, ConstraintSet.END)
-        constraintSetLogin.clear(R.id.userNameRegisterTextInput, ConstraintSet.START)
+        constraintSetLogin.clear(UiCoreId.userNameRegisterTextInput, ConstraintSet.END)
+        constraintSetLogin.clear(UiCoreId.userNameRegisterTextInput, ConstraintSet.START)
         constraintSetLogin.connect(
-            R.id.userNameRegisterTextInput,
+            UiCoreId.userNameRegisterTextInput,
             ConstraintSet.END,
-            R.id.constraintLayoutSet,
+            UiCoreId.constraintLayoutSet,
             ConstraintSet.START
         )
         constraintSetLogin.applyTo(binding.root)
 
-        constraintSetLogin.clear(R.id.userNameTextInput, ConstraintSet.START)
+        constraintSetLogin.clear(UiCoreId.userNameTextInput, ConstraintSet.START)
         constraintSetLogin.connect(
-            R.id.userNameTextInput,
+            UiCoreId.userNameTextInput,
             ConstraintSet.START,
-            R.id.constraintLayoutSet,
+            UiCoreId.constraintLayoutSet,
             ConstraintSet.START
         )
         constraintSetLogin.connect(
-            R.id.userNameTextInput,
+            UiCoreId.userNameTextInput,
             ConstraintSet.END,
-            R.id.constraintLayoutSet,
+            UiCoreId.constraintLayoutSet,
             ConstraintSet.END
         )
         constraintSetLogin.applyTo(binding.root)
-        constraintSetLogin.clear(R.id.privacyPolicy, ConstraintSet.TOP)
+        constraintSetLogin.clear(UiCoreId.privacyPolicy, ConstraintSet.TOP)
         constraintSetLogin.connect(
-            R.id.privacyPolicy, ConstraintSet.TOP,
-            R.id.changeRegisterButton,
+            UiCoreId.privacyPolicy, ConstraintSet.TOP,
+            UiCoreId.changeRegisterButton,
             ConstraintSet.BOTTOM
         )
         constraintSetLogin.applyTo(binding.root)
     }
 
     private fun setSpanRegulationsTv() {
-
         SpannableStringBuilder(binding.privacyPolicy.text).also { span ->
-            var colorPrimary = this.getColor(R.color.color_primary_app)
+            val colorPrimary = getColor(UiCoreColor.color_primary_app)
 
             span.setSpan(
                 ForegroundColorSpan(colorPrimary),

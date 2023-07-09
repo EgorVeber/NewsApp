@@ -5,24 +5,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toFormatDateDayMouthYearHoursMinutes
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateYearMonthDay
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY
-import ru.gb.veber.newsapi.common.utils.ALL_COUNTRY_VALUE
-import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.common.utils.ERROR_LOAD_NEWS
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.domain.interactor.TopNewsInteractor
 import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.domain.models.CountryModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
 import ru.gb.veber.newsapi.presentation.mapper.toArticleModel
 import ru.gb.veber.newsapi.presentation.mapper.toArticleUiModel
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.ALL_COUNTRY
+import ru.gb.veber.ui_common.ALL_COUNTRY_VALUE
+import ru.gb.veber.ui_common.API_KEY_NEWS
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.TAG_LOAD_NEWS_ERROR
+import ru.gb.veber.ui_common.coroutine.launchJob
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateYearMonthDay
 import java.util.Date
 import javax.inject.Inject
 
@@ -113,7 +112,7 @@ class TopNewsViewModel @Inject constructor(
                     viewModelScope.launchJob(tryBlock = {
                         topNewsInteractor.updateAccount(accountModel)
                     }, catchBlock = { error ->
-                        Log.d(ERROR_DB, error.localizedMessage)
+                        Log.d(TAG_DB_ERROR, error.localizedMessage)
                     }, finallyBlock = {
                         mutableFlow.postValue(TopNewsState.EventUpdateViewPager)
                     })
@@ -151,7 +150,7 @@ class TopNewsViewModel @Inject constructor(
             }
             mutableFlow.postValue(TopNewsState.SetCountry(list, index))
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -167,7 +166,7 @@ class TopNewsViewModel @Inject constructor(
                     }?.isHistory = true
                     mutableFlow.postValue(TopNewsState.UpdateListNews(articleModelListHistory))
                 }, catchBlock = { error ->
-                    Log.d(ERROR_DB, error.localizedMessage)
+                    Log.d(TAG_DB_ERROR, error.localizedMessage)
                 })
             }
         }
@@ -183,7 +182,7 @@ class TopNewsViewModel @Inject constructor(
 
             mutableFlow.postValue(TopNewsState.UpdateListNews(articleModelListHistory))
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -196,7 +195,7 @@ class TopNewsViewModel @Inject constructor(
             }?.isFavorites = false
             mutableFlow.postValue(TopNewsState.UpdateListNews(articleModelListHistory))
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -206,7 +205,7 @@ class TopNewsViewModel @Inject constructor(
                 accountModel = topNewsInteractor.getAccount(accountId)
                 saveHistory = accountModel.saveHistory
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
+                Log.d(TAG_DB_ERROR, error.localizedMessage)
             })
         } else {
             mutableFlow.value = TopNewsState.HideFavoritesImageView
@@ -232,7 +231,7 @@ class TopNewsViewModel @Inject constructor(
 
         }, catchBlock = { error ->
             mutableFlow.postValue(TopNewsState.ErrorLoadNews)
-            Log.d(ERROR_LOAD_NEWS, error.localizedMessage)
+            Log.d(TAG_LOAD_NEWS_ERROR, error.localizedMessage)
         })
     }
 

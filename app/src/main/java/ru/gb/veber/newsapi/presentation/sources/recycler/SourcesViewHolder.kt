@@ -1,13 +1,13 @@
 package ru.gb.veber.newsapi.presentation.sources.recycler
 
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.utils.FOCUS_BRIF
-import ru.gb.veber.newsapi.common.utils.FOCUS_NAME
-import ru.gb.veber.newsapi.databinding.SourcesItemBinding
+import ru.gb.veber.newsapi.common.UiCoreDrawable
 import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.newsapi.presentation.sources.SourcesFragment.Companion.FOCUS_BRIF
+import ru.gb.veber.newsapi.presentation.sources.SourcesFragment.Companion.FOCUS_NAME
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_core.databinding.SourcesItemBinding
 
 class SourcesViewHolder(
     private val binding: SourcesItemBinding,
@@ -40,16 +40,21 @@ class SourcesViewHolder(
 
     private fun itemState(item: SourcesModel) {
         when (item.focusType) {
-            FOCUS_NAME -> { hideDesc(); hideSubs(); }
-            FOCUS_BRIF -> { hideDesc(); showSubs(); }
-            else -> { showDesc(); showSubs(); }
+            FOCUS_NAME -> {
+                hideDesc(); hideSubs(); }
+
+            FOCUS_BRIF -> {
+                hideDesc(); showSubs(); }
+
+            else -> {
+                showDesc(); showSubs(); }
         }
     }
 
     fun bind(item: SourcesModel) = with(binding) {
 
-        if (item.liked) imageFavorites.setImageResource(R.drawable.ic_favorite_36_active)
-        else imageFavorites.setImageResource(R.drawable.ic_favorite_36)
+        if (item.liked) imageFavorites.setImageResource(UiCoreDrawable.ic_favorite_36_active)
+        else imageFavorites.setImageResource(UiCoreDrawable.ic_favorite_36)
 
         name.text = item.name
         description.text = item.description

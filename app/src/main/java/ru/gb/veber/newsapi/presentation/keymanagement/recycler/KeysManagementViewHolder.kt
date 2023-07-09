@@ -2,8 +2,8 @@ package ru.gb.veber.newsapi.presentation.keymanagement.recycler
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.databinding.KeysManagementItemBinding
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
+import ru.gb.veber.ui_core.databinding.KeysManagementItemBinding
 
 class KeysManagementViewHolder(
     private val binding: KeysManagementItemBinding,

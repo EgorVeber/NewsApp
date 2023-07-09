@@ -1,6 +1,6 @@
 package ru.gb.veber.newsapi.domain.models
 
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateDefault
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateDefault
 import java.util.Date
 
 data class ArticleModel(
@@ -12,9 +12,9 @@ data class ArticleModel(
     var title: String,
     var url: String,
     var urlToImage: String,
-    //TODO ViewType не должен утекать в domain
     var isHistory: Boolean = false,
     var isFavorites: Boolean = false,
+    // TODO Убрать из домена сеттить в Ui
     var dateAdded: String = Date().toStringFormatDateDefault(),
     var showHistory: Boolean = true,
 )

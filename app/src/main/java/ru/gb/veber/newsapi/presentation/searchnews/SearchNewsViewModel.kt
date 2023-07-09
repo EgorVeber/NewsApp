@@ -11,23 +11,23 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateDefault
-import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.domain.interactor.SearchNewsInteractor
 import ru.gb.veber.newsapi.domain.models.AccountSourcesModel
 import ru.gb.veber.newsapi.domain.models.ArticleModel
 import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
 import ru.gb.veber.newsapi.presentation.mapper.toArticleModel
 import ru.gb.veber.newsapi.presentation.mapper.toArticleUiModel
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.API_KEY_NEWS
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.coroutine.SingleSharedFlow
+import ru.gb.veber.ui_common.coroutine.launchJob
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateDefault
 import java.util.Date
 import javax.inject.Inject
 
@@ -101,13 +101,13 @@ class SearchNewsViewModel @Inject constructor(
                     saveHistory = account.saveHistory
                 }
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
+                Log.d(TAG_DB_ERROR, error.localizedMessage)
             })
             viewModelScope.launchJob(tryBlock = {
                 getSourcesLike()
                 getSources()
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.localizedMessage)
+                Log.d(TAG_DB_ERROR, error.localizedMessage)
             })
         } else {
             searchNewsState.tryEmit(SearchNewsState.HideFavorites)
@@ -164,7 +164,7 @@ class SearchNewsViewModel @Inject constructor(
             saveSourcesState.emit(false)
             getSourcesLike()
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -209,7 +209,7 @@ class SearchNewsViewModel @Inject constructor(
             }
         }, catchBlock = { error ->
             searchNewsState.tryEmit(SearchNewsState.EmptyList)
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         }, finallyBlock = {
             searchNewsState.tryEmit(SearchNewsState.HideProgress)
         })
@@ -233,7 +233,7 @@ class SearchNewsViewModel @Inject constructor(
                         ?.isHistory = true
                     searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleModelListHistory))
                 }, catchBlock = { error ->
-                    Log.d(ERROR_DB, error.localizedMessage)
+                    Log.d(TAG_DB_ERROR, error.localizedMessage)
                 })
             }
         }
@@ -253,7 +253,7 @@ class SearchNewsViewModel @Inject constructor(
 
             searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleModelListHistory))
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -266,7 +266,7 @@ class SearchNewsViewModel @Inject constructor(
             searchNewsState.tryEmit(SearchNewsState.ChangeNews(articleModelListHistory))
 
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -274,7 +274,7 @@ class SearchNewsViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             likeSources = searchNewsInteractor.getLikeSources(accountId).toMutableList()
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
@@ -282,7 +282,7 @@ class SearchNewsViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             allSources = searchNewsInteractor.getSources()
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 

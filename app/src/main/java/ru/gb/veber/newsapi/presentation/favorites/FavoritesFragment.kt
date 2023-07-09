@@ -7,28 +7,28 @@ import android.transition.TransitionManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toFormatDateDayMouthYearHoursMinutes
-import ru.gb.veber.newsapi.common.extentions.collapsed
-import ru.gb.veber.newsapi.common.extentions.expanded
-import ru.gb.veber.newsapi.common.extentions.getAppComponent
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.loadPicForTitle
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.extentions.showText
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.BundleString
-import ru.gb.veber.newsapi.common.utils.PAGE
-import ru.gb.veber.newsapi.databinding.FavotitesFragmentBinding
-import ru.gb.veber.newsapi.presentation.activity.EventShareLink
+import ru.gb.veber.newsapi.common.UiCoreDrawable
+import ru.gb.veber.newsapi.common.UiCoreStrings
+import ru.gb.veber.newsapi.common.getAppComponent
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventShareLink
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsAdapter
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.TopNewsListener
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.collapsed
+import ru.gb.veber.ui_common.expanded
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_common.showText
+import ru.gb.veber.ui_common.utils.BundleInt
+import ru.gb.veber.ui_common.utils.BundleString
+import ru.gb.veber.ui_common.utils.DateFormatter.toFormatDateDayMouthYearHoursMinutes
+import ru.gb.veber.ui_core.databinding.FavotitesFragmentBinding
+import ru.gb.veber.ui_core.extentions.loadPicForTitle
 
 class FavoritesFragment :
     NewsFragment<FavotitesFragmentBinding, FavoritesViewModel>(FavotitesFragmentBinding::inflate),
@@ -61,8 +61,8 @@ class FavoritesFragment :
 
     private val historyAdapter = TopNewsAdapter(itemListener)
 
-    private var accountID by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
-    private var tagPage by BundleString(PAGE, FAVORITES)
+    private var accountID by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
+    private var tagPage by BundleString(BUNDLE_PAGE_KEY, FAVORITES)
 
     override fun getViewModelClass(): Class<FavoritesViewModel> = FavoritesViewModel::class.java
     override fun onInject() = getAppComponent().inject(this)
@@ -114,7 +114,7 @@ class FavoritesFragment :
     private fun setSpanDescription(articleModel: ArticleUiModel) {
         SpannableStringBuilder(articleModel.description).also { span ->
             span.setSpan(
-                ImageSpan(requireContext(), R.drawable.ic_baseline_open_in_new_24),
+                ImageSpan(requireContext(), UiCoreDrawable.ic_baseline_open_in_new_24),
                 span.length - 1,
                 span.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
@@ -168,19 +168,20 @@ class FavoritesFragment :
     private fun notAuthorized() {
         TransitionManager.beginDelayedTransition(binding.root)
         binding.statusTextLike.show()
-        binding.statusTextLike.text = getString(R.string.not_authorized)
+        binding.statusTextLike.text = getString(UiCoreStrings.not_authorized)
     }
 
     private fun emptyList() {
         binding.statusTextLike.show()
-        binding.statusTextLike.text = getString(R.string.empty_list)
+        binding.statusTextLike.text = getString(UiCoreStrings.empty_list)
     }
 
     private fun toastDeleteHistoryError() {
-        binding.root.showText(getString(R.string.historyCanNotBeCleared))
+        binding.root.showText(getString(UiCoreStrings.historyCanNotBeCleared))
     }
 
     companion object {
+        private const val BUNDLE_PAGE_KEY = "BUNDLE_PAGE_KEY"
         fun getInstance(page: String, accountID: Int) = FavoritesFragment().apply {
             this.accountID = accountID
             this.tagPage = page

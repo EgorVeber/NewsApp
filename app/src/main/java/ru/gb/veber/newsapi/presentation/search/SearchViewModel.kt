@@ -8,19 +8,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.DateFormatter
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toDateFormatDateSeparator
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateSeparator
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateYearMonthDay
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.SearchNewsScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.common.utils.NOT_INPUT_DATE
+import ru.gb.veber.newsapi.core.SearchNewsScreen
 import ru.gb.veber.newsapi.domain.interactor.SearchInteractor
 import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.NOT_INPUT_DATE
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.coroutine.launchJob
+import ru.gb.veber.ui_common.utils.DateFormatter
+import ru.gb.veber.ui_common.utils.DateFormatter.toDateFormatDateSeparator
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateSeparator
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateYearMonthDay
 import java.util.Date
 import javax.inject.Inject
 
@@ -57,7 +57,7 @@ class SearchViewModel @Inject constructor(
             getAccountInfo(accountId)
             getSources()
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.toString())
+            Log.d(TAG_DB_ERROR, error.toString())
         })
     }
 
@@ -131,7 +131,7 @@ class SearchViewModel @Inject constructor(
             dataState.emit(DataState.SetHistorySelect(listOf()))
             historyStateContainer.update { HistoryState.StatusTextHistoryShow }
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.toString())
+            Log.d(TAG_DB_ERROR, error.toString())
         })
     }
 
@@ -140,7 +140,7 @@ class SearchViewModel @Inject constructor(
             searchInteractor.deleteSelect(historySelectModel)
             getHistorySelect()
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.toString())
+            Log.d(TAG_DB_ERROR, error.toString())
         })
     }
 
@@ -170,7 +170,7 @@ class SearchViewModel @Inject constructor(
                 dataState.emit(DataState.SetHistorySelect(historySelectList))
 
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.toString())
+                Log.d(TAG_DB_ERROR, error.toString())
             })
         } else historyStateContainer.value = HistoryState.HideSelectHistory
     }
@@ -194,7 +194,7 @@ class SearchViewModel @Inject constructor(
             viewModelScope.launchJob(tryBlock = {
                 searchInteractor.insertSelect(historySelectModel)
             }, catchBlock = { error ->
-                Log.d(ERROR_DB, error.toString())
+                Log.d(TAG_DB_ERROR, error.toString())
             })
         }
     }

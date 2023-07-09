@@ -1,13 +1,13 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.AccountDataSource
+import ru.gb.veber.newsapi.common.PrefsAccountHelper
 import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import javax.inject.Inject
 
 class EditAccountInteractor @Inject constructor(
     private val roomRepoImpl: AccountRepo,
-    private val prefsAccount: AccountDataSource,
+    private val prefsAccount: PrefsAccountHelper,
 ) {
 
     suspend fun updateAccount(accountModel: AccountModel, login: String) {

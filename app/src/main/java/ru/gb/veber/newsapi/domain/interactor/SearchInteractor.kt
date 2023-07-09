@@ -1,6 +1,5 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.domain.models.HistorySelectModel
 import ru.gb.veber.newsapi.domain.models.SourcesModel
@@ -8,6 +7,7 @@ import ru.gb.veber.newsapi.domain.repository.AccountRepo
 import ru.gb.veber.newsapi.domain.repository.AccountSourcesRepo
 import ru.gb.veber.newsapi.domain.repository.HistorySelectRepo
 import ru.gb.veber.newsapi.domain.repository.SourcesRepo
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
 import javax.inject.Inject
 
 class SearchInteractor @Inject constructor(

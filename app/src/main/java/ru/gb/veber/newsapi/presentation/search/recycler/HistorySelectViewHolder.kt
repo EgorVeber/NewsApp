@@ -1,10 +1,10 @@
 package ru.gb.veber.newsapi.presentation.search.recycler
 
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.databinding.HistorySelectItemBinding
 import ru.gb.veber.newsapi.domain.models.HistorySelectModel
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_core.databinding.HistorySelectItemBinding
 
 class HistorySelectViewHolder(
     private val binding: HistorySelectItemBinding,

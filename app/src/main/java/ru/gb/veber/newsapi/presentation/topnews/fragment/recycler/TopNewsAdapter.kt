@@ -4,11 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import ru.gb.veber.newsapi.databinding.FavoritesHistoryItemBinding
-import ru.gb.veber.newsapi.databinding.HistoryArticleHeaderBinding
-import ru.gb.veber.newsapi.databinding.SearchNewsItemBinding
-import ru.gb.veber.newsapi.databinding.TopNewsItemBinding
-import ru.gb.veber.newsapi.databinding.TopNewsItemHeaderBinding
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder.Companion.VIEW_TYPE_FAVORITES_NEWS
@@ -22,6 +17,11 @@ import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.His
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.NewsHeaderViewHolder
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.NewsViewHolder
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.SearchNewsViewHolder
+import ru.gb.veber.ui_core.databinding.FavoritesHistoryItemBinding
+import ru.gb.veber.ui_core.databinding.HistoryArticleHeaderBinding
+import ru.gb.veber.ui_core.databinding.SearchNewsItemBinding
+import ru.gb.veber.ui_core.databinding.TopNewsItemBinding
+import ru.gb.veber.ui_core.databinding.TopNewsItemHeaderBinding
 
 class TopNewsAdapter(
     var listener: TopNewsListener,
@@ -37,20 +37,24 @@ class TopNewsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            VIEW_TYPE_TOP_NEWS -> NewsViewHolder(TopNewsItemBinding.inflate(LayoutInflater.from(
+            VIEW_TYPE_TOP_NEWS -> NewsViewHolder(
+                TopNewsItemBinding.inflate(LayoutInflater.from(
                 parent.context),
                 parent,
                 false), listener)
-            VIEW_TYPE_TOP_NEWS_HEADER -> NewsHeaderViewHolder(TopNewsItemHeaderBinding.inflate(
+            VIEW_TYPE_TOP_NEWS_HEADER -> NewsHeaderViewHolder(
+                TopNewsItemHeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
-            VIEW_TYPE_SEARCH_NEWS -> SearchNewsViewHolder(SearchNewsItemBinding.inflate(
+            VIEW_TYPE_SEARCH_NEWS -> SearchNewsViewHolder(
+                SearchNewsItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)
 
-            VIEW_TYPE_FAVORITES_NEWS -> FavoritesHistoryViewHolder(FavoritesHistoryItemBinding.inflate(
+            VIEW_TYPE_FAVORITES_NEWS -> FavoritesHistoryViewHolder(
+                FavoritesHistoryItemBinding.inflate(
                 LayoutInflater.from(
                     parent.context),
                 parent,
@@ -62,7 +66,8 @@ class TopNewsAdapter(
                 parent,
                 false), listener)
 
-            VIEW_TYPE_HISTORY_HEADER -> HistoryHeaderViewHolder(HistoryArticleHeaderBinding.inflate(
+            VIEW_TYPE_HISTORY_HEADER -> HistoryHeaderViewHolder(
+                HistoryArticleHeaderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false), listener)

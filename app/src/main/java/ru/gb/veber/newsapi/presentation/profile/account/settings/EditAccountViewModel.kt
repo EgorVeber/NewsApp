@@ -5,15 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.common.base.NewsViewModel
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.EMAIL_PATTERN
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.LOGIN_PATTERN
-import ru.gb.veber.newsapi.common.extentions.AuthPattern.PASSWORD_PATTERN
-import ru.gb.veber.newsapi.common.extentions.checkLogin
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
 import ru.gb.veber.newsapi.domain.interactor.EditAccountInteractor
 import ru.gb.veber.newsapi.domain.models.AccountModel
+import ru.gb.veber.newsapi.presentation.base.NewsViewModel
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.coroutine.launchJob
+import ru.gb.veber.ui_common.getCutLogin
+import ru.gb.veber.ui_common.utils.AuthPattern.EMAIL_PATTERN
+import ru.gb.veber.ui_common.utils.AuthPattern.LOGIN_PATTERN
+import ru.gb.veber.ui_common.utils.AuthPattern.PASSWORD_PATTERN
 import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(
@@ -39,11 +39,11 @@ class EditAccountViewModel @Inject constructor(
             accountModel.userName = userLogin
             accountModel.password = userPassword
             viewModelScope.launchJob(tryBlock = {
-                editAccountInteractor.updateAccount(accountModel, accountModel.userName.checkLogin())
-                mutableFlow.postValue(EditAccountState.SuccessUpdateAccount(accountModel.userName.checkLogin()))
+                editAccountInteractor.updateAccount(accountModel, accountModel.userName.getCutLogin())
+                mutableFlow.postValue(EditAccountState.SuccessUpdateAccount(accountModel.userName.getCutLogin()))
             }, catchBlock = { error ->
                 mutableFlow.postValue(EditAccountState.ErrorUpdateAccount)
-                Log.d(ERROR_DB, error.localizedMessage)
+                Log.d(TAG_DB_ERROR, error.localizedMessage)
             })
         }
     }
@@ -88,7 +88,7 @@ class EditAccountViewModel @Inject constructor(
             accountModel = accountDb
             mutableFlow.postValue(EditAccountState.SetAccountDate(accountModel))
         }, catchBlock = { error ->
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
             mutableFlow.postValue(EditAccountState.ErrorLoadingAccount)
         })
     }

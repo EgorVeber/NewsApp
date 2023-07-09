@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.TopNewsViewPagerFragmentBinding
-import ru.gb.veber.newsapi.presentation.activity.BackPressedListener
+import ru.gb.veber.newsapi.presentation.activity.callbackhell.BackPressedListener
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.BUSINESS
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.ENTERTAINMENT
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.GENERAL
@@ -20,6 +17,9 @@ import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapte
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SCIENCE
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.SPORTS
 import ru.gb.veber.newsapi.presentation.topnews.viewpager.TopNewsViewPagerAdapter.Companion.TECHNOLOGY
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_core.databinding.TopNewsViewPagerFragmentBinding
 import javax.inject.Inject
 
 class TopNewsViewPagerFragment : Fragment(),
@@ -47,7 +47,7 @@ class TopNewsViewPagerFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         App.instance.appComponent.inject(this)
-        initialization(arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+        initialization(arguments?.getInt(BUNDLE_ACCOUNT_ID_KEY) ?: ACCOUNT_ID_DEFAULT)
     }
 
     private fun initialization(accountID: Int) {
@@ -55,13 +55,13 @@ class TopNewsViewPagerFragment : Fragment(),
             TopNewsViewPagerAdapter(requireActivity(), accountID)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
-                BUSINESS -> tab.text = getString(R.string.categoryBusiness)
-                ENTERTAINMENT -> tab.text = getString(R.string.categoryEntertainment)
-                GENERAL -> tab.text = getString(R.string.categoryGeneral)
-                HEALTH -> tab.text = getString(R.string.categoryHealth)
-                SCIENCE -> tab.text = getString(R.string.categoryScience)
-                SPORTS -> tab.text = getString(R.string.categorySports)
-                TECHNOLOGY -> tab.text = getString(R.string.categoryTechnology)
+                BUSINESS -> tab.text = getString(UiCoreStrings.categoryBusiness)
+                ENTERTAINMENT -> tab.text = getString(UiCoreStrings.categoryEntertainment)
+                GENERAL -> tab.text = getString(UiCoreStrings.categoryGeneral)
+                HEALTH -> tab.text = getString(UiCoreStrings.categoryHealth)
+                SCIENCE -> tab.text = getString(UiCoreStrings.categoryScience)
+                SPORTS -> tab.text = getString(UiCoreStrings.categorySports)
+                TECHNOLOGY -> tab.text = getString(UiCoreStrings.categoryTechnology)
             }
         }.attach()
     }
@@ -79,7 +79,7 @@ class TopNewsViewPagerFragment : Fragment(),
         fun getInstance(accountID: Int): TopNewsViewPagerFragment {
             return TopNewsViewPagerFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ACCOUNT_ID, accountID)
+                    putInt(BUNDLE_ACCOUNT_ID_KEY, accountID)
                 }
             }
         }
@@ -87,6 +87,7 @@ class TopNewsViewPagerFragment : Fragment(),
 
     override fun updateViewPager() {
         binding.viewPager.adapter = TopNewsViewPagerAdapter(requireActivity(),
-            arguments?.getInt(ACCOUNT_ID) ?: ACCOUNT_ID_DEFAULT)
+            arguments?.getInt(BUNDLE_ACCOUNT_ID_KEY) ?: ACCOUNT_ID_DEFAULT
+        )
     }
 }

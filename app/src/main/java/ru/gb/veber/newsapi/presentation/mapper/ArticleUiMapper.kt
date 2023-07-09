@@ -1,16 +1,17 @@
 package ru.gb.veber.newsapi.presentation.mapper
 
-import ru.gb.veber.newsapi.R
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.equalsByFormat
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.getCurrentDateMinusDay
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toDateFormatDateServerResponse
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toFormatDateDefault
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateHourMinutes
-import ru.gb.veber.newsapi.common.extentions.DateFormatter.toStringFormatDateDefault
-import ru.gb.veber.newsapi.common.extentions.getStringByResId
+import androidx.annotation.StringRes
+import ru.gb.veber.newsapi.common.UiCoreStrings
+import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.domain.models.ArticleModel
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
+import ru.gb.veber.ui_common.utils.DateFormatter.equalsByFormat
+import ru.gb.veber.ui_common.utils.DateFormatter.getCurrentDateMinusDay
+import ru.gb.veber.ui_common.utils.DateFormatter.toDateFormatDateServerResponse
+import ru.gb.veber.ui_common.utils.DateFormatter.toFormatDateDefault
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateDefault
+import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateHourMinutes
 import java.util.Date
 
 fun ArticleUiModel.toArticleModel(): ArticleModel =
@@ -34,8 +35,8 @@ fun ArticleModel.toArticleUiModel(
     viewType: Int = BaseViewHolder.VIEW_TYPE_TOP_NEWS,
 ): ArticleUiModel {
     //TODO Подумать про стринг провайдер или что то со строками придумать константы ?
-    val anonymousOnStr = getStringByResId(R.string.anonymous_author)
-    val readOnStr = getStringByResId(R.string.readOn)
+    val anonymousOnStr = getStringByResId(UiCoreStrings.anonymous_author)
+    val readOnStr = getStringByResId(UiCoreStrings.readOn)
 
     return ArticleUiModel(
         id = id,
@@ -52,9 +53,12 @@ fun ArticleModel.toArticleUiModel(
     )
 }
 
+private fun getStringByResId(@StringRes resId: Int) =
+    App.instance.applicationContext.getString(resId)
+
 private fun getDayPublishing(publishedAt: String): String {
-    val todayStr = getStringByResId(R.string.today)
-    val yesterdayStr = getStringByResId(R.string.yesterday)
+    val todayStr = getStringByResId(UiCoreStrings.today)
+    val yesterdayStr = getStringByResId(UiCoreStrings.yesterday)
 
     val publishedDate: Date = publishedAt.toDateFormatDateServerResponse()
 

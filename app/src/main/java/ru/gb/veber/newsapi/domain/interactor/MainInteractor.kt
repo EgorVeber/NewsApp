@@ -1,6 +1,6 @@
 package ru.gb.veber.newsapi.domain.interactor
 
-import ru.gb.veber.newsapi.data.AccountDataSource
+import ru.gb.veber.newsapi.common.PrefsAccountHelper
 import ru.gb.veber.newsapi.domain.models.CountryModel
 import ru.gb.veber.newsapi.domain.models.SourcesModel
 import ru.gb.veber.newsapi.domain.repository.CountryRepo
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class MainInteractor @Inject constructor(
     private val newsRepoImpl: NewsRepo,
-    private val sharedPreferenceAccount: AccountDataSource,
+    private val sharedPreferenceAccount: PrefsAccountHelper,
     private val sourcesRepoImpl: SourcesRepo,
     private val countryRepoImpl: CountryRepo,
 ) {

@@ -2,14 +2,17 @@ package ru.gb.veber.newsapi.data
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.gb.veber.newsapi.common.utils.EVERYTHING
-import ru.gb.veber.newsapi.common.utils.TOP_HEADLINES
-import ru.gb.veber.newsapi.common.utils.TOP_HEADLINES_SOURCES
 import ru.gb.veber.newsapi.data.models.ArticlesBaseResponse
 import ru.gb.veber.newsapi.data.models.SourcesBaseResponse
 
 //TODO Разделить на несколько сервисов
 interface NewsService {
+    companion object {
+        //TODO разделить на Api
+        const val TOP_HEADLINES = "top-headlines"
+        const val TOP_HEADLINES_SOURCES = "top-headlines/sources"
+        const val EVERYTHING = "everything"
+    }
 
     @GET(TOP_HEADLINES)
     suspend fun getTopicalHeadlinesCountryCategoryKeywordV2(

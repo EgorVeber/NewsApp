@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupSearchIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="helperTextSortedBy,spinnerSortBy,searchBlock,spinnerSearchIn,helperTextSearchIn" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupSources"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="spinnerSortBySources,helperTextSources,selectDate" />
+
+    <LinearLayout
+        android:id="@+id/searchBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:background="@drawable/search_view_background"
+        android:paddingLeft="@dimen/padding_10"
+        android:paddingRight="@dimen/padding_10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_baseline_search_24"
+            android:backgroundTint="@color/color_black" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_view_title"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_view_background"
+                android:layout_margin="@dimen/margin_5"
+                android:hint="@string/searchNewsKey"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:lines="1"
+                android:visibility="invisible" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinnerSearchIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:entries="@array/searchInArray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBlock" />
+
+    <TextView
+        android:id="@+id/helperTextSearchIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_10"
+        android:text="@string/search_keyword_in"
+        android:textColor="@color/helper_text_app"
+        android:textSize="@dimen/text_size_helper_text"
+        app:layout_constraintEnd_toEndOf="@id/spinnerSearchIn"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@id/spinnerSearchIn"
+        app:layout_constraintTop_toBottomOf="@id/spinnerSearchIn" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinnerSortBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:entries="@array/sortBy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBlock" />
+
+    <TextView
+        android:id="@+id/helperTextSortedBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_10"
+        android:text="@string/sorting"
+        android:textColor="@color/helper_text_app"
+        android:textSize="@dimen/text_size_helper_text"
+        app:layout_constraintEnd_toEndOf="@id/spinnerSortBy"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@id/spinnerSortBy"
+        app:layout_constraintTop_toBottomOf="@id/spinnerSortBy" />
+
+    <TextView
+        android:id="@+id/titleFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:text="@string/select_sources"
+        android:textColor="@color/color_title_search"
+        android:textSize="@dimen/text_size_title_filter"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/helperTextSearchIn" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchTextInput"
+        style="@style/MyFilledBox"
+        android:layout_width="0dp"
+        android:layout_margin="@dimen/margin_10"
+        android:hint="@string/default_all_sources"
+        app:hintTextColor="@color/color_primary_app"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleFilter">
+
+        <ru.gb.veber.ui_core.view.DropDownList
+            android:id="@+id/searchSpinnerCountry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:paddingStart="@dimen/padding_5" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="titleHistory,deleteHistoryAll,recyclerHistoryBlock" />
+
+    <TextView
+        android:id="@+id/titleHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:text="@string/history_request"
+        android:textColor="@color/color_title_search"
+        android:textSize="@dimen/text_size_title_filter"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/helperTextSources" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/deleteHistoryAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/margin_10"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_baseline_delete_36"
+        app:layout_constraintBottom_toBottomOf="@id/titleHistory"
+        app:layout_constraintStart_toEndOf="@+id/titleHistory"
+        app:layout_constraintTop_toTopOf="@+id/titleHistory" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/recyclerHistoryBlock"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_10"
+        app:layout_constraintBottom_toTopOf="@id/searchSourcesButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleHistory">
+
+        <TextView
+            android:id="@+id/statusTextHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="@string/empty_list"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/empty_list_history" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkBoxSearchSources"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_10"
+        android:text="@string/search_news_only_sources"
+        app:layout_constraintBottom_toBottomOf="@+id/titleFilter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/titleFilter" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinnerSortBySources"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_marginBottom="@dimen/margin_10"
+        android:entries="@array/sortBySources"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchTextInput" />
+
+    <TextView
+        android:id="@+id/helperTextSources"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sorting"
+        android:textColor="@color/helper_text_app"
+        android:textSize="@dimen/text_size_helper_text"
+        app:layout_constraintEnd_toEndOf="@id/spinnerSortBySources"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@id/spinnerSortBySources"
+        app:layout_constraintTop_toBottomOf="@id/spinnerSortBySources" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/selectDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:backgroundTint="@color/color_primary_app"
+        android:text="@string/select_date"
+        app:layout_constraintBottom_toBottomOf="@+id/spinnerSortBySources"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/spinnerSortBySources" />
+
+    <TextView
+        android:id="@+id/errorDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:singleLine="true"
+        android:text="@string/invalid_date"
+        android:textColor="@color/color_error_like"
+        android:visibility="gone"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintTop_toBottomOf="@+id/selectDate" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/searchSourcesButton"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/height_size_button_default"
+        android:layout_marginBottom="@dimen/margin_5"
+        android:alpha="0.5"
+        android:backgroundTint="@color/color_primary_app"
+        android:text="@string/search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <FrameLayout
+        android:id="@+id/search_enot_block"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchBlock" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

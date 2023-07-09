@@ -4,27 +4,26 @@ import KeysDialogFragment
 import android.transition.TransitionManager
 import androidx.fragment.app.setFragmentResultListener
 import com.github.terrakok.cicerone.Router
-import ru.gb.veber.newsapi.common.base.NewsFragment
-import ru.gb.veber.newsapi.common.extentions.hide
-import ru.gb.veber.newsapi.common.extentions.observeFlow
-import ru.gb.veber.newsapi.common.extentions.show
-import ru.gb.veber.newsapi.common.screen.WebViewScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.BundleInt
-import ru.gb.veber.newsapi.common.utils.PAGE_GET_KEY
 import ru.gb.veber.newsapi.core.App
-import ru.gb.veber.newsapi.databinding.KeysManagementFragmentBinding
+import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.domain.models.ApiKeysModel
+import ru.gb.veber.newsapi.presentation.base.NewsFragment
 import ru.gb.veber.newsapi.presentation.keymanagement.recycler.KeysListener
 import ru.gb.veber.newsapi.presentation.keymanagement.recycler.KeysManagementAdapter
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
+import ru.gb.veber.ui_common.coroutine.observeFlow
+import ru.gb.veber.ui_common.hide
+import ru.gb.veber.ui_common.show
+import ru.gb.veber.ui_common.utils.BundleInt
+import ru.gb.veber.ui_core.databinding.KeysManagementFragmentBinding
 import javax.inject.Inject
 
 class KeysManagementFragment :
     NewsFragment<KeysManagementFragmentBinding, KeysManagementViewModel>(
         KeysManagementFragmentBinding::inflate) {
 
-    private var accountId: Int by BundleInt(ACCOUNT_ID, ACCOUNT_ID_DEFAULT)
+    private var accountId: Int by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
 
     @Inject
     lateinit var router: Router
@@ -59,7 +58,7 @@ class KeysManagementFragment :
         }
 
         binding.goToSiteB.setOnClickListener {
-            router.navigateTo(WebViewScreen(PAGE_GET_KEY))
+            router.navigateTo(WebViewScreen(REGISTER_NEW_KEY))
         }
     }
 
@@ -99,6 +98,7 @@ class KeysManagementFragment :
     companion object {
         const val RESULT_KEY_LISTENER = "RESULT_KEY_LISTENER"
         const val RESULT_KEY_DATA = "RESULT_KEY_DATA"
+        const val REGISTER_NEW_KEY = "https://newsapi.org/register"
         fun getInstance(accountId: Int) = KeysManagementFragment().apply {
             this.accountId = accountId
         }

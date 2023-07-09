@@ -6,7 +6,7 @@ import android.net.Network
 import android.net.NetworkRequest
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
+import ru.gb.veber.ui_common.coroutine.SingleSharedFlow
 
 class ConnectivityListener(context: Context) {
 

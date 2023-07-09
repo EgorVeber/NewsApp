@@ -9,20 +9,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import ru.gb.veber.newsapi.common.ConnectivityListener
-import ru.gb.veber.newsapi.common.extentions.SingleSharedFlow
-import ru.gb.veber.newsapi.common.extentions.launchJob
-import ru.gb.veber.newsapi.common.screen.FavoritesViewPagerScreen
-import ru.gb.veber.newsapi.common.screen.ProfileScreen
-import ru.gb.veber.newsapi.common.screen.SearchScreen
-import ru.gb.veber.newsapi.common.screen.SourcesScreen
-import ru.gb.veber.newsapi.common.screen.TopNewsViewPagerScreen
-import ru.gb.veber.newsapi.common.utils.ACCOUNT_ID_DEFAULT
-import ru.gb.veber.newsapi.common.utils.API_KEY_NEWS
-import ru.gb.veber.newsapi.common.utils.ERROR_DB
-import ru.gb.veber.newsapi.common.utils.ERROR_LOAD_NEWS
+import ru.gb.veber.newsapi.core.FavoritesViewPagerScreen
+import ru.gb.veber.newsapi.core.ProfileScreen
+import ru.gb.veber.newsapi.core.SearchScreen
+import ru.gb.veber.newsapi.core.SourcesScreen
+import ru.gb.veber.newsapi.core.TopNewsViewPagerScreen
 import ru.gb.veber.newsapi.domain.interactor.MainInteractor
 import ru.gb.veber.newsapi.domain.models.CountryModel
 import ru.gb.veber.newsapi.domain.models.SourcesModel
+import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
+import ru.gb.veber.ui_common.API_KEY_NEWS
+import ru.gb.veber.ui_common.TAG_DB_ERROR
+import ru.gb.veber.ui_common.TAG_LOAD_NEWS_ERROR
+import ru.gb.veber.ui_common.coroutine.SingleSharedFlow
+import ru.gb.veber.ui_common.coroutine.launchJob
 import javax.inject.Inject
 
 class ActivityMainViewModel @Inject constructor(
@@ -44,7 +44,7 @@ class ActivityMainViewModel @Inject constructor(
                 connectionState.emit(statusNetwork)
             }
         }, catchBlock = { error ->
-            Log.d(ERROR_LOAD_NEWS, error.toString())
+            Log.d(TAG_LOAD_NEWS_ERROR, error.toString())
         })
     }
 
@@ -120,7 +120,7 @@ class ActivityMainViewModel @Inject constructor(
 
         }, catchBlock = { error ->
             mutableFlow.value = ViewMainState.ErrorSourcesDownload
-            Log.d(ERROR_DB, error.localizedMessage)
+            Log.d(TAG_DB_ERROR, error.localizedMessage)
         })
     }
 
