@@ -13,6 +13,7 @@ data class ArticleUiModel(
     var url: String,
     var urlToImage: String,
     var viewType: Int = 0,
+    //TODO возможно стоит убрать дефолтные значения в мапперах тогда хуйнина
     var isHistory: Boolean = false,
     var isFavorites: Boolean = false,
     var dateAdded: String,

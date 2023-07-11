@@ -1,7 +1,7 @@
 package ru.gb.veber.newsapi.domain.models
 
 data class ArticleModel(
-    var id: Int,// TODO понять нужно или нект
+    var id: Int,
     var author: String,
     var description: String,
     var publishedAt: String,
@@ -12,5 +12,4 @@ data class ArticleModel(
     var isHistory: Boolean = false,
     var isFavorites: Boolean = false,
     var dateAdded: String,
-    var showHistory: Boolean = true,
 )

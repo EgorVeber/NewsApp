@@ -10,7 +10,7 @@ import ru.gb.veber.ui_common.BUNDLE_ACCOUNT_ID_KEY
 import ru.gb.veber.ui_common.KEY_THEME_DARK
 import ru.gb.veber.ui_common.KEY_THEME_DEFAULT
 
-//TODO нужен контекст подумать как вынетси в другой модуль
+//TODO нужен контекст подумать как вынетси в другой модуль и разделить на несколько класов
 object PrefsAccountHelper {
     private const val PREFS_SETTINGS = "PREFS_SETTINGS"
     private const val PREFS_THEME_KEY = "PREFS_THEME_KEY"

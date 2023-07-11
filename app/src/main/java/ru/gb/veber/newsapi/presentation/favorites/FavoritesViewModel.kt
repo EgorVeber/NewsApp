@@ -33,138 +33,112 @@ class FavoritesViewModel @Inject constructor(
         return true
     }
 
-    fun getAccountArticle(accountID: Int, page: String) {
+    fun getAccountArticle(accountID: Int, isFavoritesPage: Boolean) {
+        _uiState.value = FavoritesState.Loading
         accountIdS = accountID
         if (accountID != ACCOUNT_ID_DEFAULT) {
-            if (page == FavoritesViewPagerAdapter.FAVORITES) {
-                _uiState.value = FavoritesState.Loading
-                viewModelScope.launchJob(tryBlock = {
-                    val listArticle = favoritesInteractor.getLikeArticle(accountID)
-                    if (listArticle.isEmpty()) {
-                        _uiState.postValue(FavoritesState.EmptyList)
-                    } else {
-                        //TODO сделать нормально
-                        val changedUiArticleList =
-                            listArticle.reversed().map { article ->
-                                article.publishedAt = article.publishedAt.toFormatDateDefault()
-                                article.toArticleUiModel(viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS)
-                            }
-                        _uiState.postValue(FavoritesState.SetSources(changedUiArticleList))
-                    }
-                },
-                    catchBlock = { error ->
-                        error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
-                    }
-                )
-            } else {
-                _uiState.value = FavoritesState.Loading
-                viewModelScope.launchJob(tryBlock = {
-                    val listArticle = favoritesInteractor.getHistoryArticle(accountID)
-                    if (listArticle.isEmpty()) {
-                        _uiState.postValue(FavoritesState.EmptyList)
-                    } else {
-                        listSave = favoritesInteractor.getListArticleGroupByDate(listArticle)
-                            .toMutableList()
-                        listSave.map { articleUiModel ->
-                            if (articleUiModel.title == SHOW_HISTORY) {
-                                articleUiModel.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
-                            }
-                        }
-                        _uiState.postValue(FavoritesState.SetSources(listSave))
-                    }
-                }, catchBlock = { error ->
-                    error.localizedMessage?.let {
-                        Log.d(TAG_DB_ERROR, it)
-                    }
-                })
-            }
+            if (isFavoritesPage) getFavoritesArticle(accountID)
+            else getHistoryArticle(accountID)
         } else {
             _uiState.value = FavoritesState.NotAuthorized
         }
     }
 
-    fun clickNews(articleUiModel: ArticleUiModel) {
-        _uiState.value = FavoritesState.ClickNews(articleUiModel)
+    private fun getFavoritesArticle(accountID: Int) {
+        viewModelScope.launchJob(
+            tryBlock = {
+                val listArticle = favoritesInteractor.getLikeArticle(accountID)
+                if (listArticle.isEmpty()) {
+                    _uiState.postValue(FavoritesState.EmptyList)
+                    return@launchJob
+                }
+                listArticle.map { article ->
+                    article.toArticleUiModel(
+                        noChangeDateFormat = true,
+                        viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
+                    )
+                }.run {
+                    _uiState.postValue(FavoritesState.SetSources(this))
+                }
+            },
+            catchBlock = { error ->
+                error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
+            }
+        )
+    }
+
+    private fun getHistoryArticle(accountID: Int) {
+        viewModelScope.launchJob(tryBlock = {
+            val listGrouping =
+                favoritesInteractor.getListArticlesGroupByDate(accountID, SHOW_HISTORY)
+                    .map { article ->
+                        article.toArticleUiModel(
+                            true,
+                            BaseViewHolder.VIEW_TYPE_HISTORY_NEWS
+                        )
+                    }
+            if (listGrouping.isEmpty()) {
+                _uiState.postValue(FavoritesState.EmptyList)
+                return@launchJob
+            }
+
+            listSave = listGrouping.map { articleUiModel ->
+                if (articleUiModel.title == SHOW_HISTORY) {
+                    articleUiModel.viewType = BaseViewHolder.VIEW_TYPE_HISTORY_HEADER
+                }
+                articleUiModel
+            }.toMutableList()
+
+
+            _uiState.postValue(FavoritesState.SetSources(listSave))
+
+        }, catchBlock = { error ->
+            error.localizedMessage?.let {
+                Log.d(TAG_DB_ERROR, it)
+            }
+        })
     }
 
     fun deleteFavorites(articleUiModel: ArticleUiModel) {
-        articleUiModel.title?.let { title ->
-            viewModelScope.launchJob(tryBlock = {
-                favoritesInteractor.deleteArticleFavorites(title, accountIdS)
-                val art = (favoritesInteractor.getLikeArticle(accountIdS))
-                val artModifiedList = art.reversed().map { article ->
-                    article.publishedAt = article.publishedAt.toFormatDateDefault()
-                    article.toArticleUiModel(viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS)
-                }
-                _uiState.postValue(
-                    FavoritesState.SetSources(artModifiedList)
-                )
-            }, catchBlock = { error ->
-                error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
-            })
-        }
-    }
-
-    fun openScreenWebView(url: String) {
-        router.navigateTo(WebViewScreen(url))
+        viewModelScope.launchJob(tryBlock = {
+            favoritesInteractor.deleteArticleFavorites(articleUiModel.title, accountIdS)
+            getFavoritesArticle(accountIdS)
+        }, catchBlock = { error ->
+            error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
+        })
     }
 
     fun deleteHistory(articleUiModel: ArticleUiModel) {
-        articleUiModel.title?.let { title ->
-            viewModelScope.launchJob(tryBlock = {
-                favoritesInteractor.deleteArticleHistory(title, accountIdS)
-                val art = favoritesInteractor.getHistoryArticle(accountIdS)
-                listSave = favoritesInteractor.getListArticleGroupByDate(art).toMutableList()
-                listSave.map { articleUiModel ->
-                    if (articleUiModel.title == SHOW_HISTORY) {
-                        articleUiModel.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
-                    }
-                }
-                _uiState.postValue(FavoritesState.SetSources(listSave))
-            }, catchBlock = { error ->
-                error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
-            })
-        }
+        viewModelScope.launchJob(tryBlock = {
+            favoritesInteractor.deleteArticleHistory(articleUiModel.title, accountIdS)
+            getHistoryArticle(accountIdS)
+        }, catchBlock = { error ->
+            error.localizedMessage?.let { Log.d(TAG_DB_ERROR, it) }
+        })
     }
 
     fun clickGroupHistory(articleUiModel: ArticleUiModel) {
-        listSave.forEach {
-            Log.d("clickGroupHistory", it.toString())
+        listSave.forEach { article ->
+            if (article.dateAdded == articleUiModel.dateAdded) {
+                article.showHistory = articleUiModel.title != SHOW_HISTORY
+            }
         }
-        Log.d(
-            "clickGroupHistory",
-            "clickGroupHistory() called with: articleUiModel = $articleUiModel"
-        )
 
         if (articleUiModel.title == SHOW_HISTORY) {
-            listSave.forEach {
-                if (it.dateAdded == articleUiModel.publishedAt) {
-                    it.showHistory = false
-                }
-            }
             articleUiModel.title = HIDE_HISTORY
-            _uiState.value = FavoritesState.SetSources(listSave.filter { it.showHistory })
+            articleUiModel.showHistory = true
         } else {
-            listSave.forEach {
-                if (it.dateAdded == articleUiModel.publishedAt) {
-                    it.showHistory = true
-                }
-            }
             articleUiModel.title = SHOW_HISTORY
-            _uiState.value = FavoritesState.SetSources(listSave.filter { it.showHistory })
         }
+
+        val filteredList = listSave.filter { article -> article.showHistory }
+        _uiState.value = FavoritesState.SetSources(filteredList)
     }
 
     fun deleteGroupHistory(articleUiModel: ArticleUiModel) {
         viewModelScope.launchJob(tryBlock = {
-            favoritesInteractor.deleteArticleHistoryGroup(accountIdS, articleUiModel.publishedAt)
-            val list = favoritesInteractor.getHistoryArticle(accountIdS)
-            listSave = favoritesInteractor.getListArticleGroupByDate(list).toMutableList()
-            listSave.map { articleUiModel ->
-                if (articleUiModel.title == SHOW_HISTORY) {
-                    articleUiModel.viewType = BaseViewHolder.VIEW_TYPE_FAVORITES_NEWS
-                }
-            }
+            favoritesInteractor.deleteArticleHistoryGroup(accountIdS, articleUiModel.dateAdded)
+            getHistoryArticle(accountIdS)
             _uiState.postValue(FavoritesState.SetSources(listSave))
         }, catchBlock = { error ->
             error.localizedMessage?.let {
@@ -172,6 +146,14 @@ class FavoritesViewModel @Inject constructor(
                 Log.d(TAG_DB_ERROR, it)
             }
         })
+    }
+
+    fun clickNews(articleUiModel: ArticleUiModel) {
+        _uiState.value = FavoritesState.ClickNews(articleUiModel)
+    }
+
+    fun openScreenWebView(url: String) {
+        router.navigateTo(WebViewScreen(url))
     }
 
     sealed class FavoritesState {
@@ -184,7 +166,6 @@ class FavoritesViewModel @Inject constructor(
     }
 
     companion object {
-        //TODO  две константы подумать куда вынести
         private const val SHOW_HISTORY = "SHOW_HISTORY"
         private const val HIDE_HISTORY = "HIDE_HISTORY"
     }

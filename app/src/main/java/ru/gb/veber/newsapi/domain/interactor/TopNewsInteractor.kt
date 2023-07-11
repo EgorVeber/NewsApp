@@ -1,5 +1,6 @@
 package ru.gb.veber.newsapi.domain.interactor
 
+import android.util.Log
 import ru.gb.veber.newsapi.common.PrefsAccountHelper
 import ru.gb.veber.newsapi.domain.models.AccountModel
 import ru.gb.veber.newsapi.domain.models.ArticleModel
@@ -35,7 +36,7 @@ class TopNewsInteractor @Inject constructor(
     }
 
     suspend fun deleteArticleByIdFavoritesV2(toString: String, accountId: Int) {
-        articleRepoImpl.deleteArticleByIdFavoritesV2(toString, accountId)
+        articleRepoImpl.deleteArticleByIdFavorites(toString, accountId)
     }
 
     suspend fun getAccount(accountId: Int): AccountModel {
@@ -61,6 +62,10 @@ class TopNewsInteractor @Inject constructor(
         if (accountId == ACCOUNT_ID_DEFAULT) return articlesApi
 
         val articlesHistory = getArticleById(accountId)
+
+        articlesHistory.forEach {
+            Log.d("articlesHistory",it.isFavorites.toString() +  it.title)
+        }
 
         articlesHistory.forEach { articleHistory ->
             articlesApi.forEach { articleApi ->

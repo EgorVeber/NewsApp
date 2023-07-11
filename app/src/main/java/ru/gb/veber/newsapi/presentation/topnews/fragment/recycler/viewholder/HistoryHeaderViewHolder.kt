@@ -10,7 +10,7 @@ class HistoryHeaderViewHolder(
 ) : BaseViewHolder(binding.root) {
 
     override fun bind(item: ArticleUiModel) = with(binding) {
-        dateAdded.text = item.publishedAt
+        dateAdded.text = item.dateAdded
         sizeNews.text = item.author
         dateAdded.setOnClickListener {
             listener.clickGroupHistory(item)

@@ -12,6 +12,7 @@ import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.common.getAppComponent
 import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventShareLink
 import ru.gb.veber.newsapi.presentation.base.NewsFragment
+import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
@@ -80,7 +81,7 @@ class FavoritesFragment :
     }
 
     override fun onViewInited() {
-        viewModel.getAccountArticle(accountID, tagPage)
+        viewModel.getAccountArticle(accountID, tagPage == FAVORITES )
     }
 
     override fun getStateBehavior(): Int {
@@ -154,9 +155,6 @@ class FavoritesFragment :
 
     private fun setSources(list: List<ArticleUiModel>) {
         TransitionManager.beginDelayedTransition(binding.root)
-        if (list.isEmpty()) {
-            emptyList()
-        }
         historyAdapter.articleModels = list
         binding.likeRecycler.show()
     }
@@ -172,8 +170,10 @@ class FavoritesFragment :
     }
 
     private fun emptyList() {
+        TransitionManager.beginDelayedTransition(binding.root)
         binding.statusTextLike.show()
         binding.statusTextLike.text = getString(UiCoreStrings.empty_list)
+        binding.likeRecycler.hide()
     }
 
     private fun toastDeleteHistoryError() {
