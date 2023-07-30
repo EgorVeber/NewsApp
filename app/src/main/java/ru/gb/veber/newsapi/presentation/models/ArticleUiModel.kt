@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.presentation.models
 
 import ru.gb.veber.newsapi.domain.models.SourceModel
+import ru.gb.veber.newsapi.presentation.favorites.delegate.ListItem
 
 data class ArticleUiModel(
     var id: Int,
@@ -18,4 +19,4 @@ data class ArticleUiModel(
     var isFavorites: Boolean = false,
     var dateAdded: String,
     var showHistory: Boolean = true,
-)
+) : ListItem

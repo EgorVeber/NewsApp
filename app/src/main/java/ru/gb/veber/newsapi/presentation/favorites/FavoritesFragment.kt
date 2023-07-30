@@ -7,12 +7,15 @@ import android.transition.TransitionManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import ru.gb.veber.newsapi.common.UiCoreDrawable
 import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.common.getAppComponent
 import ru.gb.veber.newsapi.presentation.activity.callbackhell.EventShareLink
 import ru.gb.veber.newsapi.presentation.base.NewsFragment
-import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter
+import ru.gb.veber.newsapi.presentation.favorites.delegate.DelegateAdapter.getArticleHistoryDelegate
+import ru.gb.veber.newsapi.presentation.favorites.delegate.DelegateAdapter.getArticleHistoryHeaderDelegate
+import ru.gb.veber.newsapi.presentation.favorites.delegate.ListItem
 import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter.Companion.FAVORITES
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.EventBehaviorToActivity
@@ -59,8 +62,14 @@ class FavoritesFragment :
     }
 
     private lateinit var bSheetB: BottomSheetBehavior<ConstraintLayout>
-
     private val historyAdapter = TopNewsAdapter(itemListener)
+
+    private val adapterDelegate = ListDelegationAdapter(
+        getArticleHistoryDelegate(itemListener),
+        getArticleHistoryHeaderDelegate() {
+            viewModel.deleteGroupHistoryTitle(it)
+        }
+    )
 
     private var accountID by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
     private var tagPage by BundleString(BUNDLE_PAGE_KEY, FAVORITES)
@@ -69,7 +78,8 @@ class FavoritesFragment :
     override fun onInject() = getAppComponent().inject(this)
 
     override fun onInitView() {
-        binding.likeRecycler.adapter = historyAdapter
+        //  binding.likeRecycler.adapter = historyAdapter
+        binding.likeRecycler.adapter = adapterDelegate
         binding.likeRecycler.itemAnimator = null
         binding.likeRecycler.layoutManager = LinearLayoutManager(requireContext())
         bSheetB = BottomSheetBehavior.from(binding.behaviorInclude.bottomSheetContainer)
@@ -81,7 +91,7 @@ class FavoritesFragment :
     }
 
     override fun onViewInited() {
-        viewModel.getAccountArticle(accountID, tagPage == FAVORITES )
+        viewModel.getAccountArticle(accountID, tagPage == FAVORITES)
     }
 
     override fun getStateBehavior(): Int {
@@ -153,9 +163,11 @@ class FavoritesFragment :
         }
     }
 
-    private fun setSources(list: List<ArticleUiModel>) {
+    private fun setSources(list: List<ListItem>) {
         TransitionManager.beginDelayedTransition(binding.root)
-        historyAdapter.articleModels = list
+        // historyAdapter.articleModels = list
+        adapterDelegate.items = list
+        adapterDelegate.notifyDataSetChanged()
         binding.likeRecycler.show()
     }
 

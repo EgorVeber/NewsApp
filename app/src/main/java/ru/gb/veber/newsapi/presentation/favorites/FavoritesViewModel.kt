@@ -7,15 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.github.terrakok.cicerone.Router
 import ru.gb.veber.newsapi.core.WebViewScreen
 import ru.gb.veber.newsapi.domain.interactor.FavoritesInteractor
+import ru.gb.veber.newsapi.domain.models.ArticleModel
 import ru.gb.veber.newsapi.presentation.base.NewsViewModel
-import ru.gb.veber.newsapi.presentation.favorites.viewpager.FavoritesViewPagerAdapter
+import ru.gb.veber.newsapi.presentation.favorites.delegate.ListItem
 import ru.gb.veber.newsapi.presentation.mapper.toArticleUiModel
+import ru.gb.veber.newsapi.presentation.models.ArticleHistoryHeader
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import ru.gb.veber.ui_common.ACCOUNT_ID_DEFAULT
 import ru.gb.veber.ui_common.TAG_DB_ERROR
 import ru.gb.veber.ui_common.coroutine.launchJob
-import ru.gb.veber.ui_common.utils.DateFormatter.toFormatDateDefault
 import javax.inject.Inject
 
 class FavoritesViewModel @Inject constructor(
@@ -38,7 +39,7 @@ class FavoritesViewModel @Inject constructor(
         accountIdS = accountID
         if (accountID != ACCOUNT_ID_DEFAULT) {
             if (isFavoritesPage) getFavoritesArticle(accountID)
-            else getHistoryArticle(accountID)
+            else getHistoryNewItemArticle(accountID)
         } else {
             _uiState.value = FavoritesState.NotAuthorized
         }
@@ -88,8 +89,6 @@ class FavoritesViewModel @Inject constructor(
                 }
                 articleUiModel
             }.toMutableList()
-
-
             _uiState.postValue(FavoritesState.SetSources(listSave))
 
         }, catchBlock = { error ->
@@ -98,6 +97,46 @@ class FavoritesViewModel @Inject constructor(
             }
         })
     }
+
+    private fun getHistoryNewItemArticle(accountID: Int) {
+        viewModelScope.launchJob(tryBlock = {
+            val listHistory: List<ArticleUiModel> =
+                favoritesInteractor.getHistoryArticle(accountID).map { it.toArticleUiModel() }
+            val newList = createAdapterItem(listHistory)
+
+            _uiState.postValue(FavoritesState.SetSources(newList))
+        }, catchBlock = { error ->
+            error.localizedMessage?.let {
+                Log.d(TAG_DB_ERROR, it)
+            }
+        })
+    }
+
+
+    private fun createAdapterItem(listHistory: List<ArticleUiModel>): MutableList<ListItem> {
+        val mutableList: MutableList<ListItem> = mutableListOf()
+        listHistory.reversed().sortedBy { reversedArticle ->
+            reversedArticle.dateAdded
+        }.reversed().groupBy { groupArticle ->
+            groupArticle.dateAdded
+        }.forEach { group ->
+            mutableList.add(createHeaderItem((group.key), group.value.size, SHOW_HISTORY))
+            group.value.reversed().forEach { groupReversedArticle ->
+                mutableList.add(groupReversedArticle)
+            }
+        }
+        return mutableList
+    }
+
+    private fun createHeaderItem(
+        groupTitleDate: String,
+        countArticleDate: Int,
+        title: String,
+    ) = ArticleHistoryHeader(
+        dateAdded = groupTitleDate,
+        sizeArticle = countArticleDate.toString(),
+        title = title
+    )
 
     fun deleteFavorites(articleUiModel: ArticleUiModel) {
         viewModelScope.launchJob(tryBlock = {
@@ -139,6 +178,18 @@ class FavoritesViewModel @Inject constructor(
         viewModelScope.launchJob(tryBlock = {
             favoritesInteractor.deleteArticleHistoryGroup(accountIdS, articleUiModel.dateAdded)
             getHistoryArticle(accountIdS)
+        }, catchBlock = { error ->
+            error.localizedMessage?.let {
+                _uiState.postValue(FavoritesState.ErrorDeleteGroup)
+                Log.d(TAG_DB_ERROR, it)
+            }
+        })
+    }
+
+    fun deleteGroupHistoryTitle(dateAdded: String) {
+        viewModelScope.launchJob(tryBlock = {
+            favoritesInteractor.deleteArticleHistoryGroup(accountIdS, dateAdded)
+            getHistoryNewItemArticle(accountIdS)
             _uiState.postValue(FavoritesState.SetSources(listSave))
         }, catchBlock = { error ->
             error.localizedMessage?.let {
@@ -158,7 +209,7 @@ class FavoritesViewModel @Inject constructor(
 
     sealed class FavoritesState {
         data class ClickNews(val articleModel: ArticleUiModel) : FavoritesState()
-        data class SetSources(val articleModels: List<ArticleUiModel>) : FavoritesState()
+        data class SetSources(val articleModels: List<ListItem>) : FavoritesState()
         object EmptyList : FavoritesState()
         object Loading : FavoritesState()
         object NotAuthorized : FavoritesState()

@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.core.App
 import ru.gb.veber.newsapi.domain.models.ArticleModel
+import ru.gb.veber.newsapi.presentation.favorites.delegate.ListItem
 import ru.gb.veber.newsapi.presentation.models.ArticleUiModel
 import ru.gb.veber.newsapi.presentation.topnews.fragment.recycler.viewholder.BaseViewHolder
 import ru.gb.veber.ui_common.utils.DateFormatter.equalsByFormat

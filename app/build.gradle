@@ -85,6 +85,10 @@ dependencies {
     //fragment ktx
     implementation "androidx.fragment:fragment-ktx:$versions.ktxFragment"
 
+    //Delegate adapter
+    implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.2'
+    implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:4.3.2'
+
     implementation project(":ui_common")
     implementation project(":ui_core")
 }

@@ -41,7 +41,7 @@ class FavoritesInteractor @Inject constructor(
         }.reversed().groupBy { groupArticle ->
             groupArticle.dateAdded
         }.forEach { group ->
-            mutableList.add(getNewHeaderArticleHistory((group.key), group.value.size,keyTitle))
+            mutableList.add(getNewHeaderArticleHistory((group.key), group.value.size, keyTitle))
             group.value.reversed().forEach { groupReversedArticle ->
                 mutableList.add(groupReversedArticle)
             }
