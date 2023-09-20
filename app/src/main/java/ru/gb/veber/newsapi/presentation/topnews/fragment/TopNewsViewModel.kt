@@ -1,6 +1,7 @@
 package ru.gb.veber.newsapi.presentation.topnews.fragment
 
 import android.util.Log
+import androidx.core.util.toAndroidPair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -43,8 +44,8 @@ class TopNewsViewModel @Inject constructor(
     private var articleModelListHistory: MutableList<ArticleUiModel> = mutableListOf()
     private var listCountryModel: MutableList<CountryModel> = mutableListOf()
 
-    private val mapAnal: MutableMap<Int, MutableList<Pair<Int, Boolean>>> = mutableMapOf()
-
+    private val mapAnal: MutableMap<Int, MutableMap<Int, Boolean>> = mutableMapOf()
+    private val mapAnal2: MutableMap<Boolean, MutableMap<Int, Int>> = mutableMapOf()
 
     fun subscribe(accountId: Int, categoryKey: String): LiveData<TopNewsState> {
         this.accountId = accountId
@@ -54,32 +55,57 @@ class TopNewsViewModel @Inject constructor(
     }
 
     fun clickNews(articleModel: ArticleUiModel) {
-        val period = Random.nextInt(0, 3)
-        val event = Random.nextInt(0, 4)
+        Log.d("mapAnal", "Do = $mapAnal")
 
-        Log.d("mapAnal", "period = $period")
-        Log.d("mapAnal", "event  = $event")
+        val period = Random.nextInt(0, 4)
+        val event = Random.nextInt(0, 11)
 
-        val currentEventList: MutableList<Pair<Int, Boolean>> = mapAnal[period] ?: mutableListOf()
-        val availableEvents: Pair<Int, Boolean>? = currentEventList.find { it.first == event }
-        if (availableEvents != null) {
-            currentEventList.remove(availableEvents)
-            if (currentEventList.isEmpty()) {
+        //val currentEventList: MutableList<Pair<Int, Boolean>> = mapAnal[period] ?: mutableListOf()
+        //val availableEvents: Pair<Int, Boolean>? = currentEventList.find { it.first == event }
+        //if (availableEvents != null) {
+        //    currentEventList.remove(availableEvents)
+        //    if (currentEventList.isEmpty()) {
+        //        mapAnal.remove(period)
+        //    } else {
+        //        mapAnal[period] = currentEventList
+        //    }
+        //} else {
+        //    currentEventList += mutableListOf(event to Random.nextBoolean())
+        //    mapAnal[period] = currentEventList
+        //}
+
+        val eventList: MutableMap<Int, Boolean> = mapAnal.getOrPut(period) { mutableMapOf() }
+        if (eventList.contains(event)) {
+            eventList.remove(event)
+            if (eventList.isEmpty()) {
                 mapAnal.remove(period)
-            } else {
-                mapAnal[period] = currentEventList
             }
         } else {
-            currentEventList += mutableListOf(event to Random.nextBoolean())
-            mapAnal[period] = currentEventList
+            eventList += mutableMapOf(event to Random.nextBoolean())
         }
-        Log.d("mapAnal", mapAnal.toString())
+
+
+        Log.d("mapAnal", "Prepare = $mapAnal")
     }
 
     fun filterButtonClick(country: String) {
-        Log.d("mapAnal", mapAnal.toString())
-    }
+        // mapAnal.clear()
+        // private val mapAnal: MutableMap<Int, MutableMap<Int, Boolean>> = mutableMapOf()
+        val list = mapAnal.map {
+            Period.getText(it.key) to it.value.filter { it.value }.keys.map { Event.getText(it) }
+        }
 
+
+        list.map { all ->
+            all.second.forEach {
+                Log.d("mapAnal", "subEvent period = " + all.first + " event = " + it)
+            }
+        }
+
+
+        //  Log.d("mapAnal", "subscribe = " + subscribeList.toString())
+        Log.d("", "unSubscribe = $list")
+    }
 
     fun clickImageFavorites(articleModel: ArticleUiModel) {
         if (articleModel.isFavorites) {
@@ -242,5 +268,53 @@ class TopNewsViewModel @Inject constructor(
         object EventNavigationBarAddBadgeFavorites : TopNewsState()
         object EventNavigationBarRemoveBadgeFavorites : TopNewsState()
         object EventUpdateViewPager : TopNewsState()
+    }
+}
+
+enum class Period(val id: Int) {
+    TYPE0(0),
+    TYPE1(1),
+    TYPE2(2),
+    TYPE3(3);
+
+    companion object {
+        fun getText(id: Int): String {
+           return when (id) {
+                TYPE0.id -> "TYPE0"
+                TYPE1.id -> "TYPE1"
+                TYPE2.id -> "TYPE2"
+                TYPE3.id -> "TYPE3"
+               else -> {"asdsadas"}
+           }
+        }
+    }
+}
+
+enum class Event(val id: Int) {
+    EVENT0(0),
+    EVENT1(1),
+    EVENT2(2),
+    EVENT3(3),
+    EVENT4(4),
+    EVENT5(5),
+    EVENT6(6),
+    EVENT7(7),
+    EVENT8(8);
+
+    companion object {
+        fun getText(id: Int): String {
+           return when (id) {
+                EVENT0.id -> "EVENT0"
+                EVENT1.id -> "EVENT1"
+                EVENT2.id -> "EVENT2"
+                EVENT3.id -> "EVENT3"
+                EVENT4.id -> "EVENT4"
+                EVENT5.id -> "EVENT5"
+                EVENT6.id -> "EVENT6"
+                EVENT7.id -> "EVENT7"
+                EVENT8.id -> "EVENT8"
+               else -> {"EVENTasdasdas8"}
+           }
+        }
     }
 }
