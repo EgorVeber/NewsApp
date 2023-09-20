@@ -24,6 +24,7 @@ import ru.gb.veber.ui_common.coroutine.launchJob
 import ru.gb.veber.ui_common.utils.DateFormatter.toStringFormatDateYearMonthDay
 import java.util.Date
 import javax.inject.Inject
+import kotlin.random.Random
 
 class TopNewsViewModel @Inject constructor(
     private val router: Router,
@@ -42,6 +43,9 @@ class TopNewsViewModel @Inject constructor(
     private var articleModelListHistory: MutableList<ArticleUiModel> = mutableListOf()
     private var listCountryModel: MutableList<CountryModel> = mutableListOf()
 
+    private val mapAnal: MutableMap<Int, MutableList<Pair<Int, Boolean>>> = mutableMapOf()
+
+
     fun subscribe(accountId: Int, categoryKey: String): LiveData<TopNewsState> {
         this.accountId = accountId
         loadNews(categoryKey)
@@ -50,16 +54,32 @@ class TopNewsViewModel @Inject constructor(
     }
 
     fun clickNews(articleModel: ArticleUiModel) {
-        if (!filterFlag) {
-            saveArticle(articleModel)
-            mutableFlow.value = TopNewsState.ClickNews(articleModel)
+        val period = Random.nextInt(0, 3)
+        val event = Random.nextInt(0, 4)
 
-            if (articleModel.isFavorites) mutableFlow.value = TopNewsState.FavoritesImageViewSetLike
-            else mutableFlow.value = TopNewsState.FavoritesImageViewSetDislike
-            mutableFlow.value = TopNewsState.HideFilterButton
-            mutableFlow.value = TopNewsState.BottomSheetExpanded
+        Log.d("mapAnal", "period = $period")
+        Log.d("mapAnal", "event  = $event")
+
+        val currentEventList: MutableList<Pair<Int, Boolean>> = mapAnal[period] ?: mutableListOf()
+        val availableEvents: Pair<Int, Boolean>? = currentEventList.find { it.first == event }
+        if (availableEvents != null) {
+            currentEventList.remove(availableEvents)
+            if (currentEventList.isEmpty()) {
+                mapAnal.remove(period)
+            } else {
+                mapAnal[period] = currentEventList
+            }
+        } else {
+            currentEventList += mutableListOf(event to Random.nextBoolean())
+            mapAnal[period] = currentEventList
         }
+        Log.d("mapAnal", mapAnal.toString())
     }
+
+    fun filterButtonClick(country: String) {
+        Log.d("mapAnal", mapAnal.toString())
+    }
+
 
     fun clickImageFavorites(articleModel: ArticleUiModel) {
         if (articleModel.isFavorites) {
@@ -84,39 +104,6 @@ class TopNewsViewModel @Inject constructor(
         return true
     }
 
-    fun filterButtonClick(country: String) {
-        if (!filterFlag) {
-            mutableFlow.value = TopNewsState.ShowFilterHideRecycler
-            filterFlag = !filterFlag
-        } else {
-            if (country.isEmpty() || !listCountryModel.map { itemCountry -> itemCountry.id }
-                    .contains(country)) {
-                mutableFlow.value = TopNewsState.ErrorSelectCountry
-            } else {
-                val countryCode = listCountryModel.find { listCountry ->
-                    listCountry.id == country
-                }?.code ?: ALL_COUNTRY_VALUE
-
-                topNewsInteractor.setAccountCountryCode(countryCode)
-                topNewsInteractor.setAccountCountry(country)
-
-                if (accountId != ACCOUNT_ID_DEFAULT) {
-                    accountModel.myCountry = country
-                    accountModel.countryCode = countryCode
-
-                    viewModelScope.launchJob(tryBlock = {
-                        topNewsInteractor.updateAccount(accountModel)
-                    }, catchBlock = { error ->
-                        Log.d(TAG_DB_ERROR, error.localizedMessage)
-                    }, finallyBlock = {
-                        mutableFlow.postValue(TopNewsState.EventUpdateViewPager)
-                    })
-                } else {
-                    mutableFlow.postValue(TopNewsState.EventUpdateViewPager)
-                }
-            }
-        }
-    }
 
     fun closeFilter(country: String) {
         if (country.isEmpty() || !listCountryModel.map { itemCountry -> itemCountry.id }
