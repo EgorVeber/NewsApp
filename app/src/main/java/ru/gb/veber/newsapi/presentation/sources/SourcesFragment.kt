@@ -1,9 +1,7 @@
 package ru.gb.veber.newsapi.presentation.sources
 
 import android.transition.TransitionManager
-import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.gb.veber.newsapi.common.UiCoreStrings
 import ru.gb.veber.newsapi.common.getAppComponent
@@ -17,13 +15,13 @@ import ru.gb.veber.ui_common.coroutine.observeFlow
 import ru.gb.veber.ui_common.utils.BundleInt
 import ru.gb.veber.ui_core.databinding.SourcesFragmentBinding
 import ru.gb.veber.ui_core.extentions.showSnackBar
+import kotlin.math.abs
 
-class SourcesFragment : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
-    SourcesFragmentBinding::inflate
-) {
+
+class SourcesFragment : NewsFragment<SourcesFragmentBinding, SourcesViewModel>
+    (SourcesFragmentBinding::inflate) {
 
     private var accountId: Int by BundleInt(BUNDLE_ACCOUNT_ID_KEY, ACCOUNT_ID_DEFAULT)
-    private var lastFocusSelected = FOCUS_DEFAULT
     override fun getViewModelClass(): Class<SourcesViewModel> = SourcesViewModel::class.java
 
     override fun onInject() = getAppComponent().inject(this)
@@ -59,7 +57,7 @@ class SourcesFragment : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
             }
         }
         viewModel.showMessageFlow.observeFlow(this) {
-            setLogin()
+
         }
     }
 
@@ -67,26 +65,8 @@ class SourcesFragment : NewsFragment<SourcesFragmentBinding, SourcesViewModel>(
         binding.recyclerSources.adapter = sourcesAdapter
         binding.recyclerSources.itemAnimator = null
         binding.recyclerSources.layoutManager = LinearLayoutManager(requireContext())
-        binding.spinnerShowBy.setSelection(FOCUS_DEFAULT, false)
-        binding.spinnerShowBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long,
-            ) {
-                if (lastFocusSelected != position) {
-                    lastFocusSelected = position
-                    viewModel.focusAll(position)
-                }
-            }
 
-        }
-        binding.filter.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) viewModel.setFilter(binding.filter.text.toString())
-            false
-        }
+
     }
 
     private fun setSources(list: List<SourcesModel>) {
